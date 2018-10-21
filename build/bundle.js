@@ -3783,7 +3783,7 @@ eval("var g;\r\n\r\n// This works in non-strict mode\r\ng = (function() {\r\n\tr
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _queue_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./queue.js */ \"./src/ourthings/queue.js\");\n/* harmony import */ var _queue_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_queue_js__WEBPACK_IMPORTED_MODULE_0__);\n\nqueue = new _queue_js__WEBPACK_IMPORTED_MODULE_0___default.a();\n\n//# sourceURL=webpack:///./src/ourthings/main.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _queue_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./queue.js */ \"./src/ourthings/queue.js\");\n\n/**\n * On load initiate the queue object\n *\n */\n//window.onload = function() {\n\nvar queue = new _queue_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"](); //};\n\n//# sourceURL=webpack:///./src/ourthings/main.js?");
 
 /***/ }),
 
@@ -3791,10 +3791,11 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _que
 /*!********************************!*\
   !*** ./src/ourthings/queue.js ***!
   \********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-eval("function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\n/**\n * @classdesc\n *\n * The main queue class\n *\n */\nvar Queue =\n/**\n * @param {string} type Type.\n */\nfunction Queue(type) {\n  _classCallCheck(this, Queue);\n\n  console.log('Queue construct');\n};\n\n//# sourceURL=webpack:///./src/ourthings/queue.js?");
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Queue; });\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\n/**\n * @classdesc\n *\n * The main queue class\n *\n * @author Richard Reynolds richard@nautoguide.com\n *\n * @example\n * // queue = new Queue();\n *\n */\nvar Queue =\n/*#__PURE__*/\nfunction () {\n  /**\n   * Class constructor\n   */\n  function Queue() {\n    _classCallCheck(this, Queue);\n\n    self = this;\n    /**\n     * Our Queue array\n     *\n     * @type {Array}\n     */\n\n    self.queue = [];\n    self.templates = [];\n    fetch('templates.json', {\n      headers: {\n        'Content-Type': 'application/json'\n      }\n    }).then(function (response) {\n      return response.json();\n    }).then(function (json) {\n      self.templates = json;\n      self.templateLoader();\n    }).catch(function (error) {\n      return console.error('Error:', error);\n    });\n  }\n\n  _createClass(Queue, [{\n    key: \"templateLoader\",\n    value: function templateLoader() {\n      var template = this.templates.pop();\n      console.log('loading:' + template);\n    }\n    /**\n     * Template processor\n     * Takes a template, process it and places into the dom\n     * @param templateId {string} - ID of the template\n     * @param targetId {string} - Place in the dom the put the result\n     */\n\n  }, {\n    key: \"templateProcessor\",\n    value: function templateProcessor(templateId, targetId) {\n      var templateDom = document.getElementById(templateId);\n      var targetDom = document.getElementById(targetId);\n      var templateHTML = templateDom.innerHTML;\n      console.log(templateHTML);\n    }\n  }]);\n\n  return Queue;\n}();\n\n\n\n//# sourceURL=webpack:///./src/ourthings/queue.js?");
 
 /***/ }),
 
