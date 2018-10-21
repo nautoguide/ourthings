@@ -2,8 +2,10 @@
   "name": "ourthings",
   "version": "1.0.0",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "apidoc": "jsdoc package.json -d docs/api src/ourthings"
   },
+  "main": "src/ourthings/main.js",
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/polyfill": "^7.0.0",
@@ -13,6 +15,7 @@
     "path": "^0.12.7",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.9"
+    "webpack-dev-server": "^3.1.9",
+    "jsdoc": "^3.5.5"
   }
 }
