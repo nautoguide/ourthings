@@ -12,4 +12,25 @@ We mandate style guide for all submissions
 
 https://github.com/rwaldron/idiomatic.js/
 
-# 
+# Environment
+
+Before stanting you will need the following packages installed:
+
+## node & npm
+
+Install node & npm as per your platform guides
+
+https://nodejs.org/en/download/
+
+Install our base packages
+
+```npm install```
+
+## Webpack
+
+```npm install -g webpack```
+
+On windows additionally the webpack-cli
+
+```npm install -g webpack-cli```
+
