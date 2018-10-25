@@ -34,3 +34,17 @@ On windows additionally the webpack-cli
 
 ```npm install -g webpack-cli```
 
+## JSDoc
+
+Still working this
+
+# Build
+
+Build latest 
+
+``npm run build``
+
+Update the API Docs
+
+``npm run apidoc``
+
