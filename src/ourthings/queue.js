@@ -312,8 +312,10 @@ export default class Queue {
 		for(let item in self.queue) {
 			/**
 			 *  Look for items that are QUEUE_ADDED as they need processing
+			 *
+			 *  Ensure the component is online
 			 */
-			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED) {
+			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED&&self.queueables[self.queue[item].queueable].ready) {
 				/**
 				 * Update our state to be running
 				 * @type {number}

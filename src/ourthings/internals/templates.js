@@ -14,6 +14,11 @@ import Queueable from "../queueable";
  */
 export default class Templates extends Queueable {
 
+	/**
+	 * Render a template into the dom using the queues templateProcessor
+	 * @param pid
+	 * @param json
+	 */
 	render(pid,json) {
 		let self=this;
 		self.queue.templateProcessor(json.template,json.targetId);
