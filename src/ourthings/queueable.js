@@ -13,14 +13,20 @@ import Define from './define.js';
  *
  */
 export default class Queueable {
-	/**
-	 * Class constructor
-	 */
-	constructor() {
 
+	constructor(queue) {
+		let self=this;
+		self.queue=queue;
 	}
 
-	finished(pid) {
+	start(pid,command,json) {
+		let self=this;
+		self[command](pid,json);
+	}
 
+	finished(pid,mode) {
+		let self=this;
+		console.log('finished:'+pid+':'+mode);
+		self.queue.finished(pid.mode);
 	}
 }

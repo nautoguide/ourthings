@@ -42,5 +42,15 @@ export default class Define {
 		 */
 		this.QUEUE_ADDED = 0;
 		this.QUEUE_RUNNING = 1;
+		this.QUEUE_FINISHED = 1;
+
+		/**
+		 * Queueable Finished states
+		 */
+
+		this.FIN_OK = 0;
+		this.FIN_TRUE = 1;
+		this.FIN_FALSE = 1;
+
 	}
 }

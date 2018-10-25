@@ -1,5 +1,6 @@
 /** @module Queue */
 import Define from './define.js';
+import Templates from './internals/templates';
 
 /**
  * @classdesc
@@ -64,6 +65,17 @@ export default class Queue {
 		 * @type {number}
 		 */
 		self.defaultTimer=10;
+
+		/**
+		 * The actual objects that can run
+		 * @type {{}}
+		 */
+		self.queueables={};
+
+		/**
+		 * TODO THIS IS A HACK FOR TESTING, need dynamic loader
+		 */
+		self.queueables.templates=new Templates(self);
 
 		/**
 		 * Load the templates.json
@@ -292,7 +304,7 @@ export default class Queue {
 	 * This launches the actual objects using a timeout
 	 */
 	queueProcess() {
-		var self=this;
+		let self=this;
 		/**
 		 *  TODO Only implementing basic queue here for testing. Concepts of active componets etc need importing
 		 *  for moho
@@ -319,8 +331,23 @@ export default class Queue {
 				 */
 				self.queue[item].options.queueTimer=self.queue[item].options.queueTimer||self.defaultTimer;
 
-				console.log('running');
-				console.log(self.queue[item]);
+				/**
+				 *  Launch the function as a time out (so we get control back)
+				 */
+
+				setTimeout(function () {
+					self.queueables[self.queue[item].queueable].start(self.queue[item].pid,self.queue[item].command,self.queue[item].json,self);
+				}, self.queue[item].options.queueTimer);
+			}
+		}
+	}
+
+	finished(pid,mode) {
+		let self=this;
+		for(let item in self.queue) {
+			if(self.queue[item].state===self.DEFINE.QUEUE_RUNNING) {
+				self.queue[item.state]=self.DEFINE.QUEUE_FINISHED;
+				return;
 			}
 		}
 	}
@@ -337,7 +364,9 @@ export default class Queue {
 		let self=this;
 		let commandObject={};
 		// Find the actual command
-		commandObject.command=command.match(/(.*?)\(/)[1];
+		let commandArray=command.match(/(.*?)\(/)[1].split('.');
+		commandObject.queueable=commandArray[0];
+		commandObject.command=commandArray[1];
 		// Strip as we go to make follow up regex easier
 		command=command.replace(/.*?\(/,'');
 		// Find first json arg
@@ -375,8 +404,9 @@ export default class Queue {
 	 * @param mode {number} - Mode to use while writing see define.js
 	 * @return {boolean}
 	 */
-	renderToDom(domObject,text,mode=self.DEFINE.RENDER_INSERT) {
+	renderToDom(domObject,text,mode) {
 		let self=this;
+		mode=mode||self.DEFINE.RENDER_INSERT;
 		switch(mode) {
 			case self.DEFINE.RENDER_INSERT:
 				domObject.innerHTML=text;
