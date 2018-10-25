@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "webpack",
-    "apidoc": "jsdoc package.json -d docs/api src/ourthings"
+    "apidoc": "jsdoc -d docs/api src/ourthings"
   },
   "main": "src/ourthings/main.js",
   "devDependencies": {
