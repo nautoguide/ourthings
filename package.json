@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "build": "webpack",
-    "apidoc": "jsdoc -d docs/api src/ourthings"
+    "apidoc": "jsdoc -d docs/api src/ourthings",
+    "test": "mocha"
   },
   "main": "src/ourthings/main.js",
   "devDependencies": {
@@ -16,6 +17,8 @@
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.9",
-    "jsdoc": "^3.5.5"
+    "jsdoc": "^3.5.5",
+    "mocha": "^5.2.0",
+    "chai": "^4.2.0"
   }
 }
