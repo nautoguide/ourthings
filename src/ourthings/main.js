@@ -13,4 +13,5 @@ window.onload = function() {
 	 * @type {Queue}
 	 */
 	window.queue=queue;
+	console.log('I ran');
 };

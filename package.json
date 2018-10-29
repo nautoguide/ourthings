@@ -4,7 +4,8 @@
   "scripts": {
     "build": "webpack",
     "apidoc": "jsdoc -d docs/api src/ourthings",
-    "test": "mocha"
+    "test": "mocha-headless-chrome -f http://localhost:8080/test/test.html -o test/out.res -v",
+    "headlesstest": "mocha-headless-chrome -f http://localhost:8080/test/test.html -o test/out.res"
   },
   "main": "src/ourthings/main.js",
   "devDependencies": {
@@ -20,6 +21,6 @@
     "jsdoc": "^3.5.5",
     "mocha": "^5.2.0",
     "chai": "^4.2.0",
-    "mocha-phantomjs": "^4.1.0"
+    "mocha-headless-chrome": "^2.0.1"
   }
 }
