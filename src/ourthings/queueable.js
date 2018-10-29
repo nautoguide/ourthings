@@ -45,7 +45,6 @@ export default class Queueable {
 	 */
 	finished(pid,mode) {
 		let self=this;
-		console.log('finished:'+pid+':'+mode);
 		self.queue.finished(pid.mode);
 	}
 }

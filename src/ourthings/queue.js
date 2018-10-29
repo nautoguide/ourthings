@@ -126,7 +126,6 @@ export default class Queue {
 		 *  If not then we dump the fragment into the dom
 		 */
 		if (this.templates.length === 0) {
-			console.log('Done Loading');
 			document.head.appendChild(self.fragment);
 			// Clean up the fragment
 			self.fragment=document.createDocumentFragment();

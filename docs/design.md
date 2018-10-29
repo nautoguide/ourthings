@@ -42,9 +42,27 @@ Still working this
 
 Build latest 
 
-``npm run build``
+```npm run build```
 
 Update the API Docs
 
-``npm run apidoc``
+```npm run apidoc```
 
+# Testing
+
+To run the tests you will need to start a local http-server
+
+```
+npm install -g http-server
+http-server
+```
+
+Then you can start testing using
+
+```
+npm test #With chrome window
+npm headlesstest #In headless mode
+```
+ 
+
+Note you need to run a build to test any changes
