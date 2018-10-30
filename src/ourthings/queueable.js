@@ -14,7 +14,7 @@
 export default class Queueable {
 
 	/**
-	 * Constructor, Sets out status to be false (flipped on init)
+	 * Constructor, Sets our status to be false (flipped on init)
 	 *
 	 */
 	constructor() {

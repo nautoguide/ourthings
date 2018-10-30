@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: internals/templates.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,45 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: internals/templates.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @module Templates */
+import Queueable from "../queueable";
 
+/**
+ * @classdesc
+ *
+ * Template manipulations
+ *
+ * @author Richard Reynolds richard@nautoguide.com
+ *
+ * @example
+ * // @templates.render({"targetId":"content","template":"basic"},{"queueRun":"Instant"});
+ *
+ */
+export default class Templates extends Queueable {
 
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+	/**
+	 * Render a template into the dom using the queues templateProcessor
+	 * @param pid
+	 * @param json
+	 */
+	render(pid,json) {
+		let self=this;
+		self.queue.templateProcessor(json.template,json.targetId);
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+}
+</code></pre>
+        </article>
+    </section>
 
 
 
