@@ -1,5 +1,4 @@
 /** @module Queueable */
-import Define from './define.js';
 
 /**
  * @classdesc
@@ -15,15 +14,23 @@ import Define from './define.js';
 export default class Queueable {
 
 	/**
-	 * Constructor, overide this for any promise based inits setting
+	 * Constructor, Sets our status to be false (flipped on init)
+	 *
+	 */
+	constructor() {
+		let self=this;
+		self.ready=false;
+	}
+
+	/**
+	 * init, override this for any promise based inits setting
 	 * the self.ready=true after the promise
 	 *
-	 * @param queue
 	 */
-	constructor(queue) {
+	init(queue) {
 		let self=this;
-		self.ready=true;
 		self.queue=queue;
+		self.ready=true;
 	}
 
 	/**

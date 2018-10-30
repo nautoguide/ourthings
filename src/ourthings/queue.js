@@ -1,6 +1,6 @@
 /** @module Queue */
 import Define from './define.js';
-import Templates from './internals/templates';
+
 
 /**
  * @classdesc
@@ -21,6 +21,7 @@ export default class Queue {
 	constructor() {
 
 		self = this;
+
 
 		/**
 		 * Create our DEFINE object for
@@ -57,25 +58,24 @@ export default class Queue {
 		 * Our queue process ID
 		 * @type {number}
 		 */
-		self.pid=0;
+		self.pid = 0;
 
 		/**
 		 * Default time for process to be executed after
 		 * TODO Platform test / tune
 		 * @type {number}
 		 */
-		self.defaultTimer=10;
+		self.defaultTimer = 10;
 
 		/**
-		 * The actual objects that can run
-		 * @type {{}}
+		 * Run init against all our queueables
+		 *
+		 * This basically passes the queue object (self) though but also for any queueables that require it
+		 * starts any promise functions that will result in them becoming active
 		 */
-		self.queueables={};
-
-		/**
-		 * TODO THIS IS A HACK FOR TESTING, need dynamic loader
-		 */
-		self.queueables.templates=new Templates(self);
+		for (let i in window.queueables) {
+			window.queueables[i].init(self);
+		}
 
 		/**
 		 * Load the templates.json
@@ -314,7 +314,7 @@ export default class Queue {
 			 *
 			 *  Ensure the component is online
 			 */
-			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED&&self.queueables[self.queue[item].queueable].ready) {
+			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED&&window.queueables[self.queue[item].queueable].ready) {
 				/**
 				 * Update our state to be running
 				 * @type {number}
@@ -337,7 +337,7 @@ export default class Queue {
 				 */
 
 				setTimeout(function () {
-					self.queueables[self.queue[item].queueable].start(self.queue[item].pid,self.queue[item].command,self.queue[item].json,self);
+					window.queueables[self.queue[item].queueable].start(self.queue[item].pid,self.queue[item].command,self.queue[item].json,self);
 				}, self.queue[item].options.queueTimer);
 			}
 		}

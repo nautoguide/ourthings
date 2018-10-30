@@ -21,11 +21,8 @@ We also wanted to detach the framework from a need to use javascript. Our UX des
 writing bad javascript or having to get coders involved for even the most basic of tasks. Thus we wanted to give HTML/CSS users access
 to the framework in a language they already understand.
 
+# Documentation
 
-# Quick Start
+<a href="https://nautoguide.github.io/ourthings/">
 
-# Contributors
 
-See design and standard doc
-
-<a href="docs/design.md">Design</a>
