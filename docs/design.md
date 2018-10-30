@@ -14,7 +14,7 @@ https://github.com/rwaldron/idiomatic.js/
 
 # Environment
 
-Before stanting you will need the following packages installed:
+Before starting you will need the following packages installed:
 
 ## node & npm
 

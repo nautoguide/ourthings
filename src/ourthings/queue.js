@@ -67,14 +67,21 @@ export default class Queue {
 		 */
 		self.defaultTimer = 10;
 
+
+		console.clear();
+		console.info(self.DEFINE.CONSOLE_LINE);
+		console.info('ourthings framework https://github.com/nautoguide/ourthings');
+
 		/**
 		 * Run init against all our queueables
 		 *
 		 * This basically passes the queue object (self) though but also for any queueables that require it
 		 * starts any promise functions that will result in them becoming active
 		 */
+		console.log("[Queueables]");
 		for (let i in window.queueables) {
 			window.queueables[i].init(self);
+			console.log('-'+i);
 		}
 
 		/**
@@ -95,6 +102,7 @@ export default class Queue {
 				self.templateLoader();
 			})
 			.catch(function (error) {
+				console.info(self.DEFINE.CONSOLE_LINE);
 				console.error('Error:', error);
 				console.info("Warning this error is probably fatal as I have no templates to load")
 			});
@@ -140,6 +148,9 @@ export default class Queue {
 			 */
 			self.templateProcessor("init",false);
 			self.status=self.DEFINE.STATUS_RUNNING;
+			console.info(self.DEFINE.CONSOLE_LINE);
+			console.log('[Online]');
+			console.log('queue.show(); # To debug the queue');
 			return;
 		}
 
@@ -343,12 +354,22 @@ export default class Queue {
 		}
 	}
 
+	/**
+	 *  Called to flag a queue item as finished
+	 *
+	 *  Normally hooked down from queueable this is a queue item saying I have finished in mode (see define.js)
+	 *
+	 * @param pid
+	 * @param mode
+	 */
 	finished(pid,mode) {
 		let self=this;
 		for(let item in self.queue) {
-			if(self.queue[item].state===self.DEFINE.QUEUE_RUNNING) {
-				self.queue[item.state]=self.DEFINE.QUEUE_FINISHED;
-				return;
+			if(self.queue[item].pid===pid) {
+				if (self.queue[item].state === self.DEFINE.QUEUE_RUNNING) {
+					self.queue[item.state] = self.DEFINE.QUEUE_FINISHED;
+					return;
+				}
 			}
 		}
 	}
@@ -414,6 +435,36 @@ export default class Queue {
 				break;
 		}
 		return true;
+	}
+
+	/**
+	 *  Show current queue status in the console DEBUG function
+	 */
+	show() {
+		let self=this;
+		for(let i in self.queue) {
+			let indent=0;
+			self.prettyCommandObject(self.queue[i],indent);
+			for(let j in self.queue[i].commands) {
+				indent++;
+				self.prettyCommandObject(self.queue[i].commands[j],indent);
+
+			}
+		}
+	}
+
+	/**
+	 * Make a pretty version of the currrent commandObject and dump it to the console
+	 * @param commandObject
+	 * @param indent
+	 */
+	prettyCommandObject(commandObject,indent) {
+		let string='';
+		for(var i=0;i<indent;i++) {
+			string+=' ';
+		}
+		string+=commandObject.queueable+'.'+commandObject.command+'('+JSON.stringify(commandObject.json)+','+JSON.stringify(commandObject.options)+');'
+		console.log('%c '+string,(commandObject.state===self.DEFINE.QUEUE_FINISHED?self.DEFINE.CONSOLE_COL_RED:self.DEFINE.CONSOLE_COL_GREEN ));
 	}
 
 
