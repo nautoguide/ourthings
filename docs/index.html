@@ -16,18 +16,35 @@
 	<h3>Create your own simple app</h3>
 	<p>Add an include for our framework</p>
 	<code>
-		&#x3C;!doctype html&#x3E;
-&#x9;&#x9;&#x3C;html lang=&#x22;en&#x22;&#x3E;
-&#x9;&#x9;&#x3C;head&#x3E;
-&#x9;&#x9;&#x9;&#x3C;script type=&#x22;text/javascript&#x22; src=&#x22;../build/bundle.js&#x22;&#x3E;&#x3C;/script&#x3E;
-&#x9;&#x9;&#x3C;/head&#x3E;
-&#x9;&#x9;&#x3C;body&#x3E;
-&#x9;&#x9;&#x3C;div id=&#x22;content&#x22;&#x3E;
-&#x9;&#x9;&#x9;Loading
-&#x9;&#x9;&#x3C;/div&#x3E;
-&#x9;&#x9;&#x3C;/body&#x3E;
-&#x9;&#x9;&#x3C;/html&#x3E;
+&#x3C;!doctype html&#x3E;
+&#x3C;html lang=&#x22;en&#x22;&#x3E;
+&#x3C;head&#x3E;
+&#x9;&#x3C;script type=&#x22;text/javascript&#x22; src=&#x22;../build/bundle.js&#x22;&#x3E;&#x3C;/script&#x3E;
+&#x3C;/head&#x3E;
+&#x3C;body&#x3E;
+&#x9;&#x3C;div id=&#x22;content&#x22;&#x3E;
+		Hello World
+	&#x3C;/div&#x3E;
+&#x3C;/body&#x3E;
+&#x3C;/html&#x3E;
 	</code>
+	<p>Add a templates.json file to the directory where you html page is</p>
+	<code>[ "actions.html" ]</code>
+	<p>Add a html template called actions.html that you reference above</p>
+	<code>&#x3C;script id=&#x22;init&#x22; type=&#x22;text/html&#x22;&#x3E;
+&#x9;&#x3C;!-- init is always run automatically on startup --&#x3E;
+&#x9;@templates.render({&#x22;targetId&#x22;:&#x22;content&#x22;,&#x22;template&#x22;:&#x22;basic&#x22;},{&#x22;queueRun&#x22;:&#x22;Instant&#x22;});
+&#x3C;/script&#x3E;
+
+&#x3C;script id=&#x22;basic&#x22; type=&#x22;text/html&#x22;&#x3E;
+&#x9;Very basic template
+&#x3C;/script&#x3E;</code>
+	<p>That's it, now open the page in the browser and you will see your Hello World has been replaced with Very basic template</p>
+	<p>Lets walk over what has happened here. When you specified actions.html in the json files ourthings loaded that template and
+	looked for the a script entry called "init". In there the command:</p>
+<code>@templates.render({"targetId":"content","template":"basic"},{"queueRun":"Instant"});</code>
+	<p>was run. It called the queueable module templates and the function render with the argument json {"targetId":"content","template":"basic"}.
+	The second json argument indicateds we want this queue to run instantly</p>
 	<h2>API reference guide</h2>
 	<a href="api/index.html">API Docs</a>
 	<h2>Contributor guide</h2>
