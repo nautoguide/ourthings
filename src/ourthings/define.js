@@ -52,5 +52,14 @@ export default class Define {
 		this.FIN_TRUE = 1;
 		this.FIN_FALSE = 1;
 
+		/**
+		 *  Console outputs
+		 */
+		this.CONSOLE_LINE="-==ourthings======================================================-";
+		this.CONSOLE_COL_VT="background: #222; color: #bada55";
+		this.CONSOLE_COL_GREEN="background: #222; color: #0f0";
+		this.CONSOLE_COL_RED="background: #222; color: #f00";
+		this.CONSOLE_COL_AMBER="background: #222; color: amber";
+
 	}
 }
