@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Ourthings</title>
+	<link type="text/css" rel="stylesheet" href="css/docs.css">
+
+</head>
+<body>
+
+<h1>Coding Standards</h1>
+
+<p>All code should be targeted at ES6. This include both node & browser code</p>
+
+<p>ES6 additions can be found here:</p>
+
+<a href="https://www.w3schools.com/js/js_es6.asp">https://www.w3schools.com/js/js_es6.asp</a>
+
+<p>See build process for details on targeting non ES6 platforms</p>
+
+<p>We mandate style guide for all submissions</p>
+
+<a href="https://github.com/rwaldron/idiomatic.js/">https://github.com/rwaldron/idiomatic.js/</a>
+
+<h2>Environment</h2>
+
+<p>Before starting you will need the following packages installed:</p>
+
+<h3>node & npm</h3>
+
+<p>Install node & npm as per your platform guides</p>
+
+<a href="https://nodejs.org/en/download/">https://nodejs.org/en/download/</a>
+
+<p>Install our base packages</p>
+
+<code>npm install</code>
+
+<h2>Webpack</h2>
+
+<code>npm install -g webpack</code>
+
+<p>On windows additionally the webpack-cli</p>
+
+<code>npm install -g webpack-cli</code>
+
+<h2>JSDoc</h2>
+
+<code>npm run apidoc</code>
+
+<h2>Build</h2>
+
+<p>Build latest</p>
+
+<code>npm run build</code>
+
+<p>Update the API Docs</p>
+
+<code>npm run apidoc</code>
+
+<h2>Testing</h2>
+
+<p>To run the tests you will need to start a local http-server</p>
+
+<code>
+npm install -g http-server
+http-server
+</code>
+
+<p>Then you can start testing using</p>
+
+<code>
+npm test <span class="comment">#With chrome window</span>
+npm headlesstest <span class="comment">#In headless mode</span>
+</code>
+ 
+
+<p>Note you need to run a build to test any changes</p>
+
+</body>
+</html>
