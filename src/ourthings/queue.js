@@ -23,44 +23,44 @@ export default class Queue {
 		self = this;
 
 
-		/**
+		/*
 		 * Create our DEFINE object for
 		 * @type {Define}
 		 */
 		self.DEFINE = new Define();
-		/**
+		/*
 		 * Our Queue array
 		 *
 		 * @type {Array}
 		 */
 		self.queue = [];
 
-		/**
+		/*
 		 * Templates to be loaded
 		 * @type {Array}
 		 */
 		self.templates = [];
 
 
-		/**
+		/*
 		 * Create a fragment for big dom inserts
 		 * @type {DocumentFragment}
 		 */
 		self.fragment = document.createDocumentFragment();
 
-		/**
+		/*
 		 * Se our status
 		 * @type {number}
 		 */
 		self.status = self.DEFINE.STATUS_LOADING;
 
-		/**
+		/*
 		 * Our queue process ID
 		 * @type {number}
 		 */
 		self.pid = 0;
 
-		/**
+		/*
 		 * Default time for process to be executed after
 		 * TODO Platform test / tune
 		 * @type {number}
@@ -72,7 +72,7 @@ export default class Queue {
 		console.info(self.DEFINE.CONSOLE_LINE);
 		console.info('ourthings framework https://github.com/nautoguide/ourthings');
 
-		/**
+		/*
 		 * Run init against all our queueables
 		 *
 		 * This basically passes the queue object (self) though but also for any queueables that require it
@@ -84,7 +84,7 @@ export default class Queue {
 			console.log('-'+i);
 		}
 
-		/**
+		/*
 		 * Load the templates.json
 		 */
 		fetch('templates.json', {
@@ -123,12 +123,11 @@ export default class Queue {
 
 	/**
 	 * Loads templates from the template stack. Recursively calls self until stack is empty
-	 * @param {void}
 	 * @returns {void}
 	 */
 	templateLoader() {
 		let self=this;
-		/**
+		/*
 		 *  Are there any templates to load?
 		 *
 		 *  If not then we dump the fragment into the dom
@@ -137,12 +136,11 @@ export default class Queue {
 			document.head.appendChild(self.fragment);
 			// Clean up the fragment
 			self.fragment=document.createDocumentFragment();
-			/**
+			/*
 			 * Set our status and then process the init template
-			 * @type {number}
 			 */
 			self.status=self.DEFINE.STATUS_LOADED;
-			/**
+			/*
 			 *  TODO once queue generation is working this this pushing to the queue
 			 *  As currently this is a chain of promises and so everything will error trap back to the loader
 			 */
@@ -154,9 +152,8 @@ export default class Queue {
 			return;
 		}
 
-		/**
+		/*
 		 * Pop the template off the stack
-		 * @type {string}
 		 */
 		let template = this.templates.pop();
 
@@ -169,7 +166,7 @@ export default class Queue {
 			.then(response => response.text())
 			.then(function (response) {
 
-				/**
+				/*
 				 * Get the template we were sent and add it to the fragment for insertion into the dom
 				 *
 				 * We wrap it in meta tag, this helps improve render speed but still stuck with an innerHTML
@@ -183,7 +180,7 @@ export default class Queue {
 				meta.innerHTML=text;
 				self.fragment.appendChild(meta);
 
-				/**
+				/*
 				 *  Call our self again to process any more templates
 				 */
 				self.templateLoader();
@@ -206,11 +203,6 @@ export default class Queue {
 		let templateDom = document.getElementById(templateId);
 		let targetDom=undefined;
 		let templateHTML = templateDom.innerHTML;
-
-		/**
-		 *  TODO Process the template
-		 */
-
 		let pharsedTemplate=self.templatePharse(templateHTML);
 
 		if(targetId!==false) {
@@ -233,19 +225,18 @@ export default class Queue {
 		let commands=[];
 		let parentCommand;
 		let isParent;
-		/**
+		/*
 		 *  Locate all the commands in the template and generate an array of command objects that
 		 *  are linked by a reference into the template
 		 */
 		while (match = commandRegex.exec(template)) {
 			isParent=match[0][0]==='@';
-			/**
+			/*
 			 * Generate this command object from the extracted string
-			 * @type {Object}
 			 */
 			let command=self.commandParse(match[1],isParent);
 
-			/**
+			/*
 			 *  In the case of an instant or sub run we don't need to leave anything in the DOM so nuke
 			 */
 			if(command.options.queueRun===self.DEFINE.COMMAND_INSTANT||command.options.queueRun===self.DEFINE.COMMAND_SUB) {
@@ -253,18 +244,18 @@ export default class Queue {
 			} else {
 				template = template.replace(match[0], "#CMD" + commands.length + ";");
 			}
-			/**
+			/*
 			 *  Is this a @parent or a -child?
 			 */
 			if(isParent) {
 				// Set the parent point to current position
 				parentCommand=commands.length;
-				/**
+				/*
 				 *  Is this an event (in which case we need to bind events later). We know this use case because an
 				 *  event will not be instant and it will be a parent
 				 */
 				if(command.options.queueRun!==self.DEFINE.COMMAND_INSTANT) {
-					/**
+					/*
 					 *  We need to re-extract the command from the template and find the HTML element that this
 					 *  belongs to
 					 *
@@ -302,7 +293,7 @@ export default class Queue {
 				self.queue.push(commandObj[command]);
 			}
 		}
-		/**
+		/*
 		 *  Trigger a queue process
 		 */
 		self.queueProcess();
@@ -315,35 +306,32 @@ export default class Queue {
 	 */
 	queueProcess() {
 		let self=this;
-		/**
+		/*
 		 *  TODO Only implementing basic queue here for testing. Concepts of active componets etc need importing
 		 *  for moho
 		 */
 		for(let item in self.queue) {
-			/**
+			/*
 			 *  Look for items that are QUEUE_ADDED as they need processing
 			 *
 			 *  Ensure the component is online
 			 */
 			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED&&window.queueables[self.queue[item].queueable].ready) {
-				/**
+				/*
 				 * Update our state to be running
-				 * @type {number}
 				 */
 				self.queue[item].state=self.DEFINE.QUEUE_RUNNING;
-				/**
+				/*
 				 * Assign a pid
-				 * @type {number}
 				 */
 				self.queue[item].pid=self.pid;
 				self.pid++;
-				/**
+				/*
 				 * Check if any specific timing is needed
-				 * @type {*|number}
 				 */
 				self.queue[item].options.queueTimer=self.queue[item].options.queueTimer||self.defaultTimer;
 
-				/**
+				/*
 				 *  Launch the function as a time out (so we get control back)
 				 */
 
@@ -365,9 +353,41 @@ export default class Queue {
 	finished(pid,mode) {
 		let self=this;
 		for(let item in self.queue) {
+			/**
+			 *  Find the queue item we need to finish
+			 */
 			if(self.queue[item].pid===pid) {
 				if (self.queue[item].state === self.DEFINE.QUEUE_RUNNING) {
-					self.queue[item.state] = self.DEFINE.QUEUE_FINISHED;
+					/*
+					 *
+					 * Check if this queue has commands left
+					 */
+					if(self.queue[item].commands.length>0) {
+						console.info('I have more to do');
+						/*
+						 * Move the next item in the queue down
+						 */
+						self.queue[item].command=self.queue[item].commands[0].command;
+						self.queue[item].queueable=self.queue[item].queueable[0].command;
+						self.queue[item].json=self.queue[item].queueable[0].json;
+						self.queue[item].options=self.queue[item].queueable[0].options;
+						self.queue[item].queueable.shift();
+						/*
+						 *  Update the pid
+						 */
+						self.queue[item]=self.pid;
+						self.pid++;
+						self.queue[item].state = self.DEFINE.QUEUE_ADDED;
+						/*
+						 * Start the queue processor as we just posted a new command
+						 */
+						self.queueProcess();
+					} else {
+						self.queue[item].state = self.DEFINE.QUEUE_FINISHED;
+					}
+					return;
+				} else {
+					self.reportError('Cant stop an already stopped process','Queue is corrupted');
 					return;
 				}
 			}
@@ -407,7 +427,7 @@ export default class Queue {
 		} else {
 			commandObject.options={};
 		}
-		/**
+		/*
 		 * Set our default options if they haven't been set
 		 *
 		 * We must always have a queueRun object if its not set (normally by instant) then its either an event in
@@ -467,5 +487,15 @@ export default class Queue {
 		console.log('%c '+string,(commandObject.state===self.DEFINE.QUEUE_FINISHED?self.DEFINE.CONSOLE_COL_RED:self.DEFINE.CONSOLE_COL_GREEN ));
 	}
 
+	/**
+	 * Report an error to the console, adds various internal stats
+	 * @param error
+	 * @param message
+	 */
+	reportError(error,message) {
+		console.info(self.DEFINE.CONSOLE_LINE);
+		console.error('Error:', error);
+		console.info(message);
+	}
 
 }
