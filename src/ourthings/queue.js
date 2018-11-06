@@ -209,7 +209,16 @@ export default class Queue {
 		}
 		let targetDom=undefined;
 		let templateHTML = templateDom.innerHTML;
-		let pharsedTemplate=self.templatePharse(templateHTML,commands);
+		/*
+		 * Pass to the templateParse to build our commands
+		 */
+		let parsedTemplate=self.templateParse(templateHTML,commands);
+
+		/*
+		 * Now we pass any var tags {{ }}
+		 */
+		parsedTemplate=self.templateVars(parsedTemplate);
+
 
 		if(targetId!==false) {
 			targetDom=self.getElement(targetId);
@@ -217,10 +226,39 @@ export default class Queue {
 				self.reportError('No valid target','I have no valid target to render the template to, check the targetId ['+targetId+']');
 				return false;
 			}
-			self.renderToDom(targetDom,pharsedTemplate);
+			self.renderToDom(targetDom,parsedTemplate);
 			self.commandsBind(commands);
 		}
 		return true;
+	}
+
+	/**
+	 * Process the template looking for {{}} instances
+	 * @param template
+	 * @return {*}
+	 */
+	templateVars(template) {
+		let commandRegex=/{{(.*?)}}/;
+		let match=undefined;
+		while (match = commandRegex.exec(template)) {
+			console.log(match);
+			template = template.replace(match[0], self.varsParser(match[1]));
+		}
+		return template;
+	}
+
+	/**
+	 * parse a var string
+	 *
+	 * TODO This is massively insecure. If as user can input {{}} into a form and have it displayed
+	 * to other users they can take over. We either clean all input as you would with <script> etc tags or we
+	 * manually write a parser.
+	 *
+	 * @param parseString
+	 * @return {any}
+	 */
+	varsParser(parseString) {
+		return eval(parseString);
 	}
 
 	/**
@@ -230,7 +268,7 @@ export default class Queue {
 	 * @param template {string}
 	 * @return {string}
 	 */
-	templatePharse(template,commands) {
+	templateParse(template,commands) {
 		let commandRegex=/[@\-](.*?\);)/;
 		let match=undefined;
 		let parentCommand;
