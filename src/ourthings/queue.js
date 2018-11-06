@@ -144,7 +144,7 @@ export default class Queue {
 			 *  TODO once queue generation is working this this pushing to the queue
 			 *  As currently this is a chain of promises and so everything will error trap back to the loader
 			 */
-			self.templateProcessor("init",false);
+			self.templateProcessor("#init",false);
 			self.status=self.DEFINE.STATUS_RUNNING;
 			console.info(self.DEFINE.CONSOLE_LINE);
 			console.log('[Online]');
@@ -200,14 +200,25 @@ export default class Queue {
 	 */
 	templateProcessor(templateId, targetId) {
 		let self=this;
-		let templateDom = document.getElementById(templateId);
+		let commands=[];
+
+		let templateDom = self.getElement(templateId);
+		if(!templateDom) {
+			self.reportError('No valid template','I have no valid template, check the templateId ['+templateId+']');
+			return false;
+		}
 		let targetDom=undefined;
 		let templateHTML = templateDom.innerHTML;
-		let pharsedTemplate=self.templatePharse(templateHTML);
+		let pharsedTemplate=self.templatePharse(templateHTML,commands);
 
 		if(targetId!==false) {
-			targetDom=document.getElementById(targetId);
+			targetDom=self.getElement(targetId);
+			if(!targetDom) {
+				self.reportError('No valid target','I have no valid target to render the template to, check the targetId ['+targetId+']');
+				return false;
+			}
 			self.renderToDom(targetDom,pharsedTemplate);
+			self.commandsBind(commands);
 		}
 		return true;
 	}
@@ -219,10 +230,9 @@ export default class Queue {
 	 * @param template {string}
 	 * @return {string}
 	 */
-	templatePharse(template) {
+	templatePharse(template,commands) {
 		let commandRegex=/[@\-](.*?\);)/;
 		let match=undefined;
-		let commands=[];
 		let parentCommand;
 		let isParent;
 		/*
@@ -242,7 +252,7 @@ export default class Queue {
 			if(command.options.queueRun===self.DEFINE.COMMAND_INSTANT||command.options.queueRun===self.DEFINE.COMMAND_SUB) {
 				template = template.replace(match[0], "");
 			} else {
-				template = template.replace(match[0], "#CMD" + commands.length + ";");
+				template = template.replace(match[0], "data-queueable=\"CMD" + commands.length + "\"");
 			}
 			/*
 			 *  Is this a @parent or a -child?
@@ -280,6 +290,35 @@ export default class Queue {
 	}
 
 	/**
+	 * Bind the events to the dom based on the command Object
+	 * @param commandObj
+	 */
+	commandsBind(commandObj) {
+		let self=this;
+		for(let command in commandObj) {
+			/*
+			 * Bind queue elements will not me marked to run instantly so we pick those
+			 */
+			if(commandObj[command].options.queueRun!==self.DEFINE.COMMAND_INSTANT) {
+				/*
+				 * Find its dom entry using the selector we added
+				 */
+				let element=self.getElement("[data-queueable=CMD"+command+"]");
+
+				/*
+				 * Add the event. We flip it over to an instant event now because we want
+				 * it triggered.
+				 */
+				element.addEventListener("click", function(){
+					commandObj[command].options.queueRun=self.DEFINE.COMMAND_INSTANT;
+					self.commandsQueue.apply(self,[[commandObj[command]]]);
+				});
+			}
+		}
+
+	}
+
+	/**
 	 * Take the commands array with command objects in it and add them to the queue *if* they are
 	 * marked as instant. IE ready to execute
 	 *
@@ -288,9 +327,9 @@ export default class Queue {
 	commandsQueue(commandObj) {
 		let self=this;
 		for(let command in commandObj) {
-			if(commandObj[command].options.queueRun==self.DEFINE.COMMAND_INSTANT) {
-
-				self.queue.push(commandObj[command]);
+			if(commandObj[command].options.queueRun===self.DEFINE.COMMAND_INSTANT) {
+				let dereference=self.deepCopy(commandObj[command])
+				self.queue.push(dereference);
 			}
 		}
 		/*
@@ -336,7 +375,7 @@ export default class Queue {
 				 */
 
 				setTimeout(function () {
-					window.queueables[self.queue[item].queueable].start(self.queue[item].pid,self.queue[item].command,self.queue[item].json,self);
+					window.queueables[self.queue[item].queueable].start.apply(window.queueables[self.queue[item].queueable],[self.queue[item].pid,self.queue[item].command,self.queue[item].json,self]);
 				}, self.queue[item].options.queueTimer);
 			}
 		}
@@ -350,32 +389,46 @@ export default class Queue {
 	 * @param pid
 	 * @param mode
 	 */
-	finished(pid,mode) {
+	finished(pid,mode,error) {
 		let self=this;
 		for(let item in self.queue) {
-			/**
+			/*
 			 *  Find the queue item we need to finish
 			 */
 			if(self.queue[item].pid===pid) {
+				self.queue[item].error=error;
 				if (self.queue[item].state === self.DEFINE.QUEUE_RUNNING) {
 					/*
-					 *
-					 * Check if this queue has commands left
+					 * Did the command return an error? If so we will stop this queue from further execution
 					 */
-					if(self.queue[item].commands.length>0) {
-						console.info('I have more to do');
+					if(mode==self.DEFINE.FIN_ERROR) {
+						self.queue[item].state=self.DEFINE.QUEUE_ERROR;
+						self.reportError(error,'The queueable ['+pid+'] has errored, queue put on hold');
+						return;
+					}
+					/*
+					 * Was there a warning?. This isn't serious so we just mention it to the console
+					 */
+					if(mode==self.DEFINE.FIN_WARNING) {
+						console.log('Warning: '+error);
+					}
+						/*
+						 *
+						 * Check if this queue has commands left
+						 */
+					if(self.queue[item].commands!==undefined&&self.queue[item].commands.length>0) {
 						/*
 						 * Move the next item in the queue down
 						 */
 						self.queue[item].command=self.queue[item].commands[0].command;
-						self.queue[item].queueable=self.queue[item].queueable[0].command;
-						self.queue[item].json=self.queue[item].queueable[0].json;
-						self.queue[item].options=self.queue[item].queueable[0].options;
-						self.queue[item].queueable.shift();
+						self.queue[item].queueable=self.queue[item].commands[0].queueable;
+						self.queue[item].json=self.queue[item].commands[0].json;
+						self.queue[item].options=self.queue[item].commands[0].options;
+						self.queue[item].commands.shift();
 						/*
 						 *  Update the pid
 						 */
-						self.queue[item]=self.pid;
+						self.queue[item].pid=self.pid;
 						self.pid++;
 						self.queue[item].state = self.DEFINE.QUEUE_ADDED;
 						/*
@@ -387,7 +440,7 @@ export default class Queue {
 					}
 					return;
 				} else {
-					self.reportError('Cant stop an already stopped process','Queue is corrupted');
+					self.reportError('Cant stop an already stopped process ['+pid+']','Queue is corrupted');
 					return;
 				}
 			}
@@ -458,6 +511,20 @@ export default class Queue {
 	}
 
 	/**
+	 * Finds an element in the dom using the jquery formant IE #id .class tag
+	 * @param elementTarget
+	 * @return {object|false}
+	 */
+	getElement(elementTarget) {
+		let self=this;
+		let element=document.querySelector(elementTarget);
+		if(element!==null)
+			return element;
+		self.reportError('Dom Element find failed for ['+elementTarget+']','Follow up calls that rely on this will fail');
+		return false;
+	}
+
+	/**
 	 *  Show current queue status in the console DEBUG function
 	 */
 	show() {
@@ -483,8 +550,20 @@ export default class Queue {
 		for(var i=0;i<indent;i++) {
 			string+=' ';
 		}
+		let color=self.DEFINE.CONSOLE_COL_GREEN;
+		switch(commandObject.state) {
+			case self.DEFINE.QUEUE_FINISHED:
+				color=self.DEFINE.CONSOLE_COL_AMBER;
+				break;
+			case self.DEFINE.QUEUE_ERROR:
+				color=self.DEFINE.CONSOLE_COL_RED;
+				break;
+
+		}
 		string+=commandObject.queueable+'.'+commandObject.command+'('+JSON.stringify(commandObject.json)+','+JSON.stringify(commandObject.options)+');'
-		console.log('%c '+string,(commandObject.state===self.DEFINE.QUEUE_FINISHED?self.DEFINE.CONSOLE_COL_RED:self.DEFINE.CONSOLE_COL_GREEN ));
+		console.log('%c '+string,color);
+		if(commandObject.error)
+			console.log('%c  Stopped: '+commandObject.error,self.DEFINE.CONSOLE_COL_AMBER);
 	}
 
 	/**
@@ -496,6 +575,15 @@ export default class Queue {
 		console.info(self.DEFINE.CONSOLE_LINE);
 		console.error('Error:', error);
 		console.info(message);
+	}
+
+	/**
+	 * Deep copy and object IE remove references
+	 * @param inputObject
+	 * @return {any}
+	 */
+	deepCopy(inputObject) {
+		return JSON.parse(JSON.stringify(inputObject));
 	}
 
 }

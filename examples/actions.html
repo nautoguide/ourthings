@@ -1,12 +1,12 @@
 <script id="init" type="text/html">
 	<!-- init is always run automatically on startup -->
-	@templates.render({"targetId":"content","template":"basic"},{"queueRun":"Instant"});
-	 -templates.render({"targetId":"content","template":"foo"});
+	@templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});
+	 -elements.addClass({"targetId":"#content","class":"highlight"});
 </script>
 
 <script id="basic" type="text/html">
 	Very basic template
-	<div @templates.render({"targetId":"content","template":"wibbly"});>
+	<div id="myButton" class="button" @elements.addClass({"targetId":"#myButton","class":"active"});>
 		Example of button
 	</div>
 </script>

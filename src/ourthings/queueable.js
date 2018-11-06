@@ -41,7 +41,11 @@ export default class Queueable {
 	 */
 	start(pid,command,json) {
 		let self=this;
-		self[command](pid,json);
+		if(self[command]&&typeof self[command] === 'function') {
+			self[command](pid, json);
+		} else {
+			self.queue.finished(pid,self.queue.DEFINE.FIN_ERROR,'No such command ['+command+']');
+		}
 	}
 
 	/**
@@ -50,8 +54,8 @@ export default class Queueable {
 	 * @param pid
 	 * @param mode
 	 */
-	finished(pid,mode) {
+	finished(pid,mode,error='') {
 		let self=this;
-		self.queue.finished(pid.mode,mode);
+		self.queue.finished(pid,mode,error);
 	}
 }
