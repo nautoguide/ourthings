@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: define.js</title>
+    <title>JSDoc: Source: internals/elements.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: define.js</h1>
+    <h1 class="page-title">Source: internals/elements.js</h1>
 
     
 
@@ -26,72 +26,39 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/** @module Define */
-
+            <pre class="prettyprint source linenums"><code>/** @module Elements */
+import Queueable from "../queueable";
 
 /**
  * @classdesc
  *
- * Our define class, contains all magic dnumber defines
+ * Dom Elements manipulations
  *
  * @author Richard Reynolds richard@nautoguide.com
  *
  * @example
- * // DEFINE = new Define();
+ * //
  *
  */
-export default class Define {
-	constructor() {
-		/**
-		 * Queue state of operations
-		 */
-		this.STATUS_LOADING = 0;
-		this.STATUS_LOADED = 1;
-		this.STATUS_RUNNING = 2;
-		this.STATUS_ERROR = 3;
+export default class Elements extends Queueable {
 
-		/**
-		 * Render modes
-		 */
-		this.RENDER_INSERT = 0;
-		this.RENDER_APPEND = 1;
-
-
-		/**
-		 *  Command types
-		 */
-
-		this.COMMAND_INSTANT = "Instant";
-		this.COMMAND_EVENT = "Event";
-		this.COMMAND_SUB = "Sub";
-
-		/**
-		 *  Queue states
-		 */
-		this.QUEUE_ADDED = 0;
-		this.QUEUE_RUNNING = 1;
-		this.QUEUE_FINISHED = 2;
-		this.QUEUE_ERROR = 3;
-
-		/**
-		 * Queueable Finished states
-		 */
-
-		this.FIN_OK = 0;
-		this.FIN_WARNING = 1;
-		this.FIN_ERROR = 2;
-
-		/**
-		 *  Console outputs
-		 */
-		this.CONSOLE_LINE="-==ourthings======================================================-";
-		this.CONSOLE_COL_VT="background: #222; color: #bada55";
-		this.CONSOLE_COL_GREEN="background: #222; color: #0f0";
-		this.CONSOLE_COL_RED="background: #222; color: #f00";
-		this.CONSOLE_COL_AMBER="background: #222; color: #f90";
-
+	/**
+	 * Render a template into the dom using the queues templateProcessor
+	 * @param pid
+	 * @param json
+	 */
+	addClass(pid,json) {
+		let self=this;
+		let element=self.queue.getElement(json.targetId);
+		if(element!==false) {
+			element.classList.add(json.class);
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not add class ['+json.class+'] to ['+json.targetId+']');
+		}
 	}
-}</code></pre>
+}
+</code></pre>
         </article>
     </section>
 

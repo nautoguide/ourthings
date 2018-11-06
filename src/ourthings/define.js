@@ -42,15 +42,16 @@ export default class Define {
 		 */
 		this.QUEUE_ADDED = 0;
 		this.QUEUE_RUNNING = 1;
-		this.QUEUE_FINISHED = 1;
+		this.QUEUE_FINISHED = 2;
+		this.QUEUE_ERROR = 3;
 
 		/**
 		 * Queueable Finished states
 		 */
 
 		this.FIN_OK = 0;
-		this.FIN_TRUE = 1;
-		this.FIN_FALSE = 1;
+		this.FIN_WARNING = 1;
+		this.FIN_ERROR = 2;
 
 		/**
 		 *  Console outputs
@@ -59,7 +60,7 @@ export default class Define {
 		this.CONSOLE_COL_VT="background: #222; color: #bada55";
 		this.CONSOLE_COL_GREEN="background: #222; color: #0f0";
 		this.CONSOLE_COL_RED="background: #222; color: #f00";
-		this.CONSOLE_COL_AMBER="background: #222; color: amber";
+		this.CONSOLE_COL_AMBER="background: #222; color: #f90";
 
 	}
 }

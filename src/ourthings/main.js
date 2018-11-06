@@ -7,6 +7,7 @@ import Queue from './queue.js';
  *  TODO Figure a way to get list of imported queuaables from webpack (plugin?)
  */
 import Templates from './internals/templates.js';
+import Elements from './internals/elements.js';
 
 /**
  * On load initiate the queue object
@@ -23,6 +24,7 @@ window.onload = function() {
 	 * Setup our imported queueables here
 	 */
 	window.queueables['templates']=new Templates();
+	window.queueables['elements']=new Elements();
 
 	queue = new Queue();
 

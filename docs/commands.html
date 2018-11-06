@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Ourthings</title>
+    <link type="text/css" rel="stylesheet" href="css/docs.css">
+
+</head>
+<body>
+<h1>Command Reference</h1>
+<h2>Overview</h2>
+<p>ourthings has two formats for interacting with your templates. One is a traditional approach that
+    will be familair to users fo existing templating libraries such a mostache and jsrender and the second
+    and more powerful queue system that is unique to ourthings. We refer to them as template *tags* and
+    *queueables*.</p>
+<h3>Queuables</h3>
+<p>Queueables are javascript modules that can be called from inside your templates to perform a wide range
+    of functions. This can range from changing the class of an element in the page to making a rest API call
+    or moving a map around.</p>
+
+<p>The simplist invocation and possibly the most frequent used example is that of rendering a template
+    to the DOM.</p>
+<code>@templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});</code>
+<p>Breaking this down the command format is defined as</p>
+<code>@<span class="arg">queueable</span>.<span class="arg">command</span>(<span class="arg">arguments</span>,<span class="arg">options</span>);</code>
+<ul>
+	<li><span class="arg">queueable</span> - The queueable module you wish to use</li>
+	<li><span class="arg">command</span> - The command in the module you wish to use</li>
+	<li><span class="arg">arguments</span> - Arguments to pass ro the command in json format</li>
+	<li><span class="arg">options</span> - Options to pass to the queue processor</li>
+</ul>
+<p>If you are familar with the javascript OO model then queueable.command() will already be very familar to you
+and you can translate that to directly running a function in javascript from the html page. queueables
+are very much built in this fashion bu extending a class and writting functions. We also want to pass arguments
+to that function and you do this by sending some json in which the function will be given.</p>
+<p>Options are things you want to instruct the queue handler to do with this item in the queue. This can range from
+delaying execution, running instantly or waiting for the user to hit a button see the command options sections
+for a list of these</p>
+</body>
+<h2>Command Options</h2>
+<ul>
+	<li><span class="arg">queueRun</span> Instant|Event|Sub</li>
+	<li><span class="arg">queueTimer</span> Delay run in ms, default is 10</li>
+</ul>
+</html>
+
+

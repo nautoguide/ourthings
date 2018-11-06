@@ -36,3 +36,7 @@ code {
 code .comment {
     color: #aaaaaa;
 }
+
+.arg {
+    color: orangered;
+}
