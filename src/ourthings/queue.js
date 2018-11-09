@@ -85,6 +85,10 @@ export default class Queue {
 		}
 
 		/*
+		 * Initialise the memory
+		 */
+		window.memory={};
+		/*
 		 * Load the templates.json
 		 */
 		fetch('templates.json', {
@@ -96,7 +100,7 @@ export default class Queue {
 			.then(response => response.json() )
 			.then(function (response) {
 				/**
-				 * Conver the response to json and start the loader
+				 * Convert the response to json and start the loader
 				 */
 				self.templates = response;
 				self.templateLoader();
@@ -238,10 +242,19 @@ export default class Queue {
 	 * @return {*}
 	 */
 	templateVars(template) {
-		let commandRegex=/{{(.*?)}}/;
+		const forRegex=/{{#for (.*?)}}([\s\S]*?){{\/for}}/;
 		let match=undefined;
+		while (match = forRegex.exec(template)) {
+			let subTemplate='';
+			for(let i in eval(match[1])) {
+				let incrementMatch=match[2].replace(/#loop0/,i);
+				subTemplate+=self.templateVars(incrementMatch);
+			}
+			template = template.replace(match[0], subTemplate);
+		}
+
+		const commandRegex=/{{(.*?)}}/;
 		while (match = commandRegex.exec(template)) {
-			console.log(match);
 			template = template.replace(match[0], self.varsParser(match[1]));
 		}
 		return template;
@@ -401,8 +414,10 @@ export default class Queue {
 				/*
 				 * Assign a pid
 				 */
-				self.queue[item].pid=self.pid;
-				self.pid++;
+				if(self.queue[item].pid===undefined) {
+					self.queue[item].pid = self.pid;
+					self.pid++;
+				}
 				/*
 				 * Check if any specific timing is needed
 				 */
@@ -417,6 +432,59 @@ export default class Queue {
 				}, self.queue[item].options.queueTimer);
 			}
 		}
+	}
+
+	/**
+	 * Find a queue item by searching for its PID
+	 * @param pid
+	 * @return {*}
+	 */
+	findQueueByPid(pid) {
+		for(let item in self.queue) {
+			if(self.queue[item].pid===pid) {
+				return self.queue[item];
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Called by queueables to add something to our memory stack
+	 * @param name
+	 * @param value
+	 * @param pid
+	 */
+	memory(pid,value,name) {
+		let self=this;
+		let command=this.findQueueByPid(pid);
+		if(command) {
+			let origin = name || command.queueable + '.' + command.command;
+			let mode = self.DEFINE.MEMORY_GARBAGE;
+			if (command.options.memory)
+				mode = command.options.memory;
+			let memoryDetails = {
+				pid: pid,
+				mode: mode,
+				origin: origin,
+				value: value
+			};
+			window.memory[origin] = memoryDetails;
+			return true;
+		} else {
+			this.reportError("Could not set memory","The memory set for pid ["+pid+"] could not be found");
+			return false;
+		}
+	}
+
+	cleanMemory(pid) {
+		let self=this;
+		for(let i in window.memory) {
+			if(window.memory[i].pid===pid&&window.memory[i].mode===self.DEFINE.MEMORY_GARBAGE) {
+				window.memory[i]={};
+				delete window.memory[i];
+			}
+		}
+
 	}
 
 	/**
@@ -465,9 +533,10 @@ export default class Queue {
 						self.queue[item].commands.shift();
 						/*
 						 *  Update the pid
+						 *  TODO remove this as queues need to maintain their Pid for memory
 						 */
-						self.queue[item].pid=self.pid;
-						self.pid++;
+						//self.queue[item].pid=self.pid;
+						//self.pid++;
 						self.queue[item].state = self.DEFINE.QUEUE_ADDED;
 						/*
 						 * Start the queue processor as we just posted a new command
@@ -475,6 +544,7 @@ export default class Queue {
 						self.queueProcess();
 					} else {
 						self.queue[item].state = self.DEFINE.QUEUE_FINISHED;
+						self.cleanMemory(self.queue[item].pid);
 					}
 					return;
 				} else {

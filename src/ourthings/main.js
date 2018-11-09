@@ -8,6 +8,7 @@ import Queue from './queue.js';
  */
 import Templates from './internals/templates.js';
 import Elements from './internals/elements.js';
+import Api from './internals/api.js';
 
 /**
  * On load initiate the queue object
@@ -25,6 +26,7 @@ window.onload = function() {
 	 */
 	window.queueables['templates']=new Templates();
 	window.queueables['elements']=new Elements();
+	window.queueables['api']=new Api();
 
 	queue = new Queue();
 

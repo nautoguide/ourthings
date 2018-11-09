@@ -21,6 +21,7 @@ export default class Templates extends Queueable {
 	 */
 	render(pid,json) {
 		let self=this;
+		self.set(pid,json);
 		if(!self.queue.templateProcessor(json.template,json.targetId))
 			self.finished(pid,self.queue.DEFINE.FIN_ERROR,'Could not render template');
 		else

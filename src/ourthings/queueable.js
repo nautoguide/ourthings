@@ -67,4 +67,9 @@ export default class Queueable {
 		let self=this;
 		self.queue.finished(pid,mode,error);
 	}
+
+	set(pid,value,name) {
+		let self=this;
+		self.queue.memory(pid,value,name);
+	}
 }
