@@ -594,22 +594,19 @@ class Queue {
 		commandObject.queueable=commandArray[0];
 		commandObject.command=commandArray[1];
 		// Strip as we go to make follow up regex easier
-		command=command.replace(/.*?\(/,'');
+		command=command.replace(/.*?\(/,'[');
 		// Find first json arg
 
-
-		let json=command.match(/(\{.*?\})]/);
-		command=command.replace(/\{.*?\}[,]{0,1}/,'');
-		if(command[1]) {
-			commandObject.json = JSON.parse(json[1]);
+		command=command.replace(/\);$/,']');
+		let jsonArray=JSON.parse(command);
+		if(jsonArray[0]) {
+			commandObject.json = jsonArray[0];
 		} else {
 			commandObject.json={};
 		}
-
-		// Find second json arg
-		let jsonOptions=command.match(/(\{.*?\})/);
-		if(Array.isArray(jsonOptions) && jsonOptions[1]) {
-			commandObject.options = JSON.parse(jsonOptions[1]);
+		
+		if(jsonArray[1]) {
+			commandObject.options = jsonArray[1];
 		} else {
 			commandObject.options={};
 		}
