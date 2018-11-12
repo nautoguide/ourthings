@@ -1,4 +1,4 @@
-/** @module Elements */
+/** @module ourthings/Queueable/Elements */
 import Queueable from "../Queueable";
 
 /**

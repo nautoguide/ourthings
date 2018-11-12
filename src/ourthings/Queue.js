@@ -1,6 +1,5 @@
-/** @module Queue */
+/** @module ourthings/Queue */
 import Define from './Define.js';
-
 
 /**
  * @classdesc
@@ -13,12 +12,12 @@ import Define from './Define.js';
  * // queue = new Queue();
  *
  */
-export default class Queue {
+class Queue {
 
 	/**
 	 * Class constructor
 	 */
-	constructor() {
+	constructor(queueablesList) {
 
 		self = this;
 
@@ -35,6 +34,11 @@ export default class Queue {
 		 */
 		self.queue = [];
 
+
+		/*
+		 * Queueable items object
+		 */
+		self.queueables={};
 		/*
 		 * Templates to be loaded
 		 * @type {Array}
@@ -79,9 +83,8 @@ export default class Queue {
 		 * starts any promise functions that will result in them becoming active
 		 */
 		console.log("[Queueables]");
-		for (let i in window.queueables) {
-			window.queueables[i].init(self);
-			console.log('-'+i);
+		for (let i in queueablesList) {
+			self.checkQueueable(i,queueablesList[i]);
 		}
 
 		/*
@@ -123,6 +126,26 @@ export default class Queue {
 			throw Error(response.statusText);
 		}
 		return response;
+	}
+
+	checkQueueable(name,obj) {
+		let self=this;
+		if(self.queueables[name]===undefined) {
+			self.queueables[name]=new obj();
+			self.queueables[name].init(self);
+			console.log('Booting Queueable ['+name+']');
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Helper function to upcase first letter of string
+	 * @param string
+	 * @return {string}
+	 */
+	capitalizeFirstLetter(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 
 	/**
@@ -406,7 +429,7 @@ export default class Queue {
 			 *
 			 *  Ensure the component is online
 			 */
-			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED&&window.queueables[self.queue[item].queueable].ready) {
+			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED&&self.queueables[self.queue[item].queueable].ready) {
 				/*
 				 * Update our state to be running
 				 */
@@ -428,7 +451,7 @@ export default class Queue {
 				 */
 
 				setTimeout(function () {
-					window.queueables[self.queue[item].queueable].start.apply(window.queueables[self.queue[item].queueable],[self.queue[item].pid,self.queue[item].command,self.queue[item].json,self]);
+					self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable],[self.queue[item].pid,self.queue[item].command,self.queue[item].json,self]);
 				}, self.queue[item].options.queueTimer);
 			}
 		}
@@ -695,3 +718,5 @@ export default class Queue {
 	}
 
 }
+
+export default Queue;
