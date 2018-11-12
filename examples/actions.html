@@ -6,7 +6,16 @@
 
 <script id="basic" type="text/html">
 	Very basic template
-	<div id="myButton" class="button" @elements.addClass({"targetId":"#myButton","class":"active"});>
-		Example of button {{Math.round(window.queue.status+10);}}
+	<div id="myButton" class="button" @api.get({"url":"https://api.openbrewerydb.org/breweries"});>
+		-templates.render({"targetId":"#results","template":"#displayResults"});
+		Example of API call to get breweries
 	</div>
+	<div id="results"></div>
 </script>
+
+<script id="displayResults" type="text/html">
+	{{#for window.memory['api.get'].value}}
+		{{window.memory['api.get'].value[#loop0].name}}
+	{{/for}}
+</script>
+

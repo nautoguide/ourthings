@@ -37,11 +37,16 @@ to that function and you do this by sending some json in which the function will
 delaying execution, running instantly or waiting for the user to hit a button see the command options sections
 for a list of these</p>
 </body>
-<h2>Command Options</h2>
+<h4>Command Options</h4>
 <ul>
 	<li><span class="arg">queueRun</span> Instant|Event|Sub</li>
 	<li><span class="arg">queueTimer</span> Delay run in ms, default is 10</li>
 </ul>
+<h3>Template Commands</h3>
+<p>Ourthings supports a standard template of {{something}} that allows the execution of javascript
+to place values in the page. This format can used in two ways.</p>
+<p>1. Placing values in a rendered template at render time EG {{window.foo}} will output the value window.foo</p>
+<p>2. Passing values to argument lists in queueables at command execution time</p>
 </html>
 
 

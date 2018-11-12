@@ -1,5 +1,5 @@
 /** @module Elements */
-import Queueable from "../queueable";
+import Queueable from "../Queueable";
 
 /**
  * @classdesc
@@ -22,6 +22,8 @@ export default class Elements extends Queueable {
 	addClass(pid,json) {
 		let self=this;
 		let element=self.queue.getElement(json.targetId);
+		self.set(pid,json);
+
 		if(element!==false) {
 			element.classList.add(json.class);
 			self.finished(pid,self.queue.DEFINE.FIN_OK);

@@ -104,7 +104,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line16">line 16</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line16">line 16</a>
     </li></ul></dd>
     
 
@@ -267,7 +267,7 @@ TODO no concept of the context of the command IE was it from inside a div that n
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line458">line 458</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line566">line 566</a>
     </li></ul></dd>
     
 
@@ -415,7 +415,7 @@ TODO no concept of the context of the command IE was it from inside a div that n
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line296">line 296</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line347">line 347</a>
     </li></ul></dd>
     
 
@@ -546,7 +546,7 @@ marked as instant. IE ready to execute
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line327">line 327</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line378">line 378</a>
     </li></ul></dd>
     
 
@@ -676,7 +676,7 @@ marked as instant. IE ready to execute
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line585">line 585</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line693">line 693</a>
     </li></ul></dd>
     
 
@@ -711,6 +711,154 @@ marked as instant. IE ready to execute
     <dd>
         
 <span class="param-type">any</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findQueueByPid"><span class="type-signature"></span>findQueueByPid<span class="signature">(pid)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Find a queue item by searching for its PID
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pid</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line442">line 442</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
 
 
     </dd>
@@ -844,7 +992,7 @@ marked as instant. IE ready to execute
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line392">line 392</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line498">line 498</a>
     </li></ul></dd>
     
 
@@ -974,7 +1122,7 @@ marked as instant. IE ready to execute
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line518">line 518</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line626">line 626</a>
     </li></ul></dd>
     
 
@@ -1130,7 +1278,7 @@ marked as instant. IE ready to execute
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line116">line 116</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line120">line 120</a>
     </li></ul></dd>
     
 
@@ -1171,6 +1319,172 @@ marked as instant. IE ready to execute
 </dl>
 
     
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="memory"><span class="type-signature"></span>memory<span class="signature">(name, value, pid)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Called by queueables to add something to our memory stack
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>pid</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line457">line 457</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1296,7 +1610,7 @@ marked as instant. IE ready to execute
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line548">line 548</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line656">line 656</a>
     </li></ul></dd>
     
 
@@ -1384,7 +1698,7 @@ This launches the actual objects using a timeout
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line346">line 346</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line397">line 397</a>
     </li></ul></dd>
     
 
@@ -1565,7 +1879,7 @@ This launches the actual objects using a timeout
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line502">line 502</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line610">line 610</a>
     </li></ul></dd>
     
 
@@ -1731,7 +2045,7 @@ This launches the actual objects using a timeout
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line574">line 574</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line682">line 682</a>
     </li></ul></dd>
     
 
@@ -1817,7 +2131,7 @@ This launches the actual objects using a timeout
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line530">line 530</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line638">line 638</a>
     </li></ul></dd>
     
 
@@ -1903,7 +2217,7 @@ This launches the actual objects using a timeout
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line128">line 128</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line132">line 132</a>
     </li></ul></dd>
     
 
@@ -1955,7 +2269,7 @@ This launches the actual objects using a timeout
     
 
     
-    <h4 class="name" id="templatePharse"><span class="type-signature"></span>templatePharse<span class="signature">(template)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="templateParse"><span class="type-signature"></span>templateParse<span class="signature">(template)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
 
     
@@ -2057,7 +2371,7 @@ ready to be put into the dom
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line233">line 233</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line284">line 284</a>
     </li></ul></dd>
     
 
@@ -2237,7 +2551,7 @@ Takes a template, process it and places into the dom
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="queue.js.html">queue.js</a>, <a href="queue.js.html#line201">line 201</a>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line205">line 205</a>
     </li></ul></dd>
     
 
@@ -2288,6 +2602,306 @@ Takes a template, process it and places into the dom
 
 
         
+            
+
+    
+
+    
+    <h4 class="name" id="templateVars"><span class="type-signature"></span>templateVars<span class="signature">(template)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Process the template looking for {{}} instances
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>template</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line244">line 244</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="varsParser"><span class="type-signature"></span>varsParser<span class="signature">(parseString)</span><span class="type-signature"> &rarr; {any}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    parse a var string
+
+TODO This is massively insecure. If as user can input {{}} into a form and have it displayed
+to other users they can take over. We either clean all input as you would with <script> etc tags or we
+manually write a parser.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>parseString</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Queue.js.html">Queue.js</a>, <a href="Queue.js.html#line273">line 273</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">any</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
     
 
     
@@ -2303,13 +2917,13 @@ Takes a template, process it and places into the dom
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Define.html">Define</a></li><li><a href="module-Elements.html">Elements</a></li><li><a href="module-Queue.html">Queue</a></li><li><a href="module-Queueable.html">Queueable</a></li><li><a href="module-Templates.html">Templates</a></li></ul><h3>Classes</h3><ul><li><a href="module-Define.html">Define</a></li><li><a href="module-Elements.html">Elements</a></li><li><a href="module-Queue.html">Queue</a></li><li><a href="module-Queueable.html">Queueable</a></li><li><a href="module-Templates.html">Templates</a></li></ul><h3>Global</h3><ul><li><a href="global.html#queue">queue</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Api.html">Api</a></li><li><a href="module-Define.html">Define</a></li><li><a href="module-Elements.html">Elements</a></li><li><a href="module-Queue.html">Queue</a></li><li><a href="module-Queueable.html">Queueable</a></li><li><a href="module-Templates.html">Templates</a></li></ul><h3>Classes</h3><ul><li><a href="module-Api.html">Api</a></li><li><a href="module-Define.html">Define</a></li><li><a href="module-Elements.html">Elements</a></li><li><a href="module-Queue.html">Queue</a></li><li><a href="module-Queueable.html">Queueable</a></li><li><a href="module-Templates.html">Templates</a></li></ul><h3>Global</h3><ul><li><a href="global.html#queue">queue</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Nov 06 2018 15:49:58 GMT+0000 (Greenwich Mean Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Nov 12 2018 09:31:51 GMT+0000 (Greenwich Mean Time)
 </footer>
 
 <script> prettyPrint(); </script>
