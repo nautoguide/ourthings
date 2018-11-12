@@ -596,7 +596,9 @@ class Queue {
 		// Strip as we go to make follow up regex easier
 		command=command.replace(/.*?\(/,'');
 		// Find first json arg
-		let json=command.match(/(\{.*?\})/);
+
+
+		let json=command.match(/(\{.*?\})]/);
 		command=command.replace(/\{.*?\}[,]{0,1}/,'');
 		if(command[1]) {
 			commandObject.json = JSON.parse(json[1]);

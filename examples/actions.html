@@ -2,6 +2,9 @@
 	<!-- init is always run automatically on startup -->
 	@templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});
 	 -elements.addClass({"targetId":"#content","class":"highlight"});
+	 -openlayers.addMap({});
+	 -openlayers.addLayer({"name":"osm","type":"osm"});
+	 -openlayers.addLayer({"name":"data","type":"vector"});
 </script>
 
 <script id="basic" type="text/html">
@@ -16,6 +19,7 @@
 <script id="displayResults" type="text/html">
 	{{#for window.memory['api.get'].value}}
 		{{window.memory['api.get'].value[#loop0].name}}
+		@openlayers.addFeature({"layer":"data","geometry":"{{window.memory['api.get'].value[#loop0].latitude}},{{window.memory['api.get'].value[#loop0].longitude}}"},{"queueRun":"Instant"});
 	{{/for}}
 </script>
 
