@@ -1,4 +1,4 @@
-/** @module Queueable */
+/** @module ourthings/Queueable */
 
 /**
  * @classdesc
@@ -11,7 +11,7 @@
  * // queue = new Queue();
  *
  */
-export default class Queueable {
+class Queueable {
 
 	/**
 	 * Constructor, Sets our status to be false (flipped on init)
@@ -73,3 +73,5 @@ export default class Queueable {
 		self.queue.memory(pid,value,name);
 	}
 }
+
+export default Queueable;

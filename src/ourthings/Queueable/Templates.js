@@ -1,4 +1,4 @@
-/** @module Templates */
+/** @module ourthings/Queueable/Templates */
 import Queueable from "../Queueable";
 
 /**
@@ -12,7 +12,7 @@ import Queueable from "../Queueable";
  * // @templates.render({"targetId":"content","template":"basic"},{"queueRun":"Instant"});
  *
  */
-export default class Templates extends Queueable {
+class Templates extends Queueable {
 
 	/**
 	 * Render a template into the dom using the queues templateProcessor
@@ -28,3 +28,5 @@ export default class Templates extends Queueable {
 			self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 }
+
+export default Templates;
