@@ -1,5 +1,5 @@
 /** @module Elements */
-import Queueable from "../queueable";
+import Queueable from "../Queueable";
 
 /**
  * @classdesc

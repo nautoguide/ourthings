@@ -1,5 +1,5 @@
 /** @module Queue */
-import Define from './define.js';
+import Define from './Define.js';
 
 
 /**

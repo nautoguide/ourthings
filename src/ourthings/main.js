@@ -1,4 +1,4 @@
-import Queue from './queue.js';
+import Queue from './Queue';
 
 /**
  *  Import all the queueables we want to use here. Make sure to add an entry to window.queueables bellow to
@@ -6,9 +6,9 @@ import Queue from './queue.js';
  *
  *  TODO Figure a way to get list of imported queuaables from webpack (plugin?)
  */
-import Templates from './internals/templates.js';
-import Elements from './internals/elements.js';
-import Api from './internals/api.js';
+import Templates from './internals/Templates';
+import Elements from './internals/Elements';
+import Api from './internals/Api';
 
 /**
  * On load initiate the queue object
