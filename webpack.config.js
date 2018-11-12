@@ -6,7 +6,7 @@ module.exports = {
 	entry: ['babel-polyfill', path.resolve(__dirname, 'src/ourthings/main.js')],
 	output: {
 		path: path.resolve(__dirname, 'build'),
-		filename: 'bundle.js'
+		filename: 'webpackbabel.js'
 	},
 	module: {
 		rules: [

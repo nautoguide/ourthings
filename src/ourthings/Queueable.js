@@ -1,4 +1,4 @@
-/** @module Queueable */
+/** @module ourthings/Queueable */
 
 /**
  * @classdesc
@@ -11,7 +11,7 @@
  * // queue = new Queue();
  *
  */
-export default class Queueable {
+class Queueable {
 
 	/**
 	 * Constructor, Sets our status to be false (flipped on init)
@@ -42,6 +42,15 @@ export default class Queueable {
 	start(pid,command,json) {
 		let self=this;
 		if(self[command]&&typeof self[command] === 'function') {
+
+			/*
+			 * Pass the json through the var processor
+			 */
+
+			json=JSON.parse(self.queue.templateVars(JSON.stringify(json)));
+			/*
+			 * Execute
+			 */
 			self[command](pid, json);
 		} else {
 			self.queue.finished(pid,self.queue.DEFINE.FIN_ERROR,'No such command ['+command+']');
@@ -58,4 +67,11 @@ export default class Queueable {
 		let self=this;
 		self.queue.finished(pid,mode,error);
 	}
+
+	set(pid,value,name) {
+		let self=this;
+		self.queue.memory(pid,value,name);
+	}
 }
+
+export default Queueable;

@@ -1,5 +1,5 @@
-/** @module Templates */
-import Queueable from "../queueable";
+/** @module ourthings/Queueable/Templates */
+import Queueable from "../Queueable";
 
 /**
  * @classdesc
@@ -12,7 +12,7 @@ import Queueable from "../queueable";
  * // @templates.render({"targetId":"content","template":"basic"},{"queueRun":"Instant"});
  *
  */
-export default class Templates extends Queueable {
+class Templates extends Queueable {
 
 	/**
 	 * Render a template into the dom using the queues templateProcessor
@@ -21,9 +21,12 @@ export default class Templates extends Queueable {
 	 */
 	render(pid,json) {
 		let self=this;
+		self.set(pid,json);
 		if(!self.queue.templateProcessor(json.template,json.targetId))
 			self.finished(pid,self.queue.DEFINE.FIN_ERROR,'Could not render template');
 		else
 			self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 }
+
+export default Templates;

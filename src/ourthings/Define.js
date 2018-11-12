@@ -53,6 +53,10 @@ export default class Define {
 		this.FIN_WARNING = 1;
 		this.FIN_ERROR = 2;
 
+		this.MEMORY_GARBAGE="Garbage";
+		this.MEMORY_SESSION="Session";
+		this.MEMORY_PERMANENT="Permanent";
+
 		/**
 		 *  Console outputs
 		 */
