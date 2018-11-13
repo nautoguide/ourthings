@@ -15,7 +15,11 @@
 	</button>
 	<h2>Display the results here</h2>
 	<div id="results"></div>
-	<div id="info"></div>
+	<div id="info">{{#include #noInfo}}</div>
+</script>
+
+<script id="noInfo" type="text/html">
+	No info
 </script>
 
 <script id="displayResults" type="text/html">

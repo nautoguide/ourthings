@@ -223,7 +223,7 @@ class Queue {
 	 * Takes a template, process it and places into the dom
 	 * @param templateId {string} - ID of the template
 	 * @param targetId {string|false} - Place in the dom the put the result. In the event of false we process without dom
-	 * @return {boolean} - success status
+	 * @return {boolean|string} - success status
 	 */
 	templateProcessor(templateId, targetId) {
 		let self=this;
@@ -248,7 +248,8 @@ class Queue {
 		 */
 		parsedTemplate=self.templateParse(parsedTemplate,commands);
 
-
+		if(targetId==="return")
+			return parsedTemplate;
 
 
 		if(targetId!==false) {
@@ -260,6 +261,7 @@ class Queue {
 			self.renderToDom(targetDom,parsedTemplate);
 			self.commandsBind(commands);
 		}
+
 		return true;
 	}
 
@@ -284,6 +286,14 @@ class Queue {
 				subTemplate+=self.templateVars(incrementMatch);
 			}
 			template = template.replace(match[0], subTemplate);
+		}
+
+		/*
+		 * Look for any includes to directly inject templates
+		 */
+		const includeRegex=/{{#include (.*?)}}/;
+		while (match = includeRegex.exec(template)) {
+			template = template.replace(match[0], self.templateProcessor(match[1],"return"));
 		}
 
 		const commandRegex=/{{([^!].*?)}}/;
