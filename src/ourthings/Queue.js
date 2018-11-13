@@ -286,13 +286,27 @@ class Queue {
 			template = template.replace(match[0], subTemplate);
 		}
 
-		const commandRegex=/{{(.*?)}}/;
+		const commandRegex=/{{([^!].*?)}}/;
 		while (match = commandRegex.exec(template)) {
 			template = template.replace(match[0], self.varsParser(match[1]));
 		}
 		return template;
 	}
 
+	/**
+	 * Process a json object and replace {{!}} tags
+	 * @param json
+	 * @return {any}
+	 */
+	jsonVars(json) {
+		json=JSON.stringify(json);
+		const commandRegex=/{{!(.*?)}}/;
+		let match;
+		while (match = commandRegex.exec(json)) {
+			json = json.replace(match[0], self.varsParser(match[1]));
+		}
+		return JSON.parse(json);
+	}
 	/**
 	 * parse a var string
 	 *
@@ -448,7 +462,7 @@ class Queue {
 				 */
 
 				setTimeout(function () {
-					self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable],[self.queue[item].pid,self.queue[item].command,self.queue[item].json,self]);
+					self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable],[self.queue[item].pid,self.queue[item].command,self.jsonVars(self.queue[item].json),self]);
 				}, self.queue[item].options.queueTimer);
 			}
 		}

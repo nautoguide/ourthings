@@ -21,7 +21,7 @@
 <script id="displayResults" type="text/html">
 	{{#for memory.breweries.value}}
 		<button @templates.render({"targetId":"#info","template":"#displayInfo","id":"#loop0"});>{{memory.breweries.value[#loop0].name}}</button>
-		@openlayers.addFeature({"layer":"data","geometry":"SRID=4326;POINT({{memory.breweries.value[#loop0].longitude}} {{memory.breweries.value[#loop0].latitude}})"},{"queueRun":"Instant"});
+		@openlayers.addFeature({"layer":"data","geometry":"SRID=4326;POINT({{!memory.breweries.value[#loop0].longitude}} {{!memory.breweries.value[#loop0].latitude}})"},{"queueRun":"Instant"});
 	{{/for}}
 </script>
 
