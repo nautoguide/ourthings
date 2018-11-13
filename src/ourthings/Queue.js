@@ -474,14 +474,14 @@ class Queue {
 	 * @param value
 	 * @param pid
 	 */
-	memory(pid,value,name) {
+	memory(pid,value) {
 		let self=this;
 		let command=this.findQueueByPid(pid);
 		if(command) {
-			let origin = name || command.queueable + '.' + command.command;
+			let origin = command.options.memoryName || command.queueable + '.' + command.command;
 			let mode = self.DEFINE.MEMORY_GARBAGE;
-			if (command.options.memory)
-				mode = command.options.memory;
+			if (command.options.memoryMode)
+				mode = command.options.memoryMode;
 			let memoryDetails = {
 				pid: pid,
 				mode: mode,

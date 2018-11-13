@@ -9,18 +9,23 @@
 
 <script id="basic" type="text/html">
 	<h1>Get a List of breweries from open API and plot the results</h1>
-	<button id="myButton" @api.get({"url":"https://api.openbrewerydb.org/breweries"});>
+	<button id="myButton" @api.get({"url":"https://api.openbrewerydb.org/breweries"},{"memoryMode":"Session","memoryName":"breweries"});>
 		-templates.render({"targetId":"#results","template":"#displayResults"});
 		Call the API
 	</button>
 	<h2>Display the results here</h2>
 	<div id="results"></div>
+	<div id="info"></div>
 </script>
 
 <script id="displayResults" type="text/html">
-	{{#for window.memory['api.get'].value}}
-		<button>{{window.memory['api.get'].value[#loop0].name}}</button>
-		@openlayers.addFeature({"layer":"data","geometry":"SRID=4326;POINT({{window.memory['api.get'].value[#loop0].longitude}} {{window.memory['api.get'].value[#loop0].latitude}})"},{"queueRun":"Instant"});
+	{{#for memory.breweries.value}}
+		<button @templates.render({"targetId":"#info","template":"#displayInfo","id":"#loop0"});>{{memory.breweries.value[#loop0].name}}</button>
+		@openlayers.addFeature({"layer":"data","geometry":"SRID=4326;POINT({{memory.breweries.value[#loop0].longitude}} {{memory.breweries.value[#loop0].latitude}})"},{"queueRun":"Instant"});
 	{{/for}}
 </script>
 
+<script id="displayInfo" type="text/html">
+	Name - {{memory.breweries.value[memory['templates.render'].value.id].name}}
+	City - {{memory.breweries.value[memory['templates.render'].value.id].city}}
+</script>
