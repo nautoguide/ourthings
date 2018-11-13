@@ -8,18 +8,19 @@
 </script>
 
 <script id="basic" type="text/html">
-	Very basic template
-	<div id="myButton" class="button" @api.get({"url":"https://api.openbrewerydb.org/breweries"});>
+	<h1>Get a List of breweries from open API and plot the results</h1>
+	<button id="myButton" @api.get({"url":"https://api.openbrewerydb.org/breweries"});>
 		-templates.render({"targetId":"#results","template":"#displayResults"});
-		Example of API call to get breweries
-	</div>
+		Call the API
+	</button>
+	<h2>Display the results here</h2>
 	<div id="results"></div>
 </script>
 
 <script id="displayResults" type="text/html">
 	{{#for window.memory['api.get'].value}}
-		{{window.memory['api.get'].value[#loop0].name}}
-		@openlayers.addFeature({"layer":"data","geometry":"{{window.memory['api.get'].value[#loop0].latitude}},{{window.memory['api.get'].value[#loop0].longitude}}"},{"queueRun":"Instant"});
+		<button>{{window.memory['api.get'].value[#loop0].name}}</button>
+		@openlayers.addFeature({"layer":"data","geometry":"SRID=4326;POINT({{window.memory['api.get'].value[#loop0].longitude}} {{window.memory['api.get'].value[#loop0].latitude}})"},{"queueRun":"Instant"});
 	{{/for}}
 </script>
 

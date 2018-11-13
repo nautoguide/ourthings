@@ -6,6 +6,7 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import OSM from 'ol/source/OSM';
 import WKT from 'ol/format/WKT';
+import {fromLonLat,units,epsg3857,epsg4326} from 'ol/proj';
 
 /**
  * @classdesc

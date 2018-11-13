@@ -237,14 +237,18 @@ class Queue {
 		let targetDom=undefined;
 		let templateHTML = templateDom.innerHTML;
 		/*
-		 * Pass to the templateParse to build our commands
+		 * Pass all out tags {{ }} First
+		 *
+		 * TODO we need to split this so only loop etc is done first, then pass to templateParse then parse
+		 * out {{eval}} when the command queues are gone to prevent executing too early
 		 */
-		let parsedTemplate=self.templateParse(templateHTML,commands);
-
+		let parsedTemplate=self.templateVars(templateHTML);
 		/*
-		 * Now we pass any var tags {{ }}
+		 * now pass to the templateParse to build our commands
 		 */
-		parsedTemplate=self.templateVars(parsedTemplate);
+		parsedTemplate=self.templateParse(parsedTemplate,commands);
+
+
 
 
 		if(targetId!==false) {
@@ -267,10 +271,16 @@ class Queue {
 	templateVars(template) {
 		const forRegex=/{{#for (.*?)}}([\s\S]*?){{\/for}}/;
 		let match=undefined;
+		/*
+		 * Look for {{for}} loops and execute them
+		 */
 		while (match = forRegex.exec(template)) {
 			let subTemplate='';
+			/*
+			 * loop through making sub templates as we go
+			 */
 			for(let i in eval(match[1])) {
-				let incrementMatch=match[2].replace(/#loop0/,i);
+				let incrementMatch=match[2].replace(/#loop0/g,i);
 				subTemplate+=self.templateVars(incrementMatch);
 			}
 			template = template.replace(match[0], subTemplate);
@@ -305,7 +315,7 @@ class Queue {
 	 * @return {string}
 	 */
 	templateParse(template,commands) {
-		let commandRegex=/[@\-](.*?\);)/;
+		let commandRegex=/[@\-](.*\);)/;
 		let match=undefined;
 		let parentCommand;
 		let isParent;
@@ -334,19 +344,6 @@ class Queue {
 			if(isParent) {
 				// Set the parent point to current position
 				parentCommand=commands.length;
-				/*
-				 *  Is this an event (in which case we need to bind events later). We know this use case because an
-				 *  event will not be instant and it will be a parent
-				 */
-				if(command.options.queueRun!==self.DEFINE.COMMAND_INSTANT) {
-					/*
-					 *  We need to re-extract the command from the template and find the HTML element that this
-					 *  belongs to
-					 *
-					 *  TODO Stub for now as we need to get a working queue first
-					 */
-					//let elementMatch=template.match(//)
-				}
 
 				commands.push(command);
 			} else {
@@ -597,7 +594,7 @@ class Queue {
 		command=command.replace(/.*?\(/,'[');
 		// Find first json arg
 
-		command=command.replace(/\);$/,']');
+		command=command.replace(/\);$/m,']');
 		let jsonArray=JSON.parse(command);
 		if(jsonArray[0]) {
 			commandObject.json = jsonArray[0];
