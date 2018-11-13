@@ -271,11 +271,23 @@ class Queue {
 	 * @return {*}
 	 */
 	templateVars(template) {
-		const forRegex=/{{#for (.*?)}}([\s\S]*?){{\/for}}/;
-		let match=undefined;
+		let match;
+
 		/*
-		 * Look for {{for}} loops and execute them
+		 * Process {{#if}}
 		 */
+		const ifRegex=/{{#if (.*?)}}([\s\S]*?){{\/if}}/;
+		while (match = ifRegex.exec(template)) {
+			if (eval(match[1]))
+				template = template.replace(match[0], self.templateVars(match[2]));
+			else
+				template = template.replace(match[0], '');
+		}
+
+		/*
+		 * Look for {{#for}} loops and execute them
+		 */
+		const forRegex=/{{#for (.*?)}}([\s\S]*?){{\/for}}/;
 		while (match = forRegex.exec(template)) {
 			let subTemplate='';
 			/*
@@ -296,6 +308,9 @@ class Queue {
 			template = template.replace(match[0], self.templateProcessor(match[1],"return"));
 		}
 
+		/*
+		 * Process any other {{}} tags but not if they have {{!}} as those are done on command exec time
+		 */
 		const commandRegex=/{{([^!].*?)}}/;
 		while (match = commandRegex.exec(template)) {
 			template = template.replace(match[0], self.varsParser(match[1]));
