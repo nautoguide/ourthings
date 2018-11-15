@@ -33,6 +33,11 @@ class Queue {
 		 */
 		self.queue = [];
 
+		/*
+		 * Our events (queues) which can be called by name
+		 */
+		self.prepare = {};
+
 
 		/*
 		 * Queueable items object
@@ -436,15 +441,50 @@ class Queue {
 	commandsQueue(commandObj) {
 		let self=this;
 		for(let command in commandObj) {
+			/*
+			 * DEFINE.COMMAND_INSTANT, basically a queue item we need to get running
+			 */
 			if(commandObj[command].options.queueRun===self.DEFINE.COMMAND_INSTANT) {
-				let dereference=self.deepCopy(commandObj[command])
-				self.queue.push(dereference);
+				self.queue.push(self.deepCopy(commandObj[command]));
+			}
+			/*
+			 * Is the a prepare queue that will be triggered at some later stage
+			 */
+			if(commandObj[command].options.queuePrepare!== undefined) {
+				self.prepare[commandObj[command].options.queuePrepare]=self.deepCopy(commandObj[command]);
+				console.log('Added Prepared Queue ['+commandObj[command].options.queuePrepare+']');
 			}
 		}
 		/*
 		 *  Trigger a queue process
 		 */
 		self.queueProcess();
+	}
+
+	/**
+	 * Execute a queue that is loaded into prepare
+	 *
+	 * @param prepareName {string} Name of the prepared queue
+	 * @param json {object}
+	 */
+	execute(prepareName,json) {
+		let self=this;
+		if(self.prepare[prepareName]!==undefined) {
+			/*
+			 * Take a copy of the prepared command as we need to alter it
+			 * and possibly pass new params then add it to the queue
+			 */
+			let dereferenceCommand=self.deepCopy(self.prepare[prepareName]);
+			dereferenceCommand.options.queueRun=self.DEFINE.COMMAND_INSTANT;
+			if(json!==undefined)
+				dereferenceCommand.json=json;
+			self.commandsQueue.apply(self,[[dereferenceCommand]]);
+			return true;
+		} else {
+			self.reportError("Can not execute prepare ["+prepareName+"]","The prepared queue you requested does not exist");
+			return false;
+		}
+
 	}
 
 	/**

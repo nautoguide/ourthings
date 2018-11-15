@@ -5,12 +5,14 @@
 	 -openlayers.addMap({});
 	 -openlayers.addLayer({"name":"osm","type":"osm"});
 	 -openlayers.addLayer({"name":"data","type":"vector"});
+
+	@api.get({"url":"https://api.openbrewerydb.org/breweries"},{"memoryMode":"Session","memoryName":"breweries","queuePrepare":"getList"});>
+	 -templates.render({"targetId":"#results","template":"#displayResults"});
 </script>
 
 <script id="basic" type="text/html">
 	<h1>Get a List of breweries from open API and plot the results</h1>
-	<button id="myButton" @api.get({"url":"https://api.openbrewerydb.org/breweries"},{"memoryMode":"Session","memoryName":"breweries"});>
-		-templates.render({"targetId":"#results","template":"#displayResults"});
+	<button id="myButton" @internals.execute({"name":"getList"});>
 		Call the API
 	</button>
 	<h2>Display the results here</h2>
