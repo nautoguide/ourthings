@@ -1,0 +1,9 @@
+{
+  "source": "./src/ourthings/",
+  "destination": "./docs/api/",
+  "plugins": [
+    {
+      "name": "esdoc-standard-plugin"
+    }
+  ]
+}

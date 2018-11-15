@@ -1,5 +1,47 @@
-/** @module ourthings/Queue */
-import Define from './Define.js';
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">ourthings/queue.js | ourthings</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/queue.js~Queue.html">Queue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/queueable.js~Queueable.html">Queueable</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#internals">internals</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/internals/elements.js~Elements.html">Elements</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/internals/templates.js~Templates.html">Templates</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">ourthings/queue.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module Queue */
+import Define from &apos;./define.js&apos;;
+
 
 /**
  * @classdesc
@@ -11,12 +53,12 @@ import Define from './Define.js';
  * @example
  * let queue = new Queue();
  */
-class Queue {
+export default class Queue {
 
 	/**
 	 * Class constructor
 	 */
-	constructor(queueablesList) {
+	constructor() {
 
 		self = this;
 
@@ -33,11 +75,6 @@ class Queue {
 		 */
 		self.queue = [];
 
-
-		/*
-		 * Queueable items object
-		 */
-		self.queueables={};
 		/*
 		 * Templates to be loaded
 		 * @type {Array}
@@ -73,7 +110,7 @@ class Queue {
 
 		console.clear();
 		console.info(self.DEFINE.CONSOLE_LINE);
-		console.info('ourthings framework https://github.com/nautoguide/ourthings');
+		console.info(&apos;ourthings framework https://github.com/nautoguide/ourthings&apos;);
 
 		/*
 		 * Run init against all our queueables
@@ -81,36 +118,33 @@ class Queue {
 		 * This basically passes the queue object (self) though but also for any queueables that require it
 		 * starts any promise functions that will result in them becoming active
 		 */
-		console.log("[Queueables]");
-		for (let i in queueablesList) {
-			self.checkQueueable(i,queueablesList[i]);
+		console.log(&quot;[Queueables]&quot;);
+		for (let i in window.queueables) {
+			window.queueables[i].init(self);
+			console.log(&apos;-&apos;+i);
 		}
 
 		/*
-		 * Initialise the memory
-		 */
-		window.memory={};
-		/*
 		 * Load the templates.json
 		 */
-		fetch('templates.json', {
+		fetch(&apos;templates.json&apos;, {
 			headers: {
-				'Content-Type': 'application/json'
+				&apos;Content-Type&apos;: &apos;application/json&apos;
 			}
 		})
-			.then(response => self.handleFetchErrors(response))
-			.then(response => response.json() )
+			.then(response =&gt; self.handleFetchErrors(response))
+			.then(response =&gt; response.json() )
 			.then(function (response) {
 				/**
-				 * Convert the response to json and start the loader
+				 * Conver the response to json and start the loader
 				 */
 				self.templates = response;
 				self.templateLoader();
 			})
 			.catch(function (error) {
 				console.info(self.DEFINE.CONSOLE_LINE);
-				console.error('Error:', error);
-				console.info("Warning this error is probably fatal as I have no templates to load")
+				console.error(&apos;Error:&apos;, error);
+				console.info(&quot;Warning this error is probably fatal as I have no templates to load&quot;)
 			});
 	}
 
@@ -125,26 +159,6 @@ class Queue {
 			throw Error(response.statusText);
 		}
 		return response;
-	}
-
-	checkQueueable(name,obj) {
-		let self=this;
-		if(self.queueables[name]===undefined) {
-			self.queueables[name]=new obj();
-			self.queueables[name].init(self);
-			console.log('Booting Queueable ['+name+']');
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Helper function to upcase first letter of string
-	 * @param string
-	 * @return {string}
-	 */
-	capitalizeFirstLetter(string) {
-		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 
 	/**
@@ -170,11 +184,11 @@ class Queue {
 			 *  TODO once queue generation is working this this pushing to the queue
 			 *  As currently this is a chain of promises and so everything will error trap back to the loader
 			 */
-			self.templateProcessor("#init",false);
+			self.templateProcessor(&quot;#init&quot;,false);
 			self.status=self.DEFINE.STATUS_RUNNING;
 			console.info(self.DEFINE.CONSOLE_LINE);
-			console.log('[Online]');
-			console.log('queue.show(); # To debug the queue');
+			console.log(&apos;[Online]&apos;);
+			console.log(&apos;queue.show(); # To debug the queue&apos;);
 			return;
 		}
 
@@ -185,24 +199,24 @@ class Queue {
 
 		fetch(template, {
 			headers: {
-				'Content-Type': 'test/html'
+				&apos;Content-Type&apos;: &apos;test/html&apos;
 			}
 		})
-			.then(response => self.handleFetchErrors(response))
-			.then(response => response.text())
+			.then(response =&gt; self.handleFetchErrors(response))
+			.then(response =&gt; response.text())
 			.then(function (response) {
 
 				/*
 				 * Get the template we were sent and add it to the fragment for insertion into the dom
 				 *
 				 * We wrap it in meta tag, this helps improve render speed but still stuck with an innerHTML
-				 * as we don't know the content
+				 * as we don&apos;t know the content
 				 *
 				 */
 				let text = response;
-				let meta = document.createElement('meta');
-				meta.setAttribute("name", "generator");
-				meta.setAttribute("content", template);
+				let meta = document.createElement(&apos;meta&apos;);
+				meta.setAttribute(&quot;name&quot;, &quot;generator&quot;);
+				meta.setAttribute(&quot;content&quot;, template);
 				meta.innerHTML=text;
 				self.fragment.appendChild(meta);
 
@@ -212,8 +226,8 @@ class Queue {
 				self.templateLoader();
 			})
 			.catch(function (error) {
-				console.error('Error:', error);
-				console.info("Warning this error is probably fatal as a template specified in templates.json has failed to load or wont process");
+				console.error(&apos;Error:&apos;, error);
+				console.info(&quot;Warning this error is probably fatal as a template specified in templates.json has failed to load or wont process&quot;);
 			});
 	};
 
@@ -222,7 +236,7 @@ class Queue {
 	 * Takes a template, process it and places into the dom
 	 * @param templateId {string} - ID of the template
 	 * @param targetId {string|false} - Place in the dom the put the result. In the event of false we process without dom
-	 * @return {boolean|string} - success status
+	 * @return {boolean} - success status
 	 */
 	templateProcessor(templateId, targetId) {
 		let self=this;
@@ -230,37 +244,31 @@ class Queue {
 
 		let templateDom = self.getElement(templateId);
 		if(!templateDom) {
-			self.reportError('No valid template','I have no valid template, check the templateId ['+templateId+']');
+			self.reportError(&apos;No valid template&apos;,&apos;I have no valid template, check the templateId [&apos;+templateId+&apos;]&apos;);
 			return false;
 		}
 		let targetDom=undefined;
 		let templateHTML = templateDom.innerHTML;
 		/*
-		 * Pass all out tags {{ }} First
-		 *
-		 * TODO we need to split this so only loop etc is done first, then pass to templateParse then parse
-		 * out {{eval}} when the command queues are gone to prevent executing too early
+		 * Pass to the templateParse to build our commands
 		 */
-		let parsedTemplate=self.templateVars(templateHTML);
-		/*
-		 * now pass to the templateParse to build our commands
-		 */
-		parsedTemplate=self.templateParse(parsedTemplate,commands);
+		let parsedTemplate=self.templateParse(templateHTML,commands);
 
-		if(targetId==="return")
-			return parsedTemplate;
+		/*
+		 * Now we pass any var tags {{ }}
+		 */
+		parsedTemplate=self.templateVars(parsedTemplate);
 
 
 		if(targetId!==false) {
 			targetDom=self.getElement(targetId);
 			if(!targetDom) {
-				self.reportError('No valid target','I have no valid target to render the template to, check the targetId ['+targetId+']');
+				self.reportError(&apos;No valid target&apos;,&apos;I have no valid target to render the template to, check the targetId [&apos;+targetId+&apos;]&apos;);
 				return false;
 			}
 			self.renderToDom(targetDom,parsedTemplate);
 			self.commandsBind(commands);
 		}
-
 		return true;
 	}
 
@@ -270,72 +278,20 @@ class Queue {
 	 * @return {*}
 	 */
 	templateVars(template) {
-		let match;
-
-		/*
-		 * Process {{#if}}
-		 */
-		const ifRegex=/{{#if (.*?)}}([\s\S]*?){{\/if}}/;
-		while (match = ifRegex.exec(template)) {
-			if (eval(match[1]))
-				template = template.replace(match[0], self.templateVars(match[2]));
-			else
-				template = template.replace(match[0], '');
-		}
-
-		/*
-		 * Look for {{#for}} loops and execute them
-		 */
-		const forRegex=/{{#for (.*?)}}([\s\S]*?){{\/for}}/;
-		while (match = forRegex.exec(template)) {
-			let subTemplate='';
-			/*
-			 * loop through making sub templates as we go
-			 */
-			for(let i in eval(match[1])) {
-				let incrementMatch=match[2].replace(/#loop0/g,i);
-				subTemplate+=self.templateVars(incrementMatch);
-			}
-			template = template.replace(match[0], subTemplate);
-		}
-
-		/*
-		 * Look for any includes to directly inject templates
-		 */
-		const includeRegex=/{{#include (.*?)}}/;
-		while (match = includeRegex.exec(template)) {
-			template = template.replace(match[0], self.templateProcessor(match[1],"return"));
-		}
-
-		/*
-		 * Process any other {{}} tags but not if they have {{!}} as those are done on command exec time
-		 */
-		const commandRegex=/{{([^!].*?)}}/;
+		let commandRegex=/{{(.*?)}}/;
+		let match=undefined;
 		while (match = commandRegex.exec(template)) {
+			console.log(match);
 			template = template.replace(match[0], self.varsParser(match[1]));
 		}
 		return template;
 	}
 
 	/**
-	 * Process a json object and replace {{!}} tags
-	 * @param json
-	 * @return {any}
-	 */
-	jsonVars(json) {
-		json=JSON.stringify(json);
-		const commandRegex=/{{!(.*?)}}/;
-		let match;
-		while (match = commandRegex.exec(json)) {
-			json = json.replace(match[0], self.varsParser(match[1]));
-		}
-		return JSON.parse(json);
-	}
-	/**
 	 * parse a var string
 	 *
 	 * TODO This is massively insecure. If as user can input {{}} into a form and have it displayed
-	 * to other users they can take over. We either clean all input as you would with <script> etc tags or we
+	 * to other users they can take over. We either clean all input as you would with &lt;script&gt; etc tags or we
 	 * manually write a parser.
 	 *
 	 * @param parseString
@@ -353,7 +309,7 @@ class Queue {
 	 * @return {string}
 	 */
 	templateParse(template,commands) {
-		let commandRegex=/[@\-](.*\);)/;
+		let commandRegex=/[@\-](.*?\);)/;
 		let match=undefined;
 		let parentCommand;
 		let isParent;
@@ -362,19 +318,19 @@ class Queue {
 		 *  are linked by a reference into the template
 		 */
 		while (match = commandRegex.exec(template)) {
-			isParent=match[0][0]==='@';
+			isParent=match[0][0]===&apos;@&apos;;
 			/*
 			 * Generate this command object from the extracted string
 			 */
 			let command=self.commandParse(match[1],isParent);
 
 			/*
-			 *  In the case of an instant or sub run we don't need to leave anything in the DOM so nuke
+			 *  In the case of an instant or sub run we don&apos;t need to leave anything in the DOM so nuke
 			 */
 			if(command.options.queueRun===self.DEFINE.COMMAND_INSTANT||command.options.queueRun===self.DEFINE.COMMAND_SUB) {
-				template = template.replace(match[0], "");
+				template = template.replace(match[0], &quot;&quot;);
 			} else {
-				template = template.replace(match[0], "data-queueable=\"CMD" + commands.length + "\"");
+				template = template.replace(match[0], &quot;data-queueable=\&quot;CMD&quot; + commands.length + &quot;\&quot;&quot;);
 			}
 			/*
 			 *  Is this a @parent or a -child?
@@ -382,10 +338,23 @@ class Queue {
 			if(isParent) {
 				// Set the parent point to current position
 				parentCommand=commands.length;
+				/*
+				 *  Is this an event (in which case we need to bind events later). We know this use case because an
+				 *  event will not be instant and it will be a parent
+				 */
+				if(command.options.queueRun!==self.DEFINE.COMMAND_INSTANT) {
+					/*
+					 *  We need to re-extract the command from the template and find the HTML element that this
+					 *  belongs to
+					 *
+					 *  TODO Stub for now as we need to get a working queue first
+					 */
+					//let elementMatch=template.match(//)
+				}
 
 				commands.push(command);
 			} else {
-				// If the parent has just been created it won't have child structure
+				// If the parent has just been created it won&apos;t have child structure
 				if(commands[parentCommand].commands===undefined) {
 					commands[parentCommand].commands=[];
 				}
@@ -412,13 +381,13 @@ class Queue {
 				/*
 				 * Find its dom entry using the selector we added
 				 */
-				let element=self.getElement("[data-queueable=CMD"+command+"]");
+				let element=self.getElement(&quot;[data-queueable=CMD&quot;+command+&quot;]&quot;);
 
 				/*
 				 * Add the event. We flip it over to an instant event now because we want
 				 * it triggered.
 				 */
-				element.addEventListener("click", function(){
+				element.addEventListener(&quot;click&quot;, function(){
 					commandObj[command].options.queueRun=self.DEFINE.COMMAND_INSTANT;
 					self.commandsQueue.apply(self,[[commandObj[command]]]);
 				});
@@ -464,7 +433,7 @@ class Queue {
 			 *
 			 *  Ensure the component is online
 			 */
-			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED&&self.queueables[self.queue[item].queueable].ready) {
+			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED&amp;&amp;window.queueables[self.queue[item].queueable].ready) {
 				/*
 				 * Update our state to be running
 				 */
@@ -472,10 +441,8 @@ class Queue {
 				/*
 				 * Assign a pid
 				 */
-				if(self.queue[item].pid===undefined) {
-					self.queue[item].pid = self.pid;
-					self.pid++;
-				}
+				self.queue[item].pid=self.pid;
+				self.pid++;
 				/*
 				 * Check if any specific timing is needed
 				 */
@@ -486,63 +453,10 @@ class Queue {
 				 */
 
 				setTimeout(function () {
-					self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable],[self.queue[item].pid,self.queue[item].command,self.jsonVars(self.queue[item].json),self]);
+					window.queueables[self.queue[item].queueable].start.apply(window.queueables[self.queue[item].queueable],[self.queue[item].pid,self.queue[item].command,self.queue[item].json,self]);
 				}, self.queue[item].options.queueTimer);
 			}
 		}
-	}
-
-	/**
-	 * Find a queue item by searching for its PID
-	 * @param pid
-	 * @return {*}
-	 */
-	findQueueByPid(pid) {
-		for(let item in self.queue) {
-			if(self.queue[item].pid===pid) {
-				return self.queue[item];
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Called by queueables to add something to our memory stack
-	 * @param name
-	 * @param value
-	 * @param pid
-	 */
-	memory(pid,value) {
-		let self=this;
-		let command=this.findQueueByPid(pid);
-		if(command) {
-			let origin = command.options.memoryName || command.queueable + '.' + command.command;
-			let mode = self.DEFINE.MEMORY_GARBAGE;
-			if (command.options.memoryMode)
-				mode = command.options.memoryMode;
-			let memoryDetails = {
-				pid: pid,
-				mode: mode,
-				origin: origin,
-				value: value
-			};
-			window.memory[origin] = memoryDetails;
-			return true;
-		} else {
-			this.reportError("Could not set memory","The memory set for pid ["+pid+"] could not be found");
-			return false;
-		}
-	}
-
-	cleanMemory(pid) {
-		let self=this;
-		for(let i in window.memory) {
-			if(window.memory[i].pid===pid&&window.memory[i].mode===self.DEFINE.MEMORY_GARBAGE) {
-				window.memory[i]={};
-				delete window.memory[i];
-			}
-		}
-
 	}
 
 	/**
@@ -567,20 +481,20 @@ class Queue {
 					 */
 					if(mode==self.DEFINE.FIN_ERROR) {
 						self.queue[item].state=self.DEFINE.QUEUE_ERROR;
-						self.reportError(error,'The queueable ['+pid+'] has errored, queue put on hold');
+						self.reportError(error,&apos;The queueable [&apos;+pid+&apos;] has errored, queue put on hold&apos;);
 						return;
 					}
 					/*
-					 * Was there a warning?. This isn't serious so we just mention it to the console
+					 * Was there a warning?. This isn&apos;t serious so we just mention it to the console
 					 */
 					if(mode==self.DEFINE.FIN_WARNING) {
-						console.log('Warning: '+error);
+						console.log(&apos;Warning: &apos;+error);
 					}
 						/*
 						 *
 						 * Check if this queue has commands left
 						 */
-					if(self.queue[item].commands!==undefined&&self.queue[item].commands.length>0) {
+					if(self.queue[item].commands!==undefined&amp;&amp;self.queue[item].commands.length&gt;0) {
 						/*
 						 * Move the next item in the queue down
 						 */
@@ -591,10 +505,9 @@ class Queue {
 						self.queue[item].commands.shift();
 						/*
 						 *  Update the pid
-						 *  TODO remove this as queues need to maintain their Pid for memory
 						 */
-						//self.queue[item].pid=self.pid;
-						//self.pid++;
+						self.queue[item].pid=self.pid;
+						self.pid++;
 						self.queue[item].state = self.DEFINE.QUEUE_ADDED;
 						/*
 						 * Start the queue processor as we just posted a new command
@@ -602,11 +515,10 @@ class Queue {
 						self.queueProcess();
 					} else {
 						self.queue[item].state = self.DEFINE.QUEUE_FINISHED;
-						self.cleanMemory(self.queue[item].pid);
 					}
 					return;
 				} else {
-					self.reportError('Cant stop an already stopped process ['+pid+']','Queue is corrupted');
+					self.reportError(&apos;Cant stop an already stopped process [&apos;+pid+&apos;]&apos;,&apos;Queue is corrupted&apos;);
 					return;
 				}
 			}
@@ -625,28 +537,29 @@ class Queue {
 		let self=this;
 		let commandObject={};
 		// Find the actual command
-		let commandArray=command.match(/(.*?)\(/)[1].split('.');
+		let commandArray=command.match(/(.*?)\(/)[1].split(&apos;.&apos;);
 		commandObject.queueable=commandArray[0];
 		commandObject.command=commandArray[1];
 		// Strip as we go to make follow up regex easier
-		command=command.replace(/.*?\(/,'[');
+		command=command.replace(/.*?\(/,&apos;&apos;);
 		// Find first json arg
-
-		command=command.replace(/\);$/m,']');
-		let jsonArray=JSON.parse(command);
-		if(jsonArray[0]) {
-			commandObject.json = jsonArray[0];
+		let json=command.match(/(\{.*?\})/);
+		command=command.replace(/\{.*?\}[,]{0,1}/,&apos;&apos;);
+		if(command[1]) {
+			commandObject.json = JSON.parse(json[1]);
 		} else {
 			commandObject.json={};
 		}
-		
-		if(jsonArray[1]) {
-			commandObject.options = jsonArray[1];
+
+		// Find second json arg
+		let jsonOptions=command.match(/(\{.*?\})/);
+		if(Array.isArray(jsonOptions) &amp;&amp; jsonOptions[1]) {
+			commandObject.options = JSON.parse(jsonOptions[1]);
 		} else {
 			commandObject.options={};
 		}
 		/*
-		 * Set our default options if they haven't been set
+		 * Set our default options if they haven&apos;t been set
 		 *
 		 * We must always have a queueRun object if its not set (normally by instant) then its either an event in
 		 * which case it must be a parent or failing then its a sub
@@ -685,7 +598,7 @@ class Queue {
 		let element=document.querySelector(elementTarget);
 		if(element!==null)
 			return element;
-		self.reportError('Dom Element find failed for ['+elementTarget+']','Follow up calls that rely on this will fail');
+		self.reportError(&apos;Dom Element find failed for [&apos;+elementTarget+&apos;]&apos;,&apos;Follow up calls that rely on this will fail&apos;);
 		return false;
 	}
 
@@ -711,9 +624,9 @@ class Queue {
 	 * @param indent
 	 */
 	prettyCommandObject(commandObject,indent) {
-		let string='';
-		for(var i=0;i<indent;i++) {
-			string+=' ';
+		let string=&apos;&apos;;
+		for(var i=0;i&lt;indent;i++) {
+			string+=&apos; &apos;;
 		}
 		let color=self.DEFINE.CONSOLE_COL_GREEN;
 		switch(commandObject.state) {
@@ -725,10 +638,10 @@ class Queue {
 				break;
 
 		}
-		string+=commandObject.queueable+'.'+commandObject.command+'('+JSON.stringify(commandObject.json)+','+JSON.stringify(commandObject.options)+');'
-		console.log('%c '+string,color);
+		string+=commandObject.queueable+&apos;.&apos;+commandObject.command+&apos;(&apos;+JSON.stringify(commandObject.json)+&apos;,&apos;+JSON.stringify(commandObject.options)+&apos;);&apos;
+		console.log(&apos;%c &apos;+string,color);
 		if(commandObject.error)
-			console.log('%c  Stopped: '+commandObject.error,self.DEFINE.CONSOLE_COL_AMBER);
+			console.log(&apos;%c  Stopped: &apos;+commandObject.error,self.DEFINE.CONSOLE_COL_AMBER);
 	}
 
 	/**
@@ -738,7 +651,7 @@ class Queue {
 	 */
 	reportError(error,message) {
 		console.info(self.DEFINE.CONSOLE_LINE);
-		console.error('Error:', error);
+		console.error(&apos;Error:&apos;, error);
 		console.info(message);
 	}
 
@@ -751,6 +664,20 @@ class Queue {
 		return JSON.parse(JSON.stringify(inputObject));
 	}
 
-}
+}</code></pre>
 
-export default Queue;
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
