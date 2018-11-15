@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">ourthings/Queueable/Openlayers.js | ourthings</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queueable/Openlayers.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module Openlayers */
+import Queueable from &quot;../Queueable&quot;;
+import {Map, View, Feature} from &apos;ol&apos;;
+import TileLayer from &apos;ol/layer/Tile&apos;;
+import VectorLayer from &apos;ol/layer/Vector&apos;;
+import VectorSource from &apos;ol/source/Vector&apos;;
+import OSM from &apos;ol/source/OSM&apos;;
+import WKT from &apos;ol/format/WKT&apos;;
+import {fromLonLat,units,epsg3857,epsg4326} from &apos;ol/proj&apos;;
+
+/**
+ * @classdesc
+ *
+ * Openlayers Hook
+ *
+ * @author Richard Reynolds richard@nautoguide.com
+ *
+ * @example
+ * //
+ *
+ */
+export default class Openlayers extends Queueable {
+
+	init(queue) {
+		let self=this;
+		self.queue=queue;
+
+		self.maps={};
+
+		self.ready=true;
+	}
+
+
+	addMap(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;map&quot;:&quot;map1&quot;,
+			&quot;projection&quot;:&quot;EPSG:3857&quot;,
+			&quot;zoom&quot;: 0,
+			&quot;renderer&quot;: [&apos;webgl&apos;, &apos;canvas&apos;],
+			&quot;target&quot;:&quot;map&quot;
+		},json);
+		const map = new Map({
+			target: options.target,
+			view: new View({
+				center: [0, 0],
+				zoom: 0
+			})
+		});
+		self.maps[options.map]={&quot;object&quot;:map,&quot;layers&quot;:{}};
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	addLayer(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;map&quot;:&quot;map1&quot;,
+			&quot;name&quot;:&quot;default&quot;,
+			&quot;opacity&quot;: 1,
+			&quot;transparent&quot;: false,
+			&quot;active&quot;: true,
+			&quot;tilesize&quot;: [256, 256],
+			&quot;tiled&quot;: true,
+			&quot;selectable&quot;: true,
+			&quot;hover&quot;: true,
+			&quot;style&quot;: &quot;default&quot;
+		},json);
+		let map=self.maps[options.map].object;
+		let olLayer = null;
+		let layerFunction = self[&quot;_addLayer_&quot; + options.type];
+
+		if (typeof layerFunction === &quot;function&quot;) {
+			olLayer = layerFunction.apply(null, [options]);
+		}
+		else {
+			self.finished(pid,self.queue.DEFINE.FIN_ERROR,&quot;No add layer function for &quot; + options.type);
+			return false;
+		}
+		map.addLayer(olLayer);
+		self.maps[options.map].layers[options.name]=olLayer;
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
+
+	_addLayer_osm(options) {
+		let olLayer=new TileLayer({
+			source: new OSM()
+		});
+		return olLayer;
+	}
+
+	_addLayer_vector(options) {
+		let source={};
+		let vectorSource = new VectorSource(source);
+		let olLayer = new VectorLayer({
+			name: options.name,
+			visible: options.active,
+			source: vectorSource,
+			//style: window.styles[options.style],
+			opacity: options.opacity,
+			zIndex: options[&apos;zindex&apos;],
+			selectable: options.selectable,
+			hover: options.hover
+		});
+		return olLayer;
+
+	}
+
+	addFeature(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;map&quot;:&quot;map1&quot;,
+			&quot;layer&quot;:&quot;default&quot;,
+			&quot;values&quot;:{}
+		},json);
+
+		let map=self.maps[options.map].object;
+		let layer=self.maps[options.map].layers[options.layer];
+		let view=map.getView();
+		let source=layer.getSource();
+		console.log(layer);
+
+		let projection = &quot;EPSG:&quot; + options.geometry.match(/SRID=(.*?);/)[1];
+		let wkt = options.geometry.replace(/SRID=(.*?);/, &apos;&apos;);
+
+		let format = new WKT();
+		let feature = format.readFeature(wkt);
+		options.values.geometry = feature.getGeometry().transform(projection, view.getProjection().getCode());
+		source.addFeature(new Feature(options.values));
+
+	}
+}</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

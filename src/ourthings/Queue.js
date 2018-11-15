@@ -33,6 +33,11 @@ class Queue {
 		 */
 		self.queue = [];
 
+		/*
+		 * Our events (queues) which can be called by name
+		 */
+		self.prepare = {};
+
 
 		/*
 		 * Queueable items object
@@ -222,7 +227,7 @@ class Queue {
 	 * Takes a template, process it and places into the dom
 	 * @param templateId {string} - ID of the template
 	 * @param targetId {string|false} - Place in the dom the put the result. In the event of false we process without dom
-	 * @return {boolean} - success status
+	 * @return {boolean|string} - success status
 	 */
 	templateProcessor(templateId, targetId) {
 		let self=this;
@@ -236,14 +241,19 @@ class Queue {
 		let targetDom=undefined;
 		let templateHTML = templateDom.innerHTML;
 		/*
-		 * Pass to the templateParse to build our commands
+		 * Pass all out tags {{ }} First
+		 *
+		 * TODO we need to split this so only loop etc is done first, then pass to templateParse then parse
+		 * out {{eval}} when the command queues are gone to prevent executing too early
 		 */
-		let parsedTemplate=self.templateParse(templateHTML,commands);
-
+		let parsedTemplate=self.templateVars(templateHTML);
 		/*
-		 * Now we pass any var tags {{ }}
+		 * now pass to the templateParse to build our commands
 		 */
-		parsedTemplate=self.templateVars(parsedTemplate);
+		parsedTemplate=self.templateParse(parsedTemplate,commands);
+
+		if(targetId==="return")
+			return parsedTemplate;
 
 
 		if(targetId!==false) {
@@ -255,6 +265,7 @@ class Queue {
 			self.renderToDom(targetDom,parsedTemplate);
 			self.commandsBind(commands);
 		}
+
 		return true;
 	}
 
@@ -264,24 +275,67 @@ class Queue {
 	 * @return {*}
 	 */
 	templateVars(template) {
+		let match;
+
+		/*
+		 * Process {{#if}}
+		 */
+		const ifRegex=/{{#if (.*?)}}([\s\S]*?){{\/if}}/;
+		while (match = ifRegex.exec(template)) {
+			if (eval(match[1]))
+				template = template.replace(match[0], self.templateVars(match[2]));
+			else
+				template = template.replace(match[0], '');
+		}
+
+		/*
+		 * Look for {{#for}} loops and execute them
+		 */
 		const forRegex=/{{#for (.*?)}}([\s\S]*?){{\/for}}/;
-		let match=undefined;
 		while (match = forRegex.exec(template)) {
 			let subTemplate='';
+			/*
+			 * loop through making sub templates as we go
+			 */
 			for(let i in eval(match[1])) {
-				let incrementMatch=match[2].replace(/#loop0/,i);
+				let incrementMatch=match[2].replace(/#loop0/g,i);
 				subTemplate+=self.templateVars(incrementMatch);
 			}
 			template = template.replace(match[0], subTemplate);
 		}
 
-		const commandRegex=/{{(.*?)}}/;
+		/*
+		 * Look for any includes to directly inject templates
+		 */
+		const includeRegex=/{{#include (.*?)}}/;
+		while (match = includeRegex.exec(template)) {
+			template = template.replace(match[0], self.templateProcessor(match[1],"return"));
+		}
+
+		/*
+		 * Process any other {{}} tags but not if they have {{!}} as those are done on command exec time
+		 */
+		const commandRegex=/{{([^!].*?)}}/;
 		while (match = commandRegex.exec(template)) {
 			template = template.replace(match[0], self.varsParser(match[1]));
 		}
 		return template;
 	}
 
+	/**
+	 * Process a json object and replace {{!}} tags
+	 * @param json
+	 * @return {any}
+	 */
+	jsonVars(json) {
+		json=JSON.stringify(json);
+		const commandRegex=/{{!(.*?)}}/;
+		let match;
+		while (match = commandRegex.exec(json)) {
+			json = json.replace(match[0], self.varsParser(match[1]));
+		}
+		return JSON.parse(json);
+	}
 	/**
 	 * parse a var string
 	 *
@@ -304,7 +358,7 @@ class Queue {
 	 * @return {string}
 	 */
 	templateParse(template,commands) {
-		let commandRegex=/[@\-](.*?\);)/;
+		let commandRegex=/[@\-](.*\);)/;
 		let match=undefined;
 		let parentCommand;
 		let isParent;
@@ -333,19 +387,6 @@ class Queue {
 			if(isParent) {
 				// Set the parent point to current position
 				parentCommand=commands.length;
-				/*
-				 *  Is this an event (in which case we need to bind events later). We know this use case because an
-				 *  event will not be instant and it will be a parent
-				 */
-				if(command.options.queueRun!==self.DEFINE.COMMAND_INSTANT) {
-					/*
-					 *  We need to re-extract the command from the template and find the HTML element that this
-					 *  belongs to
-					 *
-					 *  TODO Stub for now as we need to get a working queue first
-					 */
-					//let elementMatch=template.match(//)
-				}
 
 				commands.push(command);
 			} else {
@@ -400,15 +441,50 @@ class Queue {
 	commandsQueue(commandObj) {
 		let self=this;
 		for(let command in commandObj) {
+			/*
+			 * DEFINE.COMMAND_INSTANT, basically a queue item we need to get running
+			 */
 			if(commandObj[command].options.queueRun===self.DEFINE.COMMAND_INSTANT) {
-				let dereference=self.deepCopy(commandObj[command])
-				self.queue.push(dereference);
+				self.queue.push(self.deepCopy(commandObj[command]));
+			}
+			/*
+			 * Is the a prepare queue that will be triggered at some later stage
+			 */
+			if(commandObj[command].options.queuePrepare!== undefined) {
+				self.prepare[commandObj[command].options.queuePrepare]=self.deepCopy(commandObj[command]);
+				console.log('Added Prepared Queue ['+commandObj[command].options.queuePrepare+']');
 			}
 		}
 		/*
 		 *  Trigger a queue process
 		 */
 		self.queueProcess();
+	}
+
+	/**
+	 * Execute a queue that is loaded into prepare
+	 *
+	 * @param prepareName {string} Name of the prepared queue
+	 * @param json {object}
+	 */
+	execute(prepareName,json) {
+		let self=this;
+		if(self.prepare[prepareName]!==undefined) {
+			/*
+			 * Take a copy of the prepared command as we need to alter it
+			 * and possibly pass new params then add it to the queue
+			 */
+			let dereferenceCommand=self.deepCopy(self.prepare[prepareName]);
+			dereferenceCommand.options.queueRun=self.DEFINE.COMMAND_INSTANT;
+			if(json!==undefined)
+				dereferenceCommand.json=json;
+			self.commandsQueue.apply(self,[[dereferenceCommand]]);
+			return true;
+		} else {
+			self.reportError("Can not execute prepare ["+prepareName+"]","The prepared queue you requested does not exist");
+			return false;
+		}
+
 	}
 
 	/**
@@ -450,7 +526,7 @@ class Queue {
 				 */
 
 				setTimeout(function () {
-					self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable],[self.queue[item].pid,self.queue[item].command,self.queue[item].json,self]);
+					self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable],[self.queue[item].pid,self.queue[item].command,self.jsonVars(self.queue[item].json),self]);
 				}, self.queue[item].options.queueTimer);
 			}
 		}
@@ -476,14 +552,14 @@ class Queue {
 	 * @param value
 	 * @param pid
 	 */
-	memory(pid,value,name) {
+	memory(pid,value) {
 		let self=this;
 		let command=this.findQueueByPid(pid);
 		if(command) {
-			let origin = name || command.queueable + '.' + command.command;
+			let origin = command.options.memoryName || command.queueable + '.' + command.command;
 			let mode = self.DEFINE.MEMORY_GARBAGE;
-			if (command.options.memory)
-				mode = command.options.memory;
+			if (command.options.memoryMode)
+				mode = command.options.memoryMode;
 			let memoryDetails = {
 				pid: pid,
 				mode: mode,
@@ -593,20 +669,19 @@ class Queue {
 		commandObject.queueable=commandArray[0];
 		commandObject.command=commandArray[1];
 		// Strip as we go to make follow up regex easier
-		command=command.replace(/.*?\(/,'');
+		command=command.replace(/.*?\(/,'[');
 		// Find first json arg
-		let json=command.match(/(\{.*?\})/);
-		command=command.replace(/\{.*?\}[,]{0,1}/,'');
-		if(command[1]) {
-			commandObject.json = JSON.parse(json[1]);
+
+		command=command.replace(/\);$/m,']');
+		let jsonArray=JSON.parse(command);
+		if(jsonArray[0]) {
+			commandObject.json = jsonArray[0];
 		} else {
 			commandObject.json={};
 		}
-
-		// Find second json arg
-		let jsonOptions=command.match(/(\{.*?\})/);
-		if(Array.isArray(jsonOptions) && jsonOptions[1]) {
-			commandObject.options = JSON.parse(jsonOptions[1]);
+		
+		if(jsonArray[1]) {
+			commandObject.options = jsonArray[1];
 		} else {
 			commandObject.options={};
 		}

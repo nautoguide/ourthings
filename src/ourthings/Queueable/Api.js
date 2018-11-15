@@ -16,8 +16,9 @@ export default class Api extends Queueable {
 
 	/**
 	 * Render a template into the dom using the queues templateProcessor
-	 * @param pid
-	 * @param json
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.url - URL to make GET request to
 	 */
 	get(pid,json) {
 		let self=this;

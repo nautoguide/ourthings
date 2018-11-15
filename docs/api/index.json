@@ -566,10 +566,10 @@
   {
     "__docId__": 48,
     "kind": "file",
-    "name": "ourthings/define.js",
-    "content": "/** @module Define */\n\n\n/**\n * @classdesc\n *\n * Our define class, contains all magic dnumber defines\n *\n * @author Richard Reynolds richard@nautoguide.com\n *\n * @example\n * // DEFINE = new Define();\n *\n */\nexport default class Define {\n\tconstructor() {\n\t\t/**\n\t\t * Queue state of operations\n\t\t */\n\t\tthis.STATUS_LOADING = 0;\n\t\tthis.STATUS_LOADED = 1;\n\t\tthis.STATUS_RUNNING = 2;\n\t\tthis.STATUS_ERROR = 3;\n\n\t\t/**\n\t\t * Render modes\n\t\t */\n\t\tthis.RENDER_INSERT = 0;\n\t\tthis.RENDER_APPEND = 1;\n\n\n\t\t/**\n\t\t *  Command types\n\t\t */\n\n\t\tthis.COMMAND_INSTANT = \"Instant\";\n\t\tthis.COMMAND_EVENT = \"Event\";\n\t\tthis.COMMAND_SUB = \"Sub\";\n\n\t\t/**\n\t\t *  Queue states\n\t\t */\n\t\tthis.QUEUE_ADDED = 0;\n\t\tthis.QUEUE_RUNNING = 1;\n\t\tthis.QUEUE_FINISHED = 2;\n\t\tthis.QUEUE_ERROR = 3;\n\n\t\t/**\n\t\t * Queueable Finished states\n\t\t */\n\n\t\tthis.FIN_OK = 0;\n\t\tthis.FIN_WARNING = 1;\n\t\tthis.FIN_ERROR = 2;\n\n\t\t/**\n\t\t *  Console outputs\n\t\t */\n\t\tthis.CONSOLE_LINE=\"-==ourthings======================================================-\";\n\t\tthis.CONSOLE_COL_VT=\"background: #222; color: #bada55\";\n\t\tthis.CONSOLE_COL_GREEN=\"background: #222; color: #0f0\";\n\t\tthis.CONSOLE_COL_RED=\"background: #222; color: #f00\";\n\t\tthis.CONSOLE_COL_AMBER=\"background: #222; color: #f90\";\n\n\t}\n}",
+    "name": "ourthings/Define.js",
+    "content": "/** @module Define */\r\n\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Our define class, contains all magic dnumber defines\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * // DEFINE = new Define();\r\n *\r\n */\r\nexport default class Define {\r\n\tconstructor() {\r\n\t\t/**\r\n\t\t * Queue state of operations\r\n\t\t */\r\n\t\tthis.STATUS_LOADING = 0;\r\n\t\tthis.STATUS_LOADED = 1;\r\n\t\tthis.STATUS_RUNNING = 2;\r\n\t\tthis.STATUS_ERROR = 3;\r\n\r\n\t\t/**\r\n\t\t * Render modes\r\n\t\t */\r\n\t\tthis.RENDER_INSERT = 0;\r\n\t\tthis.RENDER_APPEND = 1;\r\n\r\n\r\n\t\t/**\r\n\t\t *  Command types\r\n\t\t */\r\n\r\n\t\tthis.COMMAND_INSTANT = \"Instant\";\r\n\t\tthis.COMMAND_EVENT = \"Event\";\r\n\t\tthis.COMMAND_SUB = \"Sub\";\r\n\r\n\t\t/**\r\n\t\t *  Queue states\r\n\t\t */\r\n\t\tthis.QUEUE_ADDED = 0;\r\n\t\tthis.QUEUE_RUNNING = 1;\r\n\t\tthis.QUEUE_FINISHED = 2;\r\n\t\tthis.QUEUE_ERROR = 3;\r\n\r\n\t\t/**\r\n\t\t * Queueable Finished states\r\n\t\t */\r\n\r\n\t\tthis.FIN_OK = 0;\r\n\t\tthis.FIN_WARNING = 1;\r\n\t\tthis.FIN_ERROR = 2;\r\n\r\n\t\tthis.MEMORY_GARBAGE=\"Garbage\";\r\n\t\tthis.MEMORY_SESSION=\"Session\";\r\n\t\tthis.MEMORY_PERMANENT=\"Permanent\";\r\n\r\n\t\t/**\r\n\t\t *  Console outputs\r\n\t\t */\r\n\t\tthis.CONSOLE_LINE=\"-==ourthings======================================================-\";\r\n\t\tthis.CONSOLE_COL_VT=\"background: #222; color: #bada55\";\r\n\t\tthis.CONSOLE_COL_GREEN=\"background: #222; color: #0f0\";\r\n\t\tthis.CONSOLE_COL_RED=\"background: #222; color: #f00\";\r\n\t\tthis.CONSOLE_COL_AMBER=\"background: #222; color: #f90\";\r\n\r\n\t}\r\n}",
     "static": true,
-    "longname": "G:/Dropbox/Work/Projects/Web/OurThings/src/ourthings/define.js",
+    "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Define.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -578,12 +578,12 @@
     "__docId__": 49,
     "kind": "class",
     "name": "Define",
-    "memberof": "ourthings/define.js",
+    "memberof": "ourthings/Define.js",
     "static": true,
-    "longname": "ourthings/define.js~Define",
+    "longname": "ourthings/Define.js~Define",
     "access": "public",
     "export": true,
-    "importPath": "ourthings/ourthings/define.js",
+    "importPath": "ourthings/ourthings/Define.js",
     "importStyle": "Define",
     "description": "",
     "examples": [
@@ -606,11 +606,11 @@
     "__docId__": 50,
     "kind": "constructor",
     "name": "constructor",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/define.js~Define#constructor",
+    "longname": "ourthings/Define.js~Define#constructor",
     "access": "public",
     "description": null,
     "lineNumber": 16,
@@ -620,9 +620,9 @@
     "__docId__": 51,
     "kind": "member",
     "name": "STATUS_LOADING",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#STATUS_LOADING",
+    "longname": "ourthings/Define.js~Define#STATUS_LOADING",
     "access": "public",
     "description": "Queue state of operations",
     "lineNumber": 20,
@@ -636,9 +636,9 @@
     "__docId__": 52,
     "kind": "member",
     "name": "STATUS_LOADED",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#STATUS_LOADED",
+    "longname": "ourthings/Define.js~Define#STATUS_LOADED",
     "access": "public",
     "description": null,
     "lineNumber": 21,
@@ -653,9 +653,9 @@
     "__docId__": 53,
     "kind": "member",
     "name": "STATUS_RUNNING",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#STATUS_RUNNING",
+    "longname": "ourthings/Define.js~Define#STATUS_RUNNING",
     "access": "public",
     "description": null,
     "lineNumber": 22,
@@ -670,9 +670,9 @@
     "__docId__": 54,
     "kind": "member",
     "name": "STATUS_ERROR",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#STATUS_ERROR",
+    "longname": "ourthings/Define.js~Define#STATUS_ERROR",
     "access": "public",
     "description": null,
     "lineNumber": 23,
@@ -687,9 +687,9 @@
     "__docId__": 55,
     "kind": "member",
     "name": "RENDER_INSERT",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#RENDER_INSERT",
+    "longname": "ourthings/Define.js~Define#RENDER_INSERT",
     "access": "public",
     "description": "Render modes",
     "lineNumber": 28,
@@ -703,9 +703,9 @@
     "__docId__": 56,
     "kind": "member",
     "name": "RENDER_APPEND",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#RENDER_APPEND",
+    "longname": "ourthings/Define.js~Define#RENDER_APPEND",
     "access": "public",
     "description": null,
     "lineNumber": 29,
@@ -720,9 +720,9 @@
     "__docId__": 57,
     "kind": "member",
     "name": "COMMAND_INSTANT",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#COMMAND_INSTANT",
+    "longname": "ourthings/Define.js~Define#COMMAND_INSTANT",
     "access": "public",
     "description": " Command types",
     "lineNumber": 36,
@@ -736,9 +736,9 @@
     "__docId__": 58,
     "kind": "member",
     "name": "COMMAND_EVENT",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#COMMAND_EVENT",
+    "longname": "ourthings/Define.js~Define#COMMAND_EVENT",
     "access": "public",
     "description": null,
     "lineNumber": 37,
@@ -753,9 +753,9 @@
     "__docId__": 59,
     "kind": "member",
     "name": "COMMAND_SUB",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#COMMAND_SUB",
+    "longname": "ourthings/Define.js~Define#COMMAND_SUB",
     "access": "public",
     "description": null,
     "lineNumber": 38,
@@ -770,9 +770,9 @@
     "__docId__": 60,
     "kind": "member",
     "name": "QUEUE_ADDED",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#QUEUE_ADDED",
+    "longname": "ourthings/Define.js~Define#QUEUE_ADDED",
     "access": "public",
     "description": " Queue states",
     "lineNumber": 43,
@@ -786,9 +786,9 @@
     "__docId__": 61,
     "kind": "member",
     "name": "QUEUE_RUNNING",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#QUEUE_RUNNING",
+    "longname": "ourthings/Define.js~Define#QUEUE_RUNNING",
     "access": "public",
     "description": null,
     "lineNumber": 44,
@@ -803,9 +803,9 @@
     "__docId__": 62,
     "kind": "member",
     "name": "QUEUE_FINISHED",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#QUEUE_FINISHED",
+    "longname": "ourthings/Define.js~Define#QUEUE_FINISHED",
     "access": "public",
     "description": null,
     "lineNumber": 45,
@@ -820,9 +820,9 @@
     "__docId__": 63,
     "kind": "member",
     "name": "QUEUE_ERROR",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#QUEUE_ERROR",
+    "longname": "ourthings/Define.js~Define#QUEUE_ERROR",
     "access": "public",
     "description": null,
     "lineNumber": 46,
@@ -837,9 +837,9 @@
     "__docId__": 64,
     "kind": "member",
     "name": "FIN_OK",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#FIN_OK",
+    "longname": "ourthings/Define.js~Define#FIN_OK",
     "access": "public",
     "description": "Queueable Finished states",
     "lineNumber": 52,
@@ -853,9 +853,9 @@
     "__docId__": 65,
     "kind": "member",
     "name": "FIN_WARNING",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#FIN_WARNING",
+    "longname": "ourthings/Define.js~Define#FIN_WARNING",
     "access": "public",
     "description": null,
     "lineNumber": 53,
@@ -870,9 +870,9 @@
     "__docId__": 66,
     "kind": "member",
     "name": "FIN_ERROR",
-    "memberof": "ourthings/define.js~Define",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#FIN_ERROR",
+    "longname": "ourthings/Define.js~Define#FIN_ERROR",
     "access": "public",
     "description": null,
     "lineNumber": 54,
@@ -886,13 +886,14 @@
   {
     "__docId__": 67,
     "kind": "member",
-    "name": "CONSOLE_LINE",
-    "memberof": "ourthings/define.js~Define",
+    "name": "MEMORY_GARBAGE",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#CONSOLE_LINE",
+    "longname": "ourthings/Define.js~Define#MEMORY_GARBAGE",
     "access": "public",
-    "description": " Console outputs",
-    "lineNumber": 59,
+    "description": null,
+    "lineNumber": 56,
+    "undocument": true,
     "type": {
       "types": [
         "string"
@@ -902,13 +903,13 @@
   {
     "__docId__": 68,
     "kind": "member",
-    "name": "CONSOLE_COL_VT",
-    "memberof": "ourthings/define.js~Define",
+    "name": "MEMORY_SESSION",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#CONSOLE_COL_VT",
+    "longname": "ourthings/Define.js~Define#MEMORY_SESSION",
     "access": "public",
     "description": null,
-    "lineNumber": 60,
+    "lineNumber": 57,
     "undocument": true,
     "type": {
       "types": [
@@ -919,13 +920,13 @@
   {
     "__docId__": 69,
     "kind": "member",
-    "name": "CONSOLE_COL_GREEN",
-    "memberof": "ourthings/define.js~Define",
+    "name": "MEMORY_PERMANENT",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#CONSOLE_COL_GREEN",
+    "longname": "ourthings/Define.js~Define#MEMORY_PERMANENT",
     "access": "public",
     "description": null,
-    "lineNumber": 61,
+    "lineNumber": 58,
     "undocument": true,
     "type": {
       "types": [
@@ -936,14 +937,13 @@
   {
     "__docId__": 70,
     "kind": "member",
-    "name": "CONSOLE_COL_RED",
-    "memberof": "ourthings/define.js~Define",
+    "name": "CONSOLE_LINE",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#CONSOLE_COL_RED",
+    "longname": "ourthings/Define.js~Define#CONSOLE_LINE",
     "access": "public",
-    "description": null,
-    "lineNumber": 62,
-    "undocument": true,
+    "description": " Console outputs",
+    "lineNumber": 63,
     "type": {
       "types": [
         "string"
@@ -953,13 +953,13 @@
   {
     "__docId__": 71,
     "kind": "member",
-    "name": "CONSOLE_COL_AMBER",
-    "memberof": "ourthings/define.js~Define",
+    "name": "CONSOLE_COL_VT",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/define.js~Define#CONSOLE_COL_AMBER",
+    "longname": "ourthings/Define.js~Define#CONSOLE_COL_VT",
     "access": "public",
     "description": null,
-    "lineNumber": 63,
+    "lineNumber": 64,
     "undocument": true,
     "type": {
       "types": [
@@ -969,218 +969,125 @@
   },
   {
     "__docId__": 72,
-    "kind": "file",
-    "name": "ourthings/internals/elements.js",
-    "content": "/** @module Elements */\nimport Queueable from \"../queueable\";\n\n/**\n * @classdesc\n *\n * Dom Elements manipulations\n *\n * @author Richard Reynolds richard@nautoguide.com\n *\n * @example\n * //\n *\n */\nexport default class Elements extends Queueable {\n\n\t/**\n\t * Render a template into the dom using the queues templateProcessor\n\t * @param pid\n\t * @param json\n\t */\n\taddClass(pid,json) {\n\t\tlet self=this;\n\t\tlet element=self.queue.getElement(json.targetId);\n\t\tif(element!==false) {\n\t\t\telement.classList.add(json.class);\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\n\t\t} else {\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not add class ['+json.class+'] to ['+json.targetId+']');\n\t\t}\n\t}\n}\n",
-    "static": true,
-    "longname": "G:/Dropbox/Work/Projects/Web/OurThings/src/ourthings/internals/elements.js",
+    "kind": "member",
+    "name": "CONSOLE_COL_GREEN",
+    "memberof": "ourthings/Define.js~Define",
+    "static": false,
+    "longname": "ourthings/Define.js~Define#CONSOLE_COL_GREEN",
     "access": "public",
     "description": null,
-    "lineNumber": 1
+    "lineNumber": 65,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
   },
   {
     "__docId__": 73,
-    "kind": "class",
-    "name": "Elements",
-    "memberof": "ourthings/internals/elements.js",
-    "static": true,
-    "longname": "ourthings/internals/elements.js~Elements",
+    "kind": "member",
+    "name": "CONSOLE_COL_RED",
+    "memberof": "ourthings/Define.js~Define",
+    "static": false,
+    "longname": "ourthings/Define.js~Define#CONSOLE_COL_RED",
     "access": "public",
-    "export": true,
-    "importPath": "ourthings/ourthings/internals/elements.js",
-    "importStyle": "Elements",
-    "description": "",
-    "examples": [
-      "//"
-    ],
-    "lineNumber": 15,
-    "unknown": [
-      {
-        "tagName": "@classdesc",
-        "tagValue": "\nDom Elements manipulations"
-      },
-      {
-        "tagName": "@author",
-        "tagValue": "Richard Reynolds richard@nautoguide.com"
-      }
-    ],
-    "interface": false,
-    "extends": [
-      "ourthings/queueable.js~Queueable"
-    ]
+    "description": null,
+    "lineNumber": 66,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
   },
   {
     "__docId__": 74,
-    "kind": "method",
-    "name": "addClass",
-    "memberof": "ourthings/internals/elements.js~Elements",
-    "generator": false,
-    "async": false,
+    "kind": "member",
+    "name": "CONSOLE_COL_AMBER",
+    "memberof": "ourthings/Define.js~Define",
     "static": false,
-    "longname": "ourthings/internals/elements.js~Elements#addClass",
+    "longname": "ourthings/Define.js~Define#CONSOLE_COL_AMBER",
     "access": "public",
-    "description": "Render a template into the dom using the queues templateProcessor",
-    "lineNumber": 22,
-    "params": [
-      {
-        "nullable": null,
-        "types": [
-          "*"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "pid",
-        "description": ""
-      },
-      {
-        "nullable": null,
-        "types": [
-          "*"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "json",
-        "description": ""
-      }
-    ],
-    "return": null
+    "description": null,
+    "lineNumber": 67,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
   },
   {
     "__docId__": 75,
     "kind": "file",
-    "name": "ourthings/internals/templates.js",
-    "content": "/** @module Templates */\nimport Queueable from \"../queueable\";\n\n/**\n * @classdesc\n *\n * Template manipulations\n *\n * @author Richard Reynolds richard@nautoguide.com\n *\n * @example\n * // @templates.render({\"targetId\":\"content\",\"template\":\"basic\"},{\"queueRun\":\"Instant\"});\n *\n */\nexport default class Templates extends Queueable {\n\n\t/**\n\t * Render a template into the dom using the queues templateProcessor\n\t * @param pid\n\t * @param json\n\t */\n\trender(pid,json) {\n\t\tlet self=this;\n\t\tif(!self.queue.templateProcessor(json.template,json.targetId))\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_ERROR,'Could not render template');\n\t\telse\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\n\t}\n}\n",
+    "name": "ourthings/index.js",
+    "content": "/**\r\n * @module ourthings\r\n */\r\n\r\nexport {default as Queue} from './Queue';\r\nexport {default as Queueable} from './Queueable';\r\n",
     "static": true,
-    "longname": "G:/Dropbox/Work/Projects/Web/OurThings/src/ourthings/internals/templates.js",
+    "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
     "__docId__": 76,
-    "kind": "class",
-    "name": "Templates",
-    "memberof": "ourthings/internals/templates.js",
+    "kind": "file",
+    "name": "ourthings/main.js",
+    "content": "import Queue from './Queue';\n\n/**\n *  Import all the queueables we want to use here. Make sure to add an entry to to new queue to map the commands\n *\n */\nimport Internals from './Queueable/Internals';\nimport Templates from './Queueable/Templates';\nimport Elements from './Queueable/Elements';\nimport Api from './Queueable/Api';\nimport Openlayers from './Queueable/Openlayers';\n\n/*\n * Start the queue engine\n */\nlet queue = new Queue({\"internals\":Internals,\"templates\":Templates,\"elements\":Elements,\"api\":Api,\"openlayers\":Openlayers});\n\n/*\n * If you want debug put the queue into the window\n */\nwindow.queue=queue;\n",
     "static": true,
-    "longname": "ourthings/internals/templates.js~Templates",
+    "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/main.js",
     "access": "public",
-    "export": true,
-    "importPath": "ourthings/ourthings/internals/templates.js",
-    "importStyle": "Templates",
-    "description": "",
-    "examples": [
-      "// @templates.render({\"targetId\":\"content\",\"template\":\"basic\"},{\"queueRun\":\"Instant\"});"
-    ],
-    "lineNumber": 15,
-    "unknown": [
-      {
-        "tagName": "@classdesc",
-        "tagValue": "\nTemplate manipulations"
-      },
-      {
-        "tagName": "@author",
-        "tagValue": "Richard Reynolds richard@nautoguide.com"
-      }
-    ],
-    "interface": false,
-    "extends": [
-      "ourthings/queueable.js~Queueable"
-    ]
+    "description": null,
+    "lineNumber": 1
   },
   {
     "__docId__": 77,
-    "kind": "method",
-    "name": "render",
-    "memberof": "ourthings/internals/templates.js~Templates",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "ourthings/internals/templates.js~Templates#render",
+    "kind": "variable",
+    "name": "queue",
+    "memberof": "ourthings/main.js",
+    "static": true,
+    "longname": "ourthings/main.js~queue",
     "access": "public",
-    "description": "Render a template into the dom using the queues templateProcessor",
-    "lineNumber": 22,
-    "params": [
-      {
-        "nullable": null,
-        "types": [
-          "*"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "pid",
-        "description": ""
-      },
-      {
-        "nullable": null,
-        "types": [
-          "*"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "json",
-        "description": ""
-      }
-    ],
-    "return": null
+    "export": false,
+    "importPath": "ourthings/ourthings/main.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 16,
+    "undocument": true,
+    "type": {
+      "types": [
+        "ourthings/Queue.js~Queue"
+      ]
+    },
+    "ignore": true
   },
   {
     "__docId__": 78,
     "kind": "file",
-    "name": "ourthings/main.js",
-    "content": "import Queue from './queue.js';\n\n/**\n *  Import all the queueables we want to use here. Make sure to add an entry to window.queueables bellow to\n *  construct the object\n *\n *  TODO Figure a way to get list of imported queuaables from webpack (plugin?)\n */\nimport Templates from './internals/templates.js';\nimport Elements from './internals/elements.js';\n\n/**\n * On load initiate the queue object\n *\n * And setup our queueables\n *\n */\n\nlet queue;\nwindow.onload = function() {\n\twindow.queueables={};\n\n\t/**\n\t * Setup our imported queueables here\n\t */\n\twindow.queueables['templates']=new Templates();\n\twindow.queueables['elements']=new Elements();\n\n\tqueue = new Queue();\n\n\t/**\n\t * Copy the queue into the global to make debug easier\n\t * @type {Queue}\n\t */\n\twindow.queue=queue;\n};\n",
+    "name": "ourthings/Queue.js",
+    "content": "/** @module ourthings/Queue */\r\nimport Define from './Define.js';\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * The main queue class\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * let queue = new Queue();\r\n */\r\nclass Queue {\r\n\r\n\t/**\r\n\t * Class constructor\r\n\t */\r\n\tconstructor(queueablesList) {\r\n\r\n\t\tself = this;\r\n\r\n\r\n\t\t/*\r\n\t\t * Create our DEFINE object for\r\n\t\t * @type {Define}\r\n\t\t */\r\n\t\tself.DEFINE = new Define();\r\n\t\t/*\r\n\t\t * Our Queue array\r\n\t\t *\r\n\t\t * @type {Array}\r\n\t\t */\r\n\t\tself.queue = [];\r\n\r\n\t\t/*\r\n\t\t * Our events (queues) which can be called by name\r\n\t\t */\r\n\t\tself.prepare = {};\r\n\r\n\r\n\t\t/*\r\n\t\t * Queueable items object\r\n\t\t */\r\n\t\tself.queueables={};\r\n\t\t/*\r\n\t\t * Templates to be loaded\r\n\t\t * @type {Array}\r\n\t\t */\r\n\t\tself.templates = [];\r\n\r\n\r\n\t\t/*\r\n\t\t * Create a fragment for big dom inserts\r\n\t\t * @type {DocumentFragment}\r\n\t\t */\r\n\t\tself.fragment = document.createDocumentFragment();\r\n\r\n\t\t/*\r\n\t\t * Se our status\r\n\t\t * @type {number}\r\n\t\t */\r\n\t\tself.status = self.DEFINE.STATUS_LOADING;\r\n\r\n\t\t/*\r\n\t\t * Our queue process ID\r\n\t\t * @type {number}\r\n\t\t */\r\n\t\tself.pid = 0;\r\n\r\n\t\t/*\r\n\t\t * Default time for process to be executed after\r\n\t\t * TODO Platform test / tune\r\n\t\t * @type {number}\r\n\t\t */\r\n\t\tself.defaultTimer = 10;\r\n\r\n\r\n\t\tconsole.clear();\r\n\t\tconsole.info(self.DEFINE.CONSOLE_LINE);\r\n\t\tconsole.info('ourthings framework https://github.com/nautoguide/ourthings');\r\n\r\n\t\t/*\r\n\t\t * Run init against all our queueables\r\n\t\t *\r\n\t\t * This basically passes the queue object (self) though but also for any queueables that require it\r\n\t\t * starts any promise functions that will result in them becoming active\r\n\t\t */\r\n\t\tconsole.log(\"[Queueables]\");\r\n\t\tfor (let i in queueablesList) {\r\n\t\t\tself.checkQueueable(i,queueablesList[i]);\r\n\t\t}\r\n\r\n\t\t/*\r\n\t\t * Initialise the memory\r\n\t\t */\r\n\t\twindow.memory={};\r\n\t\t/*\r\n\t\t * Load the templates.json\r\n\t\t */\r\n\t\tfetch('templates.json', {\r\n\t\t\theaders: {\r\n\t\t\t\t'Content-Type': 'application/json'\r\n\t\t\t}\r\n\t\t})\r\n\t\t\t.then(response => self.handleFetchErrors(response))\r\n\t\t\t.then(response => response.json() )\r\n\t\t\t.then(function (response) {\r\n\t\t\t\t/**\r\n\t\t\t\t * Convert the response to json and start the loader\r\n\t\t\t\t */\r\n\t\t\t\tself.templates = response;\r\n\t\t\t\tself.templateLoader();\r\n\t\t\t})\r\n\t\t\t.catch(function (error) {\r\n\t\t\t\tconsole.info(self.DEFINE.CONSOLE_LINE);\r\n\t\t\t\tconsole.error('Error:', error);\r\n\t\t\t\tconsole.info(\"Warning this error is probably fatal as I have no templates to load\")\r\n\t\t\t});\r\n\t}\r\n\r\n\t/**\r\n\t * Error Handler for fetch calls\r\n\t * @param response {object} - Fetch response object\r\n\t * @returns {Object}\r\n\t */\r\n\thandleFetchErrors(response) {\r\n\t\tif (!response.ok) {\r\n\t\t\tself.status=self.DEFINE.STATUS_ERROR;\r\n\t\t\tthrow Error(response.statusText);\r\n\t\t}\r\n\t\treturn response;\r\n\t}\r\n\r\n\tcheckQueueable(name,obj) {\r\n\t\tlet self=this;\r\n\t\tif(self.queueables[name]===undefined) {\r\n\t\t\tself.queueables[name]=new obj();\r\n\t\t\tself.queueables[name].init(self);\r\n\t\t\tconsole.log('Booting Queueable ['+name+']');\r\n\t\t\treturn false;\r\n\t\t}\r\n\t\treturn true;\r\n\t}\r\n\r\n\t/**\r\n\t * Helper function to upcase first letter of string\r\n\t * @param string\r\n\t * @return {string}\r\n\t */\r\n\tcapitalizeFirstLetter(string) {\r\n\t\treturn string.charAt(0).toUpperCase() + string.slice(1);\r\n\t}\r\n\r\n\t/**\r\n\t * Loads templates from the template stack. Recursively calls self until stack is empty\r\n\t * @returns {void}\r\n\t */\r\n\ttemplateLoader() {\r\n\t\tlet self=this;\r\n\t\t/*\r\n\t\t *  Are there any templates to load?\r\n\t\t *\r\n\t\t *  If not then we dump the fragment into the dom\r\n\t\t */\r\n\t\tif (this.templates.length === 0) {\r\n\t\t\tdocument.head.appendChild(self.fragment);\r\n\t\t\t// Clean up the fragment\r\n\t\t\tself.fragment=document.createDocumentFragment();\r\n\t\t\t/*\r\n\t\t\t * Set our status and then process the init template\r\n\t\t\t */\r\n\t\t\tself.status=self.DEFINE.STATUS_LOADED;\r\n\t\t\t/*\r\n\t\t\t *  TODO once queue generation is working this this pushing to the queue\r\n\t\t\t *  As currently this is a chain of promises and so everything will error trap back to the loader\r\n\t\t\t */\r\n\t\t\tself.templateProcessor(\"#init\",false);\r\n\t\t\tself.status=self.DEFINE.STATUS_RUNNING;\r\n\t\t\tconsole.info(self.DEFINE.CONSOLE_LINE);\r\n\t\t\tconsole.log('[Online]');\r\n\t\t\tconsole.log('queue.show(); # To debug the queue');\r\n\t\t\treturn;\r\n\t\t}\r\n\r\n\t\t/*\r\n\t\t * Pop the template off the stack\r\n\t\t */\r\n\t\tlet template = this.templates.pop();\r\n\r\n\t\tfetch(template, {\r\n\t\t\theaders: {\r\n\t\t\t\t'Content-Type': 'test/html'\r\n\t\t\t}\r\n\t\t})\r\n\t\t\t.then(response => self.handleFetchErrors(response))\r\n\t\t\t.then(response => response.text())\r\n\t\t\t.then(function (response) {\r\n\r\n\t\t\t\t/*\r\n\t\t\t\t * Get the template we were sent and add it to the fragment for insertion into the dom\r\n\t\t\t\t *\r\n\t\t\t\t * We wrap it in meta tag, this helps improve render speed but still stuck with an innerHTML\r\n\t\t\t\t * as we don't know the content\r\n\t\t\t\t *\r\n\t\t\t\t */\r\n\t\t\t\tlet text = response;\r\n\t\t\t\tlet meta = document.createElement('meta');\r\n\t\t\t\tmeta.setAttribute(\"name\", \"generator\");\r\n\t\t\t\tmeta.setAttribute(\"content\", template);\r\n\t\t\t\tmeta.innerHTML=text;\r\n\t\t\t\tself.fragment.appendChild(meta);\r\n\r\n\t\t\t\t/*\r\n\t\t\t\t *  Call our self again to process any more templates\r\n\t\t\t\t */\r\n\t\t\t\tself.templateLoader();\r\n\t\t\t})\r\n\t\t\t.catch(function (error) {\r\n\t\t\t\tconsole.error('Error:', error);\r\n\t\t\t\tconsole.info(\"Warning this error is probably fatal as a template specified in templates.json has failed to load or wont process\");\r\n\t\t\t});\r\n\t};\r\n\r\n\t/**\r\n\t * Template processor\r\n\t * Takes a template, process it and places into the dom\r\n\t * @param templateId {string} - ID of the template\r\n\t * @param targetId {string|false} - Place in the dom the put the result. In the event of false we process without dom\r\n\t * @return {boolean|string} - success status\r\n\t */\r\n\ttemplateProcessor(templateId, targetId) {\r\n\t\tlet self=this;\r\n\t\tlet commands=[];\r\n\r\n\t\tlet templateDom = self.getElement(templateId);\r\n\t\tif(!templateDom) {\r\n\t\t\tself.reportError('No valid template','I have no valid template, check the templateId ['+templateId+']');\r\n\t\t\treturn false;\r\n\t\t}\r\n\t\tlet targetDom=undefined;\r\n\t\tlet templateHTML = templateDom.innerHTML;\r\n\t\t/*\r\n\t\t * Pass all out tags {{ }} First\r\n\t\t *\r\n\t\t * TODO we need to split this so only loop etc is done first, then pass to templateParse then parse\r\n\t\t * out {{eval}} when the command queues are gone to prevent executing too early\r\n\t\t */\r\n\t\tlet parsedTemplate=self.templateVars(templateHTML);\r\n\t\t/*\r\n\t\t * now pass to the templateParse to build our commands\r\n\t\t */\r\n\t\tparsedTemplate=self.templateParse(parsedTemplate,commands);\r\n\r\n\t\tif(targetId===\"return\")\r\n\t\t\treturn parsedTemplate;\r\n\r\n\r\n\t\tif(targetId!==false) {\r\n\t\t\ttargetDom=self.getElement(targetId);\r\n\t\t\tif(!targetDom) {\r\n\t\t\t\tself.reportError('No valid target','I have no valid target to render the template to, check the targetId ['+targetId+']');\r\n\t\t\t\treturn false;\r\n\t\t\t}\r\n\t\t\tself.renderToDom(targetDom,parsedTemplate);\r\n\t\t\tself.commandsBind(commands);\r\n\t\t}\r\n\r\n\t\treturn true;\r\n\t}\r\n\r\n\t/**\r\n\t * Process the template looking for {{}} instances\r\n\t * @param template\r\n\t * @return {*}\r\n\t */\r\n\ttemplateVars(template) {\r\n\t\tlet match;\r\n\r\n\t\t/*\r\n\t\t * Process {{#if}}\r\n\t\t */\r\n\t\tconst ifRegex=/{{#if (.*?)}}([\\s\\S]*?){{\\/if}}/;\r\n\t\twhile (match = ifRegex.exec(template)) {\r\n\t\t\tif (eval(match[1]))\r\n\t\t\t\ttemplate = template.replace(match[0], self.templateVars(match[2]));\r\n\t\t\telse\r\n\t\t\t\ttemplate = template.replace(match[0], '');\r\n\t\t}\r\n\r\n\t\t/*\r\n\t\t * Look for {{#for}} loops and execute them\r\n\t\t */\r\n\t\tconst forRegex=/{{#for (.*?)}}([\\s\\S]*?){{\\/for}}/;\r\n\t\twhile (match = forRegex.exec(template)) {\r\n\t\t\tlet subTemplate='';\r\n\t\t\t/*\r\n\t\t\t * loop through making sub templates as we go\r\n\t\t\t */\r\n\t\t\tfor(let i in eval(match[1])) {\r\n\t\t\t\tlet incrementMatch=match[2].replace(/#loop0/g,i);\r\n\t\t\t\tsubTemplate+=self.templateVars(incrementMatch);\r\n\t\t\t}\r\n\t\t\ttemplate = template.replace(match[0], subTemplate);\r\n\t\t}\r\n\r\n\t\t/*\r\n\t\t * Look for any includes to directly inject templates\r\n\t\t */\r\n\t\tconst includeRegex=/{{#include (.*?)}}/;\r\n\t\twhile (match = includeRegex.exec(template)) {\r\n\t\t\ttemplate = template.replace(match[0], self.templateProcessor(match[1],\"return\"));\r\n\t\t}\r\n\r\n\t\t/*\r\n\t\t * Process any other {{}} tags but not if they have {{!}} as those are done on command exec time\r\n\t\t */\r\n\t\tconst commandRegex=/{{([^!].*?)}}/;\r\n\t\twhile (match = commandRegex.exec(template)) {\r\n\t\t\ttemplate = template.replace(match[0], self.varsParser(match[1]));\r\n\t\t}\r\n\t\treturn template;\r\n\t}\r\n\r\n\t/**\r\n\t * Process a json object and replace {{!}} tags\r\n\t * @param json\r\n\t * @return {any}\r\n\t */\r\n\tjsonVars(json) {\r\n\t\tjson=JSON.stringify(json);\r\n\t\tconst commandRegex=/{{!(.*?)}}/;\r\n\t\tlet match;\r\n\t\twhile (match = commandRegex.exec(json)) {\r\n\t\t\tjson = json.replace(match[0], self.varsParser(match[1]));\r\n\t\t}\r\n\t\treturn JSON.parse(json);\r\n\t}\r\n\t/**\r\n\t * parse a var string\r\n\t *\r\n\t * TODO This is massively insecure. If as user can input {{}} into a form and have it displayed\r\n\t * to other users they can take over. We either clean all input as you would with <script> etc tags or we\r\n\t * manually write a parser.\r\n\t *\r\n\t * @param parseString\r\n\t * @return {any}\r\n\t */\r\n\tvarsParser(parseString) {\r\n\t\treturn eval(parseString);\r\n\t}\r\n\r\n\t/**\r\n\t * Takes a template and runs any template commands contained in it to create a HTML template\r\n\t * ready to be put into the dom\r\n\t *\r\n\t * @param template {string}\r\n\t * @return {string}\r\n\t */\r\n\ttemplateParse(template,commands) {\r\n\t\tlet commandRegex=/[@\\-](.*\\);)/;\r\n\t\tlet match=undefined;\r\n\t\tlet parentCommand;\r\n\t\tlet isParent;\r\n\t\t/*\r\n\t\t *  Locate all the commands in the template and generate an array of command objects that\r\n\t\t *  are linked by a reference into the template\r\n\t\t */\r\n\t\twhile (match = commandRegex.exec(template)) {\r\n\t\t\tisParent=match[0][0]==='@';\r\n\t\t\t/*\r\n\t\t\t * Generate this command object from the extracted string\r\n\t\t\t */\r\n\t\t\tlet command=self.commandParse(match[1],isParent);\r\n\r\n\t\t\t/*\r\n\t\t\t *  In the case of an instant or sub run we don't need to leave anything in the DOM so nuke\r\n\t\t\t */\r\n\t\t\tif(command.options.queueRun===self.DEFINE.COMMAND_INSTANT||command.options.queueRun===self.DEFINE.COMMAND_SUB) {\r\n\t\t\t\ttemplate = template.replace(match[0], \"\");\r\n\t\t\t} else {\r\n\t\t\t\ttemplate = template.replace(match[0], \"data-queueable=\\\"CMD\" + commands.length + \"\\\"\");\r\n\t\t\t}\r\n\t\t\t/*\r\n\t\t\t *  Is this a @parent or a -child?\r\n\t\t\t */\r\n\t\t\tif(isParent) {\r\n\t\t\t\t// Set the parent point to current position\r\n\t\t\t\tparentCommand=commands.length;\r\n\r\n\t\t\t\tcommands.push(command);\r\n\t\t\t} else {\r\n\t\t\t\t// If the parent has just been created it won't have child structure\r\n\t\t\t\tif(commands[parentCommand].commands===undefined) {\r\n\t\t\t\t\tcommands[parentCommand].commands=[];\r\n\t\t\t\t}\r\n\t\t\t\t// Put the command in the parents\r\n\t\t\t\tcommands[parentCommand].commands.push(command);\r\n\t\t\t}\r\n\t\t}\r\n\t\t// Add the instants to the active queue\r\n\t\tself.commandsQueue(commands);\r\n\t\treturn template;\r\n\t}\r\n\r\n\t/**\r\n\t * Bind the events to the dom based on the command Object\r\n\t * @param commandObj\r\n\t */\r\n\tcommandsBind(commandObj) {\r\n\t\tlet self=this;\r\n\t\tfor(let command in commandObj) {\r\n\t\t\t/*\r\n\t\t\t * Bind queue elements will not me marked to run instantly so we pick those\r\n\t\t\t */\r\n\t\t\tif(commandObj[command].options.queueRun!==self.DEFINE.COMMAND_INSTANT) {\r\n\t\t\t\t/*\r\n\t\t\t\t * Find its dom entry using the selector we added\r\n\t\t\t\t */\r\n\t\t\t\tlet element=self.getElement(\"[data-queueable=CMD\"+command+\"]\");\r\n\r\n\t\t\t\t/*\r\n\t\t\t\t * Add the event. We flip it over to an instant event now because we want\r\n\t\t\t\t * it triggered.\r\n\t\t\t\t */\r\n\t\t\t\telement.addEventListener(\"click\", function(){\r\n\t\t\t\t\tcommandObj[command].options.queueRun=self.DEFINE.COMMAND_INSTANT;\r\n\t\t\t\t\tself.commandsQueue.apply(self,[[commandObj[command]]]);\r\n\t\t\t\t});\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Take the commands array with command objects in it and add them to the queue *if* they are\r\n\t * marked as instant. IE ready to execute\r\n\t *\r\n\t * @param commandObj\r\n\t */\r\n\tcommandsQueue(commandObj) {\r\n\t\tlet self=this;\r\n\t\tfor(let command in commandObj) {\r\n\t\t\t/*\r\n\t\t\t * DEFINE.COMMAND_INSTANT, basically a queue item we need to get running\r\n\t\t\t */\r\n\t\t\tif(commandObj[command].options.queueRun===self.DEFINE.COMMAND_INSTANT) {\r\n\t\t\t\tself.queue.push(self.deepCopy(commandObj[command]));\r\n\t\t\t}\r\n\t\t\t/*\r\n\t\t\t * Is the a prepare queue that will be triggered at some later stage\r\n\t\t\t */\r\n\t\t\tif(commandObj[command].options.queuePrepare!== undefined) {\r\n\t\t\t\tself.prepare[commandObj[command].options.queuePrepare]=self.deepCopy(commandObj[command]);\r\n\t\t\t\tconsole.log('Added Prepared Queue ['+commandObj[command].options.queuePrepare+']');\r\n\t\t\t}\r\n\t\t}\r\n\t\t/*\r\n\t\t *  Trigger a queue process\r\n\t\t */\r\n\t\tself.queueProcess();\r\n\t}\r\n\r\n\t/**\r\n\t * Execute a queue that is loaded into prepare\r\n\t *\r\n\t * @param prepareName {string} Name of the prepared queue\r\n\t * @param json {object}\r\n\t */\r\n\texecute(prepareName,json) {\r\n\t\tlet self=this;\r\n\t\tif(self.prepare[prepareName]!==undefined) {\r\n\t\t\t/*\r\n\t\t\t * Take a copy of the prepared command as we need to alter it\r\n\t\t\t * and possibly pass new params then add it to the queue\r\n\t\t\t */\r\n\t\t\tlet dereferenceCommand=self.deepCopy(self.prepare[prepareName]);\r\n\t\t\tdereferenceCommand.options.queueRun=self.DEFINE.COMMAND_INSTANT;\r\n\t\t\tif(json!==undefined)\r\n\t\t\t\tdereferenceCommand.json=json;\r\n\t\t\tself.commandsQueue.apply(self,[[dereferenceCommand]]);\r\n\t\t\treturn true;\r\n\t\t} else {\r\n\t\t\tself.reportError(\"Can not execute prepare [\"+prepareName+\"]\",\"The prepared queue you requested does not exist\");\r\n\t\t\treturn false;\r\n\t\t}\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Force a queue processing\r\n\t *\r\n\t * This launches the actual objects using a timeout\r\n\t */\r\n\tqueueProcess() {\r\n\t\tlet self=this;\r\n\t\t/*\r\n\t\t *  TODO Only implementing basic queue here for testing. Concepts of active componets etc need importing\r\n\t\t *  for moho\r\n\t\t */\r\n\t\tfor(let item in self.queue) {\r\n\t\t\t/*\r\n\t\t\t *  Look for items that are QUEUE_ADDED as they need processing\r\n\t\t\t *\r\n\t\t\t *  Ensure the component is online\r\n\t\t\t */\r\n\t\t\tif(self.queue[item].state===self.DEFINE.QUEUE_ADDED&&self.queueables[self.queue[item].queueable].ready) {\r\n\t\t\t\t/*\r\n\t\t\t\t * Update our state to be running\r\n\t\t\t\t */\r\n\t\t\t\tself.queue[item].state=self.DEFINE.QUEUE_RUNNING;\r\n\t\t\t\t/*\r\n\t\t\t\t * Assign a pid\r\n\t\t\t\t */\r\n\t\t\t\tif(self.queue[item].pid===undefined) {\r\n\t\t\t\t\tself.queue[item].pid = self.pid;\r\n\t\t\t\t\tself.pid++;\r\n\t\t\t\t}\r\n\t\t\t\t/*\r\n\t\t\t\t * Check if any specific timing is needed\r\n\t\t\t\t */\r\n\t\t\t\tself.queue[item].options.queueTimer=self.queue[item].options.queueTimer||self.defaultTimer;\r\n\r\n\t\t\t\t/*\r\n\t\t\t\t *  Launch the function as a time out (so we get control back)\r\n\t\t\t\t */\r\n\r\n\t\t\t\tsetTimeout(function () {\r\n\t\t\t\t\tself.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable],[self.queue[item].pid,self.queue[item].command,self.jsonVars(self.queue[item].json),self]);\r\n\t\t\t\t}, self.queue[item].options.queueTimer);\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Find a queue item by searching for its PID\r\n\t * @param pid\r\n\t * @return {*}\r\n\t */\r\n\tfindQueueByPid(pid) {\r\n\t\tfor(let item in self.queue) {\r\n\t\t\tif(self.queue[item].pid===pid) {\r\n\t\t\t\treturn self.queue[item];\r\n\t\t\t}\r\n\t\t}\r\n\t\treturn false;\r\n\t}\r\n\r\n\t/**\r\n\t * Called by queueables to add something to our memory stack\r\n\t * @param name\r\n\t * @param value\r\n\t * @param pid\r\n\t */\r\n\tmemory(pid,value) {\r\n\t\tlet self=this;\r\n\t\tlet command=this.findQueueByPid(pid);\r\n\t\tif(command) {\r\n\t\t\tlet origin = command.options.memoryName || command.queueable + '.' + command.command;\r\n\t\t\tlet mode = self.DEFINE.MEMORY_GARBAGE;\r\n\t\t\tif (command.options.memoryMode)\r\n\t\t\t\tmode = command.options.memoryMode;\r\n\t\t\tlet memoryDetails = {\r\n\t\t\t\tpid: pid,\r\n\t\t\t\tmode: mode,\r\n\t\t\t\torigin: origin,\r\n\t\t\t\tvalue: value\r\n\t\t\t};\r\n\t\t\twindow.memory[origin] = memoryDetails;\r\n\t\t\treturn true;\r\n\t\t} else {\r\n\t\t\tthis.reportError(\"Could not set memory\",\"The memory set for pid [\"+pid+\"] could not be found\");\r\n\t\t\treturn false;\r\n\t\t}\r\n\t}\r\n\r\n\tcleanMemory(pid) {\r\n\t\tlet self=this;\r\n\t\tfor(let i in window.memory) {\r\n\t\t\tif(window.memory[i].pid===pid&&window.memory[i].mode===self.DEFINE.MEMORY_GARBAGE) {\r\n\t\t\t\twindow.memory[i]={};\r\n\t\t\t\tdelete window.memory[i];\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t}\r\n\r\n\t/**\r\n\t *  Called to flag a queue item as finished\r\n\t *\r\n\t *  Normally hooked down from queueable this is a queue item saying I have finished in mode (see define.js)\r\n\t *\r\n\t * @param pid\r\n\t * @param mode\r\n\t */\r\n\tfinished(pid,mode,error) {\r\n\t\tlet self=this;\r\n\t\tfor(let item in self.queue) {\r\n\t\t\t/*\r\n\t\t\t *  Find the queue item we need to finish\r\n\t\t\t */\r\n\t\t\tif(self.queue[item].pid===pid) {\r\n\t\t\t\tself.queue[item].error=error;\r\n\t\t\t\tif (self.queue[item].state === self.DEFINE.QUEUE_RUNNING) {\r\n\t\t\t\t\t/*\r\n\t\t\t\t\t * Did the command return an error? If so we will stop this queue from further execution\r\n\t\t\t\t\t */\r\n\t\t\t\t\tif(mode==self.DEFINE.FIN_ERROR) {\r\n\t\t\t\t\t\tself.queue[item].state=self.DEFINE.QUEUE_ERROR;\r\n\t\t\t\t\t\tself.reportError(error,'The queueable ['+pid+'] has errored, queue put on hold');\r\n\t\t\t\t\t\treturn;\r\n\t\t\t\t\t}\r\n\t\t\t\t\t/*\r\n\t\t\t\t\t * Was there a warning?. This isn't serious so we just mention it to the console\r\n\t\t\t\t\t */\r\n\t\t\t\t\tif(mode==self.DEFINE.FIN_WARNING) {\r\n\t\t\t\t\t\tconsole.log('Warning: '+error);\r\n\t\t\t\t\t}\r\n\t\t\t\t\t\t/*\r\n\t\t\t\t\t\t *\r\n\t\t\t\t\t\t * Check if this queue has commands left\r\n\t\t\t\t\t\t */\r\n\t\t\t\t\tif(self.queue[item].commands!==undefined&&self.queue[item].commands.length>0) {\r\n\t\t\t\t\t\t/*\r\n\t\t\t\t\t\t * Move the next item in the queue down\r\n\t\t\t\t\t\t */\r\n\t\t\t\t\t\tself.queue[item].command=self.queue[item].commands[0].command;\r\n\t\t\t\t\t\tself.queue[item].queueable=self.queue[item].commands[0].queueable;\r\n\t\t\t\t\t\tself.queue[item].json=self.queue[item].commands[0].json;\r\n\t\t\t\t\t\tself.queue[item].options=self.queue[item].commands[0].options;\r\n\t\t\t\t\t\tself.queue[item].commands.shift();\r\n\t\t\t\t\t\t/*\r\n\t\t\t\t\t\t *  Update the pid\r\n\t\t\t\t\t\t *  TODO remove this as queues need to maintain their Pid for memory\r\n\t\t\t\t\t\t */\r\n\t\t\t\t\t\t//self.queue[item].pid=self.pid;\r\n\t\t\t\t\t\t//self.pid++;\r\n\t\t\t\t\t\tself.queue[item].state = self.DEFINE.QUEUE_ADDED;\r\n\t\t\t\t\t\t/*\r\n\t\t\t\t\t\t * Start the queue processor as we just posted a new command\r\n\t\t\t\t\t\t */\r\n\t\t\t\t\t\tself.queueProcess();\r\n\t\t\t\t\t} else {\r\n\t\t\t\t\t\tself.queue[item].state = self.DEFINE.QUEUE_FINISHED;\r\n\t\t\t\t\t\tself.cleanMemory(self.queue[item].pid);\r\n\t\t\t\t\t}\r\n\t\t\t\t\treturn;\r\n\t\t\t\t} else {\r\n\t\t\t\t\tself.reportError('Cant stop an already stopped process ['+pid+']','Queue is corrupted');\r\n\t\t\t\t\treturn;\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * This will take a command string in the format object.command({},{}); and split it down\r\n\t * into it parts as an object\r\n\t *\r\n\t * TODO no concept of the context of the command IE was it from inside a div that need binding?\r\n\t * @param command {string}\r\n\t * @return {object}\r\n\t */\r\n\tcommandParse(command,isParent) {\r\n\t\tlet self=this;\r\n\t\tlet commandObject={};\r\n\t\t// Find the actual command\r\n\t\tlet commandArray=command.match(/(.*?)\\(/)[1].split('.');\r\n\t\tcommandObject.queueable=commandArray[0];\r\n\t\tcommandObject.command=commandArray[1];\r\n\t\t// Strip as we go to make follow up regex easier\r\n\t\tcommand=command.replace(/.*?\\(/,'[');\r\n\t\t// Find first json arg\r\n\r\n\t\tcommand=command.replace(/\\);$/m,']');\r\n\t\tlet jsonArray=JSON.parse(command);\r\n\t\tif(jsonArray[0]) {\r\n\t\t\tcommandObject.json = jsonArray[0];\r\n\t\t} else {\r\n\t\t\tcommandObject.json={};\r\n\t\t}\r\n\t\t\r\n\t\tif(jsonArray[1]) {\r\n\t\t\tcommandObject.options = jsonArray[1];\r\n\t\t} else {\r\n\t\t\tcommandObject.options={};\r\n\t\t}\r\n\t\t/*\r\n\t\t * Set our default options if they haven't been set\r\n\t\t *\r\n\t\t * We must always have a queueRun object if its not set (normally by instant) then its either an event in\r\n\t\t * which case it must be a parent or failing then its a sub\r\n\t\t *\r\n \t\t */\r\n\t\tcommandObject.options.queueRun=commandObject.options.queueRun||(isParent? self.DEFINE.COMMAND_EVENT:self.DEFINE.COMMAND_SUB);\r\n\t\tcommandObject.state=self.DEFINE.QUEUE_ADDED;\r\n\t\treturn commandObject;\r\n\t}\r\n\r\n\t/**\r\n\t * Render some text/html to the dom\r\n\t * @param domObject {object} - The object in the dom to write to\r\n\t * @param text {string} - The text/HTML to write\r\n\t * @param mode {number} - Mode to use while writing see define.js\r\n\t * @return {boolean}\r\n\t */\r\n\trenderToDom(domObject,text,mode) {\r\n\t\tlet self=this;\r\n\t\tmode=mode||self.DEFINE.RENDER_INSERT;\r\n\t\tswitch(mode) {\r\n\t\t\tcase self.DEFINE.RENDER_INSERT:\r\n\t\t\t\tdomObject.innerHTML=text;\r\n\t\t\t\tbreak;\r\n\t\t}\r\n\t\treturn true;\r\n\t}\r\n\r\n\t/**\r\n\t * Finds an element in the dom using the jquery formant IE #id .class tag\r\n\t * @param elementTarget\r\n\t * @return {object|false}\r\n\t */\r\n\tgetElement(elementTarget) {\r\n\t\tlet self=this;\r\n\t\tlet element=document.querySelector(elementTarget);\r\n\t\tif(element!==null)\r\n\t\t\treturn element;\r\n\t\tself.reportError('Dom Element find failed for ['+elementTarget+']','Follow up calls that rely on this will fail');\r\n\t\treturn false;\r\n\t}\r\n\r\n\t/**\r\n\t *  Show current queue status in the console DEBUG function\r\n\t */\r\n\tshow() {\r\n\t\tlet self=this;\r\n\t\tfor(let i in self.queue) {\r\n\t\t\tlet indent=0;\r\n\t\t\tself.prettyCommandObject(self.queue[i],indent);\r\n\t\t\tfor(let j in self.queue[i].commands) {\r\n\t\t\t\tindent++;\r\n\t\t\t\tself.prettyCommandObject(self.queue[i].commands[j],indent);\r\n\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Make a pretty version of the currrent commandObject and dump it to the console\r\n\t * @param commandObject\r\n\t * @param indent\r\n\t */\r\n\tprettyCommandObject(commandObject,indent) {\r\n\t\tlet string='';\r\n\t\tfor(var i=0;i<indent;i++) {\r\n\t\t\tstring+=' ';\r\n\t\t}\r\n\t\tlet color=self.DEFINE.CONSOLE_COL_GREEN;\r\n\t\tswitch(commandObject.state) {\r\n\t\t\tcase self.DEFINE.QUEUE_FINISHED:\r\n\t\t\t\tcolor=self.DEFINE.CONSOLE_COL_AMBER;\r\n\t\t\t\tbreak;\r\n\t\t\tcase self.DEFINE.QUEUE_ERROR:\r\n\t\t\t\tcolor=self.DEFINE.CONSOLE_COL_RED;\r\n\t\t\t\tbreak;\r\n\r\n\t\t}\r\n\t\tstring+=commandObject.queueable+'.'+commandObject.command+'('+JSON.stringify(commandObject.json)+','+JSON.stringify(commandObject.options)+');'\r\n\t\tconsole.log('%c '+string,color);\r\n\t\tif(commandObject.error)\r\n\t\t\tconsole.log('%c  Stopped: '+commandObject.error,self.DEFINE.CONSOLE_COL_AMBER);\r\n\t}\r\n\r\n\t/**\r\n\t * Report an error to the console, adds various internal stats\r\n\t * @param error\r\n\t * @param message\r\n\t */\r\n\treportError(error,message) {\r\n\t\tconsole.info(self.DEFINE.CONSOLE_LINE);\r\n\t\tconsole.error('Error:', error);\r\n\t\tconsole.info(message);\r\n\t}\r\n\r\n\t/**\r\n\t * Deep copy and object IE remove references\r\n\t * @param inputObject\r\n\t * @return {any}\r\n\t */\r\n\tdeepCopy(inputObject) {\r\n\t\treturn JSON.parse(JSON.stringify(inputObject));\r\n\t}\r\n\r\n}\r\n\r\nexport default Queue;",
     "static": true,
-    "longname": "G:/Dropbox/Work/Projects/Web/OurThings/src/ourthings/main.js",
+    "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queue.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
     "__docId__": 79,
-    "kind": "function",
-    "name": "onload",
-    "memberof": "ourthings/main.js",
-    "generator": false,
-    "async": false,
-    "static": true,
-    "longname": "ourthings/main.js~onload",
-    "access": "public",
-    "export": false,
-    "importPath": "ourthings/ourthings/main.js",
-    "importStyle": null,
-    "description": null,
-    "lineNumber": 20,
-    "undocument": true,
-    "params": [],
-    "return": null,
-    "ignore": true
-  },
-  {
-    "__docId__": 80,
-    "kind": "file",
-    "name": "ourthings/queue.js",
-    "content": "/** @module Queue */\nimport Define from './define.js';\n\n\n/**\n * @classdesc\n *\n * The main queue class\n *\n * @author Richard Reynolds richard@nautoguide.com\n *\n * @example\n * let queue = new Queue();\n */\nexport default class Queue {\n\n\t/**\n\t * Class constructor\n\t */\n\tconstructor() {\n\n\t\tself = this;\n\n\n\t\t/*\n\t\t * Create our DEFINE object for\n\t\t * @type {Define}\n\t\t */\n\t\tself.DEFINE = new Define();\n\t\t/*\n\t\t * Our Queue array\n\t\t *\n\t\t * @type {Array}\n\t\t */\n\t\tself.queue = [];\n\n\t\t/*\n\t\t * Templates to be loaded\n\t\t * @type {Array}\n\t\t */\n\t\tself.templates = [];\n\n\n\t\t/*\n\t\t * Create a fragment for big dom inserts\n\t\t * @type {DocumentFragment}\n\t\t */\n\t\tself.fragment = document.createDocumentFragment();\n\n\t\t/*\n\t\t * Se our status\n\t\t * @type {number}\n\t\t */\n\t\tself.status = self.DEFINE.STATUS_LOADING;\n\n\t\t/*\n\t\t * Our queue process ID\n\t\t * @type {number}\n\t\t */\n\t\tself.pid = 0;\n\n\t\t/*\n\t\t * Default time for process to be executed after\n\t\t * TODO Platform test / tune\n\t\t * @type {number}\n\t\t */\n\t\tself.defaultTimer = 10;\n\n\n\t\tconsole.clear();\n\t\tconsole.info(self.DEFINE.CONSOLE_LINE);\n\t\tconsole.info('ourthings framework https://github.com/nautoguide/ourthings');\n\n\t\t/*\n\t\t * Run init against all our queueables\n\t\t *\n\t\t * This basically passes the queue object (self) though but also for any queueables that require it\n\t\t * starts any promise functions that will result in them becoming active\n\t\t */\n\t\tconsole.log(\"[Queueables]\");\n\t\tfor (let i in window.queueables) {\n\t\t\twindow.queueables[i].init(self);\n\t\t\tconsole.log('-'+i);\n\t\t}\n\n\t\t/*\n\t\t * Load the templates.json\n\t\t */\n\t\tfetch('templates.json', {\n\t\t\theaders: {\n\t\t\t\t'Content-Type': 'application/json'\n\t\t\t}\n\t\t})\n\t\t\t.then(response => self.handleFetchErrors(response))\n\t\t\t.then(response => response.json() )\n\t\t\t.then(function (response) {\n\t\t\t\t/**\n\t\t\t\t * Conver the response to json and start the loader\n\t\t\t\t */\n\t\t\t\tself.templates = response;\n\t\t\t\tself.templateLoader();\n\t\t\t})\n\t\t\t.catch(function (error) {\n\t\t\t\tconsole.info(self.DEFINE.CONSOLE_LINE);\n\t\t\t\tconsole.error('Error:', error);\n\t\t\t\tconsole.info(\"Warning this error is probably fatal as I have no templates to load\")\n\t\t\t});\n\t}\n\n\t/**\n\t * Error Handler for fetch calls\n\t * @param response {object} - Fetch response object\n\t * @returns {Object}\n\t */\n\thandleFetchErrors(response) {\n\t\tif (!response.ok) {\n\t\t\tself.status=self.DEFINE.STATUS_ERROR;\n\t\t\tthrow Error(response.statusText);\n\t\t}\n\t\treturn response;\n\t}\n\n\t/**\n\t * Loads templates from the template stack. Recursively calls self until stack is empty\n\t * @returns {void}\n\t */\n\ttemplateLoader() {\n\t\tlet self=this;\n\t\t/*\n\t\t *  Are there any templates to load?\n\t\t *\n\t\t *  If not then we dump the fragment into the dom\n\t\t */\n\t\tif (this.templates.length === 0) {\n\t\t\tdocument.head.appendChild(self.fragment);\n\t\t\t// Clean up the fragment\n\t\t\tself.fragment=document.createDocumentFragment();\n\t\t\t/*\n\t\t\t * Set our status and then process the init template\n\t\t\t */\n\t\t\tself.status=self.DEFINE.STATUS_LOADED;\n\t\t\t/*\n\t\t\t *  TODO once queue generation is working this this pushing to the queue\n\t\t\t *  As currently this is a chain of promises and so everything will error trap back to the loader\n\t\t\t */\n\t\t\tself.templateProcessor(\"#init\",false);\n\t\t\tself.status=self.DEFINE.STATUS_RUNNING;\n\t\t\tconsole.info(self.DEFINE.CONSOLE_LINE);\n\t\t\tconsole.log('[Online]');\n\t\t\tconsole.log('queue.show(); # To debug the queue');\n\t\t\treturn;\n\t\t}\n\n\t\t/*\n\t\t * Pop the template off the stack\n\t\t */\n\t\tlet template = this.templates.pop();\n\n\t\tfetch(template, {\n\t\t\theaders: {\n\t\t\t\t'Content-Type': 'test/html'\n\t\t\t}\n\t\t})\n\t\t\t.then(response => self.handleFetchErrors(response))\n\t\t\t.then(response => response.text())\n\t\t\t.then(function (response) {\n\n\t\t\t\t/*\n\t\t\t\t * Get the template we were sent and add it to the fragment for insertion into the dom\n\t\t\t\t *\n\t\t\t\t * We wrap it in meta tag, this helps improve render speed but still stuck with an innerHTML\n\t\t\t\t * as we don't know the content\n\t\t\t\t *\n\t\t\t\t */\n\t\t\t\tlet text = response;\n\t\t\t\tlet meta = document.createElement('meta');\n\t\t\t\tmeta.setAttribute(\"name\", \"generator\");\n\t\t\t\tmeta.setAttribute(\"content\", template);\n\t\t\t\tmeta.innerHTML=text;\n\t\t\t\tself.fragment.appendChild(meta);\n\n\t\t\t\t/*\n\t\t\t\t *  Call our self again to process any more templates\n\t\t\t\t */\n\t\t\t\tself.templateLoader();\n\t\t\t})\n\t\t\t.catch(function (error) {\n\t\t\t\tconsole.error('Error:', error);\n\t\t\t\tconsole.info(\"Warning this error is probably fatal as a template specified in templates.json has failed to load or wont process\");\n\t\t\t});\n\t};\n\n\t/**\n\t * Template processor\n\t * Takes a template, process it and places into the dom\n\t * @param templateId {string} - ID of the template\n\t * @param targetId {string|false} - Place in the dom the put the result. In the event of false we process without dom\n\t * @return {boolean} - success status\n\t */\n\ttemplateProcessor(templateId, targetId) {\n\t\tlet self=this;\n\t\tlet commands=[];\n\n\t\tlet templateDom = self.getElement(templateId);\n\t\tif(!templateDom) {\n\t\t\tself.reportError('No valid template','I have no valid template, check the templateId ['+templateId+']');\n\t\t\treturn false;\n\t\t}\n\t\tlet targetDom=undefined;\n\t\tlet templateHTML = templateDom.innerHTML;\n\t\t/*\n\t\t * Pass to the templateParse to build our commands\n\t\t */\n\t\tlet parsedTemplate=self.templateParse(templateHTML,commands);\n\n\t\t/*\n\t\t * Now we pass any var tags {{ }}\n\t\t */\n\t\tparsedTemplate=self.templateVars(parsedTemplate);\n\n\n\t\tif(targetId!==false) {\n\t\t\ttargetDom=self.getElement(targetId);\n\t\t\tif(!targetDom) {\n\t\t\t\tself.reportError('No valid target','I have no valid target to render the template to, check the targetId ['+targetId+']');\n\t\t\t\treturn false;\n\t\t\t}\n\t\t\tself.renderToDom(targetDom,parsedTemplate);\n\t\t\tself.commandsBind(commands);\n\t\t}\n\t\treturn true;\n\t}\n\n\t/**\n\t * Process the template looking for {{}} instances\n\t * @param template\n\t * @return {*}\n\t */\n\ttemplateVars(template) {\n\t\tlet commandRegex=/{{(.*?)}}/;\n\t\tlet match=undefined;\n\t\twhile (match = commandRegex.exec(template)) {\n\t\t\tconsole.log(match);\n\t\t\ttemplate = template.replace(match[0], self.varsParser(match[1]));\n\t\t}\n\t\treturn template;\n\t}\n\n\t/**\n\t * parse a var string\n\t *\n\t * TODO This is massively insecure. If as user can input {{}} into a form and have it displayed\n\t * to other users they can take over. We either clean all input as you would with <script> etc tags or we\n\t * manually write a parser.\n\t *\n\t * @param parseString\n\t * @return {any}\n\t */\n\tvarsParser(parseString) {\n\t\treturn eval(parseString);\n\t}\n\n\t/**\n\t * Takes a template and runs any template commands contained in it to create a HTML template\n\t * ready to be put into the dom\n\t *\n\t * @param template {string}\n\t * @return {string}\n\t */\n\ttemplateParse(template,commands) {\n\t\tlet commandRegex=/[@\\-](.*?\\);)/;\n\t\tlet match=undefined;\n\t\tlet parentCommand;\n\t\tlet isParent;\n\t\t/*\n\t\t *  Locate all the commands in the template and generate an array of command objects that\n\t\t *  are linked by a reference into the template\n\t\t */\n\t\twhile (match = commandRegex.exec(template)) {\n\t\t\tisParent=match[0][0]==='@';\n\t\t\t/*\n\t\t\t * Generate this command object from the extracted string\n\t\t\t */\n\t\t\tlet command=self.commandParse(match[1],isParent);\n\n\t\t\t/*\n\t\t\t *  In the case of an instant or sub run we don't need to leave anything in the DOM so nuke\n\t\t\t */\n\t\t\tif(command.options.queueRun===self.DEFINE.COMMAND_INSTANT||command.options.queueRun===self.DEFINE.COMMAND_SUB) {\n\t\t\t\ttemplate = template.replace(match[0], \"\");\n\t\t\t} else {\n\t\t\t\ttemplate = template.replace(match[0], \"data-queueable=\\\"CMD\" + commands.length + \"\\\"\");\n\t\t\t}\n\t\t\t/*\n\t\t\t *  Is this a @parent or a -child?\n\t\t\t */\n\t\t\tif(isParent) {\n\t\t\t\t// Set the parent point to current position\n\t\t\t\tparentCommand=commands.length;\n\t\t\t\t/*\n\t\t\t\t *  Is this an event (in which case we need to bind events later). We know this use case because an\n\t\t\t\t *  event will not be instant and it will be a parent\n\t\t\t\t */\n\t\t\t\tif(command.options.queueRun!==self.DEFINE.COMMAND_INSTANT) {\n\t\t\t\t\t/*\n\t\t\t\t\t *  We need to re-extract the command from the template and find the HTML element that this\n\t\t\t\t\t *  belongs to\n\t\t\t\t\t *\n\t\t\t\t\t *  TODO Stub for now as we need to get a working queue first\n\t\t\t\t\t */\n\t\t\t\t\t//let elementMatch=template.match(//)\n\t\t\t\t}\n\n\t\t\t\tcommands.push(command);\n\t\t\t} else {\n\t\t\t\t// If the parent has just been created it won't have child structure\n\t\t\t\tif(commands[parentCommand].commands===undefined) {\n\t\t\t\t\tcommands[parentCommand].commands=[];\n\t\t\t\t}\n\t\t\t\t// Put the command in the parents\n\t\t\t\tcommands[parentCommand].commands.push(command);\n\t\t\t}\n\t\t}\n\t\t// Add the instants to the active queue\n\t\tself.commandsQueue(commands);\n\t\treturn template;\n\t}\n\n\t/**\n\t * Bind the events to the dom based on the command Object\n\t * @param commandObj\n\t */\n\tcommandsBind(commandObj) {\n\t\tlet self=this;\n\t\tfor(let command in commandObj) {\n\t\t\t/*\n\t\t\t * Bind queue elements will not me marked to run instantly so we pick those\n\t\t\t */\n\t\t\tif(commandObj[command].options.queueRun!==self.DEFINE.COMMAND_INSTANT) {\n\t\t\t\t/*\n\t\t\t\t * Find its dom entry using the selector we added\n\t\t\t\t */\n\t\t\t\tlet element=self.getElement(\"[data-queueable=CMD\"+command+\"]\");\n\n\t\t\t\t/*\n\t\t\t\t * Add the event. We flip it over to an instant event now because we want\n\t\t\t\t * it triggered.\n\t\t\t\t */\n\t\t\t\telement.addEventListener(\"click\", function(){\n\t\t\t\t\tcommandObj[command].options.queueRun=self.DEFINE.COMMAND_INSTANT;\n\t\t\t\t\tself.commandsQueue.apply(self,[[commandObj[command]]]);\n\t\t\t\t});\n\t\t\t}\n\t\t}\n\n\t}\n\n\t/**\n\t * Take the commands array with command objects in it and add them to the queue *if* they are\n\t * marked as instant. IE ready to execute\n\t *\n\t * @param commandObj\n\t */\n\tcommandsQueue(commandObj) {\n\t\tlet self=this;\n\t\tfor(let command in commandObj) {\n\t\t\tif(commandObj[command].options.queueRun===self.DEFINE.COMMAND_INSTANT) {\n\t\t\t\tlet dereference=self.deepCopy(commandObj[command])\n\t\t\t\tself.queue.push(dereference);\n\t\t\t}\n\t\t}\n\t\t/*\n\t\t *  Trigger a queue process\n\t\t */\n\t\tself.queueProcess();\n\t}\n\n\t/**\n\t * Force a queue processing\n\t *\n\t * This launches the actual objects using a timeout\n\t */\n\tqueueProcess() {\n\t\tlet self=this;\n\t\t/*\n\t\t *  TODO Only implementing basic queue here for testing. Concepts of active componets etc need importing\n\t\t *  for moho\n\t\t */\n\t\tfor(let item in self.queue) {\n\t\t\t/*\n\t\t\t *  Look for items that are QUEUE_ADDED as they need processing\n\t\t\t *\n\t\t\t *  Ensure the component is online\n\t\t\t */\n\t\t\tif(self.queue[item].state===self.DEFINE.QUEUE_ADDED&&window.queueables[self.queue[item].queueable].ready) {\n\t\t\t\t/*\n\t\t\t\t * Update our state to be running\n\t\t\t\t */\n\t\t\t\tself.queue[item].state=self.DEFINE.QUEUE_RUNNING;\n\t\t\t\t/*\n\t\t\t\t * Assign a pid\n\t\t\t\t */\n\t\t\t\tself.queue[item].pid=self.pid;\n\t\t\t\tself.pid++;\n\t\t\t\t/*\n\t\t\t\t * Check if any specific timing is needed\n\t\t\t\t */\n\t\t\t\tself.queue[item].options.queueTimer=self.queue[item].options.queueTimer||self.defaultTimer;\n\n\t\t\t\t/*\n\t\t\t\t *  Launch the function as a time out (so we get control back)\n\t\t\t\t */\n\n\t\t\t\tsetTimeout(function () {\n\t\t\t\t\twindow.queueables[self.queue[item].queueable].start.apply(window.queueables[self.queue[item].queueable],[self.queue[item].pid,self.queue[item].command,self.queue[item].json,self]);\n\t\t\t\t}, self.queue[item].options.queueTimer);\n\t\t\t}\n\t\t}\n\t}\n\n\t/**\n\t *  Called to flag a queue item as finished\n\t *\n\t *  Normally hooked down from queueable this is a queue item saying I have finished in mode (see define.js)\n\t *\n\t * @param pid\n\t * @param mode\n\t */\n\tfinished(pid,mode,error) {\n\t\tlet self=this;\n\t\tfor(let item in self.queue) {\n\t\t\t/*\n\t\t\t *  Find the queue item we need to finish\n\t\t\t */\n\t\t\tif(self.queue[item].pid===pid) {\n\t\t\t\tself.queue[item].error=error;\n\t\t\t\tif (self.queue[item].state === self.DEFINE.QUEUE_RUNNING) {\n\t\t\t\t\t/*\n\t\t\t\t\t * Did the command return an error? If so we will stop this queue from further execution\n\t\t\t\t\t */\n\t\t\t\t\tif(mode==self.DEFINE.FIN_ERROR) {\n\t\t\t\t\t\tself.queue[item].state=self.DEFINE.QUEUE_ERROR;\n\t\t\t\t\t\tself.reportError(error,'The queueable ['+pid+'] has errored, queue put on hold');\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\t\t\t\t\t/*\n\t\t\t\t\t * Was there a warning?. This isn't serious so we just mention it to the console\n\t\t\t\t\t */\n\t\t\t\t\tif(mode==self.DEFINE.FIN_WARNING) {\n\t\t\t\t\t\tconsole.log('Warning: '+error);\n\t\t\t\t\t}\n\t\t\t\t\t\t/*\n\t\t\t\t\t\t *\n\t\t\t\t\t\t * Check if this queue has commands left\n\t\t\t\t\t\t */\n\t\t\t\t\tif(self.queue[item].commands!==undefined&&self.queue[item].commands.length>0) {\n\t\t\t\t\t\t/*\n\t\t\t\t\t\t * Move the next item in the queue down\n\t\t\t\t\t\t */\n\t\t\t\t\t\tself.queue[item].command=self.queue[item].commands[0].command;\n\t\t\t\t\t\tself.queue[item].queueable=self.queue[item].commands[0].queueable;\n\t\t\t\t\t\tself.queue[item].json=self.queue[item].commands[0].json;\n\t\t\t\t\t\tself.queue[item].options=self.queue[item].commands[0].options;\n\t\t\t\t\t\tself.queue[item].commands.shift();\n\t\t\t\t\t\t/*\n\t\t\t\t\t\t *  Update the pid\n\t\t\t\t\t\t */\n\t\t\t\t\t\tself.queue[item].pid=self.pid;\n\t\t\t\t\t\tself.pid++;\n\t\t\t\t\t\tself.queue[item].state = self.DEFINE.QUEUE_ADDED;\n\t\t\t\t\t\t/*\n\t\t\t\t\t\t * Start the queue processor as we just posted a new command\n\t\t\t\t\t\t */\n\t\t\t\t\t\tself.queueProcess();\n\t\t\t\t\t} else {\n\t\t\t\t\t\tself.queue[item].state = self.DEFINE.QUEUE_FINISHED;\n\t\t\t\t\t}\n\t\t\t\t\treturn;\n\t\t\t\t} else {\n\t\t\t\t\tself.reportError('Cant stop an already stopped process ['+pid+']','Queue is corrupted');\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\n\t/**\n\t * This will take a command string in the format object.command({},{}); and split it down\n\t * into it parts as an object\n\t *\n\t * TODO no concept of the context of the command IE was it from inside a div that need binding?\n\t * @param command {string}\n\t * @return {object}\n\t */\n\tcommandParse(command,isParent) {\n\t\tlet self=this;\n\t\tlet commandObject={};\n\t\t// Find the actual command\n\t\tlet commandArray=command.match(/(.*?)\\(/)[1].split('.');\n\t\tcommandObject.queueable=commandArray[0];\n\t\tcommandObject.command=commandArray[1];\n\t\t// Strip as we go to make follow up regex easier\n\t\tcommand=command.replace(/.*?\\(/,'');\n\t\t// Find first json arg\n\t\tlet json=command.match(/(\\{.*?\\})/);\n\t\tcommand=command.replace(/\\{.*?\\}[,]{0,1}/,'');\n\t\tif(command[1]) {\n\t\t\tcommandObject.json = JSON.parse(json[1]);\n\t\t} else {\n\t\t\tcommandObject.json={};\n\t\t}\n\n\t\t// Find second json arg\n\t\tlet jsonOptions=command.match(/(\\{.*?\\})/);\n\t\tif(Array.isArray(jsonOptions) && jsonOptions[1]) {\n\t\t\tcommandObject.options = JSON.parse(jsonOptions[1]);\n\t\t} else {\n\t\t\tcommandObject.options={};\n\t\t}\n\t\t/*\n\t\t * Set our default options if they haven't been set\n\t\t *\n\t\t * We must always have a queueRun object if its not set (normally by instant) then its either an event in\n\t\t * which case it must be a parent or failing then its a sub\n\t\t *\n \t\t */\n\t\tcommandObject.options.queueRun=commandObject.options.queueRun||(isParent? self.DEFINE.COMMAND_EVENT:self.DEFINE.COMMAND_SUB);\n\t\tcommandObject.state=self.DEFINE.QUEUE_ADDED;\n\t\treturn commandObject;\n\t}\n\n\t/**\n\t * Render some text/html to the dom\n\t * @param domObject {object} - The object in the dom to write to\n\t * @param text {string} - The text/HTML to write\n\t * @param mode {number} - Mode to use while writing see define.js\n\t * @return {boolean}\n\t */\n\trenderToDom(domObject,text,mode) {\n\t\tlet self=this;\n\t\tmode=mode||self.DEFINE.RENDER_INSERT;\n\t\tswitch(mode) {\n\t\t\tcase self.DEFINE.RENDER_INSERT:\n\t\t\t\tdomObject.innerHTML=text;\n\t\t\t\tbreak;\n\t\t}\n\t\treturn true;\n\t}\n\n\t/**\n\t * Finds an element in the dom using the jquery formant IE #id .class tag\n\t * @param elementTarget\n\t * @return {object|false}\n\t */\n\tgetElement(elementTarget) {\n\t\tlet self=this;\n\t\tlet element=document.querySelector(elementTarget);\n\t\tif(element!==null)\n\t\t\treturn element;\n\t\tself.reportError('Dom Element find failed for ['+elementTarget+']','Follow up calls that rely on this will fail');\n\t\treturn false;\n\t}\n\n\t/**\n\t *  Show current queue status in the console DEBUG function\n\t */\n\tshow() {\n\t\tlet self=this;\n\t\tfor(let i in self.queue) {\n\t\t\tlet indent=0;\n\t\t\tself.prettyCommandObject(self.queue[i],indent);\n\t\t\tfor(let j in self.queue[i].commands) {\n\t\t\t\tindent++;\n\t\t\t\tself.prettyCommandObject(self.queue[i].commands[j],indent);\n\n\t\t\t}\n\t\t}\n\t}\n\n\t/**\n\t * Make a pretty version of the currrent commandObject and dump it to the console\n\t * @param commandObject\n\t * @param indent\n\t */\n\tprettyCommandObject(commandObject,indent) {\n\t\tlet string='';\n\t\tfor(var i=0;i<indent;i++) {\n\t\t\tstring+=' ';\n\t\t}\n\t\tlet color=self.DEFINE.CONSOLE_COL_GREEN;\n\t\tswitch(commandObject.state) {\n\t\t\tcase self.DEFINE.QUEUE_FINISHED:\n\t\t\t\tcolor=self.DEFINE.CONSOLE_COL_AMBER;\n\t\t\t\tbreak;\n\t\t\tcase self.DEFINE.QUEUE_ERROR:\n\t\t\t\tcolor=self.DEFINE.CONSOLE_COL_RED;\n\t\t\t\tbreak;\n\n\t\t}\n\t\tstring+=commandObject.queueable+'.'+commandObject.command+'('+JSON.stringify(commandObject.json)+','+JSON.stringify(commandObject.options)+');'\n\t\tconsole.log('%c '+string,color);\n\t\tif(commandObject.error)\n\t\t\tconsole.log('%c  Stopped: '+commandObject.error,self.DEFINE.CONSOLE_COL_AMBER);\n\t}\n\n\t/**\n\t * Report an error to the console, adds various internal stats\n\t * @param error\n\t * @param message\n\t */\n\treportError(error,message) {\n\t\tconsole.info(self.DEFINE.CONSOLE_LINE);\n\t\tconsole.error('Error:', error);\n\t\tconsole.info(message);\n\t}\n\n\t/**\n\t * Deep copy and object IE remove references\n\t * @param inputObject\n\t * @return {any}\n\t */\n\tdeepCopy(inputObject) {\n\t\treturn JSON.parse(JSON.stringify(inputObject));\n\t}\n\n}",
-    "static": true,
-    "longname": "G:/Dropbox/Work/Projects/Web/OurThings/src/ourthings/queue.js",
-    "access": "public",
-    "description": null,
-    "lineNumber": 1
-  },
-  {
-    "__docId__": 81,
     "kind": "class",
     "name": "Queue",
-    "memberof": "ourthings/queue.js",
+    "memberof": "ourthings/Queue.js",
     "static": true,
-    "longname": "ourthings/queue.js~Queue",
+    "longname": "ourthings/Queue.js~Queue",
     "access": "public",
     "export": true,
-    "importPath": "ourthings/ourthings/queue.js",
+    "importPath": "ourthings/ourthings/Queue.js",
     "importStyle": "Queue",
     "description": "",
     "examples": [
       "let queue = new Queue();"
     ],
-    "lineNumber": 15,
+    "lineNumber": 14,
     "unknown": [
       {
         "tagName": "@classdesc",
@@ -1194,30 +1101,30 @@
     "interface": false
   },
   {
-    "__docId__": 82,
+    "__docId__": 80,
     "kind": "constructor",
     "name": "constructor",
-    "memberof": "ourthings/queue.js~Queue",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#constructor",
+    "longname": "ourthings/Queue.js~Queue#constructor",
     "access": "public",
     "description": "Class constructor",
-    "lineNumber": 20
+    "lineNumber": 19
   },
   {
-    "__docId__": 83,
+    "__docId__": 81,
     "kind": "method",
     "name": "handleFetchErrors",
-    "memberof": "ourthings/queue.js~Queue",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#handleFetchErrors",
+    "longname": "ourthings/Queue.js~Queue#handleFetchErrors",
     "access": "public",
     "description": "Error Handler for fetch calls",
-    "lineNumber": 115,
+    "lineNumber": 127,
     "unknown": [
       {
         "tagName": "@returns",
@@ -1246,17 +1153,83 @@
     }
   },
   {
-    "__docId__": 84,
+    "__docId__": 82,
     "kind": "method",
-    "name": "templateLoader",
-    "memberof": "ourthings/queue.js~Queue",
+    "name": "checkQueueable",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#templateLoader",
+    "longname": "ourthings/Queue.js~Queue#checkQueueable",
+    "access": "public",
+    "description": null,
+    "lineNumber": 135,
+    "undocument": true,
+    "params": [
+      {
+        "name": "name",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "obj",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "boolean"
+      ]
+    }
+  },
+  {
+    "__docId__": 83,
+    "kind": "method",
+    "name": "capitalizeFirstLetter",
+    "memberof": "ourthings/Queue.js~Queue",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queue.js~Queue#capitalizeFirstLetter",
+    "access": "public",
+    "description": "Helper function to upcase first letter of string",
+    "lineNumber": 151,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "string",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 84,
+    "kind": "method",
+    "name": "templateLoader",
+    "memberof": "ourthings/Queue.js~Queue",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queue.js~Queue#templateLoader",
     "access": "public",
     "description": "Loads templates from the template stack. Recursively calls self until stack is empty",
-    "lineNumber": 127,
+    "lineNumber": 159,
     "unknown": [
       {
         "tagName": "@returns",
@@ -1277,14 +1250,14 @@
     "__docId__": 85,
     "kind": "method",
     "name": "templateProcessor",
-    "memberof": "ourthings/queue.js~Queue",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#templateProcessor",
+    "longname": "ourthings/Queue.js~Queue#templateProcessor",
     "access": "public",
     "description": "Template processor\nTakes a template, process it and places into the dom",
-    "lineNumber": 200,
+    "lineNumber": 232,
     "params": [
       {
         "nullable": null,
@@ -1310,7 +1283,8 @@
     "return": {
       "nullable": null,
       "types": [
-        "boolean"
+        "boolean",
+        "string"
       ],
       "spread": false,
       "description": "success status"
@@ -1320,14 +1294,14 @@
     "__docId__": 86,
     "kind": "method",
     "name": "templateVars",
-    "memberof": "ourthings/queue.js~Queue",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#templateVars",
+    "longname": "ourthings/Queue.js~Queue#templateVars",
     "access": "public",
     "description": "Process the template looking for {{}} instances",
-    "lineNumber": 239,
+    "lineNumber": 277,
     "params": [
       {
         "nullable": null,
@@ -1352,15 +1326,48 @@
   {
     "__docId__": 87,
     "kind": "method",
-    "name": "varsParser",
-    "memberof": "ourthings/queue.js~Queue",
+    "name": "jsonVars",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#varsParser",
+    "longname": "ourthings/Queue.js~Queue#jsonVars",
+    "access": "public",
+    "description": "Process a json object and replace {{!}} tags",
+    "lineNumber": 330,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "any"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 88,
+    "kind": "method",
+    "name": "varsParser",
+    "memberof": "ourthings/Queue.js~Queue",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queue.js~Queue#varsParser",
     "access": "public",
     "description": "parse a var string\n\nTODO This is massively insecure. If as user can input {{}} into a form and have it displayed\nto other users they can take over. We either clean all input as you would with <script> etc tags or we\nmanually write a parser.",
-    "lineNumber": 259,
+    "lineNumber": 349,
     "params": [
       {
         "nullable": null,
@@ -1383,17 +1390,17 @@
     }
   },
   {
-    "__docId__": 88,
+    "__docId__": 89,
     "kind": "method",
     "name": "templateParse",
-    "memberof": "ourthings/queue.js~Queue",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#templateParse",
+    "longname": "ourthings/Queue.js~Queue#templateParse",
     "access": "public",
     "description": "Takes a template and runs any template commands contained in it to create a HTML template\nready to be put into the dom",
-    "lineNumber": 270,
+    "lineNumber": 360,
     "params": [
       {
         "nullable": null,
@@ -1416,43 +1423,17 @@
     }
   },
   {
-    "__docId__": 89,
-    "kind": "method",
-    "name": "commandsBind",
-    "memberof": "ourthings/queue.js~Queue",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "ourthings/queue.js~Queue#commandsBind",
-    "access": "public",
-    "description": "Bind the events to the dom based on the command Object",
-    "lineNumber": 333,
-    "params": [
-      {
-        "nullable": null,
-        "types": [
-          "*"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "commandObj",
-        "description": ""
-      }
-    ],
-    "return": null
-  },
-  {
     "__docId__": 90,
     "kind": "method",
-    "name": "commandsQueue",
-    "memberof": "ourthings/queue.js~Queue",
+    "name": "commandsBind",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#commandsQueue",
+    "longname": "ourthings/Queue.js~Queue#commandsBind",
     "access": "public",
-    "description": "Take the commands array with command objects in it and add them to the queue *if* they are\nmarked as instant. IE ready to execute",
-    "lineNumber": 364,
+    "description": "Bind the events to the dom based on the command Object",
+    "lineNumber": 410,
     "params": [
       {
         "nullable": null,
@@ -1470,30 +1451,202 @@
   {
     "__docId__": 91,
     "kind": "method",
-    "name": "queueProcess",
-    "memberof": "ourthings/queue.js~Queue",
+    "name": "commandsQueue",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#queueProcess",
+    "longname": "ourthings/Queue.js~Queue#commandsQueue",
     "access": "public",
-    "description": "Force a queue processing\n\nThis launches the actual objects using a timeout",
-    "lineNumber": 383,
-    "params": [],
+    "description": "Take the commands array with command objects in it and add them to the queue *if* they are\nmarked as instant. IE ready to execute",
+    "lineNumber": 441,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "commandObj",
+        "description": ""
+      }
+    ],
     "return": null
   },
   {
     "__docId__": 92,
     "kind": "method",
-    "name": "finished",
-    "memberof": "ourthings/queue.js~Queue",
+    "name": "execute",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#finished",
+    "longname": "ourthings/Queue.js~Queue#execute",
+    "access": "public",
+    "description": "Execute a queue that is loaded into prepare",
+    "lineNumber": 470,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "prepareName",
+        "description": "{string} Name of the prepared queue"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json",
+        "description": "{object}"
+      }
+    ],
+    "return": {
+      "types": [
+        "boolean"
+      ]
+    }
+  },
+  {
+    "__docId__": 93,
+    "kind": "method",
+    "name": "queueProcess",
+    "memberof": "ourthings/Queue.js~Queue",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queue.js~Queue#queueProcess",
+    "access": "public",
+    "description": "Force a queue processing\n\nThis launches the actual objects using a timeout",
+    "lineNumber": 495,
+    "params": [],
+    "return": null
+  },
+  {
+    "__docId__": 94,
+    "kind": "method",
+    "name": "findQueueByPid",
+    "memberof": "ourthings/Queue.js~Queue",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queue.js~Queue#findQueueByPid",
+    "access": "public",
+    "description": "Find a queue item by searching for its PID",
+    "lineNumber": 540,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "pid",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "*"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 95,
+    "kind": "method",
+    "name": "memory",
+    "memberof": "ourthings/Queue.js~Queue",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queue.js~Queue#memory",
+    "access": "public",
+    "description": "Called by queueables to add something to our memory stack",
+    "lineNumber": 555,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "name",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "value",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "pid",
+        "description": ""
+      }
+    ],
+    "return": {
+      "types": [
+        "boolean"
+      ]
+    }
+  },
+  {
+    "__docId__": 96,
+    "kind": "method",
+    "name": "cleanMemory",
+    "memberof": "ourthings/Queue.js~Queue",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queue.js~Queue#cleanMemory",
+    "access": "public",
+    "description": null,
+    "lineNumber": 577,
+    "undocument": true,
+    "params": [
+      {
+        "name": "pid",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 97,
+    "kind": "method",
+    "name": "finished",
+    "memberof": "ourthings/Queue.js~Queue",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queue.js~Queue#finished",
     "access": "public",
     "description": " Called to flag a queue item as finished\n\n Normally hooked down from queueable this is a queue item saying I have finished in mode (see define.js)",
-    "lineNumber": 429,
+    "lineNumber": 596,
     "params": [
       {
         "nullable": null,
@@ -1519,17 +1672,17 @@
     "return": null
   },
   {
-    "__docId__": 93,
+    "__docId__": 98,
     "kind": "method",
     "name": "commandParse",
-    "memberof": "ourthings/queue.js~Queue",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#commandParse",
+    "longname": "ourthings/Queue.js~Queue#commandParse",
     "access": "public",
     "description": "This will take a command string in the format object.command({},{}); and split it down\ninto it parts as an object\n\nTODO no concept of the context of the command IE was it from inside a div that need binding?",
-    "lineNumber": 495,
+    "lineNumber": 664,
     "params": [
       {
         "nullable": null,
@@ -1552,17 +1705,17 @@
     }
   },
   {
-    "__docId__": 94,
+    "__docId__": 99,
     "kind": "method",
     "name": "renderToDom",
-    "memberof": "ourthings/queue.js~Queue",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#renderToDom",
+    "longname": "ourthings/Queue.js~Queue#renderToDom",
     "access": "public",
     "description": "Render some text/html to the dom",
-    "lineNumber": 539,
+    "lineNumber": 707,
     "params": [
       {
         "nullable": null,
@@ -1605,17 +1758,17 @@
     }
   },
   {
-    "__docId__": 95,
+    "__docId__": 100,
     "kind": "method",
     "name": "getElement",
-    "memberof": "ourthings/queue.js~Queue",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#getElement",
+    "longname": "ourthings/Queue.js~Queue#getElement",
     "access": "public",
     "description": "Finds an element in the dom using the jquery formant IE #id .class tag",
-    "lineNumber": 555,
+    "lineNumber": 723,
     "params": [
       {
         "nullable": null,
@@ -1639,32 +1792,32 @@
     }
   },
   {
-    "__docId__": 96,
+    "__docId__": 101,
     "kind": "method",
     "name": "show",
-    "memberof": "ourthings/queue.js~Queue",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#show",
+    "longname": "ourthings/Queue.js~Queue#show",
     "access": "public",
     "description": " Show current queue status in the console DEBUG function",
-    "lineNumber": 567,
+    "lineNumber": 735,
     "params": [],
     "return": null
   },
   {
-    "__docId__": 97,
+    "__docId__": 102,
     "kind": "method",
     "name": "prettyCommandObject",
-    "memberof": "ourthings/queue.js~Queue",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#prettyCommandObject",
+    "longname": "ourthings/Queue.js~Queue#prettyCommandObject",
     "access": "public",
     "description": "Make a pretty version of the currrent commandObject and dump it to the console",
-    "lineNumber": 585,
+    "lineNumber": 753,
     "params": [
       {
         "nullable": null,
@@ -1690,17 +1843,17 @@
     "return": null
   },
   {
-    "__docId__": 98,
+    "__docId__": 103,
     "kind": "method",
     "name": "reportError",
-    "memberof": "ourthings/queue.js~Queue",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#reportError",
+    "longname": "ourthings/Queue.js~Queue#reportError",
     "access": "public",
     "description": "Report an error to the console, adds various internal stats",
-    "lineNumber": 611,
+    "lineNumber": 779,
     "params": [
       {
         "nullable": null,
@@ -1726,17 +1879,17 @@
     "return": null
   },
   {
-    "__docId__": 99,
+    "__docId__": 104,
     "kind": "method",
     "name": "deepCopy",
-    "memberof": "ourthings/queue.js~Queue",
+    "memberof": "ourthings/Queue.js~Queue",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queue.js~Queue#deepCopy",
+    "longname": "ourthings/Queue.js~Queue#deepCopy",
     "access": "public",
     "description": "Deep copy and object IE remove references",
-    "lineNumber": 622,
+    "lineNumber": 790,
     "params": [
       {
         "nullable": null,
@@ -1759,26 +1912,608 @@
     }
   },
   {
-    "__docId__": 100,
+    "__docId__": 105,
     "kind": "file",
-    "name": "ourthings/queueable.js",
-    "content": "/** @module Queueable */\n\n/**\n * @classdesc\n *\n * The base class for queueable things\n *\n * @author Richard Reynolds richard@nautoguide.com\n *\n * @example\n * // queue = new Queue();\n *\n */\nexport default class Queueable {\n\n\t/**\n\t * Constructor, Sets our status to be false (flipped on init)\n\t *\n\t */\n\tconstructor() {\n\t\tlet self=this;\n\t\tself.ready=false;\n\t}\n\n\t/**\n\t * init, override this for any promise based inits setting\n\t * the self.ready=true after the promise\n\t *\n\t */\n\tinit(queue) {\n\t\tlet self=this;\n\t\tself.queue=queue;\n\t\tself.ready=true;\n\t}\n\n\t/**\n\t * Called from queue, starts running the actual command\n\t * @param pid\n\t * @param command\n\t * @param json\n\t */\n\tstart(pid,command,json) {\n\t\tlet self=this;\n\t\tif(self[command]&&typeof self[command] === 'function') {\n\t\t\tself[command](pid, json);\n\t\t} else {\n\t\t\tself.queue.finished(pid,self.queue.DEFINE.FIN_ERROR,'No such command ['+command+']');\n\t\t}\n\t}\n\n\t/**\n\t * Call this method after you command has finished. Failure to do so will result is\n\t * a stalled queue\n\t * @param pid\n\t * @param mode\n\t */\n\tfinished(pid,mode,error='') {\n\t\tlet self=this;\n\t\tself.queue.finished(pid,mode,error);\n\t}\n}\n",
+    "name": "ourthings/Queueable/Api.js",
+    "content": "/** @module Api */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Dom Elements manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n */\r\nexport default class Api extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.url - URL to make GET request to\r\n\t */\r\n\tget(pid,json) {\r\n\t\tlet self=this;\r\n\r\n\t\tfetch(json.url, {\r\n\t\t\theaders: {\r\n\t\t\t\t'Content-Type': 'application/json'\r\n\t\t\t}\r\n\t\t})\r\n\t\t\t.then(response => self.queue.handleFetchErrors(response))\r\n\t\t\t.then(response => response.json() )\r\n\t\t\t.then(function (response) {\r\n\t\t\t\t/**\r\n\t\t\t\t * Convert the response to json and start the loader\r\n\t\t\t\t */\r\n\t\t\t\tself.set(pid,response);\r\n\t\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\r\n\t\t\t})\r\n\t\t\t.catch(function (error) {\r\n\t\t\t\tconsole.info(self.queue.DEFINE.CONSOLE_LINE);\r\n\t\t\t\tconsole.error('Error:', error);\r\n\t\t\t\tconsole.info(\"Warning this error is probably fatal as I have no templates to load\")\r\n\t\t\t});\r\n\r\n\t}\r\n}\r\n",
     "static": true,
-    "longname": "G:/Dropbox/Work/Projects/Web/OurThings/src/ourthings/queueable.js",
+    "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable/Api.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 101,
+    "__docId__": 106,
     "kind": "class",
-    "name": "Queueable",
-    "memberof": "ourthings/queueable.js",
+    "name": "Api",
+    "memberof": "ourthings/Queueable/Api.js",
     "static": true,
-    "longname": "ourthings/queueable.js~Queueable",
+    "longname": "ourthings/Queueable/Api.js~Api",
     "access": "public",
     "export": true,
-    "importPath": "ourthings/ourthings/queueable.js",
+    "importPath": "ourthings/ourthings/Queueable/Api.js",
+    "importStyle": "Api",
+    "description": "",
+    "examples": [
+      "//"
+    ],
+    "lineNumber": 15,
+    "unknown": [
+      {
+        "tagName": "@classdesc",
+        "tagValue": "\nDom Elements manipulations"
+      },
+      {
+        "tagName": "@author",
+        "tagValue": "Richard Reynolds richard@nautoguide.com"
+      }
+    ],
+    "interface": false,
+    "extends": [
+      "ourthings/Queueable.js~Queueable"
+    ]
+  },
+  {
+    "__docId__": 107,
+    "kind": "method",
+    "name": "get",
+    "memberof": "ourthings/Queueable/Api.js~Api",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable/Api.js~Api#get",
+    "access": "public",
+    "description": "Render a template into the dom using the queues templateProcessor",
+    "lineNumber": 23,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "pid",
+        "description": "Process ID"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json",
+        "description": "queue arguments"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.url",
+        "description": "URL to make GET request to"
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 108,
+    "kind": "file",
+    "name": "ourthings/Queueable/Elements.js",
+    "content": "/** @module ourthings/Queueable/Elements */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Dom Elements manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n */\r\nexport default class Elements extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.targetId - Dom target\r\n\t * @param {string} json.class - Name of class to add\r\n\t */\r\n\taddClass(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet element=self.queue.getElement(json.targetId);\r\n\t\tself.set(pid,json);\r\n\r\n\t\tif(element!==false) {\r\n\t\t\telement.classList.add(json.class);\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t\t} else {\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not add class ['+json.class+'] to ['+json.targetId+']');\r\n\t\t}\r\n\t}\r\n}\r\n",
+    "static": true,
+    "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable/Elements.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 109,
+    "kind": "class",
+    "name": "Elements",
+    "memberof": "ourthings/Queueable/Elements.js",
+    "static": true,
+    "longname": "ourthings/Queueable/Elements.js~Elements",
+    "access": "public",
+    "export": true,
+    "importPath": "ourthings/ourthings/Queueable/Elements.js",
+    "importStyle": "Elements",
+    "description": "",
+    "examples": [
+      "//"
+    ],
+    "lineNumber": 15,
+    "unknown": [
+      {
+        "tagName": "@classdesc",
+        "tagValue": "\nDom Elements manipulations"
+      },
+      {
+        "tagName": "@author",
+        "tagValue": "Richard Reynolds richard@nautoguide.com"
+      }
+    ],
+    "interface": false,
+    "extends": [
+      "ourthings/Queueable.js~Queueable"
+    ]
+  },
+  {
+    "__docId__": 110,
+    "kind": "method",
+    "name": "addClass",
+    "memberof": "ourthings/Queueable/Elements.js~Elements",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable/Elements.js~Elements#addClass",
+    "access": "public",
+    "description": "Render a template into the dom using the queues templateProcessor",
+    "lineNumber": 24,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "pid",
+        "description": "Process ID"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json",
+        "description": "queue arguments"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.targetId",
+        "description": "Dom target"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.class",
+        "description": "Name of class to add"
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 111,
+    "kind": "file",
+    "name": "ourthings/Queueable/Internals.js",
+    "content": "/** @module ourthings/Queueable/Internals */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Internal queue functions exposed to queueables\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n */\r\nexport default class Internals extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param {int} pid - process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.name - prepared queue to call\r\n\t */\r\n\texecute(pid,json) {\r\n\t\tlet self=this;\r\n\t\tself.queue.execute(json.name);\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n}\r\n",
+    "static": true,
+    "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable/Internals.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 112,
+    "kind": "class",
+    "name": "Internals",
+    "memberof": "ourthings/Queueable/Internals.js",
+    "static": true,
+    "longname": "ourthings/Queueable/Internals.js~Internals",
+    "access": "public",
+    "export": true,
+    "importPath": "ourthings/ourthings/Queueable/Internals.js",
+    "importStyle": "Internals",
+    "description": "",
+    "examples": [
+      "//"
+    ],
+    "lineNumber": 15,
+    "unknown": [
+      {
+        "tagName": "@classdesc",
+        "tagValue": "\nInternal queue functions exposed to queueables"
+      },
+      {
+        "tagName": "@author",
+        "tagValue": "Richard Reynolds richard@nautoguide.com"
+      }
+    ],
+    "interface": false,
+    "extends": [
+      "ourthings/Queueable.js~Queueable"
+    ]
+  },
+  {
+    "__docId__": 113,
+    "kind": "method",
+    "name": "execute",
+    "memberof": "ourthings/Queueable/Internals.js~Internals",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable/Internals.js~Internals#execute",
+    "access": "public",
+    "description": "Render a template into the dom using the queues templateProcessor",
+    "lineNumber": 23,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "int"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "pid",
+        "description": "process ID"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json",
+        "description": "queue arguments"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.name",
+        "description": "prepared queue to call"
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 114,
+    "kind": "file",
+    "name": "ourthings/Queueable/Openlayers.js",
+    "content": "/** @module Openlayers */\r\nimport Queueable from \"../Queueable\";\r\nimport {Map, View, Feature} from 'ol';\r\nimport TileLayer from 'ol/layer/Tile';\r\nimport VectorLayer from 'ol/layer/Vector';\r\nimport VectorSource from 'ol/source/Vector';\r\nimport OSM from 'ol/source/OSM';\r\nimport WKT from 'ol/format/WKT';\r\nimport {fromLonLat,units,epsg3857,epsg4326} from 'ol/proj';\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Openlayers Hook\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n */\r\nexport default class Openlayers extends Queueable {\r\n\r\n\tinit(queue) {\r\n\t\tlet self=this;\r\n\t\tself.queue=queue;\r\n\r\n\t\tself.maps={};\r\n\r\n\t\tself.ready=true;\r\n\t}\r\n\r\n\r\n\taddMap(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet options=Object.assign({\r\n\t\t\t\"map\":\"map1\",\r\n\t\t\t\"projection\":\"EPSG:3857\",\r\n\t\t\t\"zoom\": 0,\r\n\t\t\t\"renderer\": ['webgl', 'canvas'],\r\n\t\t\t\"target\":\"map\"\r\n\t\t},json);\r\n\t\tconst map = new Map({\r\n\t\t\ttarget: options.target,\r\n\t\t\tview: new View({\r\n\t\t\t\tcenter: [0, 0],\r\n\t\t\t\tzoom: 0\r\n\t\t\t})\r\n\t\t});\r\n\t\tself.maps[options.map]={\"object\":map,\"layers\":{}};\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\taddLayer(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet options=Object.assign({\r\n\t\t\t\"map\":\"map1\",\r\n\t\t\t\"name\":\"default\",\r\n\t\t\t\"opacity\": 1,\r\n\t\t\t\"transparent\": false,\r\n\t\t\t\"active\": true,\r\n\t\t\t\"tilesize\": [256, 256],\r\n\t\t\t\"tiled\": true,\r\n\t\t\t\"selectable\": true,\r\n\t\t\t\"hover\": true,\r\n\t\t\t\"style\": \"default\"\r\n\t\t},json);\r\n\t\tlet map=self.maps[options.map].object;\r\n\t\tlet olLayer = null;\r\n\t\tlet layerFunction = self[\"_addLayer_\" + options.type];\r\n\r\n\t\tif (typeof layerFunction === \"function\") {\r\n\t\t\tolLayer = layerFunction.apply(null, [options]);\r\n\t\t}\r\n\t\telse {\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_ERROR,\"No add layer function for \" + options.type);\r\n\t\t\treturn false;\r\n\t\t}\r\n\t\tmap.addLayer(olLayer);\r\n\t\tself.maps[options.map].layers[options.name]=olLayer;\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t_addLayer_osm(options) {\r\n\t\tlet olLayer=new TileLayer({\r\n\t\t\tsource: new OSM()\r\n\t\t});\r\n\t\treturn olLayer;\r\n\t}\r\n\r\n\t_addLayer_vector(options) {\r\n\t\tlet source={};\r\n\t\tlet vectorSource = new VectorSource(source);\r\n\t\tlet olLayer = new VectorLayer({\r\n\t\t\tname: options.name,\r\n\t\t\tvisible: options.active,\r\n\t\t\tsource: vectorSource,\r\n\t\t\t//style: window.styles[options.style],\r\n\t\t\topacity: options.opacity,\r\n\t\t\tzIndex: options['zindex'],\r\n\t\t\tselectable: options.selectable,\r\n\t\t\thover: options.hover\r\n\t\t});\r\n\t\treturn olLayer;\r\n\r\n\t}\r\n\r\n\taddFeature(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet options=Object.assign({\r\n\t\t\t\"map\":\"map1\",\r\n\t\t\t\"layer\":\"default\",\r\n\t\t\t\"values\":{}\r\n\t\t},json);\r\n\r\n\t\tlet map=self.maps[options.map].object;\r\n\t\tlet layer=self.maps[options.map].layers[options.layer];\r\n\t\tlet view=map.getView();\r\n\t\tlet source=layer.getSource();\r\n\t\tconsole.log(layer);\r\n\r\n\t\tlet projection = \"EPSG:\" + options.geometry.match(/SRID=(.*?);/)[1];\r\n\t\tlet wkt = options.geometry.replace(/SRID=(.*?);/, '');\r\n\r\n\t\tlet format = new WKT();\r\n\t\tlet feature = format.readFeature(wkt);\r\n\t\toptions.values.geometry = feature.getGeometry().transform(projection, view.getProjection().getCode());\r\n\t\tsource.addFeature(new Feature(options.values));\r\n\r\n\t}\r\n}",
+    "static": true,
+    "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable/Openlayers.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 115,
+    "kind": "class",
+    "name": "Openlayers",
+    "memberof": "ourthings/Queueable/Openlayers.js",
+    "static": true,
+    "longname": "ourthings/Queueable/Openlayers.js~Openlayers",
+    "access": "public",
+    "export": true,
+    "importPath": "ourthings/ourthings/Queueable/Openlayers.js",
+    "importStyle": "Openlayers",
+    "description": "",
+    "examples": [
+      "//"
+    ],
+    "lineNumber": 22,
+    "unknown": [
+      {
+        "tagName": "@classdesc",
+        "tagValue": "\nOpenlayers Hook"
+      },
+      {
+        "tagName": "@author",
+        "tagValue": "Richard Reynolds richard@nautoguide.com"
+      }
+    ],
+    "interface": false,
+    "extends": [
+      "ourthings/Queueable.js~Queueable"
+    ]
+  },
+  {
+    "__docId__": 116,
+    "kind": "method",
+    "name": "init",
+    "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable/Openlayers.js~Openlayers#init",
+    "access": "public",
+    "description": null,
+    "lineNumber": 24,
+    "undocument": true,
+    "params": [
+      {
+        "name": "queue",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 117,
+    "kind": "method",
+    "name": "addMap",
+    "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable/Openlayers.js~Openlayers#addMap",
+    "access": "public",
+    "description": null,
+    "lineNumber": 34,
+    "undocument": true,
+    "params": [
+      {
+        "name": "pid",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "json",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 118,
+    "kind": "method",
+    "name": "addLayer",
+    "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable/Openlayers.js~Openlayers#addLayer",
+    "access": "public",
+    "description": null,
+    "lineNumber": 54,
+    "undocument": true,
+    "params": [
+      {
+        "name": "pid",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "json",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "boolean"
+      ]
+    }
+  },
+  {
+    "__docId__": 119,
+    "kind": "method",
+    "name": "_addLayer_osm",
+    "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_osm",
+    "access": "private",
+    "description": null,
+    "lineNumber": 85,
+    "undocument": true,
+    "params": [
+      {
+        "name": "options",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 120,
+    "kind": "method",
+    "name": "_addLayer_vector",
+    "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_vector",
+    "access": "private",
+    "description": null,
+    "lineNumber": 92,
+    "undocument": true,
+    "params": [
+      {
+        "name": "options",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 121,
+    "kind": "method",
+    "name": "addFeature",
+    "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable/Openlayers.js~Openlayers#addFeature",
+    "access": "public",
+    "description": null,
+    "lineNumber": 109,
+    "undocument": true,
+    "params": [
+      {
+        "name": "pid",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "json",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 122,
+    "kind": "file",
+    "name": "ourthings/Queueable/Templates.js",
+    "content": "/** @module ourthings/Queueable/Templates */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Template manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * // @templates.render({\"targetId\":\"content\",\"template\":\"basic\"});\r\n *\r\n */\r\nclass Templates extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.template - dom id of template to use\r\n\t * @param {string} [json.target] - dom id of render target\r\n\t */\r\n\trender(pid,json) {\r\n\t\tlet self=this;\r\n\t\tself.set(pid,json);\r\n\t\tif(!self.queue.templateProcessor(json.template,json.targetId))\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_ERROR,'Could not render template');\r\n\t\telse\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n}\r\n\r\nexport default Templates;",
+    "static": true,
+    "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable/Templates.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 123,
+    "kind": "class",
+    "name": "Templates",
+    "memberof": "ourthings/Queueable/Templates.js",
+    "static": true,
+    "longname": "ourthings/Queueable/Templates.js~Templates",
+    "access": "public",
+    "export": true,
+    "importPath": "ourthings/ourthings/Queueable/Templates.js",
+    "importStyle": "Templates",
+    "description": "",
+    "examples": [
+      "// @templates.render({\"targetId\":\"content\",\"template\":\"basic\"});"
+    ],
+    "lineNumber": 15,
+    "unknown": [
+      {
+        "tagName": "@classdesc",
+        "tagValue": "\nTemplate manipulations"
+      },
+      {
+        "tagName": "@author",
+        "tagValue": "Richard Reynolds richard@nautoguide.com"
+      }
+    ],
+    "interface": false,
+    "extends": [
+      "ourthings/Queueable.js~Queueable"
+    ]
+  },
+  {
+    "__docId__": 124,
+    "kind": "method",
+    "name": "render",
+    "memberof": "ourthings/Queueable/Templates.js~Templates",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable/Templates.js~Templates#render",
+    "access": "public",
+    "description": "Render a template into the dom using the queues templateProcessor",
+    "lineNumber": 24,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "pid",
+        "description": "Process ID"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json",
+        "description": "queue arguments"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.template",
+        "description": "dom id of template to use"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "json.target",
+        "description": "dom id of render target"
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 125,
+    "kind": "file",
+    "name": "ourthings/Queueable.js",
+    "content": "/** @module ourthings/Queueable */\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * The base class for queueable things\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * // queue = new Queue();\r\n *\r\n */\r\nclass Queueable {\r\n\r\n\t/**\r\n\t * Constructor, Sets our status to be false (flipped on init)\r\n\t *\r\n\t */\r\n\tconstructor() {\r\n\t\tlet self=this;\r\n\t\tself.ready=false;\r\n\t}\r\n\r\n\t/**\r\n\t * init, override this for any promise based inits setting\r\n\t * the self.ready=true after the promise\r\n\t *\r\n\t */\r\n\tinit(queue) {\r\n\t\tlet self=this;\r\n\t\tself.queue=queue;\r\n\t\tself.ready=true;\r\n\t}\r\n\r\n\t/**\r\n\t * Called from queue, starts running the actual command\r\n\t * @param pid\r\n\t * @param command\r\n\t * @param json\r\n\t */\r\n\tstart(pid,command,json) {\r\n\t\tlet self=this;\r\n\t\tif(self[command]&&typeof self[command] === 'function') {\r\n\r\n\t\t\t/*\r\n\t\t\t * Pass the json through the var processor\r\n\t\t\t */\r\n\r\n\t\t\tjson=JSON.parse(self.queue.templateVars(JSON.stringify(json)));\r\n\t\t\t/*\r\n\t\t\t * Execute\r\n\t\t\t */\r\n\t\t\tself[command](pid, json);\r\n\t\t} else {\r\n\t\t\tself.queue.finished(pid,self.queue.DEFINE.FIN_ERROR,'No such command ['+command+']');\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Call this method after you command has finished. Failure to do so will result is\r\n\t * a stalled queue\r\n\t * @param pid\r\n\t * @param mode\r\n\t */\r\n\tfinished(pid,mode,error='') {\r\n\t\tlet self=this;\r\n\t\tself.queue.finished(pid,mode,error);\r\n\t}\r\n\r\n\tset(pid,value) {\r\n\t\tlet self=this;\r\n\t\tself.queue.memory(pid,value);\r\n\t}\r\n}\r\n\r\nexport default Queueable;",
+    "static": true,
+    "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 126,
+    "kind": "class",
+    "name": "Queueable",
+    "memberof": "ourthings/Queueable.js",
+    "static": true,
+    "longname": "ourthings/Queueable.js~Queueable",
+    "access": "public",
+    "export": true,
+    "importPath": "ourthings/ourthings/Queueable.js",
     "importStyle": "Queueable",
     "description": "",
     "examples": [
@@ -1798,27 +2533,27 @@
     "interface": false
   },
   {
-    "__docId__": 102,
+    "__docId__": 127,
     "kind": "constructor",
     "name": "constructor",
-    "memberof": "ourthings/queueable.js~Queueable",
+    "memberof": "ourthings/Queueable.js~Queueable",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queueable.js~Queueable#constructor",
+    "longname": "ourthings/Queueable.js~Queueable#constructor",
     "access": "public",
     "description": "Constructor, Sets our status to be false (flipped on init)",
     "lineNumber": 20
   },
   {
-    "__docId__": 103,
+    "__docId__": 128,
     "kind": "method",
     "name": "init",
-    "memberof": "ourthings/queueable.js~Queueable",
+    "memberof": "ourthings/Queueable.js~Queueable",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queueable.js~Queueable#init",
+    "longname": "ourthings/Queueable.js~Queueable#init",
     "access": "public",
     "description": "init, override this for any promise based inits setting\nthe self.ready=true after the promise",
     "lineNumber": 30,
@@ -1833,14 +2568,14 @@
     "return": null
   },
   {
-    "__docId__": 104,
+    "__docId__": 129,
     "kind": "method",
     "name": "start",
-    "memberof": "ourthings/queueable.js~Queueable",
+    "memberof": "ourthings/Queueable.js~Queueable",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queueable.js~Queueable#start",
+    "longname": "ourthings/Queueable.js~Queueable#start",
     "access": "public",
     "description": "Called from queue, starts running the actual command",
     "lineNumber": 42,
@@ -1879,17 +2614,17 @@
     "return": null
   },
   {
-    "__docId__": 105,
+    "__docId__": 130,
     "kind": "method",
     "name": "finished",
-    "memberof": "ourthings/queueable.js~Queueable",
+    "memberof": "ourthings/Queueable.js~Queueable",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "ourthings/queueable.js~Queueable#finished",
+    "longname": "ourthings/Queueable.js~Queueable#finished",
     "access": "public",
     "description": "Call this method after you command has finished. Failure to do so will result is\na stalled queue",
-    "lineNumber": 57,
+    "lineNumber": 66,
     "params": [
       {
         "nullable": null,
@@ -1915,17 +2650,46 @@
     "return": null
   },
   {
+    "__docId__": 131,
+    "kind": "method",
+    "name": "set",
+    "memberof": "ourthings/Queueable.js~Queueable",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable.js~Queueable#set",
+    "access": "public",
+    "description": null,
+    "lineNumber": 71,
+    "undocument": true,
+    "params": [
+      {
+        "name": "pid",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "value",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
     "kind": "index",
-    "content": "# ourthings\nQueue based JavaScript framework\n\n# Intro\n\nourthings is a queue based javascript framework designed to take the legwork out of AJAX apps. Originally a closed\ncommercial framework,  we are rewriting it and giving it to the world.\n\n# What does it do\n\nAfter creating ajax site after site we realised that we were repeating the same blocks of code, over and over and \nalways ending up in the same code tangle. Do this, then do this, do that, then call this same piece of code but do\nsomething slightly different. After boiling down what we did it became obvious that what every app needed was:\n\n* A queue system\n* Flexible code blocks that can be reused\n* Common method of passing data between code and UI\n* Way to stop coders breaking the UI responsiveness\n\nWe also wanted to detach the framework from a need to use javascript. Our UX designers were spending time either\nwriting bad javascript or having to get coders involved for even the most basic of tasks. Thus we wanted to give HTML/CSS users access\nto the framework in a language they already understand.\n\n# Documentation\n\n<a href=\"https://nautoguide.github.io/ourthings/\">Documentation Site</a>\n\n\n",
-    "longname": "G:\\Dropbox\\Work\\Projects\\Web\\OurThings\\README.md",
+    "content": "# ourthings\r\nQueue based JavaScript framework\r\n\r\n# Intro\r\n\r\nourthings is a queue based javascript framework designed to take the legwork out of AJAX apps. Originally a closed\r\ncommercial framework,  we are rewriting it and giving it to the world.\r\n\r\n# What does it do\r\n\r\nAfter creating ajax site after site we realised that we were repeating the same blocks of code, over and over and \r\nalways ending up in the same code tangle. Do this, then do this, do that, then call this same piece of code but do\r\nsomething slightly different. After boiling down what we did it became obvious that what every app needed was:\r\n\r\n* A queue system\r\n* Flexible code blocks that can be reused\r\n* Common method of passing data between code and UI\r\n* Way to stop coders breaking the UI responsiveness\r\n\r\nWe also wanted to detach the framework from a need to use javascript. Our UX designers were spending time either\r\nwriting bad javascript or having to get coders involved for even the most basic of tasks. Thus we wanted to give HTML/CSS users access\r\nto the framework in a language they already understand.\r\n\r\n# Documentation\r\n\r\n<a href=\"https://nautoguide.github.io/ourthings/\">Documentation Site</a>\r\n\r\n\r\n",
+    "longname": "C:\\Users\\xrout\\Dropbox\\machine\\Work\\webstorm\\ourthings\\README.md",
     "name": "./README.md",
     "static": true,
     "access": "public"
   },
   {
     "kind": "packageJSON",
-    "content": "{\n  \"name\": \"ourthings\",\n  \"version\": \"1.0.0\",\n  \"scripts\": {\n    \"build\": \"webpack\",\n    \"apidoc\": \"esdoc\",\n    \"test\": \"mocha-headless-chrome -f http://localhost:8080/test/test.html -o test/out.res -v\",\n    \"headlesstest\": \"mocha-headless-chrome -f http://localhost:8080/test/test.html -o test/out.res\"\n  },\n  \"main\": \"src/ourthings/main.js\",\n  \"devDependencies\": {\n    \"@babel/core\": \"^7.1.2\",\n    \"@babel/polyfill\": \"^7.0.0\",\n    \"@babel/preset-env\": \"^7.1.0\",\n    \"babel-cli\": \"^6.26.0\",\n    \"babel-loader\": \"^8.0.4\",\n    \"chai\": \"^4.2.0\",\n    \"docdash\": \"^1.0.0\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"mocha\": \"^5.2.0\",\n    \"mocha-headless-chrome\": \"^2.0.1\",\n    \"path\": \"^0.12.7\",\n    \"webpack\": \"^4.20.2\",\n    \"webpack-cli\": \"^3.1.2\",\n    \"webpack-dev-server\": \"^3.1.9\"\n  }\n}\n",
-    "longname": "G:\\Dropbox\\Work\\Projects\\Web\\OurThings\\package.json",
+    "content": "{\r\n  \"name\": \"ourthings\",\r\n  \"version\": \"1.0.0\",\r\n  \"scripts\": {\r\n    \"build\": \"webpack  --config webpack.config.basic.js\",\r\n    \"buildbabel\": \"webpack\",\r\n    \"apidoc\": \"esdoc\",\r\n    \"test\": \"mocha-headless-chrome -f http://localhost:8080/test/test.html -o test/out.res -v\",\r\n    \"headlesstest\": \"mocha-headless-chrome -f http://localhost:8080/test/test.html -o test/out.res\"\r\n  },\r\n  \"main\": \"src/ourthings/index.js\",\r\n\r\n  \"devDependencies\": {\r\n    \"@babel/core\": \"^7.1.2\",\r\n    \"@babel/polyfill\": \"^7.0.0\",\r\n    \"@babel/preset-env\": \"^7.1.0\",\r\n    \"babel-cli\": \"^6.26.0\",\r\n    \"babel-loader\": \"^8.0.4\",\r\n    \"chai\": \"^4.2.0\",\r\n    \"esdoc\": \"^1.1.0\",\r\n    \"esdoc-standard-plugin\": \"^1.0.0\",\r\n    \"mocha\": \"^5.2.0\",\r\n    \"mocha-headless-chrome\": \"^2.0.1\",\r\n    \"path\": \"^0.12.7\",\r\n    \"webpack\": \"^4.20.2\",\r\n    \"webpack-cli\": \"^3.1.2\",\r\n    \"webpack-dev-server\": \"^3.1.9\",\r\n    \"ol\": \"^5.3.0\"\r\n  }\r\n}\r\n",
+    "longname": "C:\\Users\\xrout\\Dropbox\\machine\\Work\\webstorm\\ourthings\\package.json",
     "name": "package.json",
     "static": true,
     "access": "public"

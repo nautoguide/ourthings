@@ -29,52 +29,40 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/define.js~Define.html">Define</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/queue.js~Queue.html">Queue</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/queueable.js~Queueable.html">Queueable</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#internals">internals</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/internals/elements.js~Elements.html">Elements</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/internals/templates.js~Templates.html">Templates</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">ourthings/main.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Queue from &apos;./queue.js&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Queue from &apos;./Queue&apos;;
 
 /**
- *  Import all the queueables we want to use here. Make sure to add an entry to window.queueables bellow to
- *  construct the object
- *
- *  TODO Figure a way to get list of imported queuaables from webpack (plugin?)
- */
-import Templates from &apos;./internals/templates.js&apos;;
-import Elements from &apos;./internals/elements.js&apos;;
-
-/**
- * On load initiate the queue object
- *
- * And setup our queueables
+ *  Import all the queueables we want to use here. Make sure to add an entry to to new queue to map the commands
  *
  */
+import Internals from &apos;./Queueable/Internals&apos;;
+import Templates from &apos;./Queueable/Templates&apos;;
+import Elements from &apos;./Queueable/Elements&apos;;
+import Api from &apos;./Queueable/Api&apos;;
+import Openlayers from &apos;./Queueable/Openlayers&apos;;
 
-let queue;
-window.onload = function() {
-	window.queueables={};
+/*
+ * Start the queue engine
+ */
+let queue = new Queue({&quot;internals&quot;:Internals,&quot;templates&quot;:Templates,&quot;elements&quot;:Elements,&quot;api&quot;:Api,&quot;openlayers&quot;:Openlayers});
 
-	/**
-	 * Setup our imported queueables here
-	 */
-	window.queueables[&apos;templates&apos;]=new Templates();
-	window.queueables[&apos;elements&apos;]=new Elements();
-
-	queue = new Queue();
-
-	/**
-	 * Copy the queue into the global to make debug easier
-	 * @type {Queue}
-	 */
-	window.queue=queue;
-};
+/*
+ * If you want debug put the queue into the window
+ */
+window.queue=queue;
 </code></pre>
 
 </div>

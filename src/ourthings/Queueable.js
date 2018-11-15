@@ -68,9 +68,9 @@ class Queueable {
 		self.queue.finished(pid,mode,error);
 	}
 
-	set(pid,value,name) {
+	set(pid,value) {
 		let self=this;
-		self.queue.memory(pid,value,name);
+		self.queue.memory(pid,value);
 	}
 }
 

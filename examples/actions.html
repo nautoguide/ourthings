@@ -2,20 +2,38 @@
 	<!-- init is always run automatically on startup -->
 	@templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});
 	 -elements.addClass({"targetId":"#content","class":"highlight"});
+	 -openlayers.addMap({});
+	 -openlayers.addLayer({"name":"osm","type":"osm"});
+	 -openlayers.addLayer({"name":"data","type":"vector"});
+
+	@api.get({"url":"https://api.openbrewerydb.org/breweries"},{"memoryMode":"Session","memoryName":"breweries","queuePrepare":"getList"});>
+	 -templates.render({"targetId":"#results","template":"#displayResults"});
 </script>
 
 <script id="basic" type="text/html">
-	Very basic template
-	<div id="myButton" class="button" @api.get({"url":"https://api.openbrewerydb.org/breweries"});>
-		-templates.render({"targetId":"#results","template":"#displayResults"});
-		Example of API call to get breweries
-	</div>
+	<h1>Get a List of breweries from open API and plot the results</h1>
+	<button id="myButton" @internals.execute({"name":"getList"});>
+		Call the API
+	</button>
+	<h2>Display the results here</h2>
 	<div id="results"></div>
+	<div id="info">{{#include #noInfo}}</div>
+</script>
+
+<script id="noInfo" type="text/html">
+	{{#if true}}
+		No info true
+	{{/if}}
 </script>
 
 <script id="displayResults" type="text/html">
-	{{#for window.memory['api.get'].value}}
-		{{window.memory['api.get'].value[#loop0].name}}
+	{{#for memory.breweries.value}}
+		<button @templates.render({"targetId":"#info","template":"#displayInfo","id":"#loop0"});>{{memory.breweries.value[#loop0].name}}</button>
+		@openlayers.addFeature({"layer":"data","geometry":"SRID=4326;POINT({{!memory.breweries.value[#loop0].longitude}} {{!memory.breweries.value[#loop0].latitude}})"},{"queueRun":"Instant"});
 	{{/for}}
 </script>
 
+<script id="displayInfo" type="text/html">
+	Name - {{memory.breweries.value[memory['templates.render'].value.id].name}}
+	City - {{memory.breweries.value[memory['templates.render'].value.id].city}}
+</script>
