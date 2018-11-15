@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">Home | ourthings</title>
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">ourthings/define.js | ourthings</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -38,23 +38,74 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="ourthings">ourthings</h1><p>Queue based JavaScript framework</p>
-<h1 id="intro">Intro</h1><p>ourthings is a queue based javascript framework designed to take the legwork out of AJAX apps. Originally a closed
-commercial framework,  we are rewriting it and giving it to the world.</p>
-<h1 id="what-does-it-do">What does it do</h1><p>After creating ajax site after site we realised that we were repeating the same blocks of code, over and over and 
-always ending up in the same code tangle. Do this, then do this, do that, then call this same piece of code but do
-something slightly different. After boiling down what we did it became obvious that what every app needed was:</p>
-<ul>
-<li>A queue system</li>
-<li>Flexible code blocks that can be reused</li>
-<li>Common method of passing data between code and UI</li>
-<li>Way to stop coders breaking the UI responsiveness</li>
-</ul>
-<p>We also wanted to detach the framework from a need to use javascript. Our UX designers were spending time either
-writing bad javascript or having to get coders involved for even the most basic of tasks. Thus we wanted to give HTML/CSS users access
-to the framework in a language they already understand.</p>
-<h1 id="documentation">Documentation</h1><p><a href="https://nautoguide.github.io/ourthings/">Documentation Site</a></p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">ourthings/define.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module Define */
+
+
+/**
+ * @classdesc
+ *
+ * Our define class, contains all magic dnumber defines
+ *
+ * @author Richard Reynolds richard@nautoguide.com
+ *
+ * @example
+ * // DEFINE = new Define();
+ *
+ */
+export default class Define {
+	constructor() {
+		/**
+		 * Queue state of operations
+		 */
+		this.STATUS_LOADING = 0;
+		this.STATUS_LOADED = 1;
+		this.STATUS_RUNNING = 2;
+		this.STATUS_ERROR = 3;
+
+		/**
+		 * Render modes
+		 */
+		this.RENDER_INSERT = 0;
+		this.RENDER_APPEND = 1;
+
+
+		/**
+		 *  Command types
+		 */
+
+		this.COMMAND_INSTANT = &quot;Instant&quot;;
+		this.COMMAND_EVENT = &quot;Event&quot;;
+		this.COMMAND_SUB = &quot;Sub&quot;;
+
+		/**
+		 *  Queue states
+		 */
+		this.QUEUE_ADDED = 0;
+		this.QUEUE_RUNNING = 1;
+		this.QUEUE_FINISHED = 2;
+		this.QUEUE_ERROR = 3;
+
+		/**
+		 * Queueable Finished states
+		 */
+
+		this.FIN_OK = 0;
+		this.FIN_WARNING = 1;
+		this.FIN_ERROR = 2;
+
+		/**
+		 *  Console outputs
+		 */
+		this.CONSOLE_LINE=&quot;-==ourthings======================================================-&quot;;
+		this.CONSOLE_COL_VT=&quot;background: #222; color: #bada55&quot;;
+		this.CONSOLE_COL_GREEN=&quot;background: #222; color: #0f0&quot;;
+		this.CONSOLE_COL_RED=&quot;background: #222; color: #f00&quot;;
+		this.CONSOLE_COL_AMBER=&quot;background: #222; color: #f90&quot;;
+
+	}
+}</code></pre>
+
 </div>
 
 <footer class="footer">

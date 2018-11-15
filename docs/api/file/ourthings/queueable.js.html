@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">Home | ourthings</title>
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">ourthings/queueable.js | ourthings</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -38,23 +38,70 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="ourthings">ourthings</h1><p>Queue based JavaScript framework</p>
-<h1 id="intro">Intro</h1><p>ourthings is a queue based javascript framework designed to take the legwork out of AJAX apps. Originally a closed
-commercial framework,  we are rewriting it and giving it to the world.</p>
-<h1 id="what-does-it-do">What does it do</h1><p>After creating ajax site after site we realised that we were repeating the same blocks of code, over and over and 
-always ending up in the same code tangle. Do this, then do this, do that, then call this same piece of code but do
-something slightly different. After boiling down what we did it became obvious that what every app needed was:</p>
-<ul>
-<li>A queue system</li>
-<li>Flexible code blocks that can be reused</li>
-<li>Common method of passing data between code and UI</li>
-<li>Way to stop coders breaking the UI responsiveness</li>
-</ul>
-<p>We also wanted to detach the framework from a need to use javascript. Our UX designers were spending time either
-writing bad javascript or having to get coders involved for even the most basic of tasks. Thus we wanted to give HTML/CSS users access
-to the framework in a language they already understand.</p>
-<h1 id="documentation">Documentation</h1><p><a href="https://nautoguide.github.io/ourthings/">Documentation Site</a></p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">ourthings/queueable.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module Queueable */
+
+/**
+ * @classdesc
+ *
+ * The base class for queueable things
+ *
+ * @author Richard Reynolds richard@nautoguide.com
+ *
+ * @example
+ * // queue = new Queue();
+ *
+ */
+export default class Queueable {
+
+	/**
+	 * Constructor, Sets our status to be false (flipped on init)
+	 *
+	 */
+	constructor() {
+		let self=this;
+		self.ready=false;
+	}
+
+	/**
+	 * init, override this for any promise based inits setting
+	 * the self.ready=true after the promise
+	 *
+	 */
+	init(queue) {
+		let self=this;
+		self.queue=queue;
+		self.ready=true;
+	}
+
+	/**
+	 * Called from queue, starts running the actual command
+	 * @param pid
+	 * @param command
+	 * @param json
+	 */
+	start(pid,command,json) {
+		let self=this;
+		if(self[command]&amp;&amp;typeof self[command] === &apos;function&apos;) {
+			self[command](pid, json);
+		} else {
+			self.queue.finished(pid,self.queue.DEFINE.FIN_ERROR,&apos;No such command [&apos;+command+&apos;]&apos;);
+		}
+	}
+
+	/**
+	 * Call this method after you command has finished. Failure to do so will result is
+	 * a stalled queue
+	 * @param pid
+	 * @param mode
+	 */
+	finished(pid,mode,error=&apos;&apos;) {
+		let self=this;
+		self.queue.finished(pid,mode,error);
+	}
+}
+</code></pre>
+
 </div>
 
 <footer class="footer">
