@@ -16,8 +16,9 @@ export default class Internals extends Queueable {
 
 	/**
 	 * Render a template into the dom using the queues templateProcessor
-	 * @param {int} pid  process ID
-	 * @param {object} json Params to send to the process
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.name - prepared queue to call
 	 */
 	execute(pid,json) {
 		let self=this;

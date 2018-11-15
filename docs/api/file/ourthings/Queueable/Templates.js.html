@@ -53,15 +53,17 @@ import Queueable from &quot;../Queueable&quot;;
  * @author Richard Reynolds richard@nautoguide.com
  *
  * @example
- * // @templates.render({&quot;targetId&quot;:&quot;content&quot;,&quot;template&quot;:&quot;basic&quot;},{&quot;queueRun&quot;:&quot;Instant&quot;});
+ * // @templates.render({&quot;targetId&quot;:&quot;content&quot;,&quot;template&quot;:&quot;basic&quot;});
  *
  */
 class Templates extends Queueable {
 
 	/**
 	 * Render a template into the dom using the queues templateProcessor
-	 * @param pid
-	 * @param json
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.template - dom id of template to use
+	 * @param {string} [json.target] - dom id of render target
 	 */
 	render(pid,json) {
 		let self=this;

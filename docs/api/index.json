@@ -1915,7 +1915,7 @@
     "__docId__": 105,
     "kind": "file",
     "name": "ourthings/Queueable/Api.js",
-    "content": "/** @module Api */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Dom Elements manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n */\r\nexport default class Api extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param pid\r\n\t * @param json\r\n\t */\r\n\tget(pid,json) {\r\n\t\tlet self=this;\r\n\r\n\t\tfetch(json.url, {\r\n\t\t\theaders: {\r\n\t\t\t\t'Content-Type': 'application/json'\r\n\t\t\t}\r\n\t\t})\r\n\t\t\t.then(response => self.queue.handleFetchErrors(response))\r\n\t\t\t.then(response => response.json() )\r\n\t\t\t.then(function (response) {\r\n\t\t\t\t/**\r\n\t\t\t\t * Convert the response to json and start the loader\r\n\t\t\t\t */\r\n\t\t\t\tself.set(pid,response);\r\n\t\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\r\n\t\t\t})\r\n\t\t\t.catch(function (error) {\r\n\t\t\t\tconsole.info(self.queue.DEFINE.CONSOLE_LINE);\r\n\t\t\t\tconsole.error('Error:', error);\r\n\t\t\t\tconsole.info(\"Warning this error is probably fatal as I have no templates to load\")\r\n\t\t\t});\r\n\r\n\t}\r\n}\r\n",
+    "content": "/** @module Api */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Dom Elements manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n */\r\nexport default class Api extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.url - URL to make GET request to\r\n\t */\r\n\tget(pid,json) {\r\n\t\tlet self=this;\r\n\r\n\t\tfetch(json.url, {\r\n\t\t\theaders: {\r\n\t\t\t\t'Content-Type': 'application/json'\r\n\t\t\t}\r\n\t\t})\r\n\t\t\t.then(response => self.queue.handleFetchErrors(response))\r\n\t\t\t.then(response => response.json() )\r\n\t\t\t.then(function (response) {\r\n\t\t\t\t/**\r\n\t\t\t\t * Convert the response to json and start the loader\r\n\t\t\t\t */\r\n\t\t\t\tself.set(pid,response);\r\n\t\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\r\n\t\t\t})\r\n\t\t\t.catch(function (error) {\r\n\t\t\t\tconsole.info(self.queue.DEFINE.CONSOLE_LINE);\r\n\t\t\t\tconsole.error('Error:', error);\r\n\t\t\t\tconsole.info(\"Warning this error is probably fatal as I have no templates to load\")\r\n\t\t\t});\r\n\r\n\t}\r\n}\r\n",
     "static": true,
     "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable/Api.js",
     "access": "public",
@@ -1964,27 +1964,37 @@
     "longname": "ourthings/Queueable/Api.js~Api#get",
     "access": "public",
     "description": "Render a template into the dom using the queues templateProcessor",
-    "lineNumber": 22,
+    "lineNumber": 23,
     "params": [
       {
         "nullable": null,
         "types": [
-          "*"
+          "number"
         ],
         "spread": false,
         "optional": false,
         "name": "pid",
-        "description": ""
+        "description": "Process ID"
       },
       {
         "nullable": null,
         "types": [
-          "*"
+          "object"
         ],
         "spread": false,
         "optional": false,
         "name": "json",
-        "description": ""
+        "description": "queue arguments"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.url",
+        "description": "URL to make GET request to"
       }
     ],
     "return": null
@@ -1993,7 +2003,7 @@
     "__docId__": 108,
     "kind": "file",
     "name": "ourthings/Queueable/Elements.js",
-    "content": "/** @module ourthings/Queueable/Elements */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Dom Elements manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n */\r\nexport default class Elements extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param pid\r\n\t * @param json\r\n\t */\r\n\taddClass(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet element=self.queue.getElement(json.targetId);\r\n\t\tself.set(pid,json);\r\n\r\n\t\tif(element!==false) {\r\n\t\t\telement.classList.add(json.class);\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t\t} else {\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not add class ['+json.class+'] to ['+json.targetId+']');\r\n\t\t}\r\n\t}\r\n}\r\n",
+    "content": "/** @module ourthings/Queueable/Elements */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Dom Elements manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n */\r\nexport default class Elements extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.targetId - Dom target\r\n\t * @param {string} json.class - Name of class to add\r\n\t */\r\n\taddClass(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet element=self.queue.getElement(json.targetId);\r\n\t\tself.set(pid,json);\r\n\r\n\t\tif(element!==false) {\r\n\t\t\telement.classList.add(json.class);\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t\t} else {\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not add class ['+json.class+'] to ['+json.targetId+']');\r\n\t\t}\r\n\t}\r\n}\r\n",
     "static": true,
     "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable/Elements.js",
     "access": "public",
@@ -2042,27 +2052,47 @@
     "longname": "ourthings/Queueable/Elements.js~Elements#addClass",
     "access": "public",
     "description": "Render a template into the dom using the queues templateProcessor",
-    "lineNumber": 22,
+    "lineNumber": 24,
     "params": [
       {
         "nullable": null,
         "types": [
-          "*"
+          "number"
         ],
         "spread": false,
         "optional": false,
         "name": "pid",
-        "description": ""
+        "description": "Process ID"
       },
       {
         "nullable": null,
         "types": [
-          "*"
+          "object"
         ],
         "spread": false,
         "optional": false,
         "name": "json",
-        "description": ""
+        "description": "queue arguments"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.targetId",
+        "description": "Dom target"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.class",
+        "description": "Name of class to add"
       }
     ],
     "return": null
@@ -2071,7 +2101,7 @@
     "__docId__": 111,
     "kind": "file",
     "name": "ourthings/Queueable/Internals.js",
-    "content": "/** @module ourthings/Queueable/Internals */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Internal queue functions exposed to queueables\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n */\r\nexport default class Internals extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param {int} pid  process ID\r\n\t * @param {object} json Params to send to the process\r\n\t */\r\n\texecute(pid,json) {\r\n\t\tlet self=this;\r\n\t\tself.queue.execute(json.name);\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n}\r\n",
+    "content": "/** @module ourthings/Queueable/Internals */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Internal queue functions exposed to queueables\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n */\r\nexport default class Internals extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param {int} pid - process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.name - prepared queue to call\r\n\t */\r\n\texecute(pid,json) {\r\n\t\tlet self=this;\r\n\t\tself.queue.execute(json.name);\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n}\r\n",
     "static": true,
     "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable/Internals.js",
     "access": "public",
@@ -2120,7 +2150,7 @@
     "longname": "ourthings/Queueable/Internals.js~Internals#execute",
     "access": "public",
     "description": "Render a template into the dom using the queues templateProcessor",
-    "lineNumber": 22,
+    "lineNumber": 23,
     "params": [
       {
         "nullable": null,
@@ -2140,7 +2170,17 @@
         "spread": false,
         "optional": false,
         "name": "json",
-        "description": "Params to send to the process"
+        "description": "queue arguments"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.name",
+        "description": "prepared queue to call"
       }
     ],
     "return": null
@@ -2359,7 +2399,7 @@
     "__docId__": 122,
     "kind": "file",
     "name": "ourthings/Queueable/Templates.js",
-    "content": "/** @module ourthings/Queueable/Templates */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Template manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * // @templates.render({\"targetId\":\"content\",\"template\":\"basic\"},{\"queueRun\":\"Instant\"});\r\n *\r\n */\r\nclass Templates extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param pid\r\n\t * @param json\r\n\t */\r\n\trender(pid,json) {\r\n\t\tlet self=this;\r\n\t\tself.set(pid,json);\r\n\t\tif(!self.queue.templateProcessor(json.template,json.targetId))\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_ERROR,'Could not render template');\r\n\t\telse\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n}\r\n\r\nexport default Templates;",
+    "content": "/** @module ourthings/Queueable/Templates */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Template manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * // @templates.render({\"targetId\":\"content\",\"template\":\"basic\"});\r\n *\r\n */\r\nclass Templates extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.template - dom id of template to use\r\n\t * @param {string} [json.target] - dom id of render target\r\n\t */\r\n\trender(pid,json) {\r\n\t\tlet self=this;\r\n\t\tself.set(pid,json);\r\n\t\tif(!self.queue.templateProcessor(json.template,json.targetId))\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_ERROR,'Could not render template');\r\n\t\telse\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n}\r\n\r\nexport default Templates;",
     "static": true,
     "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable/Templates.js",
     "access": "public",
@@ -2379,7 +2419,7 @@
     "importStyle": "Templates",
     "description": "",
     "examples": [
-      "// @templates.render({\"targetId\":\"content\",\"template\":\"basic\"},{\"queueRun\":\"Instant\"});"
+      "// @templates.render({\"targetId\":\"content\",\"template\":\"basic\"});"
     ],
     "lineNumber": 15,
     "unknown": [
@@ -2408,27 +2448,47 @@
     "longname": "ourthings/Queueable/Templates.js~Templates#render",
     "access": "public",
     "description": "Render a template into the dom using the queues templateProcessor",
-    "lineNumber": 22,
+    "lineNumber": 24,
     "params": [
       {
         "nullable": null,
         "types": [
-          "*"
+          "number"
         ],
         "spread": false,
         "optional": false,
         "name": "pid",
-        "description": ""
+        "description": "Process ID"
       },
       {
         "nullable": null,
         "types": [
-          "*"
+          "object"
         ],
         "spread": false,
         "optional": false,
         "name": "json",
-        "description": ""
+        "description": "queue arguments"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.template",
+        "description": "dom id of template to use"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "json.target",
+        "description": "dom id of render target"
       }
     ],
     "return": null

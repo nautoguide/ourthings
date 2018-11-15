@@ -60,8 +60,10 @@ export default class Elements extends Queueable {
 
 	/**
 	 * Render a template into the dom using the queues templateProcessor
-	 * @param pid
-	 * @param json
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.class - Name of class to add
 	 */
 	addClass(pid,json) {
 		let self=this;
