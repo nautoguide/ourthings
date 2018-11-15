@@ -1,32 +1,44 @@
 window.esdocSearchIndex = [
   [
-    "ourthings/ourthings/define.js~define",
-    "class/ourthings/define.js~Define.html",
-    "<span>Define</span> <span class=\"search-result-import-path\">ourthings/ourthings/define.js</span>",
+    "ourthings/ourthings/queueable/api.js~api",
+    "class/ourthings/Queueable/Api.js~Api.html",
+    "<span>Api</span> <span class=\"search-result-import-path\">ourthings/ourthings/Queueable/Api.js</span>",
     "class"
   ],
   [
-    "ourthings/ourthings/internals/elements.js~elements",
-    "class/ourthings/internals/elements.js~Elements.html",
-    "<span>Elements</span> <span class=\"search-result-import-path\">ourthings/ourthings/internals/elements.js</span>",
+    "ourthings/ourthings/define.js~define",
+    "class/ourthings/Define.js~Define.html",
+    "<span>Define</span> <span class=\"search-result-import-path\">ourthings/ourthings/Define.js</span>",
+    "class"
+  ],
+  [
+    "ourthings/ourthings/queueable/elements.js~elements",
+    "class/ourthings/Queueable/Elements.js~Elements.html",
+    "<span>Elements</span> <span class=\"search-result-import-path\">ourthings/ourthings/Queueable/Elements.js</span>",
+    "class"
+  ],
+  [
+    "ourthings/ourthings/queueable/openlayers.js~openlayers",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html",
+    "<span>Openlayers</span> <span class=\"search-result-import-path\">ourthings/ourthings/Queueable/Openlayers.js</span>",
     "class"
   ],
   [
     "ourthings/ourthings/queue.js~queue",
-    "class/ourthings/queue.js~Queue.html",
-    "<span>Queue</span> <span class=\"search-result-import-path\">ourthings/ourthings/queue.js</span>",
+    "class/ourthings/Queue.js~Queue.html",
+    "<span>Queue</span> <span class=\"search-result-import-path\">ourthings/ourthings/Queue.js</span>",
     "class"
   ],
   [
     "ourthings/ourthings/queueable.js~queueable",
-    "class/ourthings/queueable.js~Queueable.html",
-    "<span>Queueable</span> <span class=\"search-result-import-path\">ourthings/ourthings/queueable.js</span>",
+    "class/ourthings/Queueable.js~Queueable.html",
+    "<span>Queueable</span> <span class=\"search-result-import-path\">ourthings/ourthings/Queueable.js</span>",
     "class"
   ],
   [
-    "ourthings/ourthings/internals/templates.js~templates",
-    "class/ourthings/internals/templates.js~Templates.html",
-    "<span>Templates</span> <span class=\"search-result-import-path\">ourthings/ourthings/internals/templates.js</span>",
+    "ourthings/ourthings/queueable/templates.js~templates",
+    "class/ourthings/Queueable/Templates.js~Templates.html",
+    "<span>Templates</span> <span class=\"search-result-import-path\">ourthings/ourthings/Queueable/Templates.js</span>",
     "class"
   ],
   [
@@ -313,314 +325,434 @@ window.esdocSearchIndex = [
   ],
   [
     "ourthings/define.js",
-    "file/ourthings/define.js.html",
-    "ourthings/define.js",
+    "file/ourthings/Define.js.html",
+    "ourthings/Define.js",
     "file"
   ],
   [
     "ourthings/define.js~define#command_event",
-    "class/ourthings/define.js~Define.html#instance-member-COMMAND_EVENT",
-    "ourthings/define.js~Define#COMMAND_EVENT",
+    "class/ourthings/Define.js~Define.html#instance-member-COMMAND_EVENT",
+    "ourthings/Define.js~Define#COMMAND_EVENT",
     "member"
   ],
   [
     "ourthings/define.js~define#command_instant",
-    "class/ourthings/define.js~Define.html#instance-member-COMMAND_INSTANT",
-    "ourthings/define.js~Define#COMMAND_INSTANT",
+    "class/ourthings/Define.js~Define.html#instance-member-COMMAND_INSTANT",
+    "ourthings/Define.js~Define#COMMAND_INSTANT",
     "member"
   ],
   [
     "ourthings/define.js~define#command_sub",
-    "class/ourthings/define.js~Define.html#instance-member-COMMAND_SUB",
-    "ourthings/define.js~Define#COMMAND_SUB",
+    "class/ourthings/Define.js~Define.html#instance-member-COMMAND_SUB",
+    "ourthings/Define.js~Define#COMMAND_SUB",
     "member"
   ],
   [
     "ourthings/define.js~define#console_col_amber",
-    "class/ourthings/define.js~Define.html#instance-member-CONSOLE_COL_AMBER",
-    "ourthings/define.js~Define#CONSOLE_COL_AMBER",
+    "class/ourthings/Define.js~Define.html#instance-member-CONSOLE_COL_AMBER",
+    "ourthings/Define.js~Define#CONSOLE_COL_AMBER",
     "member"
   ],
   [
     "ourthings/define.js~define#console_col_green",
-    "class/ourthings/define.js~Define.html#instance-member-CONSOLE_COL_GREEN",
-    "ourthings/define.js~Define#CONSOLE_COL_GREEN",
+    "class/ourthings/Define.js~Define.html#instance-member-CONSOLE_COL_GREEN",
+    "ourthings/Define.js~Define#CONSOLE_COL_GREEN",
     "member"
   ],
   [
     "ourthings/define.js~define#console_col_red",
-    "class/ourthings/define.js~Define.html#instance-member-CONSOLE_COL_RED",
-    "ourthings/define.js~Define#CONSOLE_COL_RED",
+    "class/ourthings/Define.js~Define.html#instance-member-CONSOLE_COL_RED",
+    "ourthings/Define.js~Define#CONSOLE_COL_RED",
     "member"
   ],
   [
     "ourthings/define.js~define#console_col_vt",
-    "class/ourthings/define.js~Define.html#instance-member-CONSOLE_COL_VT",
-    "ourthings/define.js~Define#CONSOLE_COL_VT",
+    "class/ourthings/Define.js~Define.html#instance-member-CONSOLE_COL_VT",
+    "ourthings/Define.js~Define#CONSOLE_COL_VT",
     "member"
   ],
   [
     "ourthings/define.js~define#console_line",
-    "class/ourthings/define.js~Define.html#instance-member-CONSOLE_LINE",
-    "ourthings/define.js~Define#CONSOLE_LINE",
+    "class/ourthings/Define.js~Define.html#instance-member-CONSOLE_LINE",
+    "ourthings/Define.js~Define#CONSOLE_LINE",
     "member"
   ],
   [
     "ourthings/define.js~define#fin_error",
-    "class/ourthings/define.js~Define.html#instance-member-FIN_ERROR",
-    "ourthings/define.js~Define#FIN_ERROR",
+    "class/ourthings/Define.js~Define.html#instance-member-FIN_ERROR",
+    "ourthings/Define.js~Define#FIN_ERROR",
     "member"
   ],
   [
     "ourthings/define.js~define#fin_ok",
-    "class/ourthings/define.js~Define.html#instance-member-FIN_OK",
-    "ourthings/define.js~Define#FIN_OK",
+    "class/ourthings/Define.js~Define.html#instance-member-FIN_OK",
+    "ourthings/Define.js~Define#FIN_OK",
     "member"
   ],
   [
     "ourthings/define.js~define#fin_warning",
-    "class/ourthings/define.js~Define.html#instance-member-FIN_WARNING",
-    "ourthings/define.js~Define#FIN_WARNING",
+    "class/ourthings/Define.js~Define.html#instance-member-FIN_WARNING",
+    "ourthings/Define.js~Define#FIN_WARNING",
+    "member"
+  ],
+  [
+    "ourthings/define.js~define#memory_garbage",
+    "class/ourthings/Define.js~Define.html#instance-member-MEMORY_GARBAGE",
+    "ourthings/Define.js~Define#MEMORY_GARBAGE",
+    "member"
+  ],
+  [
+    "ourthings/define.js~define#memory_permanent",
+    "class/ourthings/Define.js~Define.html#instance-member-MEMORY_PERMANENT",
+    "ourthings/Define.js~Define#MEMORY_PERMANENT",
+    "member"
+  ],
+  [
+    "ourthings/define.js~define#memory_session",
+    "class/ourthings/Define.js~Define.html#instance-member-MEMORY_SESSION",
+    "ourthings/Define.js~Define#MEMORY_SESSION",
     "member"
   ],
   [
     "ourthings/define.js~define#queue_added",
-    "class/ourthings/define.js~Define.html#instance-member-QUEUE_ADDED",
-    "ourthings/define.js~Define#QUEUE_ADDED",
+    "class/ourthings/Define.js~Define.html#instance-member-QUEUE_ADDED",
+    "ourthings/Define.js~Define#QUEUE_ADDED",
     "member"
   ],
   [
     "ourthings/define.js~define#queue_error",
-    "class/ourthings/define.js~Define.html#instance-member-QUEUE_ERROR",
-    "ourthings/define.js~Define#QUEUE_ERROR",
+    "class/ourthings/Define.js~Define.html#instance-member-QUEUE_ERROR",
+    "ourthings/Define.js~Define#QUEUE_ERROR",
     "member"
   ],
   [
     "ourthings/define.js~define#queue_finished",
-    "class/ourthings/define.js~Define.html#instance-member-QUEUE_FINISHED",
-    "ourthings/define.js~Define#QUEUE_FINISHED",
+    "class/ourthings/Define.js~Define.html#instance-member-QUEUE_FINISHED",
+    "ourthings/Define.js~Define#QUEUE_FINISHED",
     "member"
   ],
   [
     "ourthings/define.js~define#queue_running",
-    "class/ourthings/define.js~Define.html#instance-member-QUEUE_RUNNING",
-    "ourthings/define.js~Define#QUEUE_RUNNING",
+    "class/ourthings/Define.js~Define.html#instance-member-QUEUE_RUNNING",
+    "ourthings/Define.js~Define#QUEUE_RUNNING",
     "member"
   ],
   [
     "ourthings/define.js~define#render_append",
-    "class/ourthings/define.js~Define.html#instance-member-RENDER_APPEND",
-    "ourthings/define.js~Define#RENDER_APPEND",
+    "class/ourthings/Define.js~Define.html#instance-member-RENDER_APPEND",
+    "ourthings/Define.js~Define#RENDER_APPEND",
     "member"
   ],
   [
     "ourthings/define.js~define#render_insert",
-    "class/ourthings/define.js~Define.html#instance-member-RENDER_INSERT",
-    "ourthings/define.js~Define#RENDER_INSERT",
+    "class/ourthings/Define.js~Define.html#instance-member-RENDER_INSERT",
+    "ourthings/Define.js~Define#RENDER_INSERT",
     "member"
   ],
   [
     "ourthings/define.js~define#status_error",
-    "class/ourthings/define.js~Define.html#instance-member-STATUS_ERROR",
-    "ourthings/define.js~Define#STATUS_ERROR",
+    "class/ourthings/Define.js~Define.html#instance-member-STATUS_ERROR",
+    "ourthings/Define.js~Define#STATUS_ERROR",
     "member"
   ],
   [
     "ourthings/define.js~define#status_loaded",
-    "class/ourthings/define.js~Define.html#instance-member-STATUS_LOADED",
-    "ourthings/define.js~Define#STATUS_LOADED",
+    "class/ourthings/Define.js~Define.html#instance-member-STATUS_LOADED",
+    "ourthings/Define.js~Define#STATUS_LOADED",
     "member"
   ],
   [
     "ourthings/define.js~define#status_loading",
-    "class/ourthings/define.js~Define.html#instance-member-STATUS_LOADING",
-    "ourthings/define.js~Define#STATUS_LOADING",
+    "class/ourthings/Define.js~Define.html#instance-member-STATUS_LOADING",
+    "ourthings/Define.js~Define#STATUS_LOADING",
     "member"
   ],
   [
     "ourthings/define.js~define#status_running",
-    "class/ourthings/define.js~Define.html#instance-member-STATUS_RUNNING",
-    "ourthings/define.js~Define#STATUS_RUNNING",
+    "class/ourthings/Define.js~Define.html#instance-member-STATUS_RUNNING",
+    "ourthings/Define.js~Define#STATUS_RUNNING",
     "member"
   ],
   [
     "ourthings/define.js~define#constructor",
-    "class/ourthings/define.js~Define.html#instance-constructor-constructor",
-    "ourthings/define.js~Define#constructor",
+    "class/ourthings/Define.js~Define.html#instance-constructor-constructor",
+    "ourthings/Define.js~Define#constructor",
     "method"
   ],
   [
-    "ourthings/internals/elements.js",
-    "file/ourthings/internals/elements.js.html",
-    "ourthings/internals/elements.js",
+    "ourthings/queue.js",
+    "file/ourthings/Queue.js.html",
+    "ourthings/Queue.js",
     "file"
   ],
   [
-    "ourthings/internals/elements.js~elements#addclass",
-    "class/ourthings/internals/elements.js~Elements.html#instance-method-addClass",
-    "ourthings/internals/elements.js~Elements#addClass",
+    "ourthings/queue.js~queue#capitalizefirstletter",
+    "class/ourthings/Queue.js~Queue.html#instance-method-capitalizeFirstLetter",
+    "ourthings/Queue.js~Queue#capitalizeFirstLetter",
     "method"
   ],
   [
-    "ourthings/internals/templates.js",
-    "file/ourthings/internals/templates.js.html",
-    "ourthings/internals/templates.js",
+    "ourthings/queue.js~queue#checkqueueable",
+    "class/ourthings/Queue.js~Queue.html#instance-method-checkQueueable",
+    "ourthings/Queue.js~Queue#checkQueueable",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#cleanmemory",
+    "class/ourthings/Queue.js~Queue.html#instance-method-cleanMemory",
+    "ourthings/Queue.js~Queue#cleanMemory",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#commandparse",
+    "class/ourthings/Queue.js~Queue.html#instance-method-commandParse",
+    "ourthings/Queue.js~Queue#commandParse",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#commandsbind",
+    "class/ourthings/Queue.js~Queue.html#instance-method-commandsBind",
+    "ourthings/Queue.js~Queue#commandsBind",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#commandsqueue",
+    "class/ourthings/Queue.js~Queue.html#instance-method-commandsQueue",
+    "ourthings/Queue.js~Queue#commandsQueue",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#constructor",
+    "class/ourthings/Queue.js~Queue.html#instance-constructor-constructor",
+    "ourthings/Queue.js~Queue#constructor",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#deepcopy",
+    "class/ourthings/Queue.js~Queue.html#instance-method-deepCopy",
+    "ourthings/Queue.js~Queue#deepCopy",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#findqueuebypid",
+    "class/ourthings/Queue.js~Queue.html#instance-method-findQueueByPid",
+    "ourthings/Queue.js~Queue#findQueueByPid",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#finished",
+    "class/ourthings/Queue.js~Queue.html#instance-method-finished",
+    "ourthings/Queue.js~Queue#finished",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#getelement",
+    "class/ourthings/Queue.js~Queue.html#instance-method-getElement",
+    "ourthings/Queue.js~Queue#getElement",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#handlefetcherrors",
+    "class/ourthings/Queue.js~Queue.html#instance-method-handleFetchErrors",
+    "ourthings/Queue.js~Queue#handleFetchErrors",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#jsonvars",
+    "class/ourthings/Queue.js~Queue.html#instance-method-jsonVars",
+    "ourthings/Queue.js~Queue#jsonVars",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#memory",
+    "class/ourthings/Queue.js~Queue.html#instance-method-memory",
+    "ourthings/Queue.js~Queue#memory",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#prettycommandobject",
+    "class/ourthings/Queue.js~Queue.html#instance-method-prettyCommandObject",
+    "ourthings/Queue.js~Queue#prettyCommandObject",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#queueprocess",
+    "class/ourthings/Queue.js~Queue.html#instance-method-queueProcess",
+    "ourthings/Queue.js~Queue#queueProcess",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#rendertodom",
+    "class/ourthings/Queue.js~Queue.html#instance-method-renderToDom",
+    "ourthings/Queue.js~Queue#renderToDom",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#reporterror",
+    "class/ourthings/Queue.js~Queue.html#instance-method-reportError",
+    "ourthings/Queue.js~Queue#reportError",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#show",
+    "class/ourthings/Queue.js~Queue.html#instance-method-show",
+    "ourthings/Queue.js~Queue#show",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#templateloader",
+    "class/ourthings/Queue.js~Queue.html#instance-method-templateLoader",
+    "ourthings/Queue.js~Queue#templateLoader",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#templateparse",
+    "class/ourthings/Queue.js~Queue.html#instance-method-templateParse",
+    "ourthings/Queue.js~Queue#templateParse",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#templateprocessor",
+    "class/ourthings/Queue.js~Queue.html#instance-method-templateProcessor",
+    "ourthings/Queue.js~Queue#templateProcessor",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#templatevars",
+    "class/ourthings/Queue.js~Queue.html#instance-method-templateVars",
+    "ourthings/Queue.js~Queue#templateVars",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#varsparser",
+    "class/ourthings/Queue.js~Queue.html#instance-method-varsParser",
+    "ourthings/Queue.js~Queue#varsParser",
+    "method"
+  ],
+  [
+    "ourthings/queueable.js",
+    "file/ourthings/Queueable.js.html",
+    "ourthings/Queueable.js",
     "file"
   ],
   [
-    "ourthings/internals/templates.js~templates#render",
-    "class/ourthings/internals/templates.js~Templates.html#instance-method-render",
-    "ourthings/internals/templates.js~Templates#render",
+    "ourthings/queueable.js~queueable#constructor",
+    "class/ourthings/Queueable.js~Queueable.html#instance-constructor-constructor",
+    "ourthings/Queueable.js~Queueable#constructor",
     "method"
+  ],
+  [
+    "ourthings/queueable.js~queueable#finished",
+    "class/ourthings/Queueable.js~Queueable.html#instance-method-finished",
+    "ourthings/Queueable.js~Queueable#finished",
+    "method"
+  ],
+  [
+    "ourthings/queueable.js~queueable#init",
+    "class/ourthings/Queueable.js~Queueable.html#instance-method-init",
+    "ourthings/Queueable.js~Queueable#init",
+    "method"
+  ],
+  [
+    "ourthings/queueable.js~queueable#set",
+    "class/ourthings/Queueable.js~Queueable.html#instance-method-set",
+    "ourthings/Queueable.js~Queueable#set",
+    "method"
+  ],
+  [
+    "ourthings/queueable.js~queueable#start",
+    "class/ourthings/Queueable.js~Queueable.html#instance-method-start",
+    "ourthings/Queueable.js~Queueable#start",
+    "method"
+  ],
+  [
+    "ourthings/queueable/api.js",
+    "file/ourthings/Queueable/Api.js.html",
+    "ourthings/Queueable/Api.js",
+    "file"
+  ],
+  [
+    "ourthings/queueable/api.js~api#get",
+    "class/ourthings/Queueable/Api.js~Api.html#instance-method-get",
+    "ourthings/Queueable/Api.js~Api#get",
+    "method"
+  ],
+  [
+    "ourthings/queueable/elements.js",
+    "file/ourthings/Queueable/Elements.js.html",
+    "ourthings/Queueable/Elements.js",
+    "file"
+  ],
+  [
+    "ourthings/queueable/elements.js~elements#addclass",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-addClass",
+    "ourthings/Queueable/Elements.js~Elements#addClass",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js",
+    "file/ourthings/Queueable/Openlayers.js.html",
+    "ourthings/Queueable/Openlayers.js",
+    "file"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#_addlayer_osm",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_osm",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_osm",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#_addlayer_vector",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_vector",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_vector",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#addfeature",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addFeature",
+    "ourthings/Queueable/Openlayers.js~Openlayers#addFeature",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#addlayer",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addLayer",
+    "ourthings/Queueable/Openlayers.js~Openlayers#addLayer",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#addmap",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addMap",
+    "ourthings/Queueable/Openlayers.js~Openlayers#addMap",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#init",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-init",
+    "ourthings/Queueable/Openlayers.js~Openlayers#init",
+    "method"
+  ],
+  [
+    "ourthings/queueable/templates.js",
+    "file/ourthings/Queueable/Templates.js.html",
+    "ourthings/Queueable/Templates.js",
+    "file"
+  ],
+  [
+    "ourthings/queueable/templates.js~templates#render",
+    "class/ourthings/Queueable/Templates.js~Templates.html#instance-method-render",
+    "ourthings/Queueable/Templates.js~Templates#render",
+    "method"
+  ],
+  [
+    "ourthings/index.js",
+    "file/ourthings/index.js.html",
+    "ourthings/index.js",
+    "file"
   ],
   [
     "ourthings/main.js",
     "file/ourthings/main.js.html",
     "ourthings/main.js",
     "file"
-  ],
-  [
-    "ourthings/queue.js",
-    "file/ourthings/queue.js.html",
-    "ourthings/queue.js",
-    "file"
-  ],
-  [
-    "ourthings/queue.js~queue#commandparse",
-    "class/ourthings/queue.js~Queue.html#instance-method-commandParse",
-    "ourthings/queue.js~Queue#commandParse",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#commandsbind",
-    "class/ourthings/queue.js~Queue.html#instance-method-commandsBind",
-    "ourthings/queue.js~Queue#commandsBind",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#commandsqueue",
-    "class/ourthings/queue.js~Queue.html#instance-method-commandsQueue",
-    "ourthings/queue.js~Queue#commandsQueue",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#constructor",
-    "class/ourthings/queue.js~Queue.html#instance-constructor-constructor",
-    "ourthings/queue.js~Queue#constructor",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#deepcopy",
-    "class/ourthings/queue.js~Queue.html#instance-method-deepCopy",
-    "ourthings/queue.js~Queue#deepCopy",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#finished",
-    "class/ourthings/queue.js~Queue.html#instance-method-finished",
-    "ourthings/queue.js~Queue#finished",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#getelement",
-    "class/ourthings/queue.js~Queue.html#instance-method-getElement",
-    "ourthings/queue.js~Queue#getElement",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#handlefetcherrors",
-    "class/ourthings/queue.js~Queue.html#instance-method-handleFetchErrors",
-    "ourthings/queue.js~Queue#handleFetchErrors",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#prettycommandobject",
-    "class/ourthings/queue.js~Queue.html#instance-method-prettyCommandObject",
-    "ourthings/queue.js~Queue#prettyCommandObject",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#queueprocess",
-    "class/ourthings/queue.js~Queue.html#instance-method-queueProcess",
-    "ourthings/queue.js~Queue#queueProcess",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#rendertodom",
-    "class/ourthings/queue.js~Queue.html#instance-method-renderToDom",
-    "ourthings/queue.js~Queue#renderToDom",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#reporterror",
-    "class/ourthings/queue.js~Queue.html#instance-method-reportError",
-    "ourthings/queue.js~Queue#reportError",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#show",
-    "class/ourthings/queue.js~Queue.html#instance-method-show",
-    "ourthings/queue.js~Queue#show",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#templateloader",
-    "class/ourthings/queue.js~Queue.html#instance-method-templateLoader",
-    "ourthings/queue.js~Queue#templateLoader",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#templateparse",
-    "class/ourthings/queue.js~Queue.html#instance-method-templateParse",
-    "ourthings/queue.js~Queue#templateParse",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#templateprocessor",
-    "class/ourthings/queue.js~Queue.html#instance-method-templateProcessor",
-    "ourthings/queue.js~Queue#templateProcessor",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#templatevars",
-    "class/ourthings/queue.js~Queue.html#instance-method-templateVars",
-    "ourthings/queue.js~Queue#templateVars",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#varsparser",
-    "class/ourthings/queue.js~Queue.html#instance-method-varsParser",
-    "ourthings/queue.js~Queue#varsParser",
-    "method"
-  ],
-  [
-    "ourthings/queueable.js",
-    "file/ourthings/queueable.js.html",
-    "ourthings/queueable.js",
-    "file"
-  ],
-  [
-    "ourthings/queueable.js~queueable#constructor",
-    "class/ourthings/queueable.js~Queueable.html#instance-constructor-constructor",
-    "ourthings/queueable.js~Queueable#constructor",
-    "method"
-  ],
-  [
-    "ourthings/queueable.js~queueable#finished",
-    "class/ourthings/queueable.js~Queueable.html#instance-method-finished",
-    "ourthings/queueable.js~Queueable#finished",
-    "method"
-  ],
-  [
-    "ourthings/queueable.js~queueable#init",
-    "class/ourthings/queueable.js~Queueable.html#instance-method-init",
-    "ourthings/queueable.js~Queueable#init",
-    "method"
-  ],
-  [
-    "ourthings/queueable.js~queueable#start",
-    "class/ourthings/queueable.js~Queueable.html#instance-method-start",
-    "ourthings/queueable.js~Queueable#start",
-    "method"
   ]
 ]
