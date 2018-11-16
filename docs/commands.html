@@ -41,12 +41,43 @@ for a list of these</p>
 <ul>
 	<li><span class="arg">queueRun</span> Instant|Event|Sub</li>
 	<li><span class="arg">queueTimer</span> Delay run in ms, default is 10</li>
+	<li><span class="arg">queuePrepare</span> Put this queue in the prepare list ready for use when called</li>
+	<li><span class="arg">memoryName</span> If this function outputs to memory set the name</li>
+	<li><span class="arg">memoryMode</span> Memory will last [Garbage|Session|Permanent]</li>
 </ul>
 <h3>Template Commands</h3>
+<h4>{{}} & {{!}}</h4>
 <p>Ourthings supports a standard template of {{something}} that allows the execution of javascript
 to place values in the page. This format can used in two ways.</p>
-<p>1. Placing values in a rendered template at render time EG {{window.foo}} will output the value window.foo</p>
-<p>2. Passing values to argument lists in queueables at command execution time</p>
+<p>1. Placing values in a rendered template at render time EG {{memory.foo}} will output the value window.foo</p>
+<p>2. Passing values to argument lists in queueables at command execution time using {{!memory.foo}}</p>
+<p>Its important to understand when you need to use {{}} and {{!}}. If you are simply displaying data in a template use
+	{{}}. This is because when that template is shown to the user you want the value it represents at that time. If however
+	you have a queue and the last item in that queue depends on a value that may change as a result of that queues preceding commands
+	(EG an api call) then you want {{!}}</p>
+<h4>{{#include [#template]}}</h4>
+If you want to include a template (normally for reuse purposes) into the template you using then use {{#include}}.
+
+<code>&lt;script id="myTemplayeId" type="text/html"&gt;
+	blah
+&lt;/script&gt;
+	
+{{#include #myTemplayeId}}</code>
+
+<h4>{{#for [variable]}}</h4>
+Loop though an array or object
+<code>
+{{#for memory.people.value}}
+  {{memory.people.value[#loop0].name}}
+{{/for}}
+</code>
+<h4>{{#if [test}}</h4>
+Perform a if
+<code>
+{{#if memory.people.value.length>0}}
+ There are people
+{{/if}}
+</code>
 </html>
 
 

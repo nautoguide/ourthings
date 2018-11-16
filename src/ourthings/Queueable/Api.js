@@ -19,19 +19,27 @@ export default class Api extends Queueable {
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
 	 * @param {string} json.url - URL to make GET request to
+	 * @param {string} json.contentType=application/json - Content type to request
 	 */
 	get(pid,json) {
 		let self=this;
-
+		json.contentType=json.contentType||'application/json';
 		fetch(json.url, {
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': json.contentType||'application/json'
 			}
 		})
 			.then(response => self.queue.handleFetchErrors(response))
-			.then(response => response.json() )
+			.then(function(response) {
+				switch(json.contentType) {
+					case 'application/json':
+						return response.json();
+					default:
+						return response.text();
+				}
+			})
 			.then(function (response) {
-				/**
+				/*
 				 * Convert the response to json and start the loader
 				 */
 				self.set(pid,response);
