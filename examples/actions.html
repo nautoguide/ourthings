@@ -1,7 +1,6 @@
 <script id="init" type="text/html">
 	<!-- init is always run automatically on startup -->
 	@templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});
-	 -elements.addClass({"targetId":"#content","class":"highlight"});
 	 -openlayers.addMap({});
 	 -openlayers.addLayer({"name":"osm","type":"osm"});
 	 -openlayers.addLayer({"name":"data","type":"vector"});
@@ -37,3 +36,4 @@
 	Name - {{memory.breweries.value[memory['templates.render'].value.id].name}}
 	City - {{memory.breweries.value[memory['templates.render'].value.id].city}}
 </script>
+

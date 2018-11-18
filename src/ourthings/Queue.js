@@ -315,7 +315,7 @@ class Queue {
 		/*
 		 * Process any other {{}} tags but not if they have {{!}} as those are done on command exec time
 		 */
-		const commandRegex=/{{([^!].*?)}}/;
+		const commandRegex=/{{([^!|~].*?)}}/;
 		while (match = commandRegex.exec(template)) {
 			template = template.replace(match[0], self.varsParser(match[1]));
 		}

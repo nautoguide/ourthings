@@ -4,3 +4,19 @@
     background: #3e999f;
     padding: 5px;
 }
+
+.app {
+    width: 48%;
+    background: #f7f7f7;
+    padding: 10px;
+    border: 1px solid;
+    float: left;
+}
+
+.example {
+    width: 48%;
+    background: #f7f7f7;
+    padding: 10px;
+    border: 1px solid;
+    float: left;
+}

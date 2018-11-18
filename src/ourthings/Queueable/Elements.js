@@ -33,4 +33,13 @@ export default class Elements extends Queueable {
 			self.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not add class ['+json.class+'] to ['+json.targetId+']');
 		}
 	}
+
+	innerText(pid,json) {
+		let self=this;
+		debugger;
+		let element=self.queue.getElement(json.targetId);
+		element.innerHTML(json.text);
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
 }
