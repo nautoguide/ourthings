@@ -61,23 +61,19 @@ If you want to include a template (normally for reuse purposes) into the templat
 <code>&lt;script id="myTemplayeId" type="text/html"&gt;
 	blah
 &lt;/script&gt;
-	
+
 {{#include #myTemplayeId}}</code>
 
 <h4>{{#for [variable]}}</h4>
 Loop though an array or object
-<code>
-{{#for memory.people.value}}
+<code>{{#for memory.people.value}}
   {{memory.people.value[#loop0].name}}
-{{/for}}
-</code>
+{{/for}}</code>
 <h4>{{#if [test}}</h4>
 Perform a if
-<code>
-{{#if memory.people.value.length>0}}
+<code>{{#if memory.people.value.length>0}}
  There are people
-{{/if}}
-</code>
+{{/if}}</code>
 </html>
 
 
