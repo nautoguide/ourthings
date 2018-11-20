@@ -702,6 +702,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/elements.js~elements#innertext",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-innerText",
+    "ourthings/Queueable/Elements.js~Elements#innerText",
+    "method"
+  ],
+  [
     "ourthings/queueable/internals.js",
     "file/ourthings/Queueable/Internals.js.html",
     "ourthings/Queueable/Internals.js",
