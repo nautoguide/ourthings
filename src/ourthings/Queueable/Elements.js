@@ -15,7 +15,7 @@ import Queueable from "../Queueable";
 export default class Elements extends Queueable {
 
 	/**
-	 * Render a template into the dom using the queues templateProcessor
+	 * Add a class to a dom element
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
 	 * @param {string} json.targetId - Dom target
@@ -33,12 +33,17 @@ export default class Elements extends Queueable {
 			self.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not add class ['+json.class+'] to ['+json.targetId+']');
 		}
 	}
-
-	innerText(pid,json) {
+    /**
+     * Set the HTML of an element
+     * @param {number} pid - Process ID
+     * @param {object} json - queue arguments
+     * @param {string} json.targetId - Dom target
+     * @param {string} json.html - HTML to add
+     */
+	innerHTML(pid,json) {
 		let self=this;
-		debugger;
 		let element=self.queue.getElement(json.targetId);
-		element.innerHTML(json.text);
+		element.innerHTML=json.html;
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
