@@ -24,10 +24,10 @@ export default class Api extends Queueable {
 	get(pid,json) {
 		let self=this;
 		json.contentType=json.contentType||'application/json';
+		let headers=json.headers||{};
+		headers['Content-Type']=json.contentType||'application/json';
 		fetch(json.url, {
-			headers: {
-				'Content-Type': json.contentType||'application/json'
-			}
+			headers: headers
 		})
 			.then(response => self.queue.handleFetchErrors(response))
 			.then(function(response) {
