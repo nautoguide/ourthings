@@ -20,14 +20,15 @@ export default class Api extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.url - URL to make GET request to
 	 * @param {string} json.contentType=application/json - Content type to request
+	 * @param {string} json.header - header object to send (note Content-Type is overwritten by above setting)
 	 */
 	get(pid,json) {
 		let self=this;
 		json.contentType=json.contentType||'application/json';
+		let headers=json.headers||{};
+		headers['Content-Type']=json.contentType||'application/json';
 		fetch(json.url, {
-			headers: {
-				'Content-Type': json.contentType||'application/json'
-			}
+			headers: headers
 		})
 			.then(response => self.queue.handleFetchErrors(response))
 			.then(function(response) {

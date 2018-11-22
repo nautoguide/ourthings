@@ -95,6 +95,11 @@ class Queue {
 		 * Initialise the memory
 		 */
 		window.memory={};
+
+		/*
+		 * Load any perm cookies
+		 */
+		self._loadMemoryPerms();
 		/*
 		 * Load the templates.json
 		 */
@@ -574,6 +579,86 @@ class Queue {
 		}
 	}
 
+	/**
+	 * Set memory that is not associated with a running queueable (IE from the templates)
+	 * @param name
+	 * @param value
+	 * @param mode
+	 * @return {boolean}
+	 */
+	setMemory(name,value,mode) {
+		let self=this;
+		mode=mode||self.DEFINE.MEMORY_GARBAGE;
+		let memoryDetails = {
+			pid: -1,
+			mode: mode,
+			origin: 'User',
+			value: value
+		};
+		window.memory[name] = memoryDetails;
+		self._updateMemoryPerms();
+
+			return true;
+	}
+
+	/**
+	 * Flush any permanent memory to cookies
+	 * @private
+	 */
+	_updateMemoryPerms() {
+		let self=this;
+		let perms=[];
+		let date = new Date();
+		date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
+		let expires = "; expires=" + date.toUTCString();
+		for(let i in window.memory) {
+			if(window.memory[i].mode===self.DEFINE.MEMORY_PERMANENT) {
+
+				document.cookie = 'OT_'+i + "=" + window.btoa(JSON.stringify(window.memory[i])) + expires + "; path=/";
+				perms.push(i);
+			}
+		}
+		document.cookie = 'OT_INDEX' + "=" + JSON.stringify(perms) + expires + "; path=/";
+
+	}
+
+	/**
+	 * Load perm memory items from cookies
+	 * @private
+	 */
+	_loadMemoryPerms() {
+		let self=this;
+		let index=self.getCookie("OT_INDEX");
+		if(index!==null) {
+			index=JSON.parse(index);
+			for(let i in index) {
+				let perm=JSON.parse(window.atob(self.getCookie("OT_"+index[i])));
+				window.memory[index[i]]=perm;
+			}
+		}
+
+	}
+
+	/**
+	 * Retrieve a cookie by name
+	 * @param name - Cookie name
+	 * @returns {*}
+	 */
+	getCookie(name) {
+		let nameEQ = name + "=";
+		let ca = document.cookie.split(';');
+		for (let i = 0; i < ca.length; i++) {
+			let c = ca[i];
+			while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+			if (c.indexOf(nameEQ) == 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+		}
+		return null;
+	}
+
+	/**
+	 * Called at the end of a queue run to flush any garbage
+	 * @param pid
+	 */
 	cleanMemory(pid) {
 		let self=this;
 		for(let i in window.memory) {

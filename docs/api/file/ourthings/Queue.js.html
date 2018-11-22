@@ -139,6 +139,11 @@ class Queue {
 		 * Initialise the memory
 		 */
 		window.memory={};
+
+		/*
+		 * Load any perm cookies
+		 */
+		self._loadMemoryPerms();
 		/*
 		 * Load the templates.json
 		 */
@@ -359,7 +364,7 @@ class Queue {
 		/*
 		 * Process any other {{}} tags but not if they have {{!}} as those are done on command exec time
 		 */
-		const commandRegex=/{{([^!].*?)}}/;
+		const commandRegex=/{{([^!|~].*?)}}/;
 		while (match = commandRegex.exec(template)) {
 			template = template.replace(match[0], self.varsParser(match[1]));
 		}
@@ -618,6 +623,86 @@ class Queue {
 		}
 	}
 
+	/**
+	 * Set memory that is not associated with a running queueable (IE from the templates)
+	 * @param name
+	 * @param value
+	 * @param mode
+	 * @return {boolean}
+	 */
+	setMemory(name,value,mode) {
+		let self=this;
+		mode=mode||self.DEFINE.MEMORY_GARBAGE;
+		let memoryDetails = {
+			pid: -1,
+			mode: mode,
+			origin: &apos;User&apos;,
+			value: value
+		};
+		window.memory[name] = memoryDetails;
+		self._updateMemoryPerms();
+
+			return true;
+	}
+
+	/**
+	 * Flush any permanent memory to cookies
+	 * @private
+	 */
+	_updateMemoryPerms() {
+		let self=this;
+		let perms=[];
+		let date = new Date();
+		date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
+		let expires = &quot;; expires=&quot; + date.toUTCString();
+		for(let i in window.memory) {
+			if(window.memory[i].mode===self.DEFINE.MEMORY_PERMANENT) {
+
+				document.cookie = &apos;OT_&apos;+i + &quot;=&quot; + window.btoa(JSON.stringify(window.memory[i])) + expires + &quot;; path=/&quot;;
+				perms.push(i);
+			}
+		}
+		document.cookie = &apos;OT_INDEX&apos; + &quot;=&quot; + JSON.stringify(perms) + expires + &quot;; path=/&quot;;
+
+	}
+
+	/**
+	 * Load perm memory items from cookies
+	 * @private
+	 */
+	_loadMemoryPerms() {
+		let self=this;
+		let index=self.getCookie(&quot;OT_INDEX&quot;);
+		if(index!==null) {
+			index=JSON.parse(index);
+			for(let i in index) {
+				let perm=JSON.parse(window.atob(self.getCookie(&quot;OT_&quot;+index[i])));
+				window.memory[index[i]]=perm;
+			}
+		}
+
+	}
+
+	/**
+	 * Retrieve a cookie by name
+	 * @param name - Cookie name
+	 * @returns {*}
+	 */
+	getCookie(name) {
+		let nameEQ = name + &quot;=&quot;;
+		let ca = document.cookie.split(&apos;;&apos;);
+		for (let i = 0; i &lt; ca.length; i++) {
+			let c = ca[i];
+			while (c.charAt(0) == &apos; &apos;) c = c.substring(1, c.length);
+			if (c.indexOf(nameEQ) == 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+		}
+		return null;
+	}
+
+	/**
+	 * Called at the end of a queue run to flush any garbage
+	 * @param pid
+	 */
 	cleanMemory(pid) {
 		let self=this;
 		for(let i in window.memory) {
