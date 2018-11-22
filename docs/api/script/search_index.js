@@ -492,6 +492,18 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "ourthings/queue.js~queue#_loadmemoryperms",
+    "class/ourthings/Queue.js~Queue.html#instance-method-_loadMemoryPerms",
+    "ourthings/Queue.js~Queue#_loadMemoryPerms",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#_updatememoryperms",
+    "class/ourthings/Queue.js~Queue.html#instance-method-_updateMemoryPerms",
+    "ourthings/Queue.js~Queue#_updateMemoryPerms",
+    "method"
+  ],
+  [
     "ourthings/queue.js~queue#capitalizefirstletter",
     "class/ourthings/Queue.js~Queue.html#instance-method-capitalizeFirstLetter",
     "ourthings/Queue.js~Queue#capitalizeFirstLetter",
@@ -558,6 +570,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queue.js~queue#getcookie",
+    "class/ourthings/Queue.js~Queue.html#instance-method-getCookie",
+    "ourthings/Queue.js~Queue#getCookie",
+    "method"
+  ],
+  [
     "ourthings/queue.js~queue#getelement",
     "class/ourthings/Queue.js~Queue.html#instance-method-getElement",
     "ourthings/Queue.js~Queue#getElement",
@@ -603,6 +621,12 @@ window.esdocSearchIndex = [
     "ourthings/queue.js~queue#reporterror",
     "class/ourthings/Queue.js~Queue.html#instance-method-reportError",
     "ourthings/Queue.js~Queue#reportError",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#setmemory",
+    "class/ourthings/Queue.js~Queue.html#instance-method-setMemory",
+    "ourthings/Queue.js~Queue#setMemory",
     "method"
   ],
   [
@@ -702,9 +726,15 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "ourthings/queueable/elements.js~elements#innertext",
-    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-innerText",
-    "ourthings/Queueable/Elements.js~Elements#innerText",
+    "ourthings/queueable/elements.js~elements#innerhtml",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-innerHTML",
+    "ourthings/Queueable/Elements.js~Elements#innerHTML",
+    "method"
+  ],
+  [
+    "ourthings/queueable/elements.js~elements#removeclass",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-removeClass",
+    "ourthings/Queueable/Elements.js~Elements#removeClass",
     "method"
   ],
   [
@@ -717,6 +747,18 @@ window.esdocSearchIndex = [
     "ourthings/queueable/internals.js~internals#execute",
     "class/ourthings/Queueable/Internals.js~Internals.html#instance-method-execute",
     "ourthings/Queueable/Internals.js~Internals#execute",
+    "method"
+  ],
+  [
+    "ourthings/queueable/internals.js~internals#ifqueue",
+    "class/ourthings/Queueable/Internals.js~Internals.html#instance-method-ifqueue",
+    "ourthings/Queueable/Internals.js~Internals#ifqueue",
+    "method"
+  ],
+  [
+    "ourthings/queueable/internals.js~internals#setmemory",
+    "class/ourthings/Queueable/Internals.js~Internals.html#instance-method-setMemory",
+    "ourthings/Queueable/Internals.js~Internals#setMemory",
     "method"
   ],
   [

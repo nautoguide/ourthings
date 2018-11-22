@@ -59,7 +59,7 @@ import Queueable from &quot;../Queueable&quot;;
 export default class Elements extends Queueable {
 
 	/**
-	 * Render a template into the dom using the queues templateProcessor
+	 * Add a class to a dom element
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
 	 * @param {string} json.targetId - Dom target
@@ -78,11 +78,37 @@ export default class Elements extends Queueable {
 		}
 	}
 
-	innerText(pid,json) {
+	/**
+	 * Remove a class to a dom element
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.class - Name of class to remove
+	 */
+	removeClass(pid,json) {
 		let self=this;
-		debugger;
 		let element=self.queue.getElement(json.targetId);
-		element.innerHTML(json.text);
+		self.set(pid,json);
+
+		if(element!==false) {
+			element.classList.remove(json.class);
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,&apos;Could not remove class [&apos;+json.class+&apos;] to [&apos;+json.targetId+&apos;]&apos;);
+		}
+	}
+
+    /**
+     * Set the HTML of an element
+     * @param {number} pid - Process ID
+     * @param {object} json - queue arguments
+     * @param {string} json.targetId - Dom target
+     * @param {string} json.html - HTML to add
+     */
+	innerHTML(pid,json) {
+		let self=this;
+		let element=self.queue.getElement(json.targetId);
+		element.innerHTML=json.html;
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
