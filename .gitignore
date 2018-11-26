@@ -61,4 +61,5 @@ typings/
 .next
 .idea
 ourthings.iml
+package-lock.json
 test/out.res
