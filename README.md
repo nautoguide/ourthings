@@ -1,14 +1,14 @@
-# ourthings
+# OurThings
 Queue based JavaScript framework
 
 # Intro
 
-ourthings is a queue based javascript framework designed to take the legwork out of AJAX apps. Originally a closed
+OurThings is a queue based javascript framework designed to take the legwork out of AJAX apps. Originally a closed
 commercial framework,  we are rewriting it and giving it to the world.
 
-# What does it do
+# Purpose
 
-After creating ajax site after site we realised that we were repeating the same blocks of code, over and over and 
+After creating ajax site after site we realised that we were repeating the same blocks of code, over and over and
 always ending up in the same code tangle. Do this, then do this, do that, then call this same piece of code but do
 something slightly different. After boiling down what we did it became obvious that what every app needed was:
 
