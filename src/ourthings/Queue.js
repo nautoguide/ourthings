@@ -69,6 +69,11 @@ class Queue {
 		self.pid = 0;
 
 		/*
+		 * Our unique bind ids
+		 */
+		self.ucid = 0;
+
+		/*
 		 * Default time for process to be executed after
 		 * TODO Platform test / tune
 		 * @type {number}
@@ -314,7 +319,7 @@ class Queue {
 		 */
 		const includeRegex=/{{#include (.*?)}}/;
 		while (match = includeRegex.exec(template)) {
-			template = template.replace(match[0], self.templateProcessor(match[1],"return"));
+			template = template.replace(match[0], self.templateVars(self.getElement(match[1]).innerHTML));
 		}
 
 		/*
@@ -384,7 +389,7 @@ class Queue {
 			if(command.options.queueRun===self.DEFINE.COMMAND_INSTANT||command.options.queueRun===self.DEFINE.COMMAND_SUB) {
 				template = template.replace(match[0], "");
 			} else {
-				template = template.replace(match[0], "data-queueable=\"CMD" + commands.length + "\"");
+				template = template.replace(match[0], "data-queueable=\"CMD" + command.ucid + "\"");
 			}
 			/*
 			 *  Is this a @parent or a -child?
@@ -422,7 +427,7 @@ class Queue {
 				/*
 				 * Find its dom entry using the selector we added
 				 */
-				let element=self.getElement("[data-queueable=CMD"+command+"]");
+				let element=self.getElement("[data-queueable=CMD"+commandObj[command].ucid+"]");
 
 				/*
 				 * Add the event. We flip it over to an instant event now because we want
@@ -748,7 +753,7 @@ class Queue {
 	 */
 	commandParse(command,isParent) {
 		let self=this;
-		let commandObject={};
+		let commandObject={"ucid":++self.ucid};
 		// Find the actual command
 		let commandArray=command.match(/(.*?)\(/)[1].split('.');
 		commandObject.queueable=commandArray[0];

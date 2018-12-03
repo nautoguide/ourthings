@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">ourthings/Queueable/Api.js | ourthings</title>
+  <title data-ice="title">ourthings/Queueable/Api.js | @nautoguide/ourthings</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-</head>
+<meta name="description" content="Queue based JavaScript framework"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="@nautoguide/ourthings"><meta property="twitter:description" content="Queue based JavaScript framework"></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -59,7 +59,8 @@ import Queueable from &quot;../Queueable&quot;;
 export default class Api extends Queueable {
 
 	/**
-	 * Render a template into the dom using the queues templateProcessor
+	 * Make a GET request
+	 *
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
 	 * @param {string} json.url - URL to make GET request to
@@ -72,7 +73,52 @@ export default class Api extends Queueable {
 		let headers=json.headers||{};
 		headers[&apos;Content-Type&apos;]=json.contentType||&apos;application/json&apos;;
 		fetch(json.url, {
-			headers: headers
+			headers: headers,
+		})
+			.then(response =&gt; self.queue.handleFetchErrors(response))
+			.then(function(response) {
+				switch(json.contentType) {
+					case &apos;application/json&apos;:
+						return response.json();
+					default:
+						return response.text();
+				}
+			})
+			.then(function (response) {
+				/*
+				 * Convert the response to json and start the loader
+				 */
+				self.set(pid,response);
+				self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+			})
+			.catch(function (error) {
+				console.info(self.queue.DEFINE.CONSOLE_LINE);
+				console.error(&apos;Error:&apos;, error);
+				console.info(&quot;Warning this error is probably fatal as I have no templates to load&quot;)
+			});
+
+	}
+
+	/**
+	 * Make a POST request
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.url - URL to make GET request to
+	 * @param {string} json.contentType=application/json - Content type to request
+	 * @param {string} json.header - header object to send (note Content-Type is overwritten by above setting)
+	 * @param {string} json.body - object to send JSON.stringify is applies to this
+	 */
+	post(pid,json) {
+		let self=this;
+		json.contentType=json.contentType||&apos;application/json&apos;;
+		let headers=json.headers||{};
+		headers[&apos;Content-Type&apos;]=json.contentType||&apos;application/json&apos;;
+		fetch(json.url, {
+			headers: headers,
+			method: &apos;POST&apos;,
+			body: JSON.stringify(json.body)
 		})
 			.then(response =&gt; self.queue.handleFetchErrors(response))
 			.then(function(response) {
