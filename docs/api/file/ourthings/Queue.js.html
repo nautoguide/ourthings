@@ -526,7 +526,7 @@ class Queue {
 			let dereferenceCommand=self.deepCopy(self.prepare[prepareName]);
 			dereferenceCommand.options.queueRun=self.DEFINE.COMMAND_INSTANT;
 			if(json!==undefined)
-				dereferenceCommand.json=json;
+				dereferenceCommand.json=Object.assign(dereferenceCommand.json,json);
 			self.commandsQueue.apply(self,[[dereferenceCommand]]);
 			return true;
 		} else {
