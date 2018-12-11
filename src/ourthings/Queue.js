@@ -357,7 +357,13 @@ class Queue {
 	 * @return {any}
 	 */
 	varsParser(parseString) {
-		return eval(parseString);
+		let ret=undefined;
+		try {
+			ret=eval(parseString);
+		} catch (e) {
+			console.log('Cant resolve ['+parseString+']');
+		}
+		return ret;
 	}
 
 	/**
