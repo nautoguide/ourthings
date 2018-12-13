@@ -4,18 +4,23 @@
 	<meta charset="utf-8">
 	<title>Ourthings</title>
 	<link type="text/css" rel="stylesheet" href="css/docs.css">
+	<link rel="stylesheet"
+	      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/darcula.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
 
 </head>
 <body>
-	<h1>Ourthing Docs</h1>
+	<h1><img src="images/logo.png"></h1>
+	<h1>Documentation</h1>
 	<h2>Quick Start</h2>
 	<h3>Install the framework</h3>
 	<p>Install the framework using npm from our repo</p>
-	<code>#npm install ourthings</code>
+	<pre><code>npm install ourthings</code></pre>
 	<p>Open the framework examples in your web browser</p>
 	<h3>Create your own simple app with our default build</h3>
 	<p>Add an include for our framework</p>
-	<code>
+	<pre><code  class="html">
 &#x3C;!doctype html&#x3E;
 &#x3C;html lang=&#x22;en&#x22;&#x3E;
 &#x3C;head&#x3E;
@@ -27,27 +32,27 @@
 	&#x3C;/div&#x3E;
 &#x3C;/body&#x3E;
 &#x3C;/html&#x3E;
-	</code>
+	</code></pre>
 	<p>Add a templates.json file to the directory where you html page is</p>
-	<code>[ "actions.html" ]</code>
+	<pre><code>[ "actions.html" ]</code></pre>
 	<p>Add a html template called actions.html that you reference above</p>
-	<code>&#x3C;script id=&#x22;init&#x22; type=&#x22;text/html&#x22;&#x3E;
+	<pre><code>&#x3C;script id=&#x22;init&#x22; type=&#x22;text/html&#x22;&#x3E;
 &#x9;&#x3C;!-- init is always run automatically on startup --&#x3E;
 &#x9;@templates.render({&#x22;targetId&#x22;:&#x22;#content&#x22;,&#x22;template&#x22;:&#x22;#basic&#x22;},{&#x22;queueRun&#x22;:&#x22;Instant&#x22;});
 &#x3C;/script&#x3E;
 
 &#x3C;script id=&#x22;basic&#x22; type=&#x22;text/html&#x22;&#x3E;
 &#x9;Very basic template
-&#x3C;/script&#x3E;</code>
+&#x3C;/script&#x3E;</code></pre>
 	<p>That's it, now open the page in the browser and you will see your Hello World has been replaced with Very basic template</p>
 	<h3>Create your own simple app with your own build</h3>
 	<p>Install the framework using npm from our repo</p>
-	<code>#npm install ourthings</code>
+	<pre><code>#npm install ourthings</code></pre>
 	<p>We use webpack to build so install this using</p>
 	<code>npm install webpack
 	npm install webpack-cli</code>
 	<p>Now create your self an index.html containing your base site</p>
-	<code>
+	<pre><code>
 &#x3C;!doctype html&#x3E;
 &#x3C;html lang=&#x22;en&#x22;&#x3E;
 &#x3C;head&#x3E;
@@ -59,28 +64,28 @@ Hello World
 &#x3C;/div&#x3E;
 &#x3C;/body&#x3E;
 &#x3C;/html&#x3E;
-	</code>
+	</code></pre>
 	<p>Add a templates.json file to the directory where you html page is</p>
-	<code>[ "actions.html" ]</code>
+	<pre><code>[ "actions.html" ]</code></pre>
 	<p>Add a html template called actions.html that you reference above</p>
-	<code>&#x3C;script id=&#x22;init&#x22; type=&#x22;text/html&#x22;&#x3E;
+	<pre><code>&#x3C;script id=&#x22;init&#x22; type=&#x22;text/html&#x22;&#x3E;
 &#x9;&#x3C;!-- init is always run automatically on startup --&#x3E;
 &#x9;@templates.render({&#x22;targetId&#x22;:&#x22;#content&#x22;,&#x22;template&#x22;:&#x22;#basic&#x22;},{&#x22;queueRun&#x22;:&#x22;Instant&#x22;});
 &#x3C;/script&#x3E;
 
 &#x3C;script id=&#x22;basic&#x22; type=&#x22;text/html&#x22;&#x3E;
 &#x9;Very basic template
-&#x3C;/script&#x3E;</code>
+&#x3C;/script&#x3E;</code></pre>
 	<p>Now your javascript code goes in src/index.js</p>
-	<code>import { Queue } from 'ourthings';
+	<pre><code>import { Queue } from 'ourthings';
 import Templates from 'ourthings/src/ourthings/Queueable/Templates';
 import Elements from 'ourthings/src/ourthings/Queueable/Elements';
 
 let queue;
 queue = new Queue({"templates":Templates,"elements":Elements});
-window.queue=queue;</code>
+window.queue=queue;</code></pre>
 	<p>And last of all add a webpack.config.js</p>
-	<code>const path = require('path');
+	<pre><code>const path = require('path');
 
 module.exports = {
 mode: 'development',
@@ -89,12 +94,12 @@ output: {
 filename: 'main.js',
 path: path.resolve(__dirname, 'site/dist')
 }
-};</code>
+};</code></pre>
 	<p>Thats it. Now you can run 'webpack' from the command line and you have a custom build</p>
 	<h3>What does all this do?</h3>
 	<p>Lets walk over what has happened here. When you specified actions.html in the json files ourthings loaded that template and
 	looked for the a script entry called "init". In there the command:</p>
-<code>@templates.render({"targetId":"content","template":"basic"},{"queueRun":"Instant"});</code>
+	<pre><code>@templates.render({"targetId":"content","template":"basic"},{"queueRun":"Instant"});</code></pre>
 	<p>was run. It called the queueable module templates and the function render with the argument json {"targetId":"content","template":"basic"}.
 	The second json argument indicateds we want this queue to run instantly</p>
 	<p>To understand how the queueable command structure works and is formatted please read the
