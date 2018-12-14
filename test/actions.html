@@ -1,7 +1,8 @@
 <script id="init" type="text/html">
 	<!-- init is always run automatically on startup -->
-	@templates.render({"targetId":"content","template":"basic"},{"queueRun":"Instant"});
-	 -templates.render({"targetId":"content","template":"foo"});
+	@templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});
+	 -templates.render({"targetId":"#content","template":"#renderFoo"});
+	 -templates.render({"targetId":"#logic","template":"#for-if-template"},{"queueRun":"Instant"});
 </script>
 
 <script id="basic" type="text/html">
@@ -9,4 +10,100 @@
 	<div @templates.render({"targetId":"content","template":"wibbly"});>
 		Example of button
 	</div>
+</script>
+
+<script id="renderFoo" type="text/html">
+	Foo
+</script>
+
+<script id="renderBar" type="text/html">
+	Bar
+</script>
+
+<script id="if" type="text/html">
+	{{#if !memory.test[0].value}}
+	True
+	{{/if}}
+</script>
+
+<script id="if-for" type="text/html">
+	{{#if !memory.test[0].value}}
+		{{#for memory.test[0].array}}
+			{{memory.test[0].array[#loop0].template}}
+		{{/for}}
+	{{/if}}
+</script>
+
+<script id="if-for-template" type="text/html">
+	{{#if !memory.test[0].value}}
+		{{#for memory.test[0].array}}
+			{{#include #memory.test[0].array[#loop0].template}}
+		{{/for}}
+	{{/if}}
+</script>
+
+<script id="if-template-for" type="text/html">
+	{{#if !memory.test[0].value}}
+		{{#include #if-template-for-tmpl}}
+	{{/if}}
+</script>
+
+<script id="if-template-for-tmpl" type="text/html">
+	{{#for memory.test}}
+		{{memory.test[#loop0].foo}}: {{memory.test[#loop0].bar}}
+		<br>
+	{{/for}}
+</script>
+
+<script id="for" type="text/html">
+	{{#for memory.test}}
+		{{memory.test[#loop0].foo}}: {{memory.test[#loop0].bar}}
+		<br>
+	{{/for}}
+</script>
+
+<script id="for-if" type="text/html">
+	{{#for memory.test}}
+		{{#if memory.test[#loop0].value}}
+			{{memory.test[#loop0].foo}}
+		{{/if}}
+
+		{{#if !memory.test[#loop0].value}}
+			{{memory.test[#loop0].bar}}
+		{{/if}}
+	{{/for}}
+</script>
+
+<script id="for-template" type="text/html">
+	{{#for memory.test}}
+		{{#include #template-tmpl}}
+	{{/for}}
+</script>
+
+<script id="for-if-template" type="text/html">
+	{{#for memory.test}}
+		{{#if memory.test[#loop0].value}}
+			{{#include #renderFoo}}
+		{{/if}}
+
+		{{#if !memory.test[#loop0].value}}
+			{{#include #renderBar}}
+		{{/if}}
+	{{/for}}
+</script>
+
+<script id="template" type="text/html">
+	{{#include #template-tmpl}}
+</script>
+
+<script id="template-tmpl" type="text/html">
+	Foobar
+</script>
+
+<script id="template-if-for" type="text/html">
+	{{#include #if-for}}
+</script>
+
+<script id="template-for-if" type="text/html">
+	{{#include #for-if}}
 </script>

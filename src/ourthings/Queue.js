@@ -292,10 +292,15 @@ class Queue {
 		 */
 		const ifRegex=/{{#if (.*?)}}([\s\S]*?){{\/if}}/;
 		while (match = ifRegex.exec(template)) {
-			if (eval(match[1]))
-				template = template.replace(match[0], self.templateVars(match[2]));
-			else
+			try {
+				if (eval(match[1]))
+					template = template.replace(match[0], self.templateVars(match[2]));
+				else
+					template = template.replace(match[0], '');
+			} catch(e) {
+				console.log('Failed to eval ['+match[1]+']');
 				template = template.replace(match[0], '');
+			}
 		}
 
 		/*
