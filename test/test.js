@@ -24,20 +24,21 @@ describe('#Queue function', function () {
  */
 
 describe('#Queue Command Parse', function () {
-	describe("@templates.render({\"targetId\":\"content\",\"template\":\"basic\"},{\"queueRun\":\"Instant\"});", function () {
+	describe("@templates.render({\"targetId\":\"#content\",\"template\":\"#basic\"},{\"queueRun\":\"Instant\"});", function () {
 		it('Should have a status set', function () {
-			expect(window.queue.commandParse('templates.render({"targetId":"content","template":"basic"},{"queueRun":"Instant"});'))
+			expect(window.queue.commandParse('templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});'))
 				.to.deep.equal({
 				"command":"render",
 				"json":{
-					"targetId": "content",
-					"template": "basic"
+					"targetId": "#content",
+					"template": "#basic"
 				},
 				"options":{
 					"queueRun": "Instant"
 				},
 				"queueable":"templates",
-				"state":0
+				"state":0,
+				"ucid": 1
 				});
 		});
 

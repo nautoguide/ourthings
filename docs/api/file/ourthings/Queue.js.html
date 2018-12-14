@@ -401,7 +401,13 @@ class Queue {
 	 * @return {any}
 	 */
 	varsParser(parseString) {
-		return eval(parseString);
+		let ret=undefined;
+		try {
+			ret=eval(parseString);
+		} catch (e) {
+			console.log(&apos;Cant resolve [&apos;+parseString+&apos;]&apos;);
+		}
+		return ret;
 	}
 
 	/**
