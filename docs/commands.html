@@ -4,9 +4,15 @@
     <meta charset="utf-8">
     <title>Ourthings</title>
     <link type="text/css" rel="stylesheet" href="css/docs.css">
+	<link rel="stylesheet"
+	      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/darcula.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
 
 </head>
 <body>
+<h1><img src="images/logo.png"></h1>
+
 <h1>Command Reference</h1>
 <h2>Overview</h2>
 <p>ourthings has two formats for interacting with your templates. One is a traditional approach that
@@ -20,9 +26,9 @@
 
 <p>The simplist invocation and possibly the most frequent used example is that of rendering a template
     to the DOM.</p>
-<code>@templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});</code>
+<pre><code>@templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});</code></pre>
 <p>Breaking this down the command format is defined as</p>
-<code>@<span class="arg">queueable</span>.<span class="arg">command</span>(<span class="arg">arguments</span>,<span class="arg">options</span>);</code>
+<pre><code>@<span class="arg">queueable</span>.<span class="arg">command</span>(<span class="arg">arguments</span>,<span class="arg">options</span>);</code></pre>
 <ul>
 	<li><span class="arg">queueable</span> - The queueable module you wish to use</li>
 	<li><span class="arg">command</span> - The command in the module you wish to use</li>
@@ -58,22 +64,22 @@ to place values in the page. This format can used in two ways.</p>
 <h4>{{#include [#template]}}</h4>
 If you want to include a template (normally for reuse purposes) into the template you using then use {{#include}}.
 
-<code>&lt;script id="myTemplayeId" type="text/html"&gt;
+<pre><code>&lt;script id="myTemplayeId" type="text/html"&gt;
 	blah
 &lt;/script&gt;
 
-{{#include #myTemplayeId}}</code>
+{{#include #myTemplayeId}}</code></pre>
 
 <h4>{{#for [variable]}}</h4>
 Loop though an array or object
-<code>{{#for memory.people.value}}
+<pre><code>{{#for memory.people.value}}
   {{memory.people.value[#loop0].name}}
-{{/for}}</code>
+{{/for}}</code></pre>
 <h4>{{#if [test}}</h4>
 Perform a if
-<code>{{#if memory.people.value.length>0}}
+<pre><code>{{#if memory.people.value.length>0}}
  There are people
-{{/if}}</code>
+{{/if}}</code></pre>
 </html>
 
 
