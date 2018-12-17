@@ -44,3 +44,30 @@ describe('#Queue Command Parse', function () {
 
 	});
 });
+
+describe('#Test framework tags', function () {
+	describe("templates.render({\"targetId\":\"#logic\",\"template\":\"#for-if-template\"})", function () {
+		before(function(done) {
+			let cmdObj=window.queue.commandParse('internals.setMemory({"name":"test","mode":"Session","value":{"trueFalse":[true,false],"objects":[{"ElementOne":"Result One"},{"ElementTwo":"Result Two"}]}},{"queueRun":"Instant"});',true);
+			cmdObj.commands=[window.queue.commandParse('templates.render({"targetId":"#logic","template":"#for-if-template"});',false)];
+			window.queue.commandsQueue([cmdObj]);
+			waitQueue(done);
+
+		});
+		it('Should produce logic of TrueFalse', function () {
+			expect(document.getElementById('logic').innerText.replace(/ /,''))
+				.to.equal("TrueFalse");
+		});
+
+	});
+});
+
+function waitQueue(callback) {
+	setTimeout(function(){
+		if(window.queue.isWork()===0)
+			callback();
+		else
+			waitQueue(callback);
+		}, 100);
+
+}

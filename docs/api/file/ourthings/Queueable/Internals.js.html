@@ -52,8 +52,6 @@ import Queueable from &quot;../Queueable&quot;;
  *
  * @author Richard Reynolds richard@nautoguide.com
  *
- * @example
- * //
  *
  */
 export default class Internals extends Queueable {
@@ -64,6 +62,8 @@ export default class Internals extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.name - prepared queue to call
 	 * @param {object} [json.json] - New arguments to send to queue
+	 * @example
+	 * internals.execute({&quot;name&quot;:&quot;myQueue&quot;});
 	 */
 	execute(pid,json) {
 		let self=this;
@@ -78,6 +78,8 @@ export default class Internals extends Queueable {
 	 * @param {string} json.statement - statement to check
 	 * @param {string} json.name - prepared queue to call
 	 * @param {object} [json.json] - New arguments to send to queue
+	 * @example
+	 * internals.ifqueue({&quot;statement&quot;:&quot;memory.loginAPI.value.token&quot;,&quot;name&quot;:&quot;loggedIn&quot;});
 	 */
 	ifqueue(pid,json) {
 		let self=this;
@@ -88,6 +90,18 @@ export default class Internals extends Queueable {
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
+	/**
+	 * Set a memory value
+	 *
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.name - name of memory item
+	 * @param {*} json.value - value to set (can be any type)
+	 * @param {string} [json.mode] - [Garbage|Session|Permanent] Memory mode
+	 * @example
+	 * internals.setMemory({&quot;name&quot;:&quot;test&quot;,&quot;mode&quot;:&quot;Session&quot;,&quot;value&quot;:&quot;Test String&quot;});
+	 * internals.setMemory({&quot;name&quot;:&quot;test&quot;,&quot;mode&quot;:&quot;Session&quot;,&quot;value&quot;:{&quot;trueFalse&quot;:[true,false],&quot;objects&quot;:[{&quot;ElementOne&quot;:&quot;Result One&quot;},{&quot;ElementTwo&quot;:&quot;Result Two&quot;}]}});
+	 */
 	setMemory(pid,json) {
 		let self=this;
 		self.queue.setMemory(json.name,json.value,json.mode);

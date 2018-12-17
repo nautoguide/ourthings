@@ -287,21 +287,7 @@ class Queue {
 	templateVars(template) {
 		let match;
 
-		/*
-		 * Process {{#if}}
-		 */
-		const ifRegex=/{{#if (.*?)}}([\s\S]*?){{\/if}}/;
-		while (match = ifRegex.exec(template)) {
-			try {
-				if (eval(match[1]))
-					template = template.replace(match[0], self.templateVars(match[2]));
-				else
-					template = template.replace(match[0], '');
-			} catch(e) {
-				console.log('Failed to eval ['+match[1]+']');
-				template = template.replace(match[0], '');
-			}
-		}
+
 
 		/*
 		 * Look for {{#for}} loops and execute them
@@ -314,9 +300,25 @@ class Queue {
 			 */
 			for(let i in eval(match[1])) {
 				let incrementMatch=match[2].replace(/#loop0/g,i);
-				subTemplate+=self.templateVars(incrementMatch);
+				subTemplate+=self.templateVars(incrementMatch,i);
 			}
 			template = template.replace(match[0], subTemplate);
+		}
+
+		/*
+	 * Process {{#if}}
+	 */
+		const ifRegex=/{{#if (.*?)}}([\s\S]*?){{\/if}}/;
+		while (match = ifRegex.exec(template)) {
+			try {
+				if (eval(match[1]))
+					template = template.replace(match[0], self.templateVars(match[2]));
+				else
+					template = template.replace(match[0], '');
+			} catch(e) {
+				console.log('Failed to eval ['+match[1]+']');
+				template = template.replace(match[0], '');
+			}
 		}
 
 		/*
@@ -512,8 +514,10 @@ class Queue {
 	 * Force a queue processing
 	 *
 	 * This launches the actual objects using a timeout
+	 *
+	 * @param sync {boolean} - Send true to force sync mode (Really only for test mode)
 	 */
-	queueProcess() {
+	queueProcess(sync) {
 		let self=this;
 		/*
 		 *  TODO Only implementing basic queue here for testing. Concepts of active componets etc need importing
@@ -545,10 +549,13 @@ class Queue {
 				/*
 				 *  Launch the function as a time out (so we get control back)
 				 */
-
-				setTimeout(function () {
-					self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable],[self.queue[item].pid,self.queue[item].command,self.jsonVars(self.queue[item].json),self]);
-				}, self.queue[item].options.queueTimer);
+				if(sync) {
+					self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
+				} else {
+					setTimeout(function () {
+						self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
+					}, self.queue[item].options.queueTimer);
+				}
 			}
 		}
 	}
@@ -684,6 +691,19 @@ class Queue {
 			}
 		}
 
+	}
+
+	/**
+	 * Is there any work to do in the queue?
+	 */
+	isWork() {
+		let self=this;
+		let count=0;
+		for(let item in self.queue) {
+			if(self.queue[item].state!==self.DEFINE.QUEUE_FINISHED&&self.queue[item].state!==self.DEFINE.QUEUE_ERROR)
+				count++;
+		}
+		return count;
 	}
 
 	/**

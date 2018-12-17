@@ -1,8 +1,6 @@
 <script id="init" type="text/html">
 	<!-- init is always run automatically on startup -->
 	@templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});
-	 -templates.render({"targetId":"#content","template":"#renderFoo"});
-	 -templates.render({"targetId":"#logic","template":"#for-if-template"},{"queueRun":"Instant"});
 </script>
 
 <script id="basic" type="text/html">
@@ -12,13 +10,9 @@
 	</div>
 </script>
 
-<script id="renderFoo" type="text/html">
-	Foo
-</script>
+<script id="renderTrue" type="text/html">True</script>
 
-<script id="renderBar" type="text/html">
-	Bar
-</script>
+<script id="renderFalse" type="text/html">False</script>
 
 <script id="if" type="text/html">
 	{{#if !memory.test[0].value}}
@@ -81,13 +75,13 @@
 </script>
 
 <script id="for-if-template" type="text/html">
-	{{#for memory.test}}
-		{{#if memory.test[#loop0].value}}
-			{{#include #renderFoo}}
+	{{#for memory.test.value.trueFalse}}
+		{{#if memory.test.value.trueFalse[#loop0]}}
+			{{#include #renderTrue}}
 		{{/if}}
 
-		{{#if !memory.test[#loop0].value}}
-			{{#include #renderBar}}
+		{{#if !memory.test.value.trueFalse[#loop0]}}
+			{{#include #renderFalse}}
 		{{/if}}
 	{{/for}}
 </script>

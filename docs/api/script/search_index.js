@@ -588,6 +588,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queue.js~queue#iswork",
+    "class/ourthings/Queue.js~Queue.html#instance-method-isWork",
+    "ourthings/Queue.js~Queue#isWork",
+    "method"
+  ],
+  [
     "ourthings/queue.js~queue#jsonvars",
     "class/ourthings/Queue.js~Queue.html#instance-method-jsonVars",
     "ourthings/Queue.js~Queue#jsonVars",

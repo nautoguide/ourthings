@@ -42,13 +42,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Internals from &apos;<span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber15">@nautoguide/ourthings/ourthings/Queueable/Internals.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Internals from &apos;<span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber13">@nautoguide/ourthings/ourthings/Queueable/Internals.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber15">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber13">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -73,14 +73,7 @@
 
   
 
-  <div data-ice="exampleDocs">
-    <h4>Example:</h4>
-    
-  <div class="example-doc" data-ice="exampleDoc">
-      
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">//</code></pre>
-    </div>
-</div>
+  
 
   
 
@@ -167,13 +160,14 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html#instance-method-setMemory">setMemory</a></span></span><span class="code" data-ice="signature">(pid: <span>*</span>, json: <span>*</span>)</span>
+          <span class="code" data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html#instance-method-setMemory">setMemory</a></span></span><span class="code" data-ice="signature">(pid: <span>int</span>, json: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span>)</span>
         </p>
       </div>
       <div>
         
         
-        
+        <div data-ice="description"><p>Set a memory value</p>
+</div>
       </div>
     </td>
     <td>
@@ -390,7 +384,14 @@ the self.ready=true after the promise</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">internals.execute({&quot;name&quot;:&quot;myQueue&quot;});</code></pre>
+    </div>
+</div>
 
   
 
@@ -409,7 +410,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber38">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber40">source</a></span></span>
     </span>
   </h3>
 
@@ -479,7 +480,14 @@ the self.ready=true after the promise</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">internals.ifqueue({&quot;statement&quot;:&quot;memory.loginAPI.value.token&quot;,&quot;name&quot;:&quot;loggedIn&quot;});</code></pre>
+    </div>
+</div>
 
   
 
@@ -494,18 +502,19 @@ the self.ready=true after the promise</p>
     
     
     
-    <span class="code" data-ice="name">setMemory</span><span class="code" data-ice="signature">(pid: <span>*</span>, json: <span>*</span>)</span>
+    <span class="code" data-ice="name">setMemory</span><span class="code" data-ice="signature">(pid: <span>int</span>, json: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber47">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber61">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Set a memory value</p>
+</div>
 
   
 
@@ -519,15 +528,38 @@ the self.ready=true after the promise</p>
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">pid</td>
-      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="type" class="code"><span>int</span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>process ID</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">json</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>queue arguments</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.name</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>name of memory item</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.value</td>
       <td data-ice="type" class="code"><span>*</span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>value to set (can be any type)</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.mode</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>[Garbage|Session|Permanent] Memory mode</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -544,7 +576,15 @@ the self.ready=true after the promise</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">internals.setMemory({&quot;name&quot;:&quot;test&quot;,&quot;mode&quot;:&quot;Session&quot;,&quot;value&quot;:&quot;Test String&quot;});
+internals.setMemory({&quot;name&quot;:&quot;test&quot;,&quot;mode&quot;:&quot;Session&quot;,&quot;value&quot;:{&quot;trueFalse&quot;:[true,false],&quot;objects&quot;:[{&quot;ElementOne&quot;:&quot;Result One&quot;},{&quot;ElementTwo&quot;:&quot;Result Two&quot;}]}});</code></pre>
+    </div>
+</div>
 
   
 
