@@ -182,10 +182,13 @@ class Queue {
 			 */
 			self.status=self.DEFINE.STATUS_LOADED;
 			/*
-			 *  TODO once queue generation is working this this pushing to the queue
-			 *  As currently this is a chain of promises and so everything will error trap back to the loader
+			 * Detach the init template loader from this stack chain
+			 *
+			 * We do this because a fail in a subsequent template will register as an error in the fetch catch method
+			 * which is misleading
 			 */
-			self.templateProcessor("#init",false);
+			setTimeout(function(){ self.templateProcessor("#init",false);},100);
+
 			self.status=self.DEFINE.STATUS_RUNNING;
 			console.info(self.DEFINE.CONSOLE_LINE);
 			console.log('[Online]');
