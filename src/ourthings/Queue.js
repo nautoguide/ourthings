@@ -218,6 +218,11 @@ class Queue {
 				 *
 				 */
 				let text = response;
+				/*
+				 * Remove any html comments as they will slow down processing later on
+				 */
+				text=text.replace(/<!--([\s\S]*?)-->/g,'');
+
 				let meta = document.createElement('meta');
 				meta.setAttribute("name", "generator");
 				meta.setAttribute("content", template);
