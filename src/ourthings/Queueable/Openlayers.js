@@ -8,6 +8,9 @@ import OSM from 'ol/source/OSM';
 import WKT from 'ol/format/WKT';
 import GeoJSON from 'ol/format/GeoJSON';
 import {fromLonLat,units,epsg3857,epsg4326} from 'ol/proj';
+import Select from 'ol/interaction/Select.js';
+import {click, pointerMove, altKeyOnly} from 'ol/events/condition.js';
+
 
 /**
  * @classdesc
@@ -167,6 +170,31 @@ export default class Openlayers extends Queueable {
 	}
 
 	/**
+	 * Use the standard openlayers select control
+	 * @param pid
+	 * @param json
+	 *
+	 * @description This select control uses the default openlayers model. Useful for applications with no overlapping features. It does not support selecting hidden features
+	 */
+	simpleSelect(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			"map":"default",
+			condition:"click"
+		},json);
+
+		let selector = new Select();
+		self.maps[options.map].object.addInteraction(selector);
+		selector.on('select', function(e) {
+			console.log(e);
+			self.queue.setMemory('simpleSelect', e, "Session");
+			self.queue.execute("simpleSelect");
+		});
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
 	 * Add a feature to the Map
 	 * TODO: This is old code for getting something working. Needs functionising, not for production
 	 * @param pid
@@ -175,7 +203,7 @@ export default class Openlayers extends Queueable {
 	addFeature(pid,json) {
 		let self=this;
 		let options=Object.assign({
-			"map":"map1",
+			"map":"default",
 			"layer":"default",
 			"values":{}
 		},json);
@@ -193,6 +221,7 @@ export default class Openlayers extends Queueable {
 		let feature = format.readFeature(wkt);
 		options.values.geometry = feature.getGeometry().transform(projection, view.getProjection().getCode());
 		source.addFeature(new Feature(options.values));
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
 }
