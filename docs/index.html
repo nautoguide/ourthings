@@ -56,7 +56,7 @@
 &#x3C;!doctype html&#x3E;
 &#x3C;html lang=&#x22;en&#x22;&#x3E;
 &#x3C;head&#x3E;
-&#x9;&#x3C;script type=&#x22;text/javascript&#x22; src=&#x22;../dist/main.js&#x22;&#x3E;&#x3C;/script&#x3E;
+&#x9;&#x3C;script type=&#x22;text/javascript&#x22; src=&#x22;dist/main.js&#x22;&#x3E;&#x3C;/script&#x3E;
 &#x3C;/head&#x3E;
 &#x3C;body&#x3E;
 &#x9;&#x3C;div id=&#x22;content&#x22;&#x3E;
@@ -77,9 +77,9 @@ Hello World
 &#x9;Very basic template
 &#x3C;/script&#x3E;</code></pre>
 	<p>Now your javascript code goes in src/index.js</p>
-	<pre><code>import { Queue } from 'ourthings';
-import Templates from 'ourthings/src/ourthings/Queueable/Templates';
-import Elements from 'ourthings/src/ourthings/Queueable/Elements';
+	<pre><code>import { Queue } from '@nautoguide/ourthings';
+import Templates from '@nautoguide/ourthings/Queueable/Templates';
+import Elements from '@nautoguide/ourthings/Queueable/Elements';
 
 let queue;
 queue = new Queue({"templates":Templates,"elements":Elements});

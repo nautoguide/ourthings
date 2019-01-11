@@ -42,13 +42,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Openlayers from &apos;<span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber22">@nautoguide/ourthings/ourthings/Queueable/Openlayers.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Openlayers from &apos;<span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber25">@nautoguide/ourthings/ourthings/Queueable/Openlayers.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber22">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber25">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -115,7 +115,9 @@
       <div>
         
         
-        
+        <div data-ice="description"><p>Add a feature to the Map
+TODO: This is old code for getting something working.</p>
+</div>
       </div>
     </td>
     <td>
@@ -137,13 +139,14 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addLayer">addLayer</a></span></span><span class="code" data-ice="signature">(pid: <span>*</span>, json: <span>*</span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addLayer">addLayer</a></span></span><span class="code" data-ice="signature">(pid: <span>int</span>, json: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
         
         
-        
+        <div data-ice="description"><p>Add a layer to the map</p>
+</div>
       </div>
     </td>
     <td>
@@ -165,13 +168,14 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addMap">addMap</a></span></span><span class="code" data-ice="signature">(pid: <span>*</span>, json: <span>*</span>)</span>
+          <span class="code" data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addMap">addMap</a></span></span><span class="code" data-ice="signature">(pid: <span>int</span>, json: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span>)</span>
         </p>
       </div>
       <div>
         
         
-        
+        <div data-ice="description"><p>Create a new map</p>
+</div>
       </div>
     </td>
     <td>
@@ -227,13 +231,14 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_osm">_addLayer_osm</a></span></span><span class="code" data-ice="signature">(options: <span>*</span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_osm">_addLayer_osm</a></span></span><span class="code" data-ice="signature">(options: <span>*</span>): <span>TileLayer</span></span>
         </p>
       </div>
       <div>
         
         
-        
+        <div data-ice="description"><p>Add an osm layer</p>
+</div>
       </div>
     </td>
     <td>
@@ -255,13 +260,14 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_vector">_addLayer_vector</a></span></span><span class="code" data-ice="signature">(options: <span>*</span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_vector">_addLayer_vector</a></span></span><span class="code" data-ice="signature">(options: <span>*</span>): <span>VectorLayer</span></span>
         </p>
       </div>
       <div>
         
         
-        
+        <div data-ice="description"><p>Add a vector layer</p>
+</div>
       </div>
     </td>
     <td>
@@ -415,14 +421,16 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber109">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber175">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Add a feature to the Map
+TODO: This is old code for getting something working. Needs functionising, not for production</p>
+</div>
 
   
 
@@ -476,18 +484,19 @@ the self.ready=true after the promise</p>
     
     
     
-    <span class="code" data-ice="name">addLayer</span><span class="code" data-ice="signature">(pid: <span>*</span>, json: <span>*</span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span class="code" data-ice="name">addLayer</span><span class="code" data-ice="signature">(pid: <span>int</span>, json: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber54">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber88">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Add a layer to the map</p>
+</div>
 
   
 
@@ -501,15 +510,73 @@ the self.ready=true after the promise</p>
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">pid</td>
-      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="type" class="code"><span>int</span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>process ID</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">json</td>
-      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>queue arguments</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.map</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>name for the map (used to reference)</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.name</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>name for the layer (used to reference)</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.typr</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Layer type osm,vector</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.opacity</td>
+      <td data-ice="type" class="code"><span>float</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>layer opacity</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.transparent</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>is the layer transparent?</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.style</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Style object to use</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.active</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Is the layer active</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.geojson</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>geojson to add to the layer (vector)</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -538,7 +605,14 @@ the self.ready=true after the promise</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">openlayer.addLayer();</code></pre>
+    </div>
+</div>
 
   
 
@@ -553,18 +627,19 @@ the self.ready=true after the promise</p>
     
     
     
-    <span class="code" data-ice="name">addMap</span><span class="code" data-ice="signature">(pid: <span>*</span>, json: <span>*</span>)</span>
+    <span class="code" data-ice="name">addMap</span><span class="code" data-ice="signature">(pid: <span>int</span>, json: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber34">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber49">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Create a new map</p>
+</div>
 
   
 
@@ -578,15 +653,45 @@ the self.ready=true after the promise</p>
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">pid</td>
-      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="type" class="code"><span>int</span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>process ID</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">json</td>
-      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>queue arguments</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.map</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>name for the map (used to reference)</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.zoom</td>
+      <td data-ice="type" class="code"><span>int</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>statement to check</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.center</td>
+      <td data-ice="type" class="code"><span>array</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Center on</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.renderer</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Renderers to use</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -603,7 +708,14 @@ the self.ready=true after the promise</p>
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">openlayer.addMap();</code></pre>
+    </div>
+</div>
 
   
 
@@ -622,7 +734,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber24">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber27">source</a></span></span>
     </span>
   </h3>
 
@@ -681,18 +793,19 @@ the self.ready=true after the promise</p>
     
     
     
-    <span class="code" data-ice="name">_addLayer_osm</span><span class="code" data-ice="signature">(options: <span>*</span>): <span>*</span></span>
+    <span class="code" data-ice="name">_addLayer_osm</span><span class="code" data-ice="signature">(options: <span>*</span>): <span>TileLayer</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber85">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber132">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Add an osm layer</p>
+</div>
 
   
 
@@ -720,7 +833,7 @@ the self.ready=true after the promise</p>
     <table>
       <tbody>
         <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span></td>
+          <td class="return-type code" data-ice="returnType"><span>TileLayer</span></td>
           
         </tr>
       </tbody>
@@ -752,18 +865,19 @@ the self.ready=true after the promise</p>
     
     
     
-    <span class="code" data-ice="name">_addLayer_vector</span><span class="code" data-ice="signature">(options: <span>*</span>): <span>*</span></span>
+    <span class="code" data-ice="name">_addLayer_vector</span><span class="code" data-ice="signature">(options: <span>*</span>): <span>VectorLayer</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber92">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber145">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Add a vector layer</p>
+</div>
 
   
 
@@ -791,7 +905,7 @@ the self.ready=true after the promise</p>
     <table>
       <tbody>
         <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span></td>
+          <td class="return-type code" data-ice="returnType"><span>VectorLayer</span></td>
           
         </tr>
       </tbody>
