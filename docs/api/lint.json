@@ -4,35 +4,35 @@
     "filePath": "ourthings/Queue.js",
     "lines": [
       {
-        "lineNumber": 375,
+        "lineNumber": 383,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 376,
+        "lineNumber": 384,
         "line": "\t * Takes a template and runs any template commands contained in it to create a HTML template\r"
       },
       {
-        "lineNumber": 377,
+        "lineNumber": 385,
         "line": "\t * ready to be put into the dom\r"
       },
       {
-        "lineNumber": 378,
+        "lineNumber": 386,
         "line": "\t *\r"
       },
       {
-        "lineNumber": 379,
+        "lineNumber": 387,
         "line": "\t * @param template {string}\r"
       },
       {
-        "lineNumber": 380,
+        "lineNumber": 388,
         "line": "\t * @return {string}\r"
       },
       {
-        "lineNumber": 381,
+        "lineNumber": 389,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 382,
+        "lineNumber": 390,
         "line": "\ttemplateParse(template,commands) {\r"
       }
     ],
@@ -49,31 +49,31 @@
     "filePath": "ourthings/Queue.js",
     "lines": [
       {
-        "lineNumber": 576,
+        "lineNumber": 584,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 577,
+        "lineNumber": 585,
         "line": "\t * Called by queueables to add something to our memory stack\r"
       },
       {
-        "lineNumber": 578,
+        "lineNumber": 586,
         "line": "\t * @param name\r"
       },
       {
-        "lineNumber": 579,
+        "lineNumber": 587,
         "line": "\t * @param value\r"
       },
       {
-        "lineNumber": 580,
+        "lineNumber": 588,
         "line": "\t * @param pid\r"
       },
       {
-        "lineNumber": 581,
+        "lineNumber": 589,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 582,
+        "lineNumber": 590,
         "line": "\tmemory(pid,value) {\r"
       }
     ],
@@ -92,39 +92,39 @@
     "filePath": "ourthings/Queue.js",
     "lines": [
       {
-        "lineNumber": 708,
+        "lineNumber": 716,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 709,
+        "lineNumber": 717,
         "line": "\t *  Called to flag a queue item as finished\r"
       },
       {
-        "lineNumber": 710,
+        "lineNumber": 718,
         "line": "\t *\r"
       },
       {
-        "lineNumber": 711,
+        "lineNumber": 719,
         "line": "\t *  Normally hooked down from queueable this is a queue item saying I have finished in mode (see define.js)\r"
       },
       {
-        "lineNumber": 712,
+        "lineNumber": 720,
         "line": "\t *\r"
       },
       {
-        "lineNumber": 713,
+        "lineNumber": 721,
         "line": "\t * @param pid\r"
       },
       {
-        "lineNumber": 714,
+        "lineNumber": 722,
         "line": "\t * @param mode\r"
       },
       {
-        "lineNumber": 715,
+        "lineNumber": 723,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 716,
+        "lineNumber": 724,
         "line": "\tfinished(pid,mode,error) {\r"
       }
     ],
@@ -143,39 +143,39 @@
     "filePath": "ourthings/Queue.js",
     "lines": [
       {
-        "lineNumber": 776,
+        "lineNumber": 784,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 777,
+        "lineNumber": 785,
         "line": "\t * This will take a command string in the format object.command({},{}); and split it down\r"
       },
       {
-        "lineNumber": 778,
+        "lineNumber": 786,
         "line": "\t * into it parts as an object\r"
       },
       {
-        "lineNumber": 779,
+        "lineNumber": 787,
         "line": "\t *\r"
       },
       {
-        "lineNumber": 780,
+        "lineNumber": 788,
         "line": "\t * TODO no concept of the context of the command IE was it from inside a div that need binding?\r"
       },
       {
-        "lineNumber": 781,
+        "lineNumber": 789,
         "line": "\t * @param command {string}\r"
       },
       {
-        "lineNumber": 782,
+        "lineNumber": 790,
         "line": "\t * @return {object}\r"
       },
       {
-        "lineNumber": 783,
+        "lineNumber": 791,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 784,
+        "lineNumber": 792,
         "line": "\tcommandParse(command,isParent) {\r"
       }
     ],

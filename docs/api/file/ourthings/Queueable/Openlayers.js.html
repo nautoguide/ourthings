@@ -33,6 +33,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
@@ -62,6 +63,8 @@ import {fromLonLat,units,epsg3857,epsg4326} from &apos;ol/proj&apos;;
  * @example
  * //
  *
+ * @description You need to add &quot;ol&quot;: &quot;^5.3.0&quot; to your package.json to build with openlayers
+ *
  */
 export default class Openlayers extends Queueable {
 
@@ -74,31 +77,42 @@ export default class Openlayers extends Queueable {
 		self.ready=true;
 	}
 
-
+	/**
+	 *
+	 * Create a new map
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.name - name for the map (used to reference)
+	 * @param {string} json.zoom - statement to check
+	 * @param {string} json.center - Center on
+	 * @example
+	 * openlayer.addMap();
+	 *
+	 */
 	addMap(pid,json) {
 		let self=this;
 		let options=Object.assign({
-			&quot;map&quot;:&quot;map1&quot;,
+			&quot;name&quot;:&quot;default&quot;,
 			&quot;projection&quot;:&quot;EPSG:3857&quot;,
 			&quot;zoom&quot;: 0,
 			&quot;renderer&quot;: [&apos;webgl&apos;, &apos;canvas&apos;],
-			&quot;target&quot;:&quot;map&quot;
+			&quot;target&quot;:&quot;map&quot;,
+			&quot;center&quot;:[0,0]
 		},json);
 		const map = new Map({
 			target: options.target,
 			view: new View({
-				center: [0, 0],
-				zoom: 0
+				center: options.center,
+				zoom: options.zoom
 			})
 		});
-		self.maps[options.map]={&quot;object&quot;:map,&quot;layers&quot;:{}};
+		self.maps[options.name]={&quot;object&quot;:map,&quot;layers&quot;:{}};
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
 	addLayer(pid,json) {
 		let self=this;
 		let options=Object.assign({
-			&quot;map&quot;:&quot;map1&quot;,
 			&quot;name&quot;:&quot;default&quot;,
 			&quot;opacity&quot;: 1,
 			&quot;transparent&quot;: false,
@@ -109,7 +123,7 @@ export default class Openlayers extends Queueable {
 			&quot;hover&quot;: true,
 			&quot;style&quot;: &quot;default&quot;
 		},json);
-		let map=self.maps[options.map].object;
+		let map=self.maps[options.name].object;
 		let olLayer = null;
 		let layerFunction = self[&quot;_addLayer_&quot; + options.type];
 
@@ -121,7 +135,7 @@ export default class Openlayers extends Queueable {
 			return false;
 		}
 		map.addLayer(olLayer);
-		self.maps[options.map].layers[options.name]=olLayer;
+		self.maps[options.name].layers[options.name]=olLayer;
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}

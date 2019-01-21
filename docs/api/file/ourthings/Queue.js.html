@@ -33,6 +33,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
@@ -226,10 +227,13 @@ class Queue {
 			 */
 			self.status=self.DEFINE.STATUS_LOADED;
 			/*
-			 *  TODO once queue generation is working this this pushing to the queue
-			 *  As currently this is a chain of promises and so everything will error trap back to the loader
+			 * Detach the init template loader from this stack chain
+			 *
+			 * We do this because a fail in a subsequent template will register as an error in the fetch catch method
+			 * which is misleading
 			 */
-			self.templateProcessor(&quot;#init&quot;,false);
+			setTimeout(function(){ self.templateProcessor(&quot;#init&quot;,false);},100);
+
 			self.status=self.DEFINE.STATUS_RUNNING;
 			console.info(self.DEFINE.CONSOLE_LINE);
 			console.log(&apos;[Online]&apos;);
@@ -259,6 +263,11 @@ class Queue {
 				 *
 				 */
 				let text = response;
+				/*
+				 * Remove any html comments as they will slow down processing later on
+				 */
+				text=text.replace(/&lt;!--([\s\S]*?)--&gt;/g,&apos;&apos;);
+
 				let meta = document.createElement(&apos;meta&apos;);
 				meta.setAttribute(&quot;name&quot;, &quot;generator&quot;);
 				meta.setAttribute(&quot;content&quot;, template);

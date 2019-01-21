@@ -18,6 +18,8 @@ import {fromLonLat,units,epsg3857,epsg4326} from 'ol/proj';
  * @example
  * //
  *
+ * @description You need to add "ol": "^5.3.0" to your package.json to build with openlayers
+ *
  */
 export default class Openlayers extends Queueable {
 
@@ -30,31 +32,42 @@ export default class Openlayers extends Queueable {
 		self.ready=true;
 	}
 
-
+	/**
+	 *
+	 * Create a new map
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.name - name for the map (used to reference)
+	 * @param {string} json.zoom - statement to check
+	 * @param {string} json.center - Center on
+	 * @example
+	 * openlayer.addMap();
+	 *
+	 */
 	addMap(pid,json) {
 		let self=this;
 		let options=Object.assign({
-			"map":"map1",
+			"name":"default",
 			"projection":"EPSG:3857",
 			"zoom": 0,
 			"renderer": ['webgl', 'canvas'],
-			"target":"map"
+			"target":"map",
+			"center":[0,0]
 		},json);
 		const map = new Map({
 			target: options.target,
 			view: new View({
-				center: [0, 0],
-				zoom: 0
+				center: options.center,
+				zoom: options.zoom
 			})
 		});
-		self.maps[options.map]={"object":map,"layers":{}};
+		self.maps[options.name]={"object":map,"layers":{}};
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
 	addLayer(pid,json) {
 		let self=this;
 		let options=Object.assign({
-			"map":"map1",
 			"name":"default",
 			"opacity": 1,
 			"transparent": false,
@@ -65,7 +78,7 @@ export default class Openlayers extends Queueable {
 			"hover": true,
 			"style": "default"
 		},json);
-		let map=self.maps[options.map].object;
+		let map=self.maps[options.name].object;
 		let olLayer = null;
 		let layerFunction = self["_addLayer_" + options.type];
 
@@ -77,7 +90,7 @@ export default class Openlayers extends Queueable {
 			return false;
 		}
 		map.addLayer(olLayer);
-		self.maps[options.map].layers[options.name]=olLayer;
+		self.maps[options.name].layers[options.name]=olLayer;
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
