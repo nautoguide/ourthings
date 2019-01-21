@@ -1033,7 +1033,7 @@
     "__docId__": 76,
     "kind": "file",
     "name": "ourthings/main.js",
-    "content": "import Queue from './Queue';\r\n\r\n/**\r\n *  Import all the queueables we want to use here. Make sure to add an entry to to new queue to map the commands\r\n *\r\n */\r\nimport Internals from './Queueable/Internals';\r\nimport Templates from './Queueable/Templates';\r\nimport Elements from './Queueable/Elements';\r\nimport Api from './Queueable/Api';\r\nimport Openlayers from './Queueable/Openlayers';\r\n\r\n/*\r\n * Start the queue engine\r\n */\r\nlet queue = new Queue({\"internals\":Internals,\"templates\":Templates,\"elements\":Elements,\"api\":Api,\"openlayers\":Openlayers});\r\n\r\n/*\r\n * If you want debug put the queue into the window\r\n */\r\nwindow.queue=queue;\r\n",
+    "content": "import Queue from './Queue';\r\n\r\n/**\r\n *  Import all the queueables we want to use here. Make sure to add an entry to to new queue to map the commands\r\n *\r\n */\r\nimport Internals from './Queueable/Internals';\r\nimport Templates from './Queueable/Templates';\r\nimport Elements from './Queueable/Elements';\r\nimport Api from './Queueable/Api';\r\nimport Openlayers from './Queueable/Openlayers';\r\nimport Browser from './Queueable/Browser';\r\n\r\n/*\r\n * Start the queue engine\r\n */\r\nlet queue = new Queue({\"internals\":Internals,\"templates\":Templates,\"elements\":Elements,\"api\":Api,\"openlayers\":Openlayers,\"browser\":Browser});\r\n\r\n/*\r\n * If you want debug put the queue into the window\r\n */\r\nwindow.queue=queue;\r\n",
     "static": true,
     "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/main.js",
     "access": "public",
@@ -1052,7 +1052,7 @@
     "importPath": "@nautoguide/ourthings/ourthings/main.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 16,
+    "lineNumber": 17,
     "undocument": true,
     "type": {
       "types": [
@@ -2257,6 +2257,94 @@
   {
     "__docId__": 114,
     "kind": "file",
+    "name": "ourthings/Queueable/Browser.js",
+    "content": "/** @module ourthings/Queueable/Elements */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Browser Functions\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n */\r\nexport default class Browser extends Queueable {\r\n\r\n\r\n\t/**\r\n\t * Redirect browser to a new page\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.location - Dom location to direct to\r\n\t */\r\n\tredirect(pid,json) {\r\n\t\tlet self=this;\r\n\t\twindow.top.location = json.location;\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n}\r\n",
+    "static": true,
+    "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable/Browser.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 115,
+    "kind": "class",
+    "name": "Browser",
+    "memberof": "ourthings/Queueable/Browser.js",
+    "static": true,
+    "longname": "ourthings/Queueable/Browser.js~Browser",
+    "access": "public",
+    "export": true,
+    "importPath": "@nautoguide/ourthings/ourthings/Queueable/Browser.js",
+    "importStyle": "Browser",
+    "description": "",
+    "examples": [
+      "//"
+    ],
+    "lineNumber": 15,
+    "unknown": [
+      {
+        "tagName": "@classdesc",
+        "tagValue": "\nBrowser Functions"
+      },
+      {
+        "tagName": "@author",
+        "tagValue": "Richard Reynolds richard@nautoguide.com"
+      }
+    ],
+    "interface": false,
+    "extends": [
+      "ourthings/Queueable.js~Queueable"
+    ]
+  },
+  {
+    "__docId__": 116,
+    "kind": "method",
+    "name": "redirect",
+    "memberof": "ourthings/Queueable/Browser.js~Browser",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable/Browser.js~Browser#redirect",
+    "access": "public",
+    "description": "Redirect browser to a new page",
+    "lineNumber": 24,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "pid",
+        "description": "Process ID"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json",
+        "description": "queue arguments"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.location",
+        "description": "Dom location to direct to"
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 117,
+    "kind": "file",
     "name": "ourthings/Queueable/Elements.js",
     "content": "/** @module ourthings/Queueable/Elements */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Dom Elements manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n */\r\nexport default class Elements extends Queueable {\r\n\r\n\t/**\r\n\t * Add a class to a dom element\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.targetId - Dom target\r\n\t * @param {string} json.class - Name of class to add\r\n\t */\r\n\taddClass(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet element=self.queue.getElement(json.targetId);\r\n\t\tself.set(pid,json);\r\n\r\n\t\tif(element!==false) {\r\n\t\t\telement.classList.add(json.class);\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t\t} else {\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not add class ['+json.class+'] to ['+json.targetId+']');\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Remove a class to a dom element\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.targetId - Dom target\r\n\t * @param {string} json.class - Name of class to remove\r\n\t */\r\n\tremoveClass(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet element=self.queue.getElement(json.targetId);\r\n\t\tself.set(pid,json);\r\n\r\n\t\tif(element!==false) {\r\n\t\t\telement.classList.remove(json.class);\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t\t} else {\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not remove class ['+json.class+'] to ['+json.targetId+']');\r\n\t\t}\r\n\t}\r\n\r\n    /**\r\n     * Set the HTML of an element\r\n     * @param {number} pid - Process ID\r\n     * @param {object} json - queue arguments\r\n     * @param {string} json.targetId - Dom target\r\n     * @param {string} json.html - HTML to add\r\n     */\r\n\tinnerHTML(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet element=self.queue.getElement(json.targetId);\r\n\t\telement.innerHTML=json.html;\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n}\r\n",
     "static": true,
@@ -2266,7 +2354,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 115,
+    "__docId__": 118,
     "kind": "class",
     "name": "Elements",
     "memberof": "ourthings/Queueable/Elements.js",
@@ -2297,7 +2385,7 @@
     ]
   },
   {
-    "__docId__": 116,
+    "__docId__": 119,
     "kind": "method",
     "name": "addClass",
     "memberof": "ourthings/Queueable/Elements.js~Elements",
@@ -2353,7 +2441,7 @@
     "return": null
   },
   {
-    "__docId__": 117,
+    "__docId__": 120,
     "kind": "method",
     "name": "removeClass",
     "memberof": "ourthings/Queueable/Elements.js~Elements",
@@ -2409,7 +2497,7 @@
     "return": null
   },
   {
-    "__docId__": 118,
+    "__docId__": 121,
     "kind": "method",
     "name": "innerHTML",
     "memberof": "ourthings/Queueable/Elements.js~Elements",
@@ -2465,7 +2553,7 @@
     "return": null
   },
   {
-    "__docId__": 119,
+    "__docId__": 122,
     "kind": "file",
     "name": "ourthings/Queueable/Internals.js",
     "content": "/** @module ourthings/Queueable/Internals */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Internal queue functions exposed to queueables\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n *\r\n */\r\nexport default class Internals extends Queueable {\r\n\r\n\t/**\r\n\t * Execute a prepared queue\r\n\t * @param {int} pid - process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.name - prepared queue to call\r\n\t * @param {object} [json.json] - New arguments to send to queue\r\n\t * @example\r\n\t * internals.execute({\"name\":\"myQueue\"});\r\n\t */\r\n\texecute(pid,json) {\r\n\t\tlet self=this;\r\n\t\tself.queue.execute(json.name,json.json);\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * Check a statement and run prepared queue if its true\r\n\t * @param {int} pid - process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.statement - statement to check\r\n\t * @param {string} json.name - prepared queue to call\r\n\t * @param {object} [json.json] - New arguments to send to queue\r\n\t * @example\r\n\t * internals.ifqueue({\"statement\":\"memory.loginAPI.value.token\",\"name\":\"loggedIn\"});\r\n\t */\r\n\tifqueue(pid,json) {\r\n\t\tlet self=this;\r\n\t\tif(eval(json.statement)) {\r\n\t\t\tself.queue.execute(json.name,json.json);\r\n\r\n\t\t}\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * Set a memory value\r\n\t *\r\n\t * @param {int} pid - process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.name - name of memory item\r\n\t * @param {*} json.value - value to set (can be any type)\r\n\t * @param {string} [json.mode] - [Garbage|Session|Permanent] Memory mode\r\n\t * @example\r\n\t * internals.setMemory({\"name\":\"test\",\"mode\":\"Session\",\"value\":\"Test String\"});\r\n\t * internals.setMemory({\"name\":\"test\",\"mode\":\"Session\",\"value\":{\"trueFalse\":[true,false],\"objects\":[{\"ElementOne\":\"Result One\"},{\"ElementTwo\":\"Result Two\"}]}});\r\n\t */\r\n\tsetMemory(pid,json) {\r\n\t\tlet self=this;\r\n\t\tself.queue.setMemory(json.name,json.value,json.mode);\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n}\r\n",
@@ -2476,7 +2564,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 120,
+    "__docId__": 123,
     "kind": "class",
     "name": "Internals",
     "memberof": "ourthings/Queueable/Internals.js",
@@ -2504,7 +2592,7 @@
     ]
   },
   {
-    "__docId__": 121,
+    "__docId__": 124,
     "kind": "method",
     "name": "execute",
     "memberof": "ourthings/Queueable/Internals.js~Internals",
@@ -2563,7 +2651,7 @@
     "return": null
   },
   {
-    "__docId__": 122,
+    "__docId__": 125,
     "kind": "method",
     "name": "ifqueue",
     "memberof": "ourthings/Queueable/Internals.js~Internals",
@@ -2632,7 +2720,7 @@
     "return": null
   },
   {
-    "__docId__": 123,
+    "__docId__": 126,
     "kind": "method",
     "name": "setMemory",
     "memberof": "ourthings/Queueable/Internals.js~Internals",
@@ -2701,10 +2789,10 @@
     "return": null
   },
   {
-    "__docId__": 124,
+    "__docId__": 127,
     "kind": "file",
     "name": "ourthings/Queueable/Openlayers.js",
-    "content": "/** @module Openlayers */\r\nimport Queueable from \"../Queueable\";\r\nimport {Map, View, Feature} from 'ol';\r\nimport TileLayer from 'ol/layer/Tile';\r\nimport VectorLayer from 'ol/layer/Vector';\r\nimport VectorSource from 'ol/source/Vector';\r\nimport OSM from 'ol/source/OSM';\r\nimport WKT from 'ol/format/WKT';\r\nimport GeoJSON from 'ol/format/GeoJSON';\r\nimport {fromLonLat,units,epsg3857,epsg4326} from 'ol/proj';\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Openlayers Hook\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n * @description You need to add \"ol\": \"^5.3.0\" to your package.json to build with openlayers\r\n *\r\n */\r\nexport default class Openlayers extends Queueable {\r\n\r\n\tinit(queue) {\r\n\t\tlet self=this;\r\n\t\tself.queue=queue;\r\n\r\n\t\tself.maps={};\r\n\r\n\t\tself.ready=true;\r\n\t}\r\n\r\n\t/**\r\n\t *\r\n\t * Create a new map\r\n\t * @param {int} pid - process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.map - name for the map (used to reference)\r\n\t * @param {int} json.zoom - statement to check\r\n\t * @param {array} json.center - Center on\r\n\t * @param {string} json.renderer - Renderers to use\r\n\t * @example\r\n\t * openlayer.addMap();\r\n\t *\r\n\t */\r\n\taddMap(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet options=Object.assign({\r\n\t\t\t\"map\":\"default\",\r\n\t\t\t\"zoom\": 0,\r\n\t\t\t\"renderer\": ['webgl', 'canvas'],\r\n\t\t\t\"target\":\"map\",\r\n\t\t\t\"center\":[0,0]\r\n\t\t},json);\r\n\t\tconst map = new Map({\r\n\t\t\ttarget: options.target,\r\n\t\t\tview: new View({\r\n\t\t\t\tcenter: options.center,\r\n\t\t\t\tzoom: options.zoom,\r\n\t\t\t\trenderer: options.renderer\r\n\t\t\t})\r\n\t\t});\r\n\t\tself.maps[options.map]={\"object\":map,\"layers\":{}};\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t *\r\n\t * Add a layer to the map\r\n\t * @param {int} pid - process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.map - name for the map (used to reference)\r\n\t * @param {string} json.name - name for the layer (used to reference)\r\n\t * @param {string} json.typr - Layer type osm,vector\r\n\t * @param {float} json.opacity - layer opacity\r\n\t * @param {boolean} json.transparent - is the layer transparent?\r\n\t * @param {string} json.style - Style object to use\r\n\t * @param {boolean} json.active - Is the layer active\r\n\t * @param {object|string} json.geojson - geojson to add to the layer (vector)\r\n\t * @example\r\n\t * openlayer.addLayer();\r\n\t *\r\n\t */\r\n\r\n\taddLayer(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet options=Object.assign({\r\n\t\t\t\"map\":\"default\",\r\n\t\t\t\"name\":\"default\",\r\n\t\t\t\"opacity\": 1,\r\n\t\t\t\"transparent\": false,\r\n\t\t\t\"active\": true\r\n\t\t},json);\r\n\t\tlet map=self.maps[options.map].object;\r\n\t\tlet olLayer = null;\r\n\r\n\t\t/*\r\n\t\t * If we had a style specified then we need to check if it needs expanding\r\n\t\t */\r\n\t\tif(options.style!==undefined&&typeof options.style!=='object')\r\n\t\t\toptions.style=eval(options.style);\r\n\r\n\t\t/*\r\n\t\t * Find the requested layer type as a function\r\n\t\t */\r\n\t\tlet layerFunction = self[\"_addLayer_\" + options.type];\r\n\t\tif (typeof layerFunction === \"function\") {\r\n\t\t\tolLayer = layerFunction.apply(self, [options]);\r\n\t\t}\r\n\t\telse {\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_ERROR,\"No add layer function for \" + options.type);\r\n\t\t\treturn false;\r\n\t\t}\r\n\t\t/*\r\n\t\t * Add the layer and update the the maps object with the new layers\r\n\t\t */\r\n\t\tmap.addLayer(olLayer);\r\n\t\tself.maps[options.map].layers[options.name]=olLayer;\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Add an osm layer\r\n\t * @param options\r\n\t * @return {TileLayer}\r\n\t * @private\r\n\t */\r\n\t_addLayer_osm(options) {\r\n\t\tlet olLayer=new TileLayer({\r\n\t\t\tsource: new OSM()\r\n\t\t});\r\n\t\treturn olLayer;\r\n\t}\r\n\r\n\t/**\r\n\t * Add a vector layer\r\n\t * @param options\r\n\t * @return {VectorLayer}\r\n\t * @private\r\n\t */\r\n\t_addLayer_vector(options) {\r\n\t\tlet self=this;\r\n\t\tlet source={};\r\n\t\tlet vectorSource;\r\n\t\tif(options.geojson!==undefined) {\r\n\t\t\tif(typeof options.geojson==='object') {\r\n\t\t\t\tsource.features = (new GeoJSON({})).readFeatures(options.geojson, {featureProjection: self.maps[options.map].object.getView().getProjection()});\r\n\t\t\t} else {\r\n\t\t\t\tsource.features = (new GeoJSON({})).readFeatures(eval(options.geojson), {featureProjection: self.maps[options.map].object.getView().getProjection()});\r\n\t\t\t}\r\n\t\t}\r\n\t\tvectorSource = new VectorSource(source);\r\n\t\tlet olLayer = new VectorLayer({\r\n\t\t\tname: options.name,\r\n\t\t\tvisible: options.active,\r\n\t\t\tsource: vectorSource,\r\n\t\t\tstyle: options.style,\r\n\t\t\topacity: options.opacity,\r\n\t\t\tselectable: options.selectable,\r\n\t\t\thover: options.hover\r\n\t\t});\r\n\t\treturn olLayer;\r\n\t}\r\n\r\n\t/**\r\n\t * Add a feature to the Map\r\n\t * TODO: This is old code for getting something working. Needs functionising, not for production\r\n\t * @param pid\r\n\t * @param json\r\n\t */\r\n\taddFeature(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet options=Object.assign({\r\n\t\t\t\"map\":\"map1\",\r\n\t\t\t\"layer\":\"default\",\r\n\t\t\t\"values\":{}\r\n\t\t},json);\r\n\r\n\t\tlet map=self.maps[options.map].object;\r\n\t\tlet layer=self.maps[options.map].layers[options.layer];\r\n\t\tlet view=map.getView();\r\n\t\tlet source=layer.getSource();\r\n\t\tconsole.log(layer);\r\n\r\n\t\tlet projection = \"EPSG:\" + options.geometry.match(/SRID=(.*?);/)[1];\r\n\t\tlet wkt = options.geometry.replace(/SRID=(.*?);/, '');\r\n\r\n\t\tlet format = new WKT();\r\n\t\tlet feature = format.readFeature(wkt);\r\n\t\toptions.values.geometry = feature.getGeometry().transform(projection, view.getProjection().getCode());\r\n\t\tsource.addFeature(new Feature(options.values));\r\n\r\n\t}\r\n}",
+    "content": "/** @module Openlayers */\r\nimport Queueable from \"../Queueable\";\r\nimport {Map, View, Feature} from 'ol';\r\nimport TileLayer from 'ol/layer/Tile';\r\nimport VectorLayer from 'ol/layer/Vector';\r\nimport VectorSource from 'ol/source/Vector';\r\nimport OSM from 'ol/source/OSM';\r\nimport WKT from 'ol/format/WKT';\r\nimport {fromLonLat,units,epsg3857,epsg4326} from 'ol/proj';\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Openlayers Hook\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n * @description You need to add \"ol\": \"^5.3.0\" to your package.json to build with openlayers\r\n *\r\n */\r\nexport default class Openlayers extends Queueable {\r\n\r\n\tinit(queue) {\r\n\t\tlet self=this;\r\n\t\tself.queue=queue;\r\n\r\n\t\tself.maps={};\r\n\r\n\t\tself.ready=true;\r\n\t}\r\n\r\n\t/**\r\n\t *\r\n\t * Create a new map\r\n\t * @param {int} pid - process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.name - name for the map (used to reference)\r\n\t * @param {string} json.zoom - statement to check\r\n\t * @param {string} json.center - Center on\r\n\t * @example\r\n\t * openlayer.addMap();\r\n\t *\r\n\t */\r\n\taddMap(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet options=Object.assign({\r\n\t\t\t\"name\":\"default\",\r\n\t\t\t\"projection\":\"EPSG:3857\",\r\n\t\t\t\"zoom\": 0,\r\n\t\t\t\"renderer\": ['webgl', 'canvas'],\r\n\t\t\t\"target\":\"map\",\r\n\t\t\t\"center\":[0,0]\r\n\t\t},json);\r\n\t\tconst map = new Map({\r\n\t\t\ttarget: options.target,\r\n\t\t\tview: new View({\r\n\t\t\t\tcenter: options.center,\r\n\t\t\t\tzoom: options.zoom\r\n\t\t\t})\r\n\t\t});\r\n\t\tself.maps[options.name]={\"object\":map,\"layers\":{}};\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\taddLayer(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet options=Object.assign({\r\n\t\t\t\"name\":\"default\",\r\n\t\t\t\"opacity\": 1,\r\n\t\t\t\"transparent\": false,\r\n\t\t\t\"active\": true,\r\n\t\t\t\"tilesize\": [256, 256],\r\n\t\t\t\"tiled\": true,\r\n\t\t\t\"selectable\": true,\r\n\t\t\t\"hover\": true,\r\n\t\t\t\"style\": \"default\"\r\n\t\t},json);\r\n\t\tlet map=self.maps[options.name].object;\r\n\t\tlet olLayer = null;\r\n\t\tlet layerFunction = self[\"_addLayer_\" + options.type];\r\n\r\n\t\tif (typeof layerFunction === \"function\") {\r\n\t\t\tolLayer = layerFunction.apply(null, [options]);\r\n\t\t}\r\n\t\telse {\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_ERROR,\"No add layer function for \" + options.type);\r\n\t\t\treturn false;\r\n\t\t}\r\n\t\tmap.addLayer(olLayer);\r\n\t\tself.maps[options.name].layers[options.name]=olLayer;\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t_addLayer_osm(options) {\r\n\t\tlet olLayer=new TileLayer({\r\n\t\t\tsource: new OSM()\r\n\t\t});\r\n\t\treturn olLayer;\r\n\t}\r\n\r\n\t_addLayer_vector(options) {\r\n\t\tlet source={};\r\n\t\tlet vectorSource = new VectorSource(source);\r\n\t\tlet olLayer = new VectorLayer({\r\n\t\t\tname: options.name,\r\n\t\t\tvisible: options.active,\r\n\t\t\tsource: vectorSource,\r\n\t\t\t//style: window.styles[options.style],\r\n\t\t\topacity: options.opacity,\r\n\t\t\tzIndex: options['zindex'],\r\n\t\t\tselectable: options.selectable,\r\n\t\t\thover: options.hover\r\n\t\t});\r\n\t\treturn olLayer;\r\n\r\n\t}\r\n\r\n\taddFeature(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet options=Object.assign({\r\n\t\t\t\"map\":\"map1\",\r\n\t\t\t\"layer\":\"default\",\r\n\t\t\t\"values\":{}\r\n\t\t},json);\r\n\r\n\t\tlet map=self.maps[options.map].object;\r\n\t\tlet layer=self.maps[options.map].layers[options.layer];\r\n\t\tlet view=map.getView();\r\n\t\tlet source=layer.getSource();\r\n\t\tconsole.log(layer);\r\n\r\n\t\tlet projection = \"EPSG:\" + options.geometry.match(/SRID=(.*?);/)[1];\r\n\t\tlet wkt = options.geometry.replace(/SRID=(.*?);/, '');\r\n\r\n\t\tlet format = new WKT();\r\n\t\tlet feature = format.readFeature(wkt);\r\n\t\toptions.values.geometry = feature.getGeometry().transform(projection, view.getProjection().getCode());\r\n\t\tsource.addFeature(new Feature(options.values));\r\n\r\n\t}\r\n}",
     "static": true,
     "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable/Openlayers.js",
     "access": "public",
@@ -2712,7 +2800,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 125,
+    "__docId__": 128,
     "kind": "class",
     "name": "Openlayers",
     "memberof": "ourthings/Queueable/Openlayers.js",
@@ -2726,7 +2814,7 @@
     "examples": [
       "//"
     ],
-    "lineNumber": 25,
+    "lineNumber": 24,
     "unknown": [
       {
         "tagName": "@classdesc",
@@ -2747,7 +2835,7 @@
     ]
   },
   {
-    "__docId__": 126,
+    "__docId__": 129,
     "kind": "method",
     "name": "init",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -2757,7 +2845,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#init",
     "access": "public",
     "description": null,
-    "lineNumber": 27,
+    "lineNumber": 26,
     "undocument": true,
     "params": [
       {
@@ -2770,7 +2858,7 @@
     "return": null
   },
   {
-    "__docId__": 127,
+    "__docId__": 130,
     "kind": "method",
     "name": "addMap",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -2783,7 +2871,7 @@
     "examples": [
       "openlayer.addMap();"
     ],
-    "lineNumber": 49,
+    "lineNumber": 47,
     "params": [
       {
         "nullable": null,
@@ -2804,95 +2892,6 @@
         "optional": false,
         "name": "json",
         "description": "queue arguments"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "string"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "json.map",
-        "description": "name for the map (used to reference)"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "int"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "json.zoom",
-        "description": "statement to check"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "array"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "json.center",
-        "description": "Center on"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "string"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "json.renderer",
-        "description": "Renderers to use"
-      }
-    ],
-    "return": null
-  },
-  {
-    "__docId__": 128,
-    "kind": "method",
-    "name": "addLayer",
-    "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "ourthings/Queueable/Openlayers.js~Openlayers#addLayer",
-    "access": "public",
-    "description": "\nAdd a layer to the map",
-    "examples": [
-      "openlayer.addLayer();"
-    ],
-    "lineNumber": 88,
-    "params": [
-      {
-        "nullable": null,
-        "types": [
-          "int"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "pid",
-        "description": "process ID"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "object"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "json",
-        "description": "queue arguments"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "string"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "json.map",
-        "description": "name for the map (used to reference)"
       },
       {
         "nullable": null,
@@ -2902,7 +2901,7 @@
         "spread": false,
         "optional": false,
         "name": "json.name",
-        "description": "name for the layer (used to reference)"
+        "description": "name for the map (used to reference)"
       },
       {
         "nullable": null,
@@ -2911,28 +2910,8 @@
         ],
         "spread": false,
         "optional": false,
-        "name": "json.typr",
-        "description": "Layer type osm,vector"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "float"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "json.opacity",
-        "description": "layer opacity"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "boolean"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "json.transparent",
-        "description": "is the layer transparent?"
+        "name": "json.zoom",
+        "description": "statement to check"
       },
       {
         "nullable": null,
@@ -2941,29 +2920,37 @@
         ],
         "spread": false,
         "optional": false,
-        "name": "json.style",
-        "description": "Style object to use"
+        "name": "json.center",
+        "description": "Center on"
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 131,
+    "kind": "method",
+    "name": "addLayer",
+    "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable/Openlayers.js~Openlayers#addLayer",
+    "access": "public",
+    "description": null,
+    "lineNumber": 68,
+    "undocument": true,
+    "params": [
+      {
+        "name": "pid",
+        "types": [
+          "*"
+        ]
       },
       {
-        "nullable": null,
+        "name": "json",
         "types": [
-          "boolean"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "json.active",
-        "description": "Is the layer active"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "object",
-          "string"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "json.geojson",
-        "description": "geojson to add to the layer (vector)"
+          "*"
+        ]
       }
     ],
     "return": {
@@ -2973,7 +2960,7 @@
     }
   },
   {
-    "__docId__": 129,
+    "__docId__": 132,
     "kind": "method",
     "name": "_addLayer_osm",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -2982,31 +2969,25 @@
     "static": false,
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_osm",
     "access": "private",
-    "description": "Add an osm layer",
-    "lineNumber": 132,
+    "description": null,
+    "lineNumber": 98,
+    "undocument": true,
     "params": [
       {
-        "nullable": null,
+        "name": "options",
         "types": [
           "*"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "options",
-        "description": ""
+        ]
       }
     ],
     "return": {
-      "nullable": null,
       "types": [
-        "TileLayer"
-      ],
-      "spread": false,
-      "description": ""
+        "*"
+      ]
     }
   },
   {
-    "__docId__": 130,
+    "__docId__": 133,
     "kind": "method",
     "name": "_addLayer_vector",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -3015,31 +2996,25 @@
     "static": false,
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_vector",
     "access": "private",
-    "description": "Add a vector layer",
-    "lineNumber": 145,
+    "description": null,
+    "lineNumber": 105,
+    "undocument": true,
     "params": [
       {
-        "nullable": null,
+        "name": "options",
         "types": [
           "*"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "options",
-        "description": ""
+        ]
       }
     ],
     "return": {
-      "nullable": null,
       "types": [
-        "VectorLayer"
-      ],
-      "spread": false,
-      "description": ""
+        "*"
+      ]
     }
   },
   {
-    "__docId__": 131,
+    "__docId__": 134,
     "kind": "method",
     "name": "addFeature",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -3048,34 +3023,27 @@
     "static": false,
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#addFeature",
     "access": "public",
-    "description": "Add a feature to the Map\nTODO: This is old code for getting something working. Needs functionising, not for production",
-    "lineNumber": 175,
+    "description": null,
+    "lineNumber": 122,
+    "undocument": true,
     "params": [
       {
-        "nullable": null,
+        "name": "pid",
         "types": [
           "*"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "pid",
-        "description": ""
+        ]
       },
       {
-        "nullable": null,
+        "name": "json",
         "types": [
           "*"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "json",
-        "description": ""
+        ]
       }
     ],
     "return": null
   },
   {
-    "__docId__": 132,
+    "__docId__": 135,
     "kind": "file",
     "name": "ourthings/Queueable/Templates.js",
     "content": "/** @module ourthings/Queueable/Templates */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Template manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * // @templates.render({\"targetId\":\"content\",\"template\":\"basic\"});\r\n *\r\n */\r\nclass Templates extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.template - dom id of template to use\r\n\t * @param {string} [json.target] - dom id of render target\r\n\t */\r\n\trender(pid,json) {\r\n\t\tlet self=this;\r\n\t\tself.set(pid,json);\r\n\t\tif(!self.queue.templateProcessor(json.template,json.targetId))\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_ERROR,'Could not render template');\r\n\t\telse\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n}\r\n\r\nexport default Templates;",
@@ -3086,7 +3054,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 133,
+    "__docId__": 136,
     "kind": "class",
     "name": "Templates",
     "memberof": "ourthings/Queueable/Templates.js",
@@ -3117,7 +3085,7 @@
     ]
   },
   {
-    "__docId__": 134,
+    "__docId__": 137,
     "kind": "method",
     "name": "render",
     "memberof": "ourthings/Queueable/Templates.js~Templates",
@@ -3173,7 +3141,7 @@
     "return": null
   },
   {
-    "__docId__": 135,
+    "__docId__": 138,
     "kind": "file",
     "name": "ourthings/Queueable.js",
     "content": "/** @module ourthings/Queueable */\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * The base class for queueable things\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * // queue = new Queue();\r\n *\r\n */\r\nclass Queueable {\r\n\r\n\t/**\r\n\t * Constructor, Sets our status to be false (flipped on init)\r\n\t *\r\n\t */\r\n\tconstructor() {\r\n\t\tlet self=this;\r\n\t\tself.ready=false;\r\n\t}\r\n\r\n\t/**\r\n\t * init, override this for any promise based inits setting\r\n\t * the self.ready=true after the promise\r\n\t *\r\n\t */\r\n\tinit(queue) {\r\n\t\tlet self=this;\r\n\t\tself.queue=queue;\r\n\t\tself.ready=true;\r\n\t}\r\n\r\n\t/**\r\n\t * Called from queue, starts running the actual command\r\n\t * @param pid\r\n\t * @param command\r\n\t * @param json\r\n\t */\r\n\tstart(pid,command,json) {\r\n\t\tlet self=this;\r\n\t\tif(self[command]&&typeof self[command] === 'function') {\r\n\r\n\t\t\t/*\r\n\t\t\t * Pass the json through the var processor\r\n\t\t\t */\r\n\r\n\t\t\tjson=JSON.parse(self.queue.templateVars(JSON.stringify(json)));\r\n\t\t\t/*\r\n\t\t\t * Execute\r\n\t\t\t */\r\n\t\t\tself[command](pid, json);\r\n\t\t} else {\r\n\t\t\tself.queue.finished(pid,self.queue.DEFINE.FIN_ERROR,'No such command ['+command+']');\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Call this method after you command has finished. Failure to do so will result is\r\n\t * a stalled queue\r\n\t * @param pid\r\n\t * @param mode\r\n\t */\r\n\tfinished(pid,mode,error='') {\r\n\t\tlet self=this;\r\n\t\tself.queue.finished(pid,mode,error);\r\n\t}\r\n\r\n\tset(pid,value) {\r\n\t\tlet self=this;\r\n\t\tself.queue.memory(pid,value);\r\n\t}\r\n}\r\n\r\nexport default Queueable;",
@@ -3184,7 +3152,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 136,
+    "__docId__": 139,
     "kind": "class",
     "name": "Queueable",
     "memberof": "ourthings/Queueable.js",
@@ -3212,7 +3180,7 @@
     "interface": false
   },
   {
-    "__docId__": 137,
+    "__docId__": 140,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "ourthings/Queueable.js~Queueable",
@@ -3225,7 +3193,7 @@
     "lineNumber": 20
   },
   {
-    "__docId__": 138,
+    "__docId__": 141,
     "kind": "method",
     "name": "init",
     "memberof": "ourthings/Queueable.js~Queueable",
@@ -3247,7 +3215,7 @@
     "return": null
   },
   {
-    "__docId__": 139,
+    "__docId__": 142,
     "kind": "method",
     "name": "start",
     "memberof": "ourthings/Queueable.js~Queueable",
@@ -3293,7 +3261,7 @@
     "return": null
   },
   {
-    "__docId__": 140,
+    "__docId__": 143,
     "kind": "method",
     "name": "finished",
     "memberof": "ourthings/Queueable.js~Queueable",
@@ -3329,7 +3297,7 @@
     "return": null
   },
   {
-    "__docId__": 141,
+    "__docId__": 144,
     "kind": "method",
     "name": "set",
     "memberof": "ourthings/Queueable.js~Queueable",

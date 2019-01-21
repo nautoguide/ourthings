@@ -6,6 +6,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "@nautoguide/ourthings/ourthings/queueable/browser.js~browser",
+    "class/ourthings/Queueable/Browser.js~Browser.html",
+    "<span>Browser</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/Browser.js</span>",
+    "class"
+  ],
+  [
     "@nautoguide/ourthings/ourthings/define.js~define",
     "class/ourthings/Define.js~Define.html",
     "<span>Define</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Define.js</span>",
@@ -723,6 +729,18 @@ window.esdocSearchIndex = [
     "ourthings/queueable/api.js~api#post",
     "class/ourthings/Queueable/Api.js~Api.html#instance-method-post",
     "ourthings/Queueable/Api.js~Api#post",
+    "method"
+  ],
+  [
+    "ourthings/queueable/browser.js",
+    "file/ourthings/Queueable/Browser.js.html",
+    "ourthings/Queueable/Browser.js",
+    "file"
+  ],
+  [
+    "ourthings/queueable/browser.js~browser#redirect",
+    "class/ourthings/Queueable/Browser.js~Browser.html#instance-method-redirect",
+    "ourthings/Queueable/Browser.js~Browser#redirect",
     "method"
   ],
   [

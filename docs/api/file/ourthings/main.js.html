@@ -33,6 +33,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
@@ -53,11 +54,12 @@ import Templates from &apos;./Queueable/Templates&apos;;
 import Elements from &apos;./Queueable/Elements&apos;;
 import Api from &apos;./Queueable/Api&apos;;
 import Openlayers from &apos;./Queueable/Openlayers&apos;;
+import Browser from &apos;./Queueable/Browser&apos;;
 
 /*
  * Start the queue engine
  */
-let queue = new Queue({&quot;internals&quot;:Internals,&quot;templates&quot;:Templates,&quot;elements&quot;:Elements,&quot;api&quot;:Api,&quot;openlayers&quot;:Openlayers});
+let queue = new Queue({&quot;internals&quot;:Internals,&quot;templates&quot;:Templates,&quot;elements&quot;:Elements,&quot;api&quot;:Api,&quot;openlayers&quot;:Openlayers,&quot;browser&quot;:Browser});
 
 /*
  * If you want debug put the queue into the window
