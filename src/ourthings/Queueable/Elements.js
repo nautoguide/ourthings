@@ -9,7 +9,7 @@ import Queueable from "../Queueable";
  * @author Richard Reynolds richard@nautoguide.com
  *
  * @example
- * //
+ * elements.removeClass({"targetId":".leftPanel","class":"hidden"});
  *
  */
 export default class Elements extends Queueable {
@@ -20,6 +20,9 @@ export default class Elements extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.targetId - Dom target
 	 * @param {string} json.class - Name of class to add
+	 *
+	 * @example
+	 * elements.addClass({"targetId":".leftPanel","class":"hidden"});
 	 */
 	addClass(pid,json) {
 		let self=this;
@@ -40,6 +43,9 @@ export default class Elements extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.targetId - Dom target
 	 * @param {string} json.class - Name of class to remove
+	 *
+	 * @example
+	 * elements.removeClass({"targetId":".leftPanel","class":"hidden"});
 	 */
 	removeClass(pid,json) {
 		let self=this;
@@ -60,6 +66,10 @@ export default class Elements extends Queueable {
      * @param {object} json - queue arguments
      * @param {string} json.targetId - Dom target
      * @param {string} json.html - HTML to add
+     *
+     * @example
+     * elements.innerHTML({"targetId":".leftPanel","html":"Hello World"});
+
      */
 	innerHTML(pid,json) {
 		let self=this;

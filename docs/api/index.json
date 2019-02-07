@@ -2346,7 +2346,7 @@
     "__docId__": 117,
     "kind": "file",
     "name": "ourthings/Queueable/Elements.js",
-    "content": "/** @module ourthings/Queueable/Elements */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Dom Elements manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n */\r\nexport default class Elements extends Queueable {\r\n\r\n\t/**\r\n\t * Add a class to a dom element\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.targetId - Dom target\r\n\t * @param {string} json.class - Name of class to add\r\n\t */\r\n\taddClass(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet element=self.queue.getElement(json.targetId);\r\n\t\tself.set(pid,json);\r\n\r\n\t\tif(element!==false) {\r\n\t\t\telement.classList.add(json.class);\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t\t} else {\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not add class ['+json.class+'] to ['+json.targetId+']');\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Remove a class to a dom element\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.targetId - Dom target\r\n\t * @param {string} json.class - Name of class to remove\r\n\t */\r\n\tremoveClass(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet element=self.queue.getElement(json.targetId);\r\n\t\tself.set(pid,json);\r\n\r\n\t\tif(element!==false) {\r\n\t\t\telement.classList.remove(json.class);\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t\t} else {\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not remove class ['+json.class+'] to ['+json.targetId+']');\r\n\t\t}\r\n\t}\r\n\r\n    /**\r\n     * Set the HTML of an element\r\n     * @param {number} pid - Process ID\r\n     * @param {object} json - queue arguments\r\n     * @param {string} json.targetId - Dom target\r\n     * @param {string} json.html - HTML to add\r\n     */\r\n\tinnerHTML(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet element=self.queue.getElement(json.targetId);\r\n\t\telement.innerHTML=json.html;\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n}\r\n",
+    "content": "/** @module ourthings/Queueable/Elements */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Dom Elements manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * elements.removeClass({\"targetId\":\".leftPanel\",\"class\":\"hidden\"});\r\n *\r\n */\r\nexport default class Elements extends Queueable {\r\n\r\n\t/**\r\n\t * Add a class to a dom element\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.targetId - Dom target\r\n\t * @param {string} json.class - Name of class to add\r\n\t *\r\n\t * @example\r\n\t * elements.addClass({\"targetId\":\".leftPanel\",\"class\":\"hidden\"});\r\n\t */\r\n\taddClass(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet element=self.queue.getElement(json.targetId);\r\n\t\tself.set(pid,json);\r\n\r\n\t\tif(element!==false) {\r\n\t\t\telement.classList.add(json.class);\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t\t} else {\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not add class ['+json.class+'] to ['+json.targetId+']');\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Remove a class to a dom element\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.targetId - Dom target\r\n\t * @param {string} json.class - Name of class to remove\r\n\t *\r\n\t * @example\r\n\t * elements.removeClass({\"targetId\":\".leftPanel\",\"class\":\"hidden\"});\r\n\t */\r\n\tremoveClass(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet element=self.queue.getElement(json.targetId);\r\n\t\tself.set(pid,json);\r\n\r\n\t\tif(element!==false) {\r\n\t\t\telement.classList.remove(json.class);\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t\t} else {\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not remove class ['+json.class+'] to ['+json.targetId+']');\r\n\t\t}\r\n\t}\r\n\r\n    /**\r\n     * Set the HTML of an element\r\n     * @param {number} pid - Process ID\r\n     * @param {object} json - queue arguments\r\n     * @param {string} json.targetId - Dom target\r\n     * @param {string} json.html - HTML to add\r\n     *\r\n     * @example\r\n     * elements.innerHTML({\"targetId\":\".leftPanel\",\"html\":\"Hello World\"});\r\n\r\n     */\r\n\tinnerHTML(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet element=self.queue.getElement(json.targetId);\r\n\t\telement.innerHTML=json.html;\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n}\r\n",
     "static": true,
     "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable/Elements.js",
     "access": "public",
@@ -2366,7 +2366,7 @@
     "importStyle": "Elements",
     "description": "",
     "examples": [
-      "//"
+      "elements.removeClass({\"targetId\":\".leftPanel\",\"class\":\"hidden\"});"
     ],
     "lineNumber": 15,
     "unknown": [
@@ -2395,7 +2395,10 @@
     "longname": "ourthings/Queueable/Elements.js~Elements#addClass",
     "access": "public",
     "description": "Add a class to a dom element",
-    "lineNumber": 24,
+    "examples": [
+      "elements.addClass({\"targetId\":\".leftPanel\",\"class\":\"hidden\"});"
+    ],
+    "lineNumber": 27,
     "params": [
       {
         "nullable": null,
@@ -2451,7 +2454,10 @@
     "longname": "ourthings/Queueable/Elements.js~Elements#removeClass",
     "access": "public",
     "description": "Remove a class to a dom element",
-    "lineNumber": 44,
+    "examples": [
+      "elements.removeClass({\"targetId\":\".leftPanel\",\"class\":\"hidden\"});"
+    ],
+    "lineNumber": 50,
     "params": [
       {
         "nullable": null,
@@ -2507,7 +2513,10 @@
     "longname": "ourthings/Queueable/Elements.js~Elements#innerHTML",
     "access": "public",
     "description": "Set the HTML of an element",
-    "lineNumber": 64,
+    "examples": [
+      "elements.innerHTML({\"targetId\":\".leftPanel\",\"html\":\"Hello World\"});"
+    ],
+    "lineNumber": 74,
     "params": [
       {
         "nullable": null,
@@ -3335,7 +3344,7 @@
   },
   {
     "kind": "packageJSON",
-    "content": "{\r\n  \"name\": \"@nautoguide/ourthings\",\r\n  \"version\": \"0.1.0\",\r\n  \"description\": \"Queue based JavaScript framework\",\r\n  \"scripts\": {\r\n    \"build\": \"webpack --config webpack.config.basic.js\",\r\n    \"buildbabel\": \"webpack\",\r\n    \"apidoc\": \"esdoc\",\r\n    \"test\": \"mocha-headless-chrome -f http://localhost:4040/test/test.html -o test/out.res -v\",\r\n    \"headlesstest\": \"mocha-headless-chrome -f http://localhost:8080/test/test.html -o test/out.res\",\r\n    \"dopublish\": \"node prepublish.js && npm publish src/ourthings && node postpublish.js\",\r\n    \"dopublish-dry\": \"node prepublish.js && npm publish src/ourthings --dry-run && node postpublish.js\",\r\n    \"devmode\": \"node devmode.js\",\r\n    \"clean\": \"node clean.js\"\r\n  },\r\n  \"main\": \"index.js\",\r\n  \"repository\": {\r\n    \"type\": \"git\",\r\n    \"url\": \"git://github.com/nautoguide/ourthings.git\"\r\n  },\r\n  \"bugs\": {\r\n    \"url\": \"https://github.com/nautoguide/ourthings/issues\"\r\n  },\r\n  \"license\": \"GPLv3\",\r\n  \"devDependencies\": {\r\n    \"chai\": \"^4.2.0\",\r\n    \"esdoc\": \"^1.1.0\",\r\n    \"esdoc-standard-plugin\": \"^1.0.0\",\r\n    \"mocha\": \"^5.2.0\",\r\n    \"mocha-headless-chrome\": \"^2.0.1\",\r\n    \"ol\": \"^5.3.0\",\r\n    \"path\": \"^0.12.7\",\r\n    \"webpack\": \"^4.26.1\",\r\n    \"shelljs\": \"^0.8.3\",\r\n    \"webpack-cli\": \"^3.1.2\",\r\n    \"webpack-dev-server\": \"^3.1.9\",\r\n    \"@babel/core\": \"^7.1.2\",\r\n    \"@babel/polyfill\": \"^7.0.0\",\r\n    \"@babel/preset-env\": \"^7.1.0\",\r\n    \"babel-cli\": \"^6.26.0\",\r\n    \"babel-loader\": \"^8.0.4\"\r\n  },\r\n  \"publishConfig\": {\r\n    \"access\": \"public\"\r\n  }\r\n}\r\n",
+    "content": "{\r\n  \"name\": \"@nautoguide/ourthings\",\r\n  \"version\": \"0.1.1\",\r\n  \"description\": \"Queue based JavaScript framework\",\r\n  \"scripts\": {\r\n    \"build\": \"webpack --config webpack.config.basic.js\",\r\n    \"buildbabel\": \"webpack\",\r\n    \"apidoc\": \"esdoc\",\r\n    \"test\": \"mocha-headless-chrome -f http://localhost:4040/test/test.html -o test/out.res -v\",\r\n    \"headlesstest\": \"mocha-headless-chrome -f http://localhost:8080/test/test.html -o test/out.res\",\r\n    \"dopublish\": \"node prepublish.js && npm publish src/ourthings && node postpublish.js\",\r\n    \"dopublish-dry\": \"node prepublish.js && npm publish src/ourthings --dry-run && node postpublish.js\",\r\n    \"devmode\": \"node devmode.js\",\r\n    \"clean\": \"node clean.js\"\r\n  },\r\n  \"main\": \"index.js\",\r\n  \"repository\": {\r\n    \"type\": \"git\",\r\n    \"url\": \"git://github.com/nautoguide/ourthings.git\"\r\n  },\r\n  \"bugs\": {\r\n    \"url\": \"https://github.com/nautoguide/ourthings/issues\"\r\n  },\r\n  \"license\": \"GPLv3\",\r\n  \"devDependencies\": {\r\n    \"chai\": \"^4.2.0\",\r\n    \"esdoc\": \"^1.1.0\",\r\n    \"esdoc-standard-plugin\": \"^1.0.0\",\r\n    \"mocha\": \"^5.2.0\",\r\n    \"mocha-headless-chrome\": \"^2.0.1\",\r\n    \"ol\": \"^5.3.0\",\r\n    \"path\": \"^0.12.7\",\r\n    \"webpack\": \"^4.26.1\",\r\n    \"shelljs\": \"^0.8.3\",\r\n    \"webpack-cli\": \"^3.1.2\",\r\n    \"webpack-dev-server\": \"^3.1.9\",\r\n    \"@babel/core\": \"^7.1.2\",\r\n    \"@babel/polyfill\": \"^7.0.0\",\r\n    \"@babel/preset-env\": \"^7.1.0\",\r\n    \"babel-cli\": \"^6.26.0\",\r\n    \"babel-loader\": \"^8.0.4\"\r\n  },\r\n  \"publishConfig\": {\r\n    \"access\": \"public\"\r\n  }\r\n}\r\n",
     "longname": "C:\\Users\\xrout\\Dropbox\\machine\\Work\\webstorm\\ourthings\\package.json",
     "name": "package.json",
     "static": true,

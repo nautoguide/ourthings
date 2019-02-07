@@ -54,7 +54,7 @@ import Queueable from &quot;../Queueable&quot;;
  * @author Richard Reynolds richard@nautoguide.com
  *
  * @example
- * //
+ * elements.removeClass({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;class&quot;:&quot;hidden&quot;});
  *
  */
 export default class Elements extends Queueable {
@@ -65,6 +65,9 @@ export default class Elements extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.targetId - Dom target
 	 * @param {string} json.class - Name of class to add
+	 *
+	 * @example
+	 * elements.addClass({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;class&quot;:&quot;hidden&quot;});
 	 */
 	addClass(pid,json) {
 		let self=this;
@@ -85,6 +88,9 @@ export default class Elements extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.targetId - Dom target
 	 * @param {string} json.class - Name of class to remove
+	 *
+	 * @example
+	 * elements.removeClass({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;class&quot;:&quot;hidden&quot;});
 	 */
 	removeClass(pid,json) {
 		let self=this;
@@ -105,6 +111,10 @@ export default class Elements extends Queueable {
      * @param {object} json - queue arguments
      * @param {string} json.targetId - Dom target
      * @param {string} json.html - HTML to add
+     *
+     * @example
+     * elements.innerHTML({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;html&quot;:&quot;Hello World&quot;});
+
      */
 	innerHTML(pid,json) {
 		let self=this;
