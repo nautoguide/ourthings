@@ -9,7 +9,7 @@ import Queueable from "../Queueable";
  * @author Richard Reynolds richard@nautoguide.com
  *
  * @example
- * // @templates.render({"targetId":"content","template":"basic"});
+ * templates.render({"targetId":"content","template":"basic"});
  *
  */
 class Templates extends Queueable {
@@ -20,6 +20,8 @@ class Templates extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.template - dom id of template to use
 	 * @param {string} [json.target] - dom id of render target
+	 * @example
+	 * templates.render({"targetId":"content","template":"basic"});
 	 */
 	render(pid,json) {
 		let self=this;

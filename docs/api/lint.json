@@ -1,7 +1,7 @@
 [
   {
     "name": "Queue#templateParse",
-    "filePath": "ourthings/Queue.js",
+    "filePath": "ourthings/queue.js",
     "lines": [
       {
         "lineNumber": 383,
@@ -46,7 +46,7 @@
   },
   {
     "name": "Queue#memory",
-    "filePath": "ourthings/Queue.js",
+    "filePath": "ourthings/queue.js",
     "lines": [
       {
         "lineNumber": 584,
@@ -89,7 +89,7 @@
   },
   {
     "name": "Queue#finished",
-    "filePath": "ourthings/Queue.js",
+    "filePath": "ourthings/queue.js",
     "lines": [
       {
         "lineNumber": 716,
@@ -140,7 +140,7 @@
   },
   {
     "name": "Queue#commandParse",
-    "filePath": "ourthings/Queue.js",
+    "filePath": "ourthings/queue.js",
     "lines": [
       {
         "lineNumber": 784,
