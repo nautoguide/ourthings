@@ -35,7 +35,7 @@
         17
       ]
     },
-    "ourthings/Queue.js": {
+    "ourthings/queue.js": {
       "expectCount": 31,
       "actualCount": 30,
       "undocumentLines": [
@@ -62,7 +62,7 @@
       "actualCount": 4,
       "undocumentLines": []
     },
-    "ourthings/Queueable/Openlayers.js": {
+    "ourthings/Queueable/openlayers.js": {
       "expectCount": 7,
       "actualCount": 2,
       "undocumentLines": [
