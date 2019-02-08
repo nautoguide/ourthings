@@ -312,17 +312,24 @@ class Queue {
 			}
 			template = template.replace(match[0], subTemplate);
 		}
-
 		/*
-	 * Process {{#if}}
-	 */
+	 	 * Process {{#if}}
+	 	*/
 		const ifRegex=/{{#if (.*?)}}([\s\S]*?){{\/if}}/;
 		while (match = ifRegex.exec(template)) {
+			const elseRegex=/{{#if .*?}}([\s\S]*?){{else}}([\s\S]*?){{\/if}}/g;
+			let ifResult=self.templateVars(match[2]);
+			let elseResult='';
+			let elseMatch=elseRegex.exec(match[0]);
+			if(elseMatch) {
+				ifResult=elseMatch[1];
+				elseResult=elseMatch[2];
+			}
 			try {
 				if (eval(match[1]))
-					template = template.replace(match[0], self.templateVars(match[2]));
+					template = template.replace(match[0], self.templateVars(ifResult));
 				else
-					template = template.replace(match[0], '');
+					template = template.replace(match[0], self.templateVars(elseResult));
 			} catch(e) {
 				console.log('Failed to eval ['+match[1]+']');
 				template = template.replace(match[0], '');
