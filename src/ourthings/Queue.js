@@ -460,11 +460,17 @@ class Queue {
 				/*
 				 * Add the event. We flip it over to an instant event now because we want
 				 * it triggered.
+				 *
+				 * The user may have specified an event and if so it will be a comma separated list
 				 */
-				element.addEventListener("click", function(){
-					commandObj[command].options.queueRun=self.DEFINE.COMMAND_INSTANT;
-					self.commandsQueue.apply(self,[[commandObj[command]]]);
-				});
+				let event=commandObj[command].options.queueEvent||"click";
+				let events=event.split(",");
+				for(let e in events) {
+					element.addEventListener(events[e], function () {
+						commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
+						self.commandsQueue.apply(self, [[commandObj[command]]]);
+					});
+				}
 			}
 		}
 
