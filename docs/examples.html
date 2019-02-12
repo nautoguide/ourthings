@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Ourthings</title>
+	<link type="text/css" rel="stylesheet" href="css/docs.css">
+	<link rel="stylesheet"
+	      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/darcula.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+<body>
+<h1><img src="images/logo.png"></h1>
+
+<h1>Examples Reference</h1>
+
+<h2>Simple Map</h2>
+
+<p>Add a simple 2 layer map to the page.</p>
+
+<pre><code>&lt;div id=&quot;map&quot;&gt;&lt;/div&gt;</code></pre>
+<pre><code>@openlayers.addMap({});
+-openlayers.addLayer({"name":"osm","type":"osm"});
+-openlayers.addLayer({"name":"data","type":"vector"});
+</code></pre>
+
+<h2>Button to hide a DIV</h2>
+
+<p>Most UI related event involve clicking something and having an action performed and form a big part of ourthings. A
+simple example being to hide a bit of the UI when a button is click or expose something hidden and render a template</p>
+<h3>Hide from button</h3>
+<pre><code>&lt;div class=&quot;thing&quot;&gt;Visible&lt;/div&gt;
+&lt;button @elements.addClass({&quot;targetId&quot;:&quot;.thing&quot;,&quot;class&quot;:&quot;hidden&quot;});&gt;Hide&lt;/button&gt;</code></pre>
+
+<h3>Render template and show</h3>
+
+<p>This example forms the basis of a lot of the grunt work you will do with our things. Putting in new content to the page and displaying it to the user.
+That content can be the result of an API call, a template to dump out some client memory or just about anything</p>
+
+<pre><code>&lt;script id=&quot;hello&quot; type=&quot;text/html&quot;&gt;Hello World&lt;/script&gt;
+&lt;div class=&quot;thing hidden&quot;&gt;Hidden&lt;/div&gt;
+&lt;button @templates.render({&quot;targetId&quot;:&quot;.thing&quot;,&quot;template&quot;:&quot;#hello&quot;}&gt;Show&lt;/button&gt;
+	-elements.removeClass({&quot;targetId&quot;:&quot;.thing&quot;,&quot;class&quot;:&quot;hidden&quot;});</code></pre>
+
+</body>
+</html>

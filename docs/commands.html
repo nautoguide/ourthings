@@ -37,7 +37,7 @@
 </ul>
 <p>If you are familar with the javascript OO model then queueable.command() will already be very familar to you
 and you can translate that to directly running a function in javascript from the html page. queueables
-are very much built in this fashion bu extending a class and writting functions. We also want to pass arguments
+are very much built in this fashion by extending a class and writing functions. We also want to pass arguments
 to that function and you do this by sending some json in which the function will be given.</p>
 <p>Options are things you want to instruct the queue handler to do with this item in the queue. This can range from
 delaying execution, running instantly or waiting for the user to hit a button see the command options sections
@@ -61,6 +61,12 @@ to place values in the page. This format can used in two ways.</p>
 	{{}}. This is because when that template is shown to the user you want the value it represents at that time. If however
 	you have a queue and the last item in that queue depends on a value that may change as a result of that queues preceding commands
 	(EG an api call) then you want {{!}}</p>
+<p>Both type of template commands are not supported in the root document. IE if you have an index.html you can not use any template commands in there. This is because
+the browser will have rendered the page before the framework is online and so depending on load speed there would be a period of time where these template commands
+could be visible to the user and cause a pop-in affect. Through development of previous version where we did allow this we found it caused bad practice in app creation or the
+need for loading animations which is generally not good practice. The developer should consider the root document as what the user/bot will first see and then build out dynamic
+content using the init command queue which is executed when the browser has finished loading all content.
+the system is online</p>
 <h4>{{#include [#template]}}</h4>
 If you want to include a template (normally for reuse purposes) into the template you using then use {{#include}}.
 
@@ -70,15 +76,22 @@ If you want to include a template (normally for reuse purposes) into the templat
 
 {{#include #myTemplayeId}}</code></pre>
 
+<p>This would result in 'blah' replacing {{#include #myTemplayeId}}</p>
+
 <h4>{{#for [variable]}}</h4>
 Loop though an array or object
 <pre><code>{{#for memory.people.value}}
   {{memory.people.value[#loop0].name}}
 {{/for}}</code></pre>
-<h4>{{#if [test}}</h4>
+
+<p>#loop0 will be replaced with the array index of object key</p>
+
+<h4>{{#if [test]}}</h4>
 Perform a if
 <pre><code>{{#if memory.people.value.length>0}}
- There are people
+	There are people
+{{else}}
+	There are not any people
 {{/if}}</code></pre>
 </html>
 
