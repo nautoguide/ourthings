@@ -60,6 +60,32 @@ export default class Elements extends Queueable {
 		}
 	}
 
+	/**
+	 * toggle a class on a dom element
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.class - Name of class to toggle
+	 *
+	 * @example
+	 * elements.toggleClass({"targetId":".leftPanel","class":"hidden"});
+	 */
+	toggleClass(pid,json) {
+		let self=this;
+		let element=self.queue.getElement(json.targetId);
+		self.set(pid,json);
+
+		if(element!==false) {
+			if(element.classList.contains(json.class))
+				element.classList.remove(json.class);
+			else
+				element.classList.add(json.class);
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not remove class ['+json.class+'] to ['+json.targetId+']');
+		}
+	}
+
     /**
      * Set the HTML of an element
      * @param {number} pid - Process ID

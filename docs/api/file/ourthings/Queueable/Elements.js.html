@@ -30,14 +30,14 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -99,6 +99,32 @@ export default class Elements extends Queueable {
 
 		if(element!==false) {
 			element.classList.remove(json.class);
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,&apos;Could not remove class [&apos;+json.class+&apos;] to [&apos;+json.targetId+&apos;]&apos;);
+		}
+	}
+
+	/**
+	 * toggle a class on a dom element
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.class - Name of class to toggle
+	 *
+	 * @example
+	 * elements.toggleClass({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;class&quot;:&quot;hidden&quot;});
+	 */
+	toggleClass(pid,json) {
+		let self=this;
+		let element=self.queue.getElement(json.targetId);
+		self.set(pid,json);
+
+		if(element!==false) {
+			if(element.classList.contains(json.class))
+				element.classList.remove(json.class);
+			else
+				element.classList.add(json.class);
 			self.finished(pid,self.queue.DEFINE.FIN_OK);
 		} else {
 			self.finished(pid,self.queue.DEFINE.FIN_WARNING,&apos;Could not remove class [&apos;+json.class+&apos;] to [&apos;+json.targetId+&apos;]&apos;);

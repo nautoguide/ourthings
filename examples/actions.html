@@ -7,10 +7,12 @@
 
 	@api.get({"url":"https://api.openbrewerydb.org/breweries"},{"memoryMode":"Session","memoryName":"breweries","queuePrepare":"getList"});>
 	 -templates.render({"targetId":"#results","template":"#displayResults"});
+
 </script>
 
 <script id="basic" type="text/html">
 	<h1>Get a List of breweries from open API and plot the results</h1>
+	<div id="hover" @elements.toggleClass({"targetId":"#hover","class":"over"},{"queueEvent":"mouseenter,mouseout"});>Hover</div>
 	<button id="myButton" @internals.execute({"name":"getList"});>
 		Call the API
 	</button>

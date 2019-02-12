@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">ourthings/Queueable/openlayers.js | @nautoguide/ourthings</title>
+  <title data-ice="title">ourthings/Queueable/Openlayers.js | @nautoguide/ourthings</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -30,19 +30,19 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 </ul>
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queueable/openlayers.js</h1>
+<div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queueable/Openlayers.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module Openlayers */
 import Queueable from &quot;../Queueable&quot;;
 import {Map, View, Feature} from &apos;ol&apos;;
@@ -51,7 +51,11 @@ import VectorLayer from &apos;ol/layer/Vector&apos;;
 import VectorSource from &apos;ol/source/Vector&apos;;
 import OSM from &apos;ol/source/OSM&apos;;
 import WKT from &apos;ol/format/WKT&apos;;
+import GeoJSON from &apos;ol/format/GeoJSON&apos;;
 import {fromLonLat,units,epsg3857,epsg4326} from &apos;ol/proj&apos;;
+import Select from &apos;ol/interaction/Select.js&apos;;
+import {click, pointerMove, altKeyOnly} from &apos;ol/events/condition.js&apos;;
+
 
 /**
  * @classdesc
@@ -82,9 +86,10 @@ export default class Openlayers extends Queueable {
 	 * Create a new map
 	 * @param {int} pid - process ID
 	 * @param {object} json - queue arguments
-	 * @param {string} json.name - name for the map (used to reference)
-	 * @param {string} json.zoom - statement to check
-	 * @param {string} json.center - Center on
+	 * @param {string} json.map - name for the map (used to reference)
+	 * @param {int} json.zoom - statement to check
+	 * @param {array} json.center - Center on
+	 * @param {string} json.renderer - Renderers to use
 	 * @example
 	 * openlayer.addMap();
 	 *
@@ -92,8 +97,7 @@ export default class Openlayers extends Queueable {
 	addMap(pid,json) {
 		let self=this;
 		let options=Object.assign({
-			&quot;name&quot;:&quot;default&quot;,
-			&quot;projection&quot;:&quot;EPSG:3857&quot;,
+			&quot;map&quot;:&quot;default&quot;,
 			&quot;zoom&quot;: 0,
 			&quot;renderer&quot;: [&apos;webgl&apos;, &apos;canvas&apos;],
 			&quot;target&quot;:&quot;map&quot;,
@@ -103,43 +107,76 @@ export default class Openlayers extends Queueable {
 			target: options.target,
 			view: new View({
 				center: options.center,
-				zoom: options.zoom
+				zoom: options.zoom,
+				renderer: options.renderer
 			})
 		});
-		self.maps[options.name]={&quot;object&quot;:map,&quot;layers&quot;:{}};
+		self.maps[options.map]={&quot;object&quot;:map,&quot;layers&quot;:{}};
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
+
+	/**
+	 *
+	 * Add a layer to the map
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.map - name for the map (used to reference)
+	 * @param {string} json.name - name for the layer (used to reference)
+	 * @param {string} json.typr - Layer type osm,vector
+	 * @param {float} json.opacity - layer opacity
+	 * @param {boolean} json.transparent - is the layer transparent?
+	 * @param {string} json.style - Style object to use
+	 * @param {boolean} json.active - Is the layer active
+	 * @param {object|string} json.geojson - geojson to add to the layer (vector)
+	 * @example
+	 * openlayer.addLayer();
+	 *
+	 */
 
 	addLayer(pid,json) {
 		let self=this;
 		let options=Object.assign({
+			&quot;map&quot;:&quot;default&quot;,
 			&quot;name&quot;:&quot;default&quot;,
 			&quot;opacity&quot;: 1,
 			&quot;transparent&quot;: false,
-			&quot;active&quot;: true,
-			&quot;tilesize&quot;: [256, 256],
-			&quot;tiled&quot;: true,
-			&quot;selectable&quot;: true,
-			&quot;hover&quot;: true,
-			&quot;style&quot;: &quot;default&quot;
+			&quot;active&quot;: true
 		},json);
-		let map=self.maps[options.name].object;
+		let map=self.maps[options.map].object;
 		let olLayer = null;
-		let layerFunction = self[&quot;_addLayer_&quot; + options.type];
 
+		/*
+		 * If we had a style specified then we need to check if it needs expanding
+		 */
+		if(options.style!==undefined&amp;&amp;typeof options.style!==&apos;object&apos;)
+			options.style=eval(options.style);
+
+		/*
+		 * Find the requested layer type as a function
+		 */
+		let layerFunction = self[&quot;_addLayer_&quot; + options.type];
 		if (typeof layerFunction === &quot;function&quot;) {
-			olLayer = layerFunction.apply(null, [options]);
+			olLayer = layerFunction.apply(self, [options]);
 		}
 		else {
 			self.finished(pid,self.queue.DEFINE.FIN_ERROR,&quot;No add layer function for &quot; + options.type);
 			return false;
 		}
+		/*
+		 * Add the layer and update the the maps object with the new layers
+		 */
 		map.addLayer(olLayer);
-		self.maps[options.name].layers[options.name]=olLayer;
+		self.maps[options.map].layers[options.name]=olLayer;
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
 
+	/**
+	 * Add an osm layer
+	 * @param options
+	 * @return {TileLayer}
+	 * @private
+	 */
 	_addLayer_osm(options) {
 		let olLayer=new TileLayer({
 			source: new OSM()
@@ -147,27 +184,71 @@ export default class Openlayers extends Queueable {
 		return olLayer;
 	}
 
+	/**
+	 * Add a vector layer
+	 * @param options
+	 * @return {VectorLayer}
+	 * @private
+	 */
 	_addLayer_vector(options) {
+		let self=this;
 		let source={};
-		let vectorSource = new VectorSource(source);
+		let vectorSource;
+		if(options.geojson!==undefined) {
+			if(typeof options.geojson===&apos;object&apos;) {
+				source.features = (new GeoJSON({})).readFeatures(options.geojson, {featureProjection: self.maps[options.map].object.getView().getProjection()});
+			} else {
+				source.features = (new GeoJSON({})).readFeatures(eval(options.geojson), {featureProjection: self.maps[options.map].object.getView().getProjection()});
+			}
+		}
+		vectorSource = new VectorSource(source);
 		let olLayer = new VectorLayer({
 			name: options.name,
 			visible: options.active,
 			source: vectorSource,
-			//style: window.styles[options.style],
+			style: options.style,
 			opacity: options.opacity,
-			zIndex: options[&apos;zindex&apos;],
 			selectable: options.selectable,
 			hover: options.hover
 		});
 		return olLayer;
+	}
+
+	/**
+	 * Use the standard openlayers select control
+	 * @param pid
+	 * @param json
+	 *
+	 * @description This select control uses the default openlayers model. Useful for applications with no overlapping features. It does not support selecting hidden features
+	 */
+	simpleSelect(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;map&quot;:&quot;default&quot;,
+			condition:&quot;click&quot;
+		},json);
+
+		let selector = new Select();
+		self.maps[options.map].object.addInteraction(selector);
+		selector.on(&apos;select&apos;, function(e) {
+			console.log(e);
+			self.queue.setMemory(&apos;simpleSelect&apos;, e, &quot;Session&quot;);
+			self.queue.execute(&quot;simpleSelect&quot;);
+		});
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
 
+	/**
+	 * Add a feature to the Map
+	 * TODO: This is old code for getting something working. Needs functionising, not for production
+	 * @param pid
+	 * @param json
+	 */
 	addFeature(pid,json) {
 		let self=this;
 		let options=Object.assign({
-			&quot;map&quot;:&quot;map1&quot;,
+			&quot;map&quot;:&quot;default&quot;,
 			&quot;layer&quot;:&quot;default&quot;,
 			&quot;values&quot;:{}
 		},json);
@@ -185,6 +266,7 @@ export default class Openlayers extends Queueable {
 		let feature = format.readFeature(wkt);
 		options.values.geometry = feature.getGeometry().transform(projection, view.getProjection().getCode());
 		source.addFeature(new Feature(options.values));
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
 }</code></pre>

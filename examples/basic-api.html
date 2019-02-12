@@ -14,19 +14,5 @@
 
 		</div>
 	</div>
-	<div class="example">
-		<textarea>
-<script id="init" type="text/html">
-	<!-- init is always run automatically on startup -->
-	@templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});
-	-openlayers.addMap({});
-	-openlayers.addLayer({"name":"osm","type":"osm"});
-	-openlayers.addLayer({"name":"data","type":"vector"});
-
-	@api.get({"url":"https://api.openbrewerydb.org/breweries"},{"memoryMode":"Session","memoryName":"breweries","queuePrepare":"getList"});>
-	-templates.render({"targetId":"#results","template":"#displayResults"});
-</script>
-		</div>
-	</div>
 </body>
 </html>

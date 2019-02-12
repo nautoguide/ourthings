@@ -33,6 +33,11 @@ simple example being to hide a bit of the UI when a button is click or expose so
 <pre><code>&lt;div class=&quot;thing&quot;&gt;Visible&lt;/div&gt;
 &lt;button @elements.addClass({&quot;targetId&quot;:&quot;.thing&quot;,&quot;class&quot;:&quot;hidden&quot;});&gt;Hide&lt;/button&gt;</code></pre>
 
+<h2>A hovering class toggle</h2>
+<p>To emulate a css style hover you can combine two event to call a class toggle</p>
+
+<pre><code>&lt;div id=&quot;hover&quot; @elements.toggleClass({&quot;targetId&quot;:&quot;#hover&quot;,&quot;class&quot;:&quot;over&quot;},{&quot;queueEvent&quot;:&quot;mouseenter,mouseout&quot;});&gt;Hover&lt;/div&gt;</code></pre>
+
 <h3>Render template and show</h3>
 
 <p>This example forms the basis of a lot of the grunt work you will do with our things. Putting in new content to the page and displaying it to the user.
