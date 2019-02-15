@@ -366,7 +366,14 @@ class Queue {
 		while (match = commandRegex.exec(json)) {
 			json = json.replace(match[0], self.varsParser(match[1]));
 		}
-		return JSON.parse(json);
+		let jsonReturn={};
+		try {
+			jsonReturn=JSON.parse(json);
+		} catch(e) {
+			self.reportError("Can not parse JSON ["+json+"]","This error is probably fatal, check your templates");
+
+		}
+		return jsonReturn;
 	}
 	/**
 	 * parse a var string
@@ -548,34 +555,45 @@ class Queue {
 			/*
 			 *  Look for items that are QUEUE_ADDED as they need processing
 			 *
-			 *  Ensure the component is online
 			 */
-			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED&&self.queueables[self.queue[item].queueable].ready) {
+			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED) {
 				/*
-				 * Update our state to be running
+				 * Does this queueable exist?
 				 */
-				self.queue[item].state=self.DEFINE.QUEUE_RUNNING;
-				/*
-				 * Assign a pid
-				 */
-				if(self.queue[item].pid===undefined) {
-					self.queue[item].pid = self.pid;
-					self.pid++;
-				}
-				/*
-				 * Check if any specific timing is needed
-				 */
-				self.queue[item].options.queueTimer=self.queue[item].options.queueTimer||self.defaultTimer;
+				if(self.queueables[self.queue[item].queueable]) {
+					/*
+					 * Is it online? If not we fail silently as it may come online later
+					 */
+					if (self.queueables[self.queue[item].queueable].ready) {
+						/*
+						 * Update our state to be running
+						 */
+						self.queue[item].state = self.DEFINE.QUEUE_RUNNING;
+						/*
+						 * Assign a pid
+						 */
+						if (self.queue[item].pid === undefined) {
+							self.queue[item].pid = self.pid;
+							self.pid++;
+						}
+						/*
+						 * Check if any specific timing is needed
+						 */
+						self.queue[item].options.queueTimer = self.queue[item].options.queueTimer || self.defaultTimer;
 
-				/*
-				 *  Launch the function as a time out (so we get control back)
-				 */
-				if(sync) {
-					self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
+						/*
+						 *  Launch the function as a time out (so we get control back)
+						 */
+						if (sync) {
+							self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
+						} else {
+							setTimeout(function () {
+								self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
+							}, self.queue[item].options.queueTimer);
+						}
+					}
 				} else {
-					setTimeout(function () {
-						self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
-					}, self.queue[item].options.queueTimer);
+					self.reportError("Can not find queueable ["+self.queue[item].queueable+"]","Have you added it to the build?");
 				}
 			}
 		}
