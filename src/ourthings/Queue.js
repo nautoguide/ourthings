@@ -366,7 +366,14 @@ class Queue {
 		while (match = commandRegex.exec(json)) {
 			json = json.replace(match[0], self.varsParser(match[1]));
 		}
-		return JSON.parse(json);
+		let jsonReturn={};
+		try {
+			jsonReturn=JSON.parse(json);
+		} catch(e) {
+			self.reportError("Can not parse JSON ["+json+"]","This error is probably fatal, check your templates");
+
+		}
+		return jsonReturn;
 	}
 	/**
 	 * parse a var string
