@@ -876,7 +876,7 @@ class Queue {
 	}
 
 	/**
-	 * Finds an element in the dom using the jquery formant IE #id .class tag
+	 * Finds an element in the dom using the jquery formant IE #id .class tag (will only ever return one)
 	 * @param elementTarget
 	 * @return {object|false}
 	 */
@@ -888,6 +888,21 @@ class Queue {
 		self.reportError('Dom Element find failed for ['+elementTarget+']','Follow up calls that rely on this will fail');
 		return false;
 	}
+
+	/**
+	 * Finds an element(s) in the dom using the jquery formant IE #id .class tag (can return one or more)
+	 * @param elementTarget
+	 * @return {object|false}
+	 */
+	getElements(elementTarget) {
+		let self=this;
+		let element=document.querySelectorAll(elementTarget);
+		if(element!==null)
+			return element;
+		self.reportError('Dom Element find failed for ['+elementTarget+']','Follow up calls that rely on this will fail');
+		return false;
+	}
+
 
 	/**
 	 *  Show current queue status in the console DEBUG function

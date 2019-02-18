@@ -26,11 +26,13 @@ export default class Elements extends Queueable {
 	 */
 	addClass(pid,json) {
 		let self=this;
-		let element=self.queue.getElement(json.targetId);
+		let elements=self.queue.getElements(json.targetId);
 		self.set(pid,json);
 
-		if(element!==false) {
-			element.classList.add(json.class);
+		if(elements!==false) {
+			elements.forEach(function(element) {
+				element.classList.add(json.class);
+			});
 			self.finished(pid,self.queue.DEFINE.FIN_OK);
 		} else {
 			self.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not add class ['+json.class+'] to ['+json.targetId+']');
@@ -49,11 +51,12 @@ export default class Elements extends Queueable {
 	 */
 	removeClass(pid,json) {
 		let self=this;
-		let element=self.queue.getElement(json.targetId);
+		let elements=self.queue.getElements(json.targetId);
 		self.set(pid,json);
-
-		if(element!==false) {
-			element.classList.remove(json.class);
+		if(elements!==false) {
+			elements.forEach(function(element) {
+				element.classList.remove(json.class);
+			});
 			self.finished(pid,self.queue.DEFINE.FIN_OK);
 		} else {
 			self.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not remove class ['+json.class+'] to ['+json.targetId+']');
