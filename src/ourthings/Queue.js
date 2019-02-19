@@ -361,10 +361,13 @@ class Queue {
 	 */
 	jsonVars(json) {
 		json=JSON.stringify(json);
-		const commandRegex=/{{!(.*?)}}/;
+		const commandRegex=/{{(![\^]{0,1})(.*?)}}/;
 		let match;
 		while (match = commandRegex.exec(json)) {
-			json = json.replace(match[0], self.varsParser(match[1]));
+			if(match[1]==='!^')
+				json = json.replace('"'+match[0]+'"', self.varsParser(match[2]));
+			else
+				json = json.replace(match[0], self.varsParser(match[2]));
 		}
 		let jsonReturn={};
 		try {
