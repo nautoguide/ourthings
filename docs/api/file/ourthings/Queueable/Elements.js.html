@@ -71,11 +71,13 @@ export default class Elements extends Queueable {
 	 */
 	addClass(pid,json) {
 		let self=this;
-		let element=self.queue.getElement(json.targetId);
+		let elements=self.queue.getElements(json.targetId);
 		self.set(pid,json);
 
-		if(element!==false) {
-			element.classList.add(json.class);
+		if(elements!==false) {
+			elements.forEach(function(element) {
+				element.classList.add(json.class);
+			});
 			self.finished(pid,self.queue.DEFINE.FIN_OK);
 		} else {
 			self.finished(pid,self.queue.DEFINE.FIN_WARNING,&apos;Could not add class [&apos;+json.class+&apos;] to [&apos;+json.targetId+&apos;]&apos;);
@@ -94,11 +96,12 @@ export default class Elements extends Queueable {
 	 */
 	removeClass(pid,json) {
 		let self=this;
-		let element=self.queue.getElement(json.targetId);
+		let elements=self.queue.getElements(json.targetId);
 		self.set(pid,json);
-
-		if(element!==false) {
-			element.classList.remove(json.class);
+		if(elements!==false) {
+			elements.forEach(function(element) {
+				element.classList.remove(json.class);
+			});
 			self.finished(pid,self.queue.DEFINE.FIN_OK);
 		} else {
 			self.finished(pid,self.queue.DEFINE.FIN_WARNING,&apos;Could not remove class [&apos;+json.class+&apos;] to [&apos;+json.targetId+&apos;]&apos;);
@@ -147,7 +150,34 @@ export default class Elements extends Queueable {
 		let element=self.queue.getElement(json.targetId);
 		element.innerHTML=json.html;
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
 
+	/**
+	 * Monitor element(s) in a form and add classes on change
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.html - HTML to add
+	 *
+	 * @example
+	 * elements.formActivityMonitor({&quot;targetId&quot;:&quot;.functionMonitor&quot;,&quot;buttonId&quot;:&quot;.form-save&quot;,&quot;modifiedClass&quot;:&quot;modified&quot;});
+
+	 */
+	formActivityMonitor(pid,json) {
+		let elements=this.queue.getElements(json.targetId);
+		let button=this.queue.getElement(json.buttonId);
+		elements.forEach(function(element) {
+			element.addEventListener(&quot;change&quot;, function () {
+				this.classList.add(json.modifiedClass);
+				button.classList.add(json.modifiedClass);
+			});
+			element.addEventListener(&quot;keypress&quot;, function () {
+				this.classList.add(json.modifiedClass);
+				button.classList.add(json.modifiedClass);
+			});
+
+		});
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 }
 </code></pre>

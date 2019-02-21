@@ -350,9 +350,24 @@ class Queue {
 			let subTemplate=&apos;&apos;;
 			/*
 			 * loop through making sub templates as we go
+			 *
+			 * NOTE: you will notice that all index methods use 0 at the end. This is to allow
+			 * for the future when we implement for loops in for loops.
 			 */
 			for(let i in eval(match[1])) {
+				/*
+				 * Set a memory &apos;for0&apos; containing the index. This is an object as in the future it
+				 * may be expanded to contain other info.
+				 */
+				this.setMemory(&quot;for0&quot;,{&quot;index&quot;:i},&quot;session&quot;);
+				/*
+				 * This is the quick way to reference in the index but will now work for templates that
+				 * include others
+				 */
 				let incrementMatch=match[2].replace(/#loop0/g,i);
+				/*
+				 * Process the template
+				 */
 				subTemplate+=self.templateVars(incrementMatch,i);
 			}
 			template = template.replace(match[0], subTemplate);
@@ -406,12 +421,22 @@ class Queue {
 	 */
 	jsonVars(json) {
 		json=JSON.stringify(json);
-		const commandRegex=/{{!(.*?)}}/;
+		const commandRegex=/{{(![\^]{0,1})(.*?)}}/;
 		let match;
 		while (match = commandRegex.exec(json)) {
-			json = json.replace(match[0], self.varsParser(match[1]));
+			if(match[1]===&apos;!^&apos;)
+				json = json.replace(&apos;&quot;&apos;+match[0]+&apos;&quot;&apos;, self.varsParser(match[2]));
+			else
+				json = json.replace(match[0], self.varsParser(match[2]));
 		}
-		return JSON.parse(json);
+		let jsonReturn={};
+		try {
+			jsonReturn=JSON.parse(json);
+		} catch(e) {
+			self.reportError(&quot;Can not parse JSON [&quot;+json+&quot;]&quot;,&quot;This error is probably fatal, check your templates&quot;);
+
+		}
+		return jsonReturn;
 	}
 	/**
 	 * parse a var string
@@ -441,7 +466,7 @@ class Queue {
 	 * @return {string}
 	 */
 	templateParse(template,commands) {
-		let commandRegex=/[@\-](.*\);)/;
+		let commandRegex=/[@\-]([a-zA-Z]*?\.[a-zA-Z]*?\(.*\);)/;
 		let match=undefined;
 		let parentCommand;
 		let isParent;
@@ -593,34 +618,45 @@ class Queue {
 			/*
 			 *  Look for items that are QUEUE_ADDED as they need processing
 			 *
-			 *  Ensure the component is online
 			 */
-			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED&amp;&amp;self.queueables[self.queue[item].queueable].ready) {
+			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED) {
 				/*
-				 * Update our state to be running
+				 * Does this queueable exist?
 				 */
-				self.queue[item].state=self.DEFINE.QUEUE_RUNNING;
-				/*
-				 * Assign a pid
-				 */
-				if(self.queue[item].pid===undefined) {
-					self.queue[item].pid = self.pid;
-					self.pid++;
-				}
-				/*
-				 * Check if any specific timing is needed
-				 */
-				self.queue[item].options.queueTimer=self.queue[item].options.queueTimer||self.defaultTimer;
+				if(self.queueables[self.queue[item].queueable]) {
+					/*
+					 * Is it online? If not we fail silently as it may come online later
+					 */
+					if (self.queueables[self.queue[item].queueable].ready) {
+						/*
+						 * Update our state to be running
+						 */
+						self.queue[item].state = self.DEFINE.QUEUE_RUNNING;
+						/*
+						 * Assign a pid
+						 */
+						if (self.queue[item].pid === undefined) {
+							self.queue[item].pid = self.pid;
+							self.pid++;
+						}
+						/*
+						 * Check if any specific timing is needed
+						 */
+						self.queue[item].options.queueTimer = self.queue[item].options.queueTimer || self.defaultTimer;
 
-				/*
-				 *  Launch the function as a time out (so we get control back)
-				 */
-				if(sync) {
-					self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
+						/*
+						 *  Launch the function as a time out (so we get control back)
+						 */
+						if (sync) {
+							self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
+						} else {
+							setTimeout(function () {
+								self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
+							}, self.queue[item].options.queueTimer);
+						}
+					}
 				} else {
-					setTimeout(function () {
-						self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
-					}, self.queue[item].options.queueTimer);
+					self.reportError(&quot;Can not find queueable [&quot;+self.queue[item].queueable+&quot;]&quot;,&quot;Have you added it to the build?&quot;);
 				}
 			}
 		}
@@ -903,7 +939,7 @@ class Queue {
 	}
 
 	/**
-	 * Finds an element in the dom using the jquery formant IE #id .class tag
+	 * Finds an element in the dom using the jquery formant IE #id .class tag (will only ever return one)
 	 * @param elementTarget
 	 * @return {object|false}
 	 */
@@ -915,6 +951,21 @@ class Queue {
 		self.reportError(&apos;Dom Element find failed for [&apos;+elementTarget+&apos;]&apos;,&apos;Follow up calls that rely on this will fail&apos;);
 		return false;
 	}
+
+	/**
+	 * Finds an element(s) in the dom using the jquery formant IE #id .class tag (can return one or more)
+	 * @param elementTarget
+	 * @return {object|false}
+	 */
+	getElements(elementTarget) {
+		let self=this;
+		let element=document.querySelectorAll(elementTarget);
+		if(element!==null)
+			return element;
+		self.reportError(&apos;Dom Element find failed for [&apos;+elementTarget+&apos;]&apos;,&apos;Follow up calls that rely on this will fail&apos;);
+		return false;
+	}
+
 
 	/**
 	 *  Show current queue status in the console DEBUG function

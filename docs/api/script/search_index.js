@@ -588,6 +588,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queue.js~queue#getelements",
+    "class/ourthings/Queue.js~Queue.html#instance-method-getElements",
+    "ourthings/Queue.js~Queue#getElements",
+    "method"
+  ],
+  [
     "ourthings/queue.js~queue#handlefetcherrors",
     "class/ourthings/Queue.js~Queue.html#instance-method-handleFetchErrors",
     "ourthings/Queue.js~Queue#handleFetchErrors",
@@ -753,6 +759,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/elements.js~elements#addclass",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-addClass",
     "ourthings/Queueable/Elements.js~Elements#addClass",
+    "method"
+  ],
+  [
+    "ourthings/queueable/elements.js~elements#formactivitymonitor",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-formActivityMonitor",
+    "ourthings/Queueable/Elements.js~Elements#formActivityMonitor",
     "method"
   ],
   [
