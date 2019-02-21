@@ -38,7 +38,7 @@ simple example being to hide a bit of the UI when a button is click or expose so
 
 <pre><code>&lt;div id=&quot;hover&quot; @elements.toggleClass({&quot;targetId&quot;:&quot;#hover&quot;,&quot;class&quot;:&quot;over&quot;},{&quot;queueEvent&quot;:&quot;mouseenter,mouseout&quot;});&gt;Hover&lt;/div&gt;</code></pre>
 
-<h3>Render template and show</h3>
+<h2>Render template and show</h2>
 
 <p>This example forms the basis of a lot of the grunt work you will do with our things. Putting in new content to the page and displaying it to the user.
 That content can be the result of an API call, a template to dump out some client memory or just about anything</p>
@@ -48,5 +48,14 @@ That content can be the result of an API call, a template to dump out some clien
 &lt;button @templates.render({&quot;targetId&quot;:&quot;.thing&quot;,&quot;template&quot;:&quot;#hello&quot;}&gt;Show&lt;/button&gt;
 	-elements.removeClass({&quot;targetId&quot;:&quot;.thing&quot;,&quot;class&quot;:&quot;hidden&quot;});</code></pre>
 
+<h2>Form values changed monitor</h2>
+
+<p>If you want to check if fields in a form have changed and highlight those fields plus the save button</p>
+
+<pre><code>&lt;label for=&quot;orgName&quot;&gt;Organisation Name&lt;/label&gt;
+&lt;input type=&quot;text&quot; class=&quot;functionMonitor&quot; id=&quot;orgName&quot; placeholder=&quot;My Organisation Ltd&quot;&gt;
+&lt;button class=&quot;form-save&quot;&gt;&lt;/button&gt;
+
+@elements.formActivityMonitor({&quot;targetId&quot;:&quot;.functionMonitor&quot;,&quot;buttonId&quot;:&quot;.form-save&quot;,&quot;modifiedClass&quot;:&quot;modified&quot;},{&quot;queueRun&quot;:&quot;Instant&quot;});</code></pre>
 </body>
 </html>
