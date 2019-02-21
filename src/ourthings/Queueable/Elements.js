@@ -105,6 +105,33 @@ export default class Elements extends Queueable {
 		let element=self.queue.getElement(json.targetId);
 		element.innerHTML=json.html;
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
 
+	/**
+	 * Monitor element(s) in a form and add classes on change
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.html - HTML to add
+	 *
+	 * @example
+	 * elements.formActivityMonitor({"targetId":".functionMonitor","buttonId":".form-save","modifiedClass":"modified"});
+
+	 */
+	formActivityMonitor(pid,json) {
+		let elements=this.queue.getElements(json.targetId);
+		let button=this.queue.getElement(json.buttonId);
+		elements.forEach(function(element) {
+			element.addEventListener("change", function () {
+				this.classList.add(json.modifiedClass);
+				button.classList.add(json.modifiedClass);
+			});
+			element.addEventListener("keypress", function () {
+				this.classList.add(json.modifiedClass);
+				button.classList.add(json.modifiedClass);
+			});
+
+		});
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 }
