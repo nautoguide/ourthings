@@ -87,12 +87,11 @@ If you want to include a template (normally for reuse purposes) into the templat
 <p>This would result in 'blah' replacing {{#include #myTemplayeId}}</p>
 
 <h4>{{#for [variable]}}</h4>
-Loop though an array or object
+<p>Loop though an array or object. There are two ways of inserting the index, the quick and dirty #loop0 which will only work if used directly inside
+the template and {{memory.for0.value.index}} which will work in subsequent templates that are for example included with {{#include}} inside the loop</p>
 <pre><code>{{#for memory.people.value}}
   {{memory.people.value[#loop0].name}}
 {{/for}}</code></pre>
-
-<p>#loop0 will be replaced with the array index of object key</p>
 
 <h4>{{#if [test]}}</h4>
 Perform a if
