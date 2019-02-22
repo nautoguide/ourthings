@@ -31,8 +31,8 @@ window.esdocSearchIndex = [
   ],
   [
     "@nautoguide/ourthings/ourthings/queueable/openlayers.js~openlayers",
-    "class/ourthings/Queueable/Openlayers.js~Openlayers.html",
-    "<span>Openlayers</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/Openlayers.js</span>",
+    "class/ourthings/Queueable/openlayers.js~Openlayers.html",
+    "<span>Openlayers</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/openlayers.js</span>",
     "class"
   ],
   [
@@ -810,54 +810,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "ourthings/queueable/openlayers.js",
-    "file/ourthings/Queueable/Openlayers.js.html",
-    "ourthings/Queueable/Openlayers.js",
-    "file"
-  ],
-  [
-    "ourthings/queueable/openlayers.js~openlayers#_addlayer_osm",
-    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_osm",
-    "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_osm",
-    "method"
-  ],
-  [
-    "ourthings/queueable/openlayers.js~openlayers#_addlayer_vector",
-    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_vector",
-    "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_vector",
-    "method"
-  ],
-  [
-    "ourthings/queueable/openlayers.js~openlayers#addfeature",
-    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addFeature",
-    "ourthings/Queueable/Openlayers.js~Openlayers#addFeature",
-    "method"
-  ],
-  [
-    "ourthings/queueable/openlayers.js~openlayers#addlayer",
-    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addLayer",
-    "ourthings/Queueable/Openlayers.js~Openlayers#addLayer",
-    "method"
-  ],
-  [
-    "ourthings/queueable/openlayers.js~openlayers#addmap",
-    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addMap",
-    "ourthings/Queueable/Openlayers.js~Openlayers#addMap",
-    "method"
-  ],
-  [
-    "ourthings/queueable/openlayers.js~openlayers#init",
-    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-init",
-    "ourthings/Queueable/Openlayers.js~Openlayers#init",
-    "method"
-  ],
-  [
-    "ourthings/queueable/openlayers.js~openlayers#simpleselect",
-    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-simpleSelect",
-    "ourthings/Queueable/Openlayers.js~Openlayers#simpleSelect",
-    "method"
-  ],
-  [
     "ourthings/queueable/templates.js",
     "file/ourthings/Queueable/Templates.js.html",
     "ourthings/Queueable/Templates.js",
@@ -867,6 +819,60 @@ window.esdocSearchIndex = [
     "ourthings/queueable/templates.js~templates#render",
     "class/ourthings/Queueable/Templates.js~Templates.html#instance-method-render",
     "ourthings/Queueable/Templates.js~Templates#render",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js",
+    "file/ourthings/Queueable/openlayers.js.html",
+    "ourthings/Queueable/openlayers.js",
+    "file"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#_addlayer_osm",
+    "class/ourthings/Queueable/openlayers.js~Openlayers.html#instance-method-_addLayer_osm",
+    "ourthings/Queueable/openlayers.js~Openlayers#_addLayer_osm",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#_addlayer_vector",
+    "class/ourthings/Queueable/openlayers.js~Openlayers.html#instance-method-_addLayer_vector",
+    "ourthings/Queueable/openlayers.js~Openlayers#_addLayer_vector",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#addfeature",
+    "class/ourthings/Queueable/openlayers.js~Openlayers.html#instance-method-addFeature",
+    "ourthings/Queueable/openlayers.js~Openlayers#addFeature",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#addlayer",
+    "class/ourthings/Queueable/openlayers.js~Openlayers.html#instance-method-addLayer",
+    "ourthings/Queueable/openlayers.js~Openlayers#addLayer",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#addmap",
+    "class/ourthings/Queueable/openlayers.js~Openlayers.html#instance-method-addMap",
+    "ourthings/Queueable/openlayers.js~Openlayers#addMap",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#init",
+    "class/ourthings/Queueable/openlayers.js~Openlayers.html#instance-method-init",
+    "ourthings/Queueable/openlayers.js~Openlayers#init",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#simpleselect",
+    "class/ourthings/Queueable/openlayers.js~Openlayers.html#instance-method-simpleSelect",
+    "ourthings/Queueable/openlayers.js~Openlayers#simpleSelect",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#zoomtolayerextent",
+    "class/ourthings/Queueable/openlayers.js~Openlayers.html#instance-method-zoomToLayerExtent",
+    "ourthings/Queueable/openlayers.js~Openlayers#zoomToLayerExtent",
     "method"
   ],
   [
