@@ -42,6 +42,7 @@ export default class Openlayers extends Queueable {
 	 * @param {int} pid - process ID
 	 * @param {object} json - queue arguments
 	 * @param {string} json.map - name for the map (used to reference)
+	 * @param {string} json.target - id of element in the page to target
 	 * @param {int} json.zoom - statement to check
 	 * @param {array} json.center - Center on
 	 * @param {string} json.renderer - Renderers to use
