@@ -421,7 +421,7 @@ class Queue {
 	 * @return {string}
 	 */
 	templateParse(template,commands) {
-		let commandRegex=/[@\-]([a-zA-Z]*?\.[a-zA-Z]*?\(.*\);)/;
+		let commandRegex=/[@\-]([a-zA-Z]*?\.[a-zA-Z0-9]*?\(.*\);)/;
 		let match=undefined;
 		let parentCommand;
 		let isParent;
