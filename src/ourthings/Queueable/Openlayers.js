@@ -225,4 +225,34 @@ export default class Openlayers extends Queueable {
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
+	/**
+	 * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @example
+	 * openlayers.zoomToLayerExtent({"map":"map_1","layer":"data"});
+	 */
+	zoomToLayerExtent(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			"map":"default",
+			"layer":"default"
+		},json);
+		/*
+		 * Pull all our resources
+		 */
+		let map=self.maps[options.map].object;
+		let view = map.getView();
+		let layer=self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		/*
+		 * Get the extent of the features and fit them
+		 */
+		let extent = source.getExtent();
+		view.fit(extent, map.getSize());
+
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
 }

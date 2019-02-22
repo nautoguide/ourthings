@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">ourthings/Queueable/Openlayers.js | @nautoguide/ourthings</title>
+  <title data-ice="title">ourthings/Queueable/openlayers.js | @nautoguide/ourthings</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -36,13 +36,13 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 </ul>
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queueable/Openlayers.js</h1>
+<div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queueable/openlayers.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module Openlayers */
 import Queueable from &quot;../Queueable&quot;;
 import {Map, View, Feature} from &apos;ol&apos;;
@@ -87,6 +87,7 @@ export default class Openlayers extends Queueable {
 	 * @param {int} pid - process ID
 	 * @param {object} json - queue arguments
 	 * @param {string} json.map - name for the map (used to reference)
+	 * @param {string} json.target - id of element in the page to target
 	 * @param {int} json.zoom - statement to check
 	 * @param {array} json.center - Center on
 	 * @param {string} json.renderer - Renderers to use
@@ -268,6 +269,36 @@ export default class Openlayers extends Queueable {
 		source.addFeature(new Feature(options.values));
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
+	}
+	/**
+	 * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @example
+	 * openlayers.zoomToLayerExtent({&quot;map&quot;:&quot;map_1&quot;,&quot;layer&quot;:&quot;data&quot;});
+	 */
+	zoomToLayerExtent(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;map&quot;:&quot;default&quot;,
+			&quot;layer&quot;:&quot;default&quot;
+		},json);
+		/*
+		 * Pull all our resources
+		 */
+		let map=self.maps[options.map].object;
+		let view = map.getView();
+		let layer=self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		/*
+		 * Get the extent of the features and fit them
+		 */
+		let extent = source.getExtent();
+		view.fit(extent, map.getSize());
+
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 }</code></pre>
 
