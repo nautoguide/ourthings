@@ -1,4 +1,4 @@
-/** @module ourthings/Queueable/Elements */
+/** @module ourthings/Queueable/Browser */
 import Queueable from "../Queueable";
 
 /**
