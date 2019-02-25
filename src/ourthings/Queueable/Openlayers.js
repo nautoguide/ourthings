@@ -255,4 +255,32 @@ export default class Openlayers extends Queueable {
 
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
+	/**
+	 * Update size of map (in the event of resize or rotation this will fix it)
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference can be * and all maps will be targeted
+	 * @example
+	 * openlayers.updateSize({"map":"map_1"});
+	 */
+	updateSize(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			"map":"default",
+		},json);
+		/*
+		 * Pull all our resources
+		 */
+		if(json.map==="*") {
+			for(let i in self.maps) {
+				let map=self.maps[i].object;
+				map.updateSize();
+			}
+		} else {
+			let map = self.maps[options.map].object;
+			map.updateSize();
+		}
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
 }

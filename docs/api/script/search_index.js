@@ -864,6 +864,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#updatesize",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-updateSize",
+    "ourthings/Queueable/Openlayers.js~Openlayers#updateSize",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#zoomtolayerextent",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-zoomToLayerExtent",
     "ourthings/Queueable/Openlayers.js~Openlayers#zoomToLayerExtent",
