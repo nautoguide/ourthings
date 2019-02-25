@@ -702,13 +702,11 @@ class Queue {
 		let expires = "; expires=" + date.toUTCString();
 		for(let i in window.memory) {
 			if(window.memory[i].mode===self.DEFINE.MEMORY_PERMANENT) {
-
-				document.cookie = 'OT_'+i + "=" + window.btoa(JSON.stringify(window.memory[i])) + expires + "; path=/";
+				self.setCookie('OT_'+i,window.btoa(JSON.stringify(window.memory[i])));
 				perms.push(i);
 			}
 		}
-		document.cookie = 'OT_INDEX' + "=" + JSON.stringify(perms) + expires + "; path=/";
-
+		self.setCookie('OT_INDEX',JSON.stringify(perms));
 	}
 
 	/**
@@ -742,6 +740,19 @@ class Queue {
 			if (c.indexOf(nameEQ) == 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
 		}
 		return null;
+	}
+
+	/**
+	 * set a cookie by name and value
+	 * @param name - Cookie name
+	 * @param value - Value of cookie
+	 * @returns {*}
+	 */
+	setCookie(name,value) {
+		let date = new Date();
+		date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
+		let expires = "; expires=" + date.toUTCString();
+		document.cookie = name + "=" + value + expires + "; path=/";
 	}
 
 	/**

@@ -642,6 +642,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queue.js~queue#setcookie",
+    "class/ourthings/Queue.js~Queue.html#instance-method-setCookie",
+    "ourthings/Queue.js~Queue#setCookie",
+    "method"
+  ],
+  [
     "ourthings/queue.js~queue#setmemory",
     "class/ourthings/Queue.js~Queue.html#instance-method-setMemory",
     "ourthings/Queue.js~Queue#setMemory",
