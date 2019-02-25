@@ -107,8 +107,17 @@ class Queue {
 		self._loadMemoryPerms();
 		/*
 		 * Load the templates.json
+		 *
+		 * This can now be specified by data-templates on the script include
 		 */
-		fetch('templates.json', {
+		let templateInclude="templates.json";
+
+		let attr=self.getElement("script[data-templates]",false);
+		if(attr&&attr.getAttribute( "data-templates" )) {
+			templateInclude=attr.getAttribute( "data-templates" );
+		}
+
+		fetch(templateInclude, {
 			headers: {
 				'Content-Type': 'application/json'
 			}
@@ -896,14 +905,16 @@ class Queue {
 	/**
 	 * Finds an element in the dom using the jquery formant IE #id .class tag (will only ever return one)
 	 * @param elementTarget
+	 * @param errorTrap {boolean} Trap any errors?
 	 * @return {object|false}
 	 */
-	getElement(elementTarget) {
+	getElement(elementTarget,errorTrap=true) {
 		let self=this;
 		let element=document.querySelector(elementTarget);
 		if(element!==null)
 			return element;
-		self.reportError('Dom Element find failed for ['+elementTarget+']','Follow up calls that rely on this will fail');
+		if(errorTrap)
+			self.reportError('Dom Element find failed for ['+elementTarget+']','Follow up calls that rely on this will fail');
 		return false;
 	}
 
