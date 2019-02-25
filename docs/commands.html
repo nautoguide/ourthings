@@ -13,6 +13,7 @@
 <body>
 <h1><img src="images/logo.png"></h1>
 
+
 <h1>Command Reference</h1>
 <h2>Overview</h2>
 <p>ourthings has two formats for interacting with your templates. One is a traditional approach that
@@ -100,6 +101,32 @@ Perform a if
 {{else}}
 	There are not any people
 {{/if}}</code></pre>
+
+<h2>templates.json</h2>
+<p>When you include your ourthings build by default the file templates.json will be loaded. You may specify a different json file to use if you have more
+than one build. This is useful if you have for example a login page which only needs a few functions</p>
+
+<pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;dist/login.bundle.js&quot; data-templates=&quot;templates-login.json&quot;&gt;&lt;/script&gt;</code></pre>
+<p>The json file is an array of template files to include</p>
+<pre><code>[
+  "templates/login/actions.html"
+]</code></pre>
+<p>To produce unique builds you can use a webpack config like this</p>
+<pre><code>const path = require('path');
+module.exports = {
+	mode: 'development',
+	entry: {
+		full:'./src/digitalboundary/index.js',
+		login:'./src/digitalboundary/login.js'
+	},
+	output: {
+		filename: '[name].bundle.js',
+		path: path.resolve(__dirname, 'site/dist')
+	}
+};
+</code></pre>
+
+<p>index.js would contain imports for all the libs you need where as login.js will just be a subset</p>
 </html>
 
 
