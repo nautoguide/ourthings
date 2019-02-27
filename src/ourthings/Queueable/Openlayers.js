@@ -1,15 +1,32 @@
 /** @module Openlayers */
 import Queueable from "../Queueable";
 import {Map, View, Feature} from 'ol';
+import {getWidth, getTopLeft} from 'ol/extent.js';
+
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
+import Disposable from 'ol/Disposable';
 import OSM from 'ol/source/OSM';
+import WMTS from 'ol/source/WMTS';
+import WMTSTileGrid  from 'ol/tilegrid/WMTS';
 import WKT from 'ol/format/WKT';
+
 import GeoJSON from 'ol/format/GeoJSON';
 import {fromLonLat,units,epsg3857,epsg4326} from 'ol/proj';
 import Select from 'ol/interaction/Select.js';
 import {click, pointerMove, altKeyOnly} from 'ol/events/condition.js';
+import proj4 from "proj4";
+import {register} from 'ol/proj/proj4';
+import {get as getProjection} from 'ol/proj'
+
+proj4.defs([
+	["EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs"]
+]);
+
+register(proj4);
+
+
 
 
 /**
@@ -57,14 +74,19 @@ export default class Openlayers extends Queueable {
 			"zoom": 0,
 			"renderer": ['webgl', 'canvas'],
 			"target":"map",
-			"center":[0,0]
+			"center":[0,0],
+			"projection": "EPSG:3857"
 		},json);
+		let projection =  getProjection(options.projection);
 		const map = new Map({
 			target: options.target,
 			view: new View({
 				center: options.center,
 				zoom: options.zoom,
-				renderer: options.renderer
+				renderer: options.renderer,
+				projection: projection,
+				resolutions: options.resolutions,
+				extent: options.extent,
 			})
 		});
 		self.maps[options.map]={"object":map,"layers":{}};
@@ -138,6 +160,37 @@ export default class Openlayers extends Queueable {
 			source: new OSM()
 		});
 		return olLayer;
+	}
+
+	_addLayer_wmts(options) {
+		let self=this;
+		let map=self.maps[options.map].object;
+		let view=map.getView();
+		debugger;
+		let source =WMTS({
+			url: options.url,
+			layer: options.layer,
+			matrixSet: options.matrixSet,
+			format: 'image/png',
+			crossOrigin: 'anonymous',
+			projection: view.getProjection(),
+			tileGrid: new WMTSTileGrid({
+				resolutions: view.getResolutions(),
+				matrixIds: options.matrix,
+				origin: options.origin
+
+			})
+		});
+		let olLayer = new TileLayer({
+			//extent: options.extent,
+			opacity: options.opacity,
+			visible: options.active,
+			name: options.name,
+			source: source
+		});
+
+		return olLayer;
+
 	}
 
 	/**
