@@ -162,12 +162,17 @@ export default class Openlayers extends Queueable {
 		return olLayer;
 	}
 
+	/**
+	 * Add an wmts layer
+	 * @param options
+	 * @return {TileLayer}
+	 * @private
+	 */
 	_addLayer_wmts(options) {
 		let self=this;
 		let map=self.maps[options.map].object;
 		let view=map.getView();
-		debugger;
-		let source =WMTS({
+		let source= new WMTS({
 			url: options.url,
 			layer: options.layer,
 			matrixSet: options.matrixSet,
@@ -182,7 +187,7 @@ export default class Openlayers extends Queueable {
 			})
 		});
 		let olLayer = new TileLayer({
-			//extent: options.extent,
+			extent: options.extent,
 			opacity: options.opacity,
 			visible: options.active,
 			name: options.name,
