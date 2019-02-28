@@ -24,6 +24,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "@nautoguide/ourthings/ourthings/queueable/files.js~files",
+    "class/ourthings/Queueable/Files.js~Files.html",
+    "<span>Files</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/Files.js</span>",
+    "class"
+  ],
+  [
     "@nautoguide/ourthings/ourthings/queueable/internals.js~internals",
     "class/ourthings/Queueable/Internals.js~Internals.html",
     "<span>Internals</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/Internals.js</span>",
@@ -744,6 +750,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/api.js~api#put",
+    "class/ourthings/Queueable/Api.js~Api.html#instance-method-put",
+    "ourthings/Queueable/Api.js~Api#put",
+    "method"
+  ],
+  [
     "ourthings/queueable/browser.js",
     "file/ourthings/Queueable/Browser.js.html",
     "ourthings/Queueable/Browser.js",
@@ -792,6 +804,30 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/files.js",
+    "file/ourthings/Queueable/Files.js.html",
+    "ourthings/Queueable/Files.js",
+    "file"
+  ],
+  [
+    "ourthings/queueable/files.js~files#clientload",
+    "class/ourthings/Queueable/Files.js~Files.html#instance-method-clientLoad",
+    "ourthings/Queueable/Files.js~Files#clientLoad",
+    "method"
+  ],
+  [
+    "ourthings/queueable/files.js~files#filepreview",
+    "class/ourthings/Queueable/Files.js~Files.html#instance-method-filePreview",
+    "ourthings/Queueable/Files.js~Files#filePreview",
+    "method"
+  ],
+  [
+    "ourthings/queueable/files.js~files#putfiletos3",
+    "class/ourthings/Queueable/Files.js~Files.html#instance-method-putFileToS3",
+    "ourthings/Queueable/Files.js~Files#putFileToS3",
+    "method"
+  ],
+  [
     "ourthings/queueable/internals.js",
     "file/ourthings/Queueable/Internals.js.html",
     "ourthings/Queueable/Internals.js",
@@ -834,6 +870,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#_addlayer_wmts",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_wmts",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_wmts",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#addfeature",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addFeature",
     "ourthings/Queueable/Openlayers.js~Openlayers#addFeature",
@@ -861,6 +903,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/openlayers.js~openlayers#simpleselect",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-simpleSelect",
     "ourthings/Queueable/Openlayers.js~Openlayers#simpleSelect",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#updatesize",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-updateSize",
+    "ourthings/Queueable/Openlayers.js~Openlayers#updateSize",
     "method"
   ],
   [
