@@ -16,10 +16,11 @@ export default class Files extends Queueable {
 
 
 	/**
-	 * Redirect browser to a new page
+	 * Load a file into memory with option to preview
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
-	 * @param {string} json.location - Dom location to direct to
+	 * @param {string} json.targetId - Dom location that contains the files input
+	 * @param {string} json.previewId - Dom location to put preview
 	 */
 	clientLoad(pid,json) {
 		let self=this;
@@ -48,6 +49,13 @@ export default class Files extends Queueable {
 
 	}
 
+	/**
+	 * Image preview
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom location that contains the files input
+	 * @param {string} json.previewId - Dom location to put preview
+	 */
 	filePreview(pid,json) {
 		let self=this;
 		let element=self.queue.getElement(json.targetId);
@@ -74,6 +82,15 @@ export default class Files extends Queueable {
 		});
 	}
 
+	/**
+	 * Upload fiel to S3
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom location that contains the files input
+	 * @param {string} json.contentType - Content type of file
+	 * @param {string} json.headers - Additional headers to send
+	 * @param {string} json.url - url to upload to
+	 */
 	putFileToS3(pid,json) {
 		let self=this;
 		json.contentType=json.contentType||'image/png';
