@@ -18,8 +18,7 @@ class Queue {
 	 */
 	constructor(queueablesList) {
 
-		self = this;
-
+		let self = this;
 
 		/*
 		 * Create our DEFINE object for
@@ -303,9 +302,7 @@ class Queue {
 	 */
 	templateVars(template) {
 		let match;
-
-
-
+		let self=this;
 		/*
 		 * Look for {{#for}} loops and execute them
 		 */
@@ -384,6 +381,7 @@ class Queue {
 	 * @return {any}
 	 */
 	jsonVars(json) {
+		let self=this;
 		json=JSON.stringify(json);
 		const commandRegex=/{{(![\^]{0,1})(.*?)}}/;
 		let match;
@@ -434,6 +432,7 @@ class Queue {
 		let match=undefined;
 		let parentCommand;
 		let isParent;
+		let self=this;
 		/*
 		 *  Locate all the commands in the template and generate an array of command objects that
 		 *  are linked by a reference into the template
@@ -632,6 +631,7 @@ class Queue {
 	 * @return {*}
 	 */
 	findQueueByPid(pid) {
+		let self=this;
 		for(let item in self.queue) {
 			if(self.queue[item].pid===pid) {
 				return self.queue[item];
@@ -687,7 +687,7 @@ class Queue {
 		window.memory[name] = memoryDetails;
 		self._updateMemoryPerms();
 
-			return true;
+		return true;
 	}
 
 	/**
@@ -937,9 +937,15 @@ class Queue {
 	getElements(elementTarget) {
 		let self=this;
 		let element=document.querySelectorAll(elementTarget);
+		/*
+		 * IE11 BUG, check for non arrays and attempt to convert
+		 */
+		if(!Array.isArray(element)) {
+			 element = Array.from(element);
+		}
 		if(element!==null)
 			return element;
-		self.reportError('Dom Element find failed for ['+elementTarget+']','Follow up calls that rely on this will fail');
+		self.reportError('Dom Element(s) find failed for ['+elementTarget+']','Follow up calls that rely on this will fail');
 		return false;
 	}
 
@@ -992,7 +998,7 @@ class Queue {
 	 * @param message
 	 */
 	reportError(error,message) {
-		console.info(self.DEFINE.CONSOLE_LINE);
+		console.info(this.DEFINE.CONSOLE_LINE);
 		console.error('Error:', error);
 		console.info(message);
 	}
