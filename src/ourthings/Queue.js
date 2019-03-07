@@ -287,7 +287,7 @@ class Queue {
 		if(targetId!==false) {
 			targetDom=self.getElement(targetId);
 			if(!targetDom) {
-				self.reportError('No valid target','I have no valid target to render the template to, check the targetId ['+targetId+']');
+				self.reportError('No valid target','I have no valid target to render the template ['+templateId+'] to, check the targetId ['+targetId+']');
 				return false;
 			}
 			self.renderToDom(targetDom,parsedTemplate);
@@ -913,6 +913,34 @@ class Queue {
 				break;
 		}
 		return true;
+	}
+
+	/**
+	 * Finds elements in the dom of an iframe (or current document) using the query selector
+	 * @param iframeTarget Iframe or false
+	 * @param elementTarget query
+	 * @param errorTrap {boolean} Trap any errors?
+	 * @return {object|false}
+	 */
+	getIframeElements(iframeTarget,elementTarget,errorTrap=true) {
+		let self=this;
+		let iframe = document.getElementById(iframeTarget);
+		if(!iframe)
+			iframe=document;
+		else
+			iframe=iframe.contentDocument || iframe.contentWindow.document;
+		let element=iframe.querySelectorAll(elementTarget);
+		/*
+		 * IE11 BUG, check for non arrays and attempt to convert
+		 */
+		if(!Array.isArray(element)) {
+			element = Array.from(element);
+		}
+		if(element!==null)
+			return element;
+		if(errorTrap)
+			self.reportError('Dom Element find failed for ['+elementTarget+'] iframe ['+iframeTarget+']','Follow up calls that rely on this will fail');
+		return false;
 	}
 
 	/**
