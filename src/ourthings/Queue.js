@@ -84,6 +84,8 @@ class Queue {
 		console.info(self.DEFINE.CONSOLE_LINE);
 		console.info('ourthings framework https://github.com/nautoguide/ourthings');
 
+		self.browserClasses();
+
 		/*
 		 * Run init against all our queueables
 		 *
@@ -1010,6 +1012,20 @@ class Queue {
 	 */
 	deepCopy(inputObject) {
 		return JSON.parse(JSON.stringify(inputObject));
+	}
+
+	/**
+	 * Adds classes for browser type to body for use in CSS
+	 */
+	browserClasses() {
+		let self=this;
+		let bodyElement=self.getElement("body");
+		if(!!window.MSInputMethodContext && !!document.documentMode)
+			bodyElement.classList.add("ie11");
+		if(navigator.vendor.match(/apple/i))
+			bodyElement.classList.add("safari");
+		if(navigator.vendor.match(/google/i))
+			bodyElement.classList.add("chrome");
 	}
 
 }
