@@ -18,6 +18,7 @@ export default class Elements extends Queueable {
 	 * Add a class to a dom element
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
+	 * @param {string} json.iframeId - iframe target
 	 * @param {string} json.targetId - Dom target
 	 * @param {string} json.class - Name of class to add
 	 *
@@ -26,7 +27,7 @@ export default class Elements extends Queueable {
 	 */
 	addClass(pid,json) {
 		let self=this;
-		let elements=self.queue.getElements(json.targetId);
+		let elements=self.queue.getIframeElements(json.iframeId,json.targetId);
 		self.set(pid,json);
 
 		if(elements!==false) {
@@ -43,6 +44,7 @@ export default class Elements extends Queueable {
 	 * Remove a class to a dom element
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
+	 * @param {string} json.iframeId - iframe target
 	 * @param {string} json.targetId - Dom target
 	 * @param {string} json.class - Name of class to remove
 	 *
@@ -51,7 +53,7 @@ export default class Elements extends Queueable {
 	 */
 	removeClass(pid,json) {
 		let self=this;
-		let elements=self.queue.getElements(json.targetId);
+		let elements=self.queue.getIframeElements(json.iframeId,json.targetId);
 		self.set(pid,json);
 		if(elements!==false) {
 			elements.forEach(function(element) {
@@ -75,14 +77,15 @@ export default class Elements extends Queueable {
 	 */
 	toggleClass(pid,json) {
 		let self=this;
-		let element=self.queue.getElement(json.targetId);
+		let elements=self.queue.getIframeElements(json.iframeId,json.targetId);
 		self.set(pid,json);
-
-		if(element!==false) {
-			if(element.classList.contains(json.class))
-				element.classList.remove(json.class);
-			else
-				element.classList.add(json.class);
+		if(elements!==false) {
+			elements.forEach(function(element) {
+				if (element.classList.contains(json.class))
+					element.classList.remove(json.class);
+				else
+					element.classList.add(json.class);
+			});
 			self.finished(pid,self.queue.DEFINE.FIN_OK);
 		} else {
 			self.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not remove class ['+json.class+'] to ['+json.targetId+']');

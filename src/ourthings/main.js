@@ -14,9 +14,18 @@ import Browser from './Queueable/Browser';
 /*
  * Start the queue engine
  */
-let queue = new Queue({"internals":Internals,"templates":Templates,"elements":Elements,"api":Api,"openlayers":Openlayers,"browser":Browser});
-
+let queue;
 /*
- * If you want debug put the queue into the window
+ * Wait until the dom is loaded (IE11 will not have the dom in place before it starts running scripts
  */
-window.queue=queue;
+document.addEventListener("DOMContentLoaded", function(event) {
+	queue = new Queue({
+		"internals": Internals,
+		"templates": Templates,
+		"elements": Elements,
+		"api": Api,
+		"openlayers": Openlayers,
+		"browser": Browser
+	});
+	window.queue = queue;
+});

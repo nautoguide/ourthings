@@ -37,8 +37,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -64,8 +64,7 @@ class Queue {
 	 */
 	constructor(queueablesList) {
 
-		self = this;
-
+		let self = this;
 
 		/*
 		 * Create our DEFINE object for
@@ -127,9 +126,11 @@ class Queue {
 		self.defaultTimer = 10;
 
 
-		console.clear();
+		//console.clear();
 		console.info(self.DEFINE.CONSOLE_LINE);
 		console.info(&apos;ourthings framework https://github.com/nautoguide/ourthings&apos;);
+
+		self.browserClasses();
 
 		/*
 		 * Run init against all our queueables
@@ -332,7 +333,7 @@ class Queue {
 		if(targetId!==false) {
 			targetDom=self.getElement(targetId);
 			if(!targetDom) {
-				self.reportError(&apos;No valid target&apos;,&apos;I have no valid target to render the template to, check the targetId [&apos;+targetId+&apos;]&apos;);
+				self.reportError(&apos;No valid target&apos;,&apos;I have no valid target to render the template [&apos;+templateId+&apos;] to, check the targetId [&apos;+targetId+&apos;]&apos;);
 				return false;
 			}
 			self.renderToDom(targetDom,parsedTemplate);
@@ -349,9 +350,7 @@ class Queue {
 	 */
 	templateVars(template) {
 		let match;
-
-
-
+		let self=this;
 		/*
 		 * Look for {{#for}} loops and execute them
 		 */
@@ -430,6 +429,7 @@ class Queue {
 	 * @return {any}
 	 */
 	jsonVars(json) {
+		let self=this;
 		json=JSON.stringify(json);
 		const commandRegex=/{{(![\^]{0,1})(.*?)}}/;
 		let match;
@@ -480,6 +480,7 @@ class Queue {
 		let match=undefined;
 		let parentCommand;
 		let isParent;
+		let self=this;
 		/*
 		 *  Locate all the commands in the template and generate an array of command objects that
 		 *  are linked by a reference into the template
@@ -678,6 +679,7 @@ class Queue {
 	 * @return {*}
 	 */
 	findQueueByPid(pid) {
+		let self=this;
 		for(let item in self.queue) {
 			if(self.queue[item].pid===pid) {
 				return self.queue[item];
@@ -733,7 +735,7 @@ class Queue {
 		window.memory[name] = memoryDetails;
 		self._updateMemoryPerms();
 
-			return true;
+		return true;
 	}
 
 	/**
@@ -960,6 +962,34 @@ class Queue {
 	}
 
 	/**
+	 * Finds elements in the dom of an iframe (or current document) using the query selector
+	 * @param iframeTarget Iframe or false
+	 * @param elementTarget query
+	 * @param errorTrap {boolean} Trap any errors?
+	 * @return {object|false}
+	 */
+	getIframeElements(iframeTarget,elementTarget,errorTrap=true) {
+		let self=this;
+		let iframe = document.getElementById(iframeTarget);
+		if(!iframe)
+			iframe=document;
+		else
+			iframe=iframe.contentDocument || iframe.contentWindow.document;
+		let element=iframe.querySelectorAll(elementTarget);
+		/*
+		 * IE11 BUG, check for non arrays and attempt to convert
+		 */
+		if(!Array.isArray(element)) {
+			element = Array.from(element);
+		}
+		if(element!==null)
+			return element;
+		if(errorTrap)
+			self.reportError(&apos;Dom Element find failed for [&apos;+elementTarget+&apos;] iframe [&apos;+iframeTarget+&apos;]&apos;,&apos;Follow up calls that rely on this will fail&apos;);
+		return false;
+	}
+
+	/**
 	 * Finds an element in the dom using the jquery formant IE #id .class tag (will only ever return one)
 	 * @param elementTarget
 	 * @param errorTrap {boolean} Trap any errors?
@@ -983,9 +1013,15 @@ class Queue {
 	getElements(elementTarget) {
 		let self=this;
 		let element=document.querySelectorAll(elementTarget);
+		/*
+		 * IE11 BUG, check for non arrays and attempt to convert
+		 */
+		if(!Array.isArray(element)) {
+			 element = Array.from(element);
+		}
 		if(element!==null)
 			return element;
-		self.reportError(&apos;Dom Element find failed for [&apos;+elementTarget+&apos;]&apos;,&apos;Follow up calls that rely on this will fail&apos;);
+		self.reportError(&apos;Dom Element(s) find failed for [&apos;+elementTarget+&apos;]&apos;,&apos;Follow up calls that rely on this will fail&apos;);
 		return false;
 	}
 
@@ -1038,7 +1074,7 @@ class Queue {
 	 * @param message
 	 */
 	reportError(error,message) {
-		console.info(self.DEFINE.CONSOLE_LINE);
+		console.info(this.DEFINE.CONSOLE_LINE);
 		console.error(&apos;Error:&apos;, error);
 		console.info(message);
 	}
@@ -1050,6 +1086,20 @@ class Queue {
 	 */
 	deepCopy(inputObject) {
 		return JSON.parse(JSON.stringify(inputObject));
+	}
+
+	/**
+	 * Adds classes for browser type to body for use in CSS
+	 */
+	browserClasses() {
+		let self=this;
+		let bodyElement=self.getElement(&quot;body&quot;);
+		if(!!window.MSInputMethodContext &amp;&amp; !!document.documentMode)
+			bodyElement.classList.add(&quot;ie11&quot;);
+		if(navigator.vendor.match(/apple/i))
+			bodyElement.classList.add(&quot;safari&quot;);
+		if(navigator.vendor.match(/google/i))
+			bodyElement.classList.add(&quot;chrome&quot;);
 	}
 
 }
