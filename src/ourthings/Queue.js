@@ -80,7 +80,7 @@ class Queue {
 		self.defaultTimer = 10;
 
 
-		console.clear();
+		//console.clear();
 		console.info(self.DEFINE.CONSOLE_LINE);
 		console.info('ourthings framework https://github.com/nautoguide/ourthings');
 

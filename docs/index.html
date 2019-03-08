@@ -82,8 +82,10 @@ import Templates from '@nautoguide/ourthings/Queueable/Templates';
 import Elements from '@nautoguide/ourthings/Queueable/Elements';
 
 let queue;
-queue = new Queue({"templates":Templates,"elements":Elements});
-window.queue=queue;</code></pre>
+document.addEventListener("DOMContentLoaded", function(event) {
+    queue = new Queue({"templates":Templates,"elements":Elements});
+    window.queue=queue;
+});</code></pre>
 	<p>And last of all add a webpack.config.js</p>
 	<pre><code>const path = require('path');
 
@@ -106,6 +108,8 @@ path: path.resolve(__dirname, 'site/dist')
 	command guide bellow and then checkout the API reference for all included queueables</p>
 	<h2>Command reference</h2>
 	<a href="commands.html">Commands</a>
+    <h2>Making Queueables</h2>
+    <a href="queueables.html">Queueables</a>
 	<h2>Example command queues</h2>
 	<a href="examples.html">Examples</a>
 	<h2>API reference guide</h2>

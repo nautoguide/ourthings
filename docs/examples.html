@@ -57,5 +57,12 @@ That content can be the result of an API call, a template to dump out some clien
 &lt;button class=&quot;form-save&quot;&gt;&lt;/button&gt;
 
 @elements.formActivityMonitor({&quot;targetId&quot;:&quot;.functionMonitor&quot;,&quot;buttonId&quot;:&quot;.form-save&quot;,&quot;modifiedClass&quot;:&quot;modified&quot;},{&quot;queueRun&quot;:&quot;Instant&quot;});</code></pre>
+
+<h2>API Calls</h2>
+
+<p>Post request, execute and load response into session memory</p>
+
+<pre><code>@api.post({"url":"{{config.api}}api/","body":{"_token":"{{!memory.token.value}}","schema":"{{!memory.sub.value}}","app":"boundary","api":"reporting_api","action":"run_report","payload":{"scenario_id":"{{memory.selectedShare.value.scenario_id}}","report_name":"polling_district_shared_scenario_details"}}},{"memoryMode":"Session","memoryName":"reportAPI",&quot;queueRun&quot;:&quot;Instant&quot;});
+</code></pre>
 </body>
 </html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Ourthings</title>
+    <link type="text/css" rel="stylesheet" href="css/docs.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/darcula.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+<body>
+<h1><img src="images/logo.png"></h1>
+
+<h1>Making Queueables</h1>
+
+<h2>Into</h2>
+
+<p>Ourthings comes with a default set of queueables but inevitably you need to write some functions to perform specific actions. It will be
+tempting to just embed javascript in the page as you normally would but this should be avoided as it defeats the core principals of the framework</p>
+
+<p>Creating a queueable is simple, lets write a print function</p>
+
+<pre><code>import Queueable from "@nautoguide/ourthings/Queueable";
+class MyThing extends Queueable {
+    print(pid,json) {
+        window.print();
+        this.finished(pid, this.queue.DEFINE.FIN_OK);
+    }
+}
+
+export default Digital;
+</code></pre>
+<p>Now in your build add in your custom queueable</p>
+
+<pre><code>import MyThing from './MyThing';
+queue = new Queue({
+		"templates": Templates,
+		"elements": Elements,
+		"mything":"MyThing"
+	});
+</code></pre>
+
+<p>Build your webpack and you can now access your queueable like you would built ins</p>
+<pre><code>&lt;button class=&quot;option-control&quot; @digital.print();&gt;
+    &lt;span class=&quot;option-print&quot;&gt;Print&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+</body>
+</html>

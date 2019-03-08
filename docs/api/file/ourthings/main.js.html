@@ -37,8 +37,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -60,12 +60,21 @@ import Browser from &apos;./Queueable/Browser&apos;;
 /*
  * Start the queue engine
  */
-let queue = new Queue({&quot;internals&quot;:Internals,&quot;templates&quot;:Templates,&quot;elements&quot;:Elements,&quot;api&quot;:Api,&quot;openlayers&quot;:Openlayers,&quot;browser&quot;:Browser});
-
+let queue;
 /*
- * If you want debug put the queue into the window
+ * Wait until the dom is loaded (IE11 will not have the dom in place before it starts running scripts
  */
-window.queue=queue;
+document.addEventListener(&quot;DOMContentLoaded&quot;, function(event) {
+	queue = new Queue({
+		&quot;internals&quot;: Internals,
+		&quot;templates&quot;: Templates,
+		&quot;elements&quot;: Elements,
+		&quot;api&quot;: Api,
+		&quot;openlayers&quot;: Openlayers,
+		&quot;browser&quot;: Browser
+	});
+	window.queue = queue;
+});
 </code></pre>
 
 </div>
