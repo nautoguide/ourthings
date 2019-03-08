@@ -308,26 +308,28 @@ class Queue {
 		/*
 		 * Look for {{#for}} loops and execute them
 		 */
-		const forRegex=/{{#for (.*?)}}([\s\S]*?){{\/for}}/;
+		const forRegex=/{{#([0-9]{0,1})for (.*?)}}([\s\S]*?){{\/for}}/;
 		while (match = forRegex.exec(template)) {
 			let subTemplate='';
+			match[1]=match[1]||0;
 			/*
 			 * loop through making sub templates as we go
 			 *
 			 * NOTE: you will notice that all index methods use 0 at the end. This is to allow
 			 * for the future when we implement for loops in for loops.
 			 */
-			for(let i in eval(match[1])) {
+			for(let i in eval(match[2])) {
 				/*
 				 * Set a memory 'for0' containing the index. This is an object as in the future it
 				 * may be expanded to contain other info.
 				 */
-				this.setMemory("for0",{"index":i},"session");
+				this.setMemory("for"+match[1],{"index":i},"session");
 				/*
 				 * This is the quick way to reference in the index but will now work for templates that
 				 * include others
 				 */
-				let incrementMatch=match[2].replace(/#loop0/g,i);
+				let loopRegex=new RegExp("#loop"+match[1],"g");
+				let incrementMatch=match[3].replace(loopRegex,i);
 				/*
 				 * Process the template
 				 */
