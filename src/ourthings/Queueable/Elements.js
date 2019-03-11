@@ -114,24 +114,39 @@ export default class Elements extends Queueable {
 	 * Monitor element(s) in a form and add classes on change
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
-	 * @param {string} json.targetId - Dom target
-	 * @param {string} json.html - HTML to add
+	 * @param {string} json.targetId - elements(s) to monitor for change and add modifiedClass to
+	 * @param {string} json.buttonId - Element to add modifiedClass to
+	 * @param {string} json.modifiedClass - Class to add to modified elements
+	 * @param {string} json.modifiedQueue - Prepared queue to run when element modified
 	 *
 	 * @example
 	 * elements.formActivityMonitor({"targetId":".functionMonitor","buttonId":".form-save","modifiedClass":"modified"});
 
 	 */
 	formActivityMonitor(pid,json) {
+		let self=this;
 		let elements=this.queue.getElements(json.targetId);
-		let button=this.queue.getElement(json.buttonId);
+		let button;
+		if(json.buttonId)
+			button=this.queue.getElement(json.buttonId);
 		elements.forEach(function(element) {
 			element.addEventListener("change", function () {
-				this.classList.add(json.modifiedClass);
-				button.classList.add(json.modifiedClass);
+				if(json.modifiedQueue)
+					self.queue.execute(json.modifiedQueue,{});
+				if(json.modifiedClass) {
+					this.classList.add(json.modifiedClass);
+					if(button)
+						button.classList.add(json.modifiedClass);
+				}
 			});
 			element.addEventListener("keypress", function () {
-				this.classList.add(json.modifiedClass);
-				button.classList.add(json.modifiedClass);
+				if(json.modifiedQueue)
+					self.queue.execute(json.modifiedQueue,{});
+				if(json.modifiedClass) {
+					this.classList.add(json.modifiedClass);
+					if(button)
+						button.classList.add(json.modifiedClass);
+				}
 			});
 
 		});
