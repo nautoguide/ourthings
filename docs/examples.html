@@ -25,6 +25,40 @@
 -openlayers.addLayer({"name":"data","type":"vector"});
 </code></pre>
 
+<h2>Include Openlayers styles</h2>
+
+<p>Make a style file, styles/reports.js</p>
+
+<pre><code>
+import {Circle, Fill, Stroke, Style} from 'ol/style.js';
+export function reportStyle(feature, resolution) {
+	return [
+		new Style({
+
+			fill: new Fill({
+				color: [247,182,67,0.8]
+			}),
+			stroke: new Stroke({
+				color: [0, 0, 0, 1],
+				width: 2,
+			})
+		})
+	]
+}
+</code></pre>
+
+<p>Include it in your build</p>
+
+<pre><code>
+import {reportStyle} from '../../site/map-styles/reports';
+window.styles={};
+window.styles.reportStyle=reportStyle;
+</code></pre>
+
+<p>Select it for a layer</p>
+<pre><code>-openlayers.addLayer({"map":"map_1","name":"data","type":"vector","geojson":"memory.reportAPI.value.API.Response[{{memory.for0.value.index}}].map","style":"styles.reportStyle"});
+</code></pre>
+
 <h2>Button to hide a DIV</h2>
 
 <p>Most UI related event involve clicking something and having an action performed and form a big part of ourthings. A

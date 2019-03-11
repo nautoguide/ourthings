@@ -53,6 +53,41 @@ for a list of these</p>
 	<li><span class="arg">memoryName</span> If this function outputs to memory set the name</li>
 	<li><span class="arg">memoryMode</span> Memory will last [Garbage|Session|Permanent]</li>
 </ul>
+<p>Queues are lists of all these commands that are run in sequence. The @ indicates the start of a list and - indicates the children of that queue, IE commands that will be
+run subsequently. Each command only executes after successful execution of the previous command and memory by default is maintained while the queue is running so each command has
+access to anything the previous command may have set. This can be over written by the memoryMode setting to make it available to other queues or make the data permanent</p>
+
+<h4>Memory</h4>
+<p>To understand how memory works take this example</p>
+
+<pre><code>@api.post({"url":"https://loginapi.com","body":{"token":"{{!memory.token.value}}"},{"memoryMode":"Session","memoryName":"sessionAPI"});
+-internals.ifqueue({"statement":"memory.sessionAPI.value.API.Code!==200","name":"loggedOut"});
+
+@browser.redirect({"location":"index.html"},{"queuePrepare":"loggedOut"});</code></pre>
+
+<p>Here we call a login api as soon as the page loads and send it the value {{!memory.token.value}} to check we have a valid token. The API response is loaded into memory
+	where we have defined "memoryMode":"Session","memoryName":"sessionAPI". How does that token value exist as we just loaded the page? When we logged in previously we set
+	that value to be permanent using:</p>
+<pre><code>-internals.setMemory({"name":"token","value":"{{!memory.sessionAPI.value.API.token}}","mode":"Permanent"});</code></pre>
+
+<p>The internals.ifqueue checks the API to see if we have a valid session. If we don't we run a prepared queue that will redirect us to the login page</p>
+
+<h4>Prepared queues</h4>
+
+<p>Prepared queues are 'things' we want to do at some later stage, possibly called from multiple locations or as the result of events. In the above example we
+used a simple one to logout as user by redirecting them another page. We might want to call that for a lot of places and while its only one command in practice
+we probably want to warn the user and do a host of other stuff so we group the commands up and call them, think of it like a function call</p>
+<pre><code>&lt;!-- Make a descision to call a prepared queue --&gt;
+@internals.ifqueue({&quot;statement&quot;:&quot;memory.sessionAPI.value.API.Code!==200&quot;,&quot;name&quot;:&quot;loggedOut&quot;});
+
+&lt;!-- Just call a queue --&gt;
+@internals.execute({&quot;name&quot;:&quot;loggedOut&quot;});
+
+&lt;!-- Our prepared queue --&gt;
+@browser.redirect({&quot;location&quot;:&quot;index.html&quot;},{&quot;queuePrepare&quot;:&quot;loggedOut&quot;});</code></pre>
+
+
+</code></pre>
 <h3>Template Commands</h3>
 <h4>{{}} & {{!}} & {{!^}}</h4>
 <p>Ourthings supports a standard template of {{something}} that allows the execution of javascript
