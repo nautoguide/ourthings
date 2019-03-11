@@ -374,7 +374,10 @@ class Queue {
 		 */
 		const commandRegex=/{{([^!|~].*?)}}/;
 		while (match = commandRegex.exec(template)) {
-			template = template.replace(match[0], self.varsParser(match[1]));
+			if(match[1][0]==='^')
+				template = template.replace('"'+match[0]+'"', self.varsParser(match[1].substring(1,match[1].length)));
+			else
+				template = template.replace(match[0], self.varsParser(match[1]));
 		}
 		return template;
 	}
