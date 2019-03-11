@@ -343,7 +343,7 @@ class Queue {
 		const ifRegex=/{{#if (.*?)}}([\s\S]*?){{\/if}}/;
 		while (match = ifRegex.exec(template)) {
 			const elseRegex=/{{#if .*?}}([\s\S]*?){{else}}([\s\S]*?){{\/if}}/g;
-			let ifResult=self.templateVars(match[2]);
+			let ifResult=match[2];
 			let elseResult='';
 			let elseMatch=elseRegex.exec(match[0]);
 			if(elseMatch) {
