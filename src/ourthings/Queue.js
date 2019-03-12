@@ -1059,6 +1059,8 @@ class Queue {
 			bodyElement.classList.add("safari");
 		if(navigator.vendor.match(/google/i))
 			bodyElement.classList.add("chrome");
+		if(navigator.userAgent.indexOf("Edge") > -1)
+			bodyElement.classList.add("edge");
 	}
 
 }
