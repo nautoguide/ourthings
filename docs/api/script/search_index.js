@@ -894,6 +894,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#addgeojson",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addGeojson",
+    "ourthings/Queueable/Openlayers.js~Openlayers#addGeojson",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#addlayer",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addLayer",
     "ourthings/Queueable/Openlayers.js~Openlayers#addLayer",

@@ -283,6 +283,35 @@ export default class Openlayers extends Queueable {
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
+
+	/**
+	 * Add geojson features to a layer
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @param {string} json.gejson - geojson
+	 */
+	addGeojson(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			"map":"default",
+			"layer":"default",
+			"geojson":{}
+		},json);
+		let map=self.maps[options.map].object;
+		let layer=self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+
+		let view = map.getView();
+
+		let features = new GeoJSON().readFeatures(options.geojson, {
+			featureProjection: view.getProjection().getCode()
+		});
+		source.addFeatures(features);
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
 	/**
 	 * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well
 	 * @param pid

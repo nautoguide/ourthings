@@ -354,26 +354,28 @@ class Queue {
 		/*
 		 * Look for {{#for}} loops and execute them
 		 */
-		const forRegex=/{{#for (.*?)}}([\s\S]*?){{\/for}}/;
+		const forRegex=/{{#([0-9]{0,1})for (.*?)}}([\s\S]*?){{\/for}}/;
 		while (match = forRegex.exec(template)) {
 			let subTemplate=&apos;&apos;;
+			match[1]=match[1]||0;
 			/*
 			 * loop through making sub templates as we go
 			 *
 			 * NOTE: you will notice that all index methods use 0 at the end. This is to allow
 			 * for the future when we implement for loops in for loops.
 			 */
-			for(let i in eval(match[1])) {
+			for(let i in eval(match[2])) {
 				/*
 				 * Set a memory &apos;for0&apos; containing the index. This is an object as in the future it
 				 * may be expanded to contain other info.
 				 */
-				this.setMemory(&quot;for0&quot;,{&quot;index&quot;:i},&quot;session&quot;);
+				this.setMemory(&quot;for&quot;+match[1],{&quot;index&quot;:i},&quot;session&quot;);
 				/*
 				 * This is the quick way to reference in the index but will now work for templates that
 				 * include others
 				 */
-				let incrementMatch=match[2].replace(/#loop0/g,i);
+				let loopRegex=new RegExp(&quot;#loop&quot;+match[1],&quot;g&quot;);
+				let incrementMatch=match[3].replace(loopRegex,i);
 				/*
 				 * Process the template
 				 */
@@ -387,7 +389,7 @@ class Queue {
 		const ifRegex=/{{#if (.*?)}}([\s\S]*?){{\/if}}/;
 		while (match = ifRegex.exec(template)) {
 			const elseRegex=/{{#if .*?}}([\s\S]*?){{else}}([\s\S]*?){{\/if}}/g;
-			let ifResult=self.templateVars(match[2]);
+			let ifResult=match[2];
 			let elseResult=&apos;&apos;;
 			let elseMatch=elseRegex.exec(match[0]);
 			if(elseMatch) {
@@ -418,7 +420,10 @@ class Queue {
 		 */
 		const commandRegex=/{{([^!|~].*?)}}/;
 		while (match = commandRegex.exec(template)) {
-			template = template.replace(match[0], self.varsParser(match[1]));
+			if(match[1][0]===&apos;^&apos;)
+				template = template.replace(&apos;&quot;&apos;+match[0]+&apos;&quot;&apos;, self.varsParser(match[1].substring(1,match[1].length)));
+			else
+				template = template.replace(match[0], self.varsParser(match[1]));
 		}
 		return template;
 	}
