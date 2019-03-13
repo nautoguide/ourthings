@@ -1055,6 +1055,8 @@ class Queue {
 		let bodyElement=self.getElement("body");
 		if(!!window.MSInputMethodContext && !!document.documentMode)
 			bodyElement.classList.add("ie11");
+		else
+			bodyElement.classList.add("notie11");
 		if(navigator.vendor.match(/apple/i))
 			bodyElement.classList.add("safari");
 		if(navigator.vendor.match(/google/i))
