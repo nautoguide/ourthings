@@ -1007,6 +1007,7 @@ class Queue {
 	 * @param indent
 	 */
 	prettyCommandObject(commandObject,indent) {
+		let self=this;
 		let string='';
 		for(var i=0;i<indent;i++) {
 			string+=' ';
@@ -1051,18 +1052,20 @@ class Queue {
 	 * Adds classes for browser type to body for use in CSS
 	 */
 	browserClasses() {
-		let self=this;
-		let bodyElement=self.getElement("body");
-		if(!!window.MSInputMethodContext && !!document.documentMode)
+		let self = this;
+		let bodyElement = self.getElement("body");
+		if (!!window.MSInputMethodContext && !!document.documentMode)
 			bodyElement.classList.add("ie11");
 		else
 			bodyElement.classList.add("notie11");
-		if(navigator.vendor.match(/apple/i))
+		if (navigator.vendor.match(/apple/i))
 			bodyElement.classList.add("safari");
-		if(navigator.vendor.match(/google/i))
+		if (navigator.vendor.match(/google/i))
 			bodyElement.classList.add("chrome");
-		if(navigator.userAgent.indexOf("Edge") > -1)
+		if (navigator.userAgent.indexOf("Edge") > -1)
 			bodyElement.classList.add("edge");
+		if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1)
+			bodyElement.classList.add("firefox");
 	}
 
 }
