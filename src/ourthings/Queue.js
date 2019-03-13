@@ -372,7 +372,7 @@ class Queue {
 		/*
 		 * Process any other {{}} tags but not if they have {{!}} as those are done on command exec time
 		 */
-		const commandRegex=/{{([^!|~].*?)}}/;
+		const commandRegex=/{{([^!|~](.|\n)*?)}}/;
 		while (match = commandRegex.exec(template)) {
 			if(match[1][0]==='^')
 				template = template.replace('"'+match[0]+'"', self.varsParser(match[1].substring(1,match[1].length)));
@@ -435,7 +435,7 @@ class Queue {
 	 * @return {string}
 	 */
 	templateParse(template,commands) {
-		let commandRegex=/[@\-]([a-zA-Z]*?\.[a-zA-Z0-9]*?\(.*\);)/;
+		let commandRegex=/[@\-]([a-zA-Z]*?\.[a-zA-Z0-9]*?\((.|\n)*?(\);))/;
 		let match=undefined;
 		let parentCommand;
 		let isParent;
