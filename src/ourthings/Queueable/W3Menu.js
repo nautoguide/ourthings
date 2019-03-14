@@ -18,7 +18,7 @@ export default class W3Menu extends Queueable {
 	 * Start the menu on assigned targetId
 	 *
 	 * @description W3C Menu implementation see: https://www.w3.org/TR/wai-aria-practices/examples/menu-button/menu-button-actions.html
-	 * 
+	 *
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
 	 * @param {string} json.targetId - Dom target of the w3c menu html
@@ -569,8 +569,8 @@ PopupMenuAction.prototype.open = function () {
 	// set CSS properties
 	this.domNode.style.display = 'block';
 	this.domNode.style.position = 'absolute';
-	this.domNode.style.top  = rect.height + 'px';
-	this.domNode.style.left = '0px';
+	//this.domNode.style.top  = rect.height + 'px';
+	//this.domNode.style.left = '0px';
 
 	// set aria-expanded attribute
 	this.controller.domNode.setAttribute('aria-expanded', 'true');
