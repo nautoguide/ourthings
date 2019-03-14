@@ -11,6 +11,8 @@ import OSM from 'ol/source/OSM';
 import WMTS from 'ol/source/WMTS';
 import WMTSTileGrid  from 'ol/tilegrid/WMTS';
 import WKT from 'ol/format/WKT';
+import Overlay from 'ol/Overlay';
+
 
 import GeoJSON from 'ol/format/GeoJSON';
 import {fromLonLat,units,epsg3857,epsg4326} from 'ol/proj';
@@ -45,12 +47,13 @@ register(proj4);
 export default class Openlayers extends Queueable {
 
 	init(queue) {
-		let self=this;
-		self.queue=queue;
+		this.queue=queue;
 
-		self.maps={};
+		this.maps={};
 
-		self.ready=true;
+		this.overlays={};
+
+		this.ready=true;
 	}
 
 	/**
@@ -375,5 +378,47 @@ export default class Openlayers extends Queueable {
 		}
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
+	}
+
+	/**
+	 * Add an overlay to the map
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.overlay - Overlay reference to use
+	 * @param {string} json.targetId - Dom element to use
+	 * @param {string} json.coordinate - coordinate to place it (Event.coordinate) for clicks
+	 * @example
+	 * openlayers.addOverlay({"targetId":"#functionOverlay","coordinate":"{{!^JSON.stringify(memory.simpleSelect.value.mapBrowserEvent.coordinate)}}"});
+	 */
+	addOverlay(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			"map":"default",
+			"overlay":"default",
+		},json);
+
+		/*
+		 * Pull all our resources
+		 */
+		let map=self.maps[options.map].object;
+
+		/*
+		 * Get the html element from the dom
+		 */
+		let element=self.queue.getElement(options.targetId);
+		/*
+		 * Make an overlay and add to the map
+		 */
+		let overlay = new Overlay({
+			element: element,
+			position: options.coordinate
+		});
+		map.addOverlay(overlay);
+		/*
+		 * Store the object for later (destroy)
+		 */
+		self.overlays[options.overlay]={"object":overlay};
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 }
