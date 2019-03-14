@@ -338,7 +338,13 @@ export default class Openlayers extends Queueable {
 		 * Get the extent of the features and fit them
 		 */
 		let extent = source.getExtent();
-		view.fit(extent, map.getSize());
+		try {
+			view.fit(extent, map.getSize());
+		} catch(e) {
+			/*
+			 * Fitting when the layer is empty fill cause OL to error
+			 */
+		}
 
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
