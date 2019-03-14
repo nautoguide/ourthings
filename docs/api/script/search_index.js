@@ -810,6 +810,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/elements.js~elements#setinputvalue",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-setInputValue",
+    "ourthings/Queueable/Elements.js~Elements#setInputValue",
+    "method"
+  ],
+  [
     "ourthings/queueable/elements.js~elements#toggleclass",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-toggleClass",
     "ourthings/Queueable/Elements.js~Elements#toggleClass",
