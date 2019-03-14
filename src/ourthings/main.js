@@ -10,6 +10,7 @@ import Elements from './Queueable/Elements';
 import Api from './Queueable/Api';
 import Openlayers from './Queueable/Openlayers';
 import Browser from './Queueable/Browser';
+import W3Menu from './Queueable/W3Menu';
 
 /*
  * Start the queue engine
@@ -25,7 +26,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		"elements": Elements,
 		"api": Api,
 		"openlayers": Openlayers,
-		"browser": Browser
+		"browser": Browser,
+		"w3menu": W3Menu
 	});
 	window.queue = queue;
 });
