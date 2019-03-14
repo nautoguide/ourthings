@@ -106,6 +106,13 @@ class Queue {
 		 * Load any perm cookies
 		 */
 		self._loadMemoryPerms();
+
+		/*
+		 * Load any url params into memoery
+		 */
+
+		self.setMemory("urlParams",self.urlToJson(),"Session");
+
 		/*
 		 * Load the templates.json
 		 *
@@ -1066,6 +1073,20 @@ class Queue {
 			bodyElement.classList.add("edge");
 		if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1)
 			bodyElement.classList.add("firefox");
+	}
+
+	/**
+	 * Get any params from the url in json format
+	 */
+	urlToJson() {
+		let url = location.search;
+		let query = url.substr(1);
+		let result = {};
+		query.split("&").forEach(function(part) {
+			let item = part.split("=");
+			result[item[0]] = decodeURIComponent(item[1]);
+		});
+		return result;
 	}
 
 }
