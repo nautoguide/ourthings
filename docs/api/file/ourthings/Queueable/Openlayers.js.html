@@ -53,11 +53,16 @@ import {getWidth, getTopLeft} from &apos;ol/extent.js&apos;;
 import TileLayer from &apos;ol/layer/Tile&apos;;
 import VectorLayer from &apos;ol/layer/Vector&apos;;
 import VectorSource from &apos;ol/source/Vector&apos;;
+import {Point} from &apos;ol/geom.js&apos;;
+
 import Disposable from &apos;ol/Disposable&apos;;
 import OSM from &apos;ol/source/OSM&apos;;
 import WMTS from &apos;ol/source/WMTS&apos;;
 import WMTSTileGrid  from &apos;ol/tilegrid/WMTS&apos;;
 import WKT from &apos;ol/format/WKT&apos;;
+import Overlay from &apos;ol/Overlay&apos;;
+import {unByKey} from &apos;ol/Observable&apos;
+
 
 import GeoJSON from &apos;ol/format/GeoJSON&apos;;
 import {fromLonLat,units,epsg3857,epsg4326} from &apos;ol/proj&apos;;
@@ -92,12 +97,13 @@ register(proj4);
 export default class Openlayers extends Queueable {
 
 	init(queue) {
-		let self=this;
-		self.queue=queue;
+		this.queue=queue;
 
-		self.maps={};
+		this.maps={};
 
-		self.ready=true;
+		this.overlays={};
+
+		this.ready=true;
 	}
 
 	/**
@@ -286,16 +292,79 @@ export default class Openlayers extends Queueable {
 		let self=this;
 		let options=Object.assign({
 			&quot;map&quot;:&quot;default&quot;,
-			condition:&quot;click&quot;
+			&quot;mode&quot;:&quot;on&quot;
 		},json);
 
-		let selector = new Select();
-		self.maps[options.map].object.addInteraction(selector);
-		selector.on(&apos;select&apos;, function(e) {
-			console.log(e);
+		let map=self.maps[options.map].object;
+		let selectObj=self.maps[options.map].selectObj;
+		if(selectObj===undefined) {
+			selectObj = new Select();
+			self.maps[options.map].selectObj=selectObj;
+			selectObj.on(&apos;select&apos;, selectFunction);
+		}
+		if(options.mode===&apos;on&apos;) {
+
+			map.addInteraction(selectObj);
+		} else {
+			map.removeInteraction(selectObj);
+		}
+
+		function selectFunction(e) {
 			self.queue.setMemory(&apos;simpleSelect&apos;, e, &quot;Session&quot;);
-			self.queue.execute(&quot;simpleSelect&quot;);
-		});
+			if (e.deselected.length &gt; 0 &amp;&amp; e.selected.length === 0)
+				self.queue.execute(&quot;simpleDeselect&quot;);
+			if (e.selected.length &gt; 0)
+				self.queue.execute(&quot;simpleSelect&quot;);
+		}
+
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Use the standard click event
+	 * @param pid
+	 * @param json
+	 *
+	 * @description This select control uses the default openlayers model. Useful for applications with no overlapping features. It does not support selecting hidden features
+	 */
+	simpleClick(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;map&quot;:&quot;default&quot;,
+			&quot;mode&quot;:&quot;on&quot;
+		},json);
+		let map=self.maps[options.map].object;
+		if(options.mode===&quot;on&quot;) {
+			self.maps[options.map].clickTag=map.on(&apos;click&apos;, clickfunction);
+		} else {
+			console.log(&apos;off&apos;);
+			unByKey(self.maps[options.map].clickTag);
+		}
+
+		function clickfunction(e) {
+			console.log(e);
+			self.queue.setMemory(&apos;simpleClick&apos;, e, &quot;Session&quot;);
+			self.queue.execute(&quot;simpleClick&quot;);
+		}
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Convert a coordinate to WKT
+	 * @param pid
+	 * @param json
+	 *
+	 * @description Convert a coordinate to WKT
+	 */
+	coordinatesToWKT(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;map&quot;:&quot;default&quot;,
+		},json);
+		let olGeom = new Point(options.coordinate);
+		let format = new WKT();
+		let wktRepresenation  = format.writeGeometry(olGeom);
+		self.set(pid,{&quot;wkt&quot;:wktRepresenation});
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
@@ -359,6 +428,30 @@ export default class Openlayers extends Queueable {
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
+
+	/**
+	 *  TODO this is not working
+	 * @param pid
+	 * @param json
+	 */
+	centerOnCoordinates(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;map&quot;:&quot;default&quot;,
+		},json);
+		/*
+		 * Pull all our resources
+		 */
+		let map=self.maps[options.map].object;
+		let view = map.getView();
+		//let point = json.feature.getGeometry();
+		//view.centerOn(point.getCoordinates());
+		let size=map.getSize();
+		view.centerOn(json.coordinates,size,[0,0]);
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
+
 	/**
 	 * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well
 	 * @param pid
@@ -385,7 +478,13 @@ export default class Openlayers extends Queueable {
 		 * Get the extent of the features and fit them
 		 */
 		let extent = source.getExtent();
-		view.fit(extent, map.getSize());
+		try {
+			view.fit(extent, map.getSize());
+		} catch(e) {
+			/*
+			 * Fitting when the layer is empty fill cause OL to error
+			 */
+		}
 
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
@@ -414,6 +513,75 @@ export default class Openlayers extends Queueable {
 			let map = self.maps[options.map].object;
 			map.updateSize();
 		}
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Add an overlay to the map
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.overlay - Overlay reference to use
+	 * @param {string} json.targetId - Dom element to use
+	 * @param {string} json.coordinate - coordinate to place it (Event.coordinate) for clicks
+	 * @example
+	 * openlayers.addOverlay({&quot;targetId&quot;:&quot;#functionOverlay&quot;,&quot;coordinate&quot;:&quot;{{!^JSON.stringify(memory.simpleSelect.value.mapBrowserEvent.coordinate)}}&quot;});
+	 */
+	addOverlay(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;map&quot;:&quot;default&quot;,
+			&quot;overlay&quot;:&quot;default&quot;,
+		},json);
+
+		/*
+		 * Pull all our resources
+		 */
+		let map=self.maps[options.map].object;
+
+		/*
+		 * Get the html element from the dom
+		 */
+		let element=self.queue.getElement(options.targetId);
+		/*
+		 * Make an overlay and add to the map
+		 */
+		let overlay = new Overlay({
+			element: element,
+			position: options.coordinate
+		});
+		map.addOverlay(overlay);
+		/*
+		 * Store the object for later (destroy)
+		 */
+		self.overlays[options.overlay]={&quot;object&quot;:overlay};
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Remove an overlay from the map
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.overlay - Overlay reference to use
+	 * @example
+	 * openlayers.removeOverlay();
+	 */
+	removeOverlay(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;map&quot;:&quot;default&quot;,
+			&quot;overlay&quot;:&quot;default&quot;,
+		},json);
+
+		/*
+		 * Pull all our resources
+		 */
+		let map=self.maps[options.map].object;
+
+		map.removeOverlay(self.overlays[options.overlay].object);
+		delete self.overlays[options.overlay];
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}

@@ -6,6 +6,8 @@ import {getWidth, getTopLeft} from 'ol/extent.js';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
+import {Point} from 'ol/geom.js';
+
 import Disposable from 'ol/Disposable';
 import OSM from 'ol/source/OSM';
 import WMTS from 'ol/source/WMTS';
@@ -261,8 +263,6 @@ export default class Openlayers extends Queueable {
 		}
 
 		function selectFunction(e) {
-			console.log(e);
-
 			self.queue.setMemory('simpleSelect', e, "Session");
 			if (e.deselected.length > 0 && e.selected.length === 0)
 				self.queue.execute("simpleDeselect");
@@ -300,6 +300,26 @@ export default class Openlayers extends Queueable {
 			self.queue.execute("simpleClick");
 		}
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Convert a coordinate to WKT
+	 * @param pid
+	 * @param json
+	 *
+	 * @description Convert a coordinate to WKT
+	 */
+	coordinatesToWKT(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			"map":"default",
+		},json);
+		let olGeom = new Point(options.coordinate);
+		let format = new WKT();
+		let wktRepresenation  = format.writeGeometry(olGeom);
+		self.set(pid,{"wkt":wktRepresenation});
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
 	}
 
 	/**

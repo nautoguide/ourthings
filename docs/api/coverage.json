@@ -1,7 +1,7 @@
 {
-  "coverage": "61.94%",
-  "expectCount": 134,
-  "actualCount": 83,
+  "coverage": "62.06%",
+  "expectCount": 145,
+  "actualCount": 90,
   "files": {
     "ourthings/Define.js": {
       "expectCount": 26,
@@ -46,8 +46,8 @@
       "undocumentLines": []
     },
     "ourthings/Queueable/Elements.js": {
-      "expectCount": 7,
-      "actualCount": 7,
+      "expectCount": 9,
+      "actualCount": 9,
       "undocumentLines": []
     },
     "ourthings/Queueable/Files.js": {
@@ -61,10 +61,14 @@
       "undocumentLines": []
     },
     "ourthings/Queueable/Openlayers.js": {
-      "expectCount": 12,
-      "actualCount": 11,
+      "expectCount": 21,
+      "actualCount": 16,
       "undocumentLines": [
-        47
+        52,
+        53,
+        55,
+        57,
+        59
       ]
     },
     "ourthings/Queueable/Templates.js": {
@@ -76,35 +80,35 @@
       "expectCount": 31,
       "actualCount": 2,
       "undocumentLines": [
-        72,
-        96,
-        124,
-        156,
-        166,
-        170,
-        176,
-        181,
-        210,
-        231,
-        249,
-        325,
-        331,
-        335,
-        340,
-        346,
-        383,
-        428,
-        471,
-        475,
-        482,
-        500,
-        504,
-        508,
-        520,
-        532,
-        556,
-        567,
-        581
+        70,
+        94,
+        122,
+        154,
+        164,
+        168,
+        174,
+        179,
+        208,
+        229,
+        247,
+        323,
+        329,
+        333,
+        338,
+        344,
+        381,
+        426,
+        469,
+        473,
+        480,
+        498,
+        502,
+        506,
+        518,
+        530,
+        554,
+        565,
+        579
       ]
     },
     "ourthings/Queueable.js": {

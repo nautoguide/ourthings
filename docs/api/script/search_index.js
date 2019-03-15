@@ -822,6 +822,18 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/elements.js~elements#scrollcontainertoelement",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-scrollContainerToElement",
+    "ourthings/Queueable/Elements.js~Elements#scrollContainerToElement",
+    "method"
+  ],
+  [
+    "ourthings/queueable/elements.js~elements#scrollintoview",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-scrollIntoView",
+    "ourthings/Queueable/Elements.js~Elements#scrollIntoView",
+    "method"
+  ],
+  [
     "ourthings/queueable/elements.js~elements#setinputvalue",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-setInputValue",
     "ourthings/Queueable/Elements.js~Elements#setInputValue",
@@ -930,9 +942,63 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#addoverlay",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addOverlay",
+    "ourthings/Queueable/Openlayers.js~Openlayers#addOverlay",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#centeroncoordinates",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-centerOnCoordinates",
+    "ourthings/Queueable/Openlayers.js~Openlayers#centerOnCoordinates",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#coordinatestowkt",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-coordinatesToWKT",
+    "ourthings/Queueable/Openlayers.js~Openlayers#coordinatesToWKT",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#init",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-init",
     "ourthings/Queueable/Openlayers.js~Openlayers#init",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#maps",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-member-maps",
+    "ourthings/Queueable/Openlayers.js~Openlayers#maps",
+    "member"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#overlays",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-member-overlays",
+    "ourthings/Queueable/Openlayers.js~Openlayers#overlays",
+    "member"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#queue",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-member-queue",
+    "ourthings/Queueable/Openlayers.js~Openlayers#queue",
+    "member"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#ready",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-member-ready",
+    "ourthings/Queueable/Openlayers.js~Openlayers#ready",
+    "member"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#removeoverlay",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-removeOverlay",
+    "ourthings/Queueable/Openlayers.js~Openlayers#removeOverlay",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#simpleclick",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-simpleClick",
+    "ourthings/Queueable/Openlayers.js~Openlayers#simpleClick",
     "method"
   ],
   [
