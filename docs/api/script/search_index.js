@@ -948,9 +948,9 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "ourthings/queueable/openlayers.js~openlayers#centeroncoordinates",
-    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-centerOnCoordinates",
-    "ourthings/Queueable/Openlayers.js~Openlayers#centerOnCoordinates",
+    "ourthings/queueable/openlayers.js~openlayers#centeroncoordinate",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-centerOnCoordinate",
+    "ourthings/Queueable/Openlayers.js~Openlayers#centerOnCoordinate",
     "method"
   ],
   [

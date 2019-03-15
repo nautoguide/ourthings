@@ -383,11 +383,16 @@ export default class Openlayers extends Queueable {
 	}
 
 	/**
-	 *  TODO this is not working
+	 *  Move the map so the cords are at the center
 	 * @param pid
 	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.coordinate - Coordinate to use
+	 * @example
+	 * openlayers.centerOnCoordinate({"coordinate":"{{!^JSON.stringify(memory.simpleSelect.value.selected[0].getGeometry().getCoordinates())}}"});
+	 *
 	 */
-	centerOnCoordinates(pid,json) {
+	centerOnCoordinate(pid,json) {
 		let self=this;
 		let options=Object.assign({
 			"map":"default",
@@ -397,10 +402,8 @@ export default class Openlayers extends Queueable {
 		 */
 		let map=self.maps[options.map].object;
 		let view = map.getView();
-		//let point = json.feature.getGeometry();
-		//view.centerOn(point.getCoordinates());
 		let size=map.getSize();
-		view.centerOn(json.coordinates,size,[0,0]);
+		view.centerOn(json.coordinate,size,[size[0]/2,size[1]/2]);
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
