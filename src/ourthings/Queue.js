@@ -506,9 +506,9 @@ class Queue {
 				let event=commandObj[command].options.queueEvent||"click";
 				let events=event.split(",");
 				for(let e in events) {
-					element.addEventListener(events[e], function () {
+					element.addEventListener(events[e], function (e) {
 						commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
-						self.commandsQueue.apply(self, [[commandObj[command]]]);
+						self.commandsQueue.apply(self, [[commandObj[command]], e]);
 					});
 				}
 			}
@@ -521,15 +521,18 @@ class Queue {
 	 * marked as instant. IE ready to execute
 	 *
 	 * @param commandObj
+	 * @param event {Event} Optional input event that triggered the command to be run
 	 */
-	commandsQueue(commandObj) {
+	commandsQueue(commandObj, event = null) {
 		let self=this;
 		for(let command in commandObj) {
 			/*
 			 * DEFINE.COMMAND_INSTANT, basically a queue item we need to get running
 			 */
 			if(commandObj[command].options.queueRun===self.DEFINE.COMMAND_INSTANT) {
-				self.queue.push(self.deepCopy(commandObj[command]));
+				const preparedCommand = self.deepCopy(commandObj[command]);
+				preparedCommand.event = event;
+				self.queue.push(preparedCommand);
 			}
 			/*
 			 * Is the a prepare queue that will be triggered at some later stage
@@ -618,10 +621,10 @@ class Queue {
 						 *  Launch the function as a time out (so we get control back)
 						 */
 						if (sync) {
-							self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
-						} else {
+                            self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self.queue[item].event, self]);
+                        } else {
 							setTimeout(function () {
-								self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
+                                self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self.queue[item].event, self]);
 							}, self.queue[item].options.queueTimer);
 						}
 					}

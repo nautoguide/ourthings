@@ -552,9 +552,9 @@ class Queue {
 				let event=commandObj[command].options.queueEvent||&quot;click&quot;;
 				let events=event.split(&quot;,&quot;);
 				for(let e in events) {
-					element.addEventListener(events[e], function () {
+					element.addEventListener(events[e], function (e) {
 						commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
-						self.commandsQueue.apply(self, [[commandObj[command]]]);
+						self.commandsQueue.apply(self, [[commandObj[command]], e]);
 					});
 				}
 			}
@@ -567,15 +567,18 @@ class Queue {
 	 * marked as instant. IE ready to execute
 	 *
 	 * @param commandObj
+	 * @param event {Event} Optional input event that triggered the command to be run
 	 */
-	commandsQueue(commandObj) {
+	commandsQueue(commandObj, event = null) {
 		let self=this;
 		for(let command in commandObj) {
 			/*
 			 * DEFINE.COMMAND_INSTANT, basically a queue item we need to get running
 			 */
 			if(commandObj[command].options.queueRun===self.DEFINE.COMMAND_INSTANT) {
-				self.queue.push(self.deepCopy(commandObj[command]));
+				const preparedCommand = self.deepCopy(commandObj[command]);
+				preparedCommand.event = event;
+				self.queue.push(preparedCommand);
 			}
 			/*
 			 * Is the a prepare queue that will be triggered at some later stage
@@ -664,10 +667,10 @@ class Queue {
 						 *  Launch the function as a time out (so we get control back)
 						 */
 						if (sync) {
-							self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
-						} else {
+                            self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self.queue[item].event, self]);
+                        } else {
 							setTimeout(function () {
-								self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
+                                self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self.queue[item].event, self]);
 							}, self.queue[item].options.queueTimer);
 						}
 					}
@@ -1053,6 +1056,7 @@ class Queue {
 	 * @param indent
 	 */
 	prettyCommandObject(commandObject,indent) {
+		let self=this;
 		let string=&apos;&apos;;
 		for(var i=0;i&lt;indent;i++) {
 			string+=&apos; &apos;;
@@ -1097,14 +1101,20 @@ class Queue {
 	 * Adds classes for browser type to body for use in CSS
 	 */
 	browserClasses() {
-		let self=this;
-		let bodyElement=self.getElement(&quot;body&quot;);
-		if(!!window.MSInputMethodContext &amp;&amp; !!document.documentMode)
+		let self = this;
+		let bodyElement = self.getElement(&quot;body&quot;);
+		if (!!window.MSInputMethodContext &amp;&amp; !!document.documentMode)
 			bodyElement.classList.add(&quot;ie11&quot;);
-		if(navigator.vendor.match(/apple/i))
+		else
+			bodyElement.classList.add(&quot;notie11&quot;);
+		if (navigator.vendor.match(/apple/i))
 			bodyElement.classList.add(&quot;safari&quot;);
-		if(navigator.vendor.match(/google/i))
+		if (navigator.vendor.match(/google/i))
 			bodyElement.classList.add(&quot;chrome&quot;);
+		if (navigator.userAgent.indexOf(&quot;Edge&quot;) &gt; -1)
+			bodyElement.classList.add(&quot;edge&quot;);
+		if (navigator.userAgent.toLowerCase().indexOf(&apos;firefox&apos;) &gt; -1)
+			bodyElement.classList.add(&quot;firefox&quot;);
 	}
 
 }

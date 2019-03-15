@@ -38,8 +38,9 @@ class Queueable {
 	 * @param pid
 	 * @param command
 	 * @param json
+	 * @param event {Event} An option event parameter if the command was ran through a user event
 	 */
-	start(pid,command,json) {
+	start(pid,command,json,event=null) {
 		let self=this;
 		if(self[command]&&typeof self[command] === 'function') {
 
@@ -51,7 +52,7 @@ class Queueable {
 			/*
 			 * Execute
 			 */
-			self[command](pid, json);
+			self[command](pid, json, event);
 		} else {
 			self.queue.finished(pid,self.queue.DEFINE.FIN_ERROR,'No such command ['+command+']');
 		}
