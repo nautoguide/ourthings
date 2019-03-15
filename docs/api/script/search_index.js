@@ -60,6 +60,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "@nautoguide/ourthings/ourthings/queueable/w3menu.js~w3menu",
+    "class/ourthings/Queueable/W3Menu.js~W3Menu.html",
+    "<span>W3Menu</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/W3Menu.js</span>",
+    "class"
+  ],
+  [
     "ourthings/.external-ecmascript.js~array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
     "ourthings/.external-ecmascript.js~Array",
@@ -702,6 +708,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queue.js~queue#urltojson",
+    "class/ourthings/Queue.js~Queue.html#instance-method-urlToJson",
+    "ourthings/Queue.js~Queue#urlToJson",
+    "method"
+  ],
+  [
     "ourthings/queue.js~queue#varsparser",
     "class/ourthings/Queue.js~Queue.html#instance-method-varsParser",
     "ourthings/Queue.js~Queue#varsParser",
@@ -807,6 +819,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/elements.js~elements#removeclass",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-removeClass",
     "ourthings/Queueable/Elements.js~Elements#removeClass",
+    "method"
+  ],
+  [
+    "ourthings/queueable/elements.js~elements#setinputvalue",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-setInputValue",
+    "ourthings/Queueable/Elements.js~Elements#setInputValue",
     "method"
   ],
   [
@@ -945,6 +963,18 @@ window.esdocSearchIndex = [
     "ourthings/queueable/templates.js~templates#render",
     "class/ourthings/Queueable/Templates.js~Templates.html#instance-method-render",
     "ourthings/Queueable/Templates.js~Templates#render",
+    "method"
+  ],
+  [
+    "ourthings/queueable/w3menu.js",
+    "file/ourthings/Queueable/W3Menu.js.html",
+    "ourthings/Queueable/W3Menu.js",
+    "file"
+  ],
+  [
+    "ourthings/queueable/w3menu.js~w3menu#initmenu",
+    "class/ourthings/Queueable/W3Menu.js~W3Menu.html#instance-method-initMenu",
+    "ourthings/Queueable/W3Menu.js~W3Menu#initMenu",
     "method"
   ],
   [

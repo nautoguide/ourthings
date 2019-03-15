@@ -39,6 +39,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/W3Menu.js~W3Menu.html">W3Menu</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -153,6 +154,24 @@ export default class Elements extends Queueable {
 		let self=this;
 		let element=self.queue.getElement(json.targetId);
 		element.innerHTML=json.html;
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Set the value of an input field
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.value - value to set
+	 *
+	 * @example
+	 * elements.setInputValue({&quot;targetId&quot;:&quot;#username&quot;,&quot;value&quot;:&quot;Hello World&quot;});
+
+	 */
+	setInputValue(pid,json) {
+		let self=this;
+		let element=self.queue.getElement(json.targetId);
+		element.value=json.value;
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 

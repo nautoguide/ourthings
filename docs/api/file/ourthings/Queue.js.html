@@ -39,6 +39,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/W3Menu.js~W3Menu.html">W3Menu</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -152,6 +153,13 @@ class Queue {
 		 * Load any perm cookies
 		 */
 		self._loadMemoryPerms();
+
+		/*
+		 * Load any url params into memoery
+		 */
+
+		self.setMemory(&quot;urlParams&quot;,self.urlToJson(),&quot;Session&quot;);
+
 		/*
 		 * Load the templates.json
 		 *
@@ -418,7 +426,7 @@ class Queue {
 		/*
 		 * Process any other {{}} tags but not if they have {{!}} as those are done on command exec time
 		 */
-		const commandRegex=/{{([^!|~].*?)}}/;
+		const commandRegex=/{{([^!|~](.|\n)*?)}}/;
 		while (match = commandRegex.exec(template)) {
 			if(match[1][0]===&apos;^&apos;)
 				template = template.replace(&apos;&quot;&apos;+match[0]+&apos;&quot;&apos;, self.varsParser(match[1].substring(1,match[1].length)));
@@ -481,7 +489,7 @@ class Queue {
 	 * @return {string}
 	 */
 	templateParse(template,commands) {
-		let commandRegex=/[@\-]([a-zA-Z]*?\.[a-zA-Z0-9]*?\(.*\);)/;
+		let commandRegex=/[@\-]([a-zA-Z0-9]*?\.[a-zA-Z0-9]*?\((.|\n)*?(\);))/;
 		let match=undefined;
 		let parentCommand;
 		let isParent;
@@ -1053,6 +1061,7 @@ class Queue {
 	 * @param indent
 	 */
 	prettyCommandObject(commandObject,indent) {
+		let self=this;
 		let string=&apos;&apos;;
 		for(var i=0;i&lt;indent;i++) {
 			string+=&apos; &apos;;
@@ -1097,14 +1106,34 @@ class Queue {
 	 * Adds classes for browser type to body for use in CSS
 	 */
 	browserClasses() {
-		let self=this;
-		let bodyElement=self.getElement(&quot;body&quot;);
-		if(!!window.MSInputMethodContext &amp;&amp; !!document.documentMode)
+		let self = this;
+		let bodyElement = self.getElement(&quot;body&quot;);
+		if (!!window.MSInputMethodContext &amp;&amp; !!document.documentMode)
 			bodyElement.classList.add(&quot;ie11&quot;);
-		if(navigator.vendor.match(/apple/i))
+		else
+			bodyElement.classList.add(&quot;notie11&quot;);
+		if (navigator.vendor.match(/apple/i))
 			bodyElement.classList.add(&quot;safari&quot;);
-		if(navigator.vendor.match(/google/i))
+		if (navigator.vendor.match(/google/i))
 			bodyElement.classList.add(&quot;chrome&quot;);
+		if (navigator.userAgent.indexOf(&quot;Edge&quot;) &gt; -1)
+			bodyElement.classList.add(&quot;edge&quot;);
+		if (navigator.userAgent.toLowerCase().indexOf(&apos;firefox&apos;) &gt; -1)
+			bodyElement.classList.add(&quot;firefox&quot;);
+	}
+
+	/**
+	 * Get any params from the url in json format
+	 */
+	urlToJson() {
+		let url = location.search;
+		let query = url.substr(1);
+		let result = {};
+		query.split(&quot;&amp;&quot;).forEach(function(part) {
+			let item = part.split(&quot;=&quot;);
+			result[item[0]] = decodeURIComponent(item[1]);
+		});
+		return result;
 	}
 
 }

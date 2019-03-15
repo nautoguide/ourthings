@@ -106,6 +106,13 @@ class Queue {
 		 * Load any perm cookies
 		 */
 		self._loadMemoryPerms();
+
+		/*
+		 * Load any url params into memoery
+		 */
+
+		self.setMemory("urlParams",self.urlToJson(),"Session");
+
 		/*
 		 * Load the templates.json
 		 *
@@ -435,7 +442,7 @@ class Queue {
 	 * @return {string}
 	 */
 	templateParse(template,commands) {
-		let commandRegex=/[@\-]([a-zA-Z]*?\.[a-zA-Z0-9]*?\((.|\n)*?(\);))/;
+		let commandRegex=/[@\-]([a-zA-Z0-9]*?\.[a-zA-Z0-9]*?\((.|\n)*?(\);))/;
 		let match=undefined;
 		let parentCommand;
 		let isParent;
@@ -1007,6 +1014,7 @@ class Queue {
 	 * @param indent
 	 */
 	prettyCommandObject(commandObject,indent) {
+		let self=this;
 		let string='';
 		for(var i=0;i<indent;i++) {
 			string+=' ';
@@ -1051,18 +1059,34 @@ class Queue {
 	 * Adds classes for browser type to body for use in CSS
 	 */
 	browserClasses() {
-		let self=this;
-		let bodyElement=self.getElement("body");
-		if(!!window.MSInputMethodContext && !!document.documentMode)
+		let self = this;
+		let bodyElement = self.getElement("body");
+		if (!!window.MSInputMethodContext && !!document.documentMode)
 			bodyElement.classList.add("ie11");
 		else
 			bodyElement.classList.add("notie11");
-		if(navigator.vendor.match(/apple/i))
+		if (navigator.vendor.match(/apple/i))
 			bodyElement.classList.add("safari");
-		if(navigator.vendor.match(/google/i))
+		if (navigator.vendor.match(/google/i))
 			bodyElement.classList.add("chrome");
-		if(navigator.userAgent.indexOf("Edge") > -1)
+		if (navigator.userAgent.indexOf("Edge") > -1)
 			bodyElement.classList.add("edge");
+		if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1)
+			bodyElement.classList.add("firefox");
+	}
+
+	/**
+	 * Get any params from the url in json format
+	 */
+	urlToJson() {
+		let url = location.search;
+		let query = url.substr(1);
+		let result = {};
+		query.split("&").forEach(function(part) {
+			let item = part.split("=");
+			result[item[0]] = decodeURIComponent(item[1]);
+		});
+		return result;
 	}
 
 }
