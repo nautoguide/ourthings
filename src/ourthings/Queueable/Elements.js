@@ -111,6 +111,24 @@ export default class Elements extends Queueable {
 	}
 
 	/**
+	 * Set the value of an input field
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.value - value to set
+	 *
+	 * @example
+	 * elements.setInputValue({"targetId":"#username","value":"Hello World"});
+
+	 */
+	setInputValue(pid,json) {
+		let self=this;
+		let element=self.queue.getElement(json.targetId);
+		element.value=json.value;
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
 	 * Monitor element(s) in a form and add classes on change
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments

@@ -39,6 +39,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/W3Menu.js~W3Menu.html">W3Menu</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -56,6 +57,7 @@ import Elements from &apos;./Queueable/Elements&apos;;
 import Api from &apos;./Queueable/Api&apos;;
 import Openlayers from &apos;./Queueable/Openlayers&apos;;
 import Browser from &apos;./Queueable/Browser&apos;;
+import W3Menu from &apos;./Queueable/W3Menu&apos;;
 
 /*
  * Start the queue engine
@@ -71,7 +73,8 @@ document.addEventListener(&quot;DOMContentLoaded&quot;, function(event) {
 		&quot;elements&quot;: Elements,
 		&quot;api&quot;: Api,
 		&quot;openlayers&quot;: Openlayers,
-		&quot;browser&quot;: Browser
+		&quot;browser&quot;: Browser,
+		&quot;w3menu&quot;: W3Menu
 	});
 	window.queue = queue;
 });
