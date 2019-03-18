@@ -245,7 +245,8 @@ export default class Openlayers extends Queueable {
 		let self=this;
 		let options=Object.assign({
 			"map":"default",
-			"mode":"on"
+			"mode":"on",
+			"prefix":""
 		},json);
 
 		let map=self.maps[options.map].object;
@@ -263,11 +264,11 @@ export default class Openlayers extends Queueable {
 		}
 
 		function selectFunction(e) {
-			self.queue.setMemory('simpleSelect', e, "Session");
+			self.queue.setMemory(options.prefix+'simpleSelect', e, "Session");
 			if (e.deselected.length > 0 && e.selected.length === 0)
-				self.queue.execute("simpleDeselect");
+				self.queue.execute(options.prefix+"simpleDeselect");
 			if (e.selected.length > 0)
-				self.queue.execute("simpleSelect");
+				self.queue.execute(options.prefix+"simpleSelect");
 		}
 
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
