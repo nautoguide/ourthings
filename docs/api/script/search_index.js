@@ -954,6 +954,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#clearlayer",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-clearLayer",
+    "ourthings/Queueable/Openlayers.js~Openlayers#clearLayer",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#coordinatestowkt",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-coordinatesToWKT",
     "ourthings/Queueable/Openlayers.js~Openlayers#coordinatesToWKT",
