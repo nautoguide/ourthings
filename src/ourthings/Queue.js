@@ -264,9 +264,10 @@ class Queue {
 	 * @param targetId {string|false} - Place in the dom the put the result. In the event of false we process without dom
 	 * @return {boolean|string} - success status
 	 */
-	templateProcessor(templateId, targetId) {
+	templateProcessor(templateId, targetId,mode) {
 		let self=this;
 		let commands=[];
+		mode=mode||self.DEFINE.RENDER_INSERT;
 
 		let templateDom = self.getElement(templateId);
 		if(!templateDom) {
@@ -297,7 +298,7 @@ class Queue {
 				self.reportError('No valid target','I have no valid target to render the template ['+templateId+'] to, check the targetId ['+targetId+']');
 				return false;
 			}
-			self.renderToDom(targetDom,parsedTemplate);
+			self.renderToDom(targetDom,parsedTemplate,mode);
 			self.commandsBind(commands);
 		}
 
@@ -325,12 +326,13 @@ class Queue {
 			 * NOTE: you will notice that all index methods use 0 at the end. This is to allow
 			 * for the future when we implement for loops in for loops.
 			 */
+			let increment=0;
 			for(let i in eval(match[2])) {
 				/*
 				 * Set a memory 'for0' containing the index. This is an object as in the future it
 				 * may be expanded to contain other info.
 				 */
-				this.setMemory("for"+match[1],{"index":i},"session");
+				this.setMemory("for"+match[1],{"index":i,"increment":increment},"session");
 				/*
 				 * This is the quick way to reference in the index but will now work for templates that
 				 * include others
@@ -341,6 +343,7 @@ class Queue {
 				 * Process the template
 				 */
 				subTemplate+=self.templateVars(incrementMatch,i);
+				increment++;
 			}
 			template = template.replace(match[0], subTemplate);
 		}
@@ -922,6 +925,9 @@ class Queue {
 		switch(mode) {
 			case self.DEFINE.RENDER_INSERT:
 				domObject.innerHTML=text;
+				break;
+			case self.DEFINE.RENDER_APPEND:
+				domObject.insertAdjacentHTML('beforeend',text);
 				break;
 		}
 		return true;
