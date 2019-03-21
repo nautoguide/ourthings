@@ -20,13 +20,15 @@ class Templates extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.template - dom id of template to use
 	 * @param {string} [json.target] - dom id of render target
+	 * @param {string} [json.mode] - "insert|append"
 	 * @example
 	 * templates.render({"targetId":"content","template":"basic"});
 	 */
 	render(pid,json) {
 		let self=this;
+		json.mode=json.mode||"insert";
 		self.set(pid,json);
-		if(!self.queue.templateProcessor(json.template,json.targetId))
+		if(!self.queue.templateProcessor(json.template,json.targetId,json.mode))
 			self.finished(pid,self.queue.DEFINE.FIN_ERROR,'Could not render template');
 		else
 			self.finished(pid,self.queue.DEFINE.FIN_OK);

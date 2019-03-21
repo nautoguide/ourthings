@@ -59,6 +59,10 @@ export default class Files extends Queueable {
 	filePreview(pid,json) {
 		let self=this;
 		let element=self.queue.getElement(json.targetId);
+		element.addEventListener('drop', function () {
+			console.log('DROP!');
+		});
+
 		element.addEventListener('change', function () {
 			let file=this.files[0];
 			let reader = new FileReader();
@@ -123,7 +127,9 @@ export default class Files extends Queueable {
 			.catch(function (error) {
 				console.info(self.queue.DEFINE.CONSOLE_LINE);
 				console.error('Error:', error);
-				console.info("Warning this error is probably fatal as I have no templates to load")
+				console.info("Warning this error is probably fatal as I have no templates to load");
+				self.finished(pid,self.queue.DEFINE.FIN_ERROR,'S3 upload error');
+
 			});
 
 	}

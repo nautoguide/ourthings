@@ -25,8 +25,8 @@ export default class Define {
 		/**
 		 * Render modes
 		 */
-		this.RENDER_INSERT = 0;
-		this.RENDER_APPEND = 1;
+		this.RENDER_INSERT = "insert";
+		this.RENDER_APPEND = "append";
 
 
 		/**

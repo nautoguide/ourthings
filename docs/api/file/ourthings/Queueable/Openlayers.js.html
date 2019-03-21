@@ -292,7 +292,8 @@ export default class Openlayers extends Queueable {
 		let self=this;
 		let options=Object.assign({
 			&quot;map&quot;:&quot;default&quot;,
-			&quot;mode&quot;:&quot;on&quot;
+			&quot;mode&quot;:&quot;on&quot;,
+			&quot;prefix&quot;:&quot;&quot;
 		},json);
 
 		let map=self.maps[options.map].object;
@@ -310,11 +311,11 @@ export default class Openlayers extends Queueable {
 		}
 
 		function selectFunction(e) {
-			self.queue.setMemory(&apos;simpleSelect&apos;, e, &quot;Session&quot;);
+			self.queue.setMemory(options.prefix+&apos;simpleSelect&apos;, e, &quot;Session&quot;);
 			if (e.deselected.length &gt; 0 &amp;&amp; e.selected.length === 0)
-				self.queue.execute(&quot;simpleDeselect&quot;);
+				self.queue.execute(options.prefix+&quot;simpleDeselect&quot;);
 			if (e.selected.length &gt; 0)
-				self.queue.execute(&quot;simpleSelect&quot;);
+				self.queue.execute(options.prefix+&quot;simpleSelect&quot;);
 		}
 
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
@@ -331,7 +332,8 @@ export default class Openlayers extends Queueable {
 		let self=this;
 		let options=Object.assign({
 			&quot;map&quot;:&quot;default&quot;,
-			&quot;mode&quot;:&quot;on&quot;
+			&quot;mode&quot;:&quot;on&quot;,
+			&quot;prefix&quot;:&quot;&quot;
 		},json);
 		let map=self.maps[options.map].object;
 		if(options.mode===&quot;on&quot;) {
@@ -343,8 +345,8 @@ export default class Openlayers extends Queueable {
 
 		function clickfunction(e) {
 			console.log(e);
-			self.queue.setMemory(&apos;simpleClick&apos;, e, &quot;Session&quot;);
-			self.queue.execute(&quot;simpleClick&quot;);
+			self.queue.setMemory(options.prefix+&apos;simpleClick&apos;, e, &quot;Session&quot;);
+			self.queue.execute(options.prefix+&quot;simpleClick&quot;);
 		}
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
