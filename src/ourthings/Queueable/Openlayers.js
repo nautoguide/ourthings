@@ -384,6 +384,26 @@ export default class Openlayers extends Queueable {
 
 	}
 
+    /**
+     * Remove the data from a layer on the map.
+     * @param pid
+     * @param json
+     * @param {string} json.map - Map reference
+     * @param {string} json.layer - Layer to clear
+     */
+    clearLayer(pid, json) {
+        let self=this;
+        let options=Object.assign({
+            "map":"default",
+            "layer":"default"
+        },json);
+        let layer=self.maps[options.map].layers[options.layer];
+        let source = layer.getSource();
+        source.clear();
+        self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+    }
+
 	/**
 	 *  Move the map so the cords are at the center
 	 * @param pid
