@@ -73,6 +73,11 @@ class Queue {
 		self.ucid = 0;
 
 		/*
+		 * When processing out loops this keeps a track
+		 */
+		self.activeLoops=[];
+
+		/*
 		 * Default time for process to be executed after
 		 * TODO Platform test / tune
 		 * @type {number}
@@ -314,12 +319,24 @@ class Queue {
 		let match;
 		let self=this;
 		/*
+		 * Fix any multi level loop references
+		 */
+
+		for(let i in self.activeLoops) {
+			//debugger;
+			let loopRegex = new RegExp("#loop" + i, "g");
+			template = template.replace(loopRegex, memory['for'+i].value.index);
+		}
+
+
+		/*
 		 * Look for {{#for}} loops and execute them
 		 */
 		const forRegex=/{{#([0-9]{0,1})for (.*?)}}([\s\S]*?){{\/for}}/;
 		while (match = forRegex.exec(template)) {
 			let subTemplate='';
 			match[1]=match[1]||0;
+			self.activeLoops.push(match[1]);
 			/*
 			 * loop through making sub templates as we go
 			 *
@@ -334,8 +351,7 @@ class Queue {
 				 */
 				this.setMemory("for"+match[1],{"index":i,"increment":increment},"session");
 				/*
-				 * This is the quick way to reference in the index but will now work for templates that
-				 * include others
+				 * This is the quick way to reference in the index using #loop[n]
 				 */
 				let loopRegex=new RegExp("#loop"+match[1],"g");
 				let incrementMatch=match[3].replace(loopRegex,i);
@@ -346,6 +362,7 @@ class Queue {
 				increment++;
 			}
 			template = template.replace(match[0], subTemplate);
+			self.activeLoops.shift();
 		}
 		/*
 	 	 * Process {{#if}}
