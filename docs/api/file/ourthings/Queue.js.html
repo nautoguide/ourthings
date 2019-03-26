@@ -835,6 +835,15 @@ class Queue {
 	}
 
 	/**
+	 * Delete a memory element
+	 * @param name
+	 */
+	deleteMemory(name) {
+		window.memory[name]={};
+		delete window.memory[name];
+	}
+
+	/**
 	 * Is there any work to do in the queue?
 	 */
 	isWork() {

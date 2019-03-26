@@ -576,6 +576,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queue.js~queue#deletememory",
+    "class/ourthings/Queue.js~Queue.html#instance-method-deleteMemory",
+    "ourthings/Queue.js~Queue#deleteMemory",
+    "method"
+  ],
+  [
     "ourthings/queue.js~queue#execute",
     "class/ourthings/Queue.js~Queue.html#instance-method-execute",
     "ourthings/Queue.js~Queue#execute",
