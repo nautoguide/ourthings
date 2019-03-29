@@ -104,7 +104,7 @@ Menubutton.prototype.init = function () {
 
 	// initialize pop up menus
 
-	var popupMenu = document.getElementById(this.domNode.getAttribute('aria-controls'));
+	let popupMenu = document.getElementById(this.domNode.getAttribute('aria-controls'));
 
 	if (popupMenu) {
 		if (popupMenu.getAttribute('aria-activedescendant')) {
@@ -321,7 +321,9 @@ PopupMenuItem.prototype.handleKeydown = function (event) {
 };
 
 PopupMenuItem.prototype.handleClick = function (event) {
-	queue.execute(event.srcElement.getAttribute('data-queue'));
+	let attr=event.srcElement.getAttribute('data-queue');
+	if(attr)
+		queue.execute(attr);
 	this.popupMenu.setFocusToController();
 	this.popupMenu.close(true);
 };
