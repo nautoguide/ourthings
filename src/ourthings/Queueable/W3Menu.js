@@ -252,7 +252,6 @@ PopupMenuItem.prototype.init = function () {
 PopupMenuItem.prototype.handleKeydown = function (event) {
 	let flag = false,
 		char = event.key;
-
 	function isPrintableCharacter (str) {
 		return str.length === 1 && str.match(/\S/);
 	}
@@ -329,8 +328,17 @@ PopupMenuItem.prototype.handleClick = function (event) {
 	let attr=event.srcElement.getAttribute('data-queue');
 	if(attr)
 		queue.execute(attr);
+
+	/*
+	 * Is this a keyboard event? If so and the data-click attr is set we send a click to the element.
+	 * This will trigger the ourthings event that is bound to it
+	 */
+	let click=event.srcElement.getAttribute('data-click');
+	if(click==="true"&&event.keyCode)
+		event.srcElement.click();
 	this.popupMenu.setFocusToController();
-	this.popupMenu.close(true);
+	this.popupMenu.close(true)
+
 };
 
 PopupMenuItem.prototype.handleFocus = function (event) {
