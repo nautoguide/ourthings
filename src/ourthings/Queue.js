@@ -533,10 +533,19 @@ class Queue {
 				let event=commandObj[command].options.queueEvent||"click";
 				let events=event.split(",");
 				for(let e in events) {
-					element.addEventListener(events[e], function () {
-						commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
-						self.commandsQueue.apply(self, [[commandObj[command]]]);
-					});
+					if(events[e]==='handleKeydown') {
+						element.addEventListener(events[e], function (e) {
+							if(e.keyCode===self.DEFINE.KEY_RETURN) {
+								commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
+								self.commandsQueue.apply(self, [[commandObj[command]]]);
+							}
+						});
+					} else {
+						element.addEventListener(events[e], function () {
+							commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
+							self.commandsQueue.apply(self, [[commandObj[command]]]);
+						});
+					}
 				}
 			}
 		}

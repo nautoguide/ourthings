@@ -66,5 +66,11 @@ export default class Define {
 		this.CONSOLE_COL_RED="background: #222; color: #f00";
 		this.CONSOLE_COL_AMBER="background: #222; color: #f90";
 
+		/**
+		 *  Keycodes
+		 */
+
+		this.KEY_RETURN=13;
+
 	}
 }
