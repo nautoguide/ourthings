@@ -25,8 +25,8 @@ export default class Define {
 		/**
 		 * Render modes
 		 */
-		this.RENDER_INSERT = 0;
-		this.RENDER_APPEND = 1;
+		this.RENDER_INSERT = "insert";
+		this.RENDER_APPEND = "append";
 
 
 		/**
@@ -65,6 +65,12 @@ export default class Define {
 		this.CONSOLE_COL_GREEN="background: #222; color: #0f0";
 		this.CONSOLE_COL_RED="background: #222; color: #f00";
 		this.CONSOLE_COL_AMBER="background: #222; color: #f90";
+
+		/**
+		 *  Keycodes
+		 */
+
+		this.KEY_RETURN=13;
 
 	}
 }

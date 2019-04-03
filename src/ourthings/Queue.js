@@ -73,6 +73,11 @@ class Queue {
 		self.ucid = 0;
 
 		/*
+		 * When processing out loops this keeps a track
+		 */
+		self.activeLoops=[];
+
+		/*
 		 * Default time for process to be executed after
 		 * TODO Platform test / tune
 		 * @type {number}
@@ -264,9 +269,10 @@ class Queue {
 	 * @param targetId {string|false} - Place in the dom the put the result. In the event of false we process without dom
 	 * @return {boolean|string} - success status
 	 */
-	templateProcessor(templateId, targetId) {
+	templateProcessor(templateId, targetId,mode) {
 		let self=this;
 		let commands=[];
+		mode=mode||self.DEFINE.RENDER_INSERT;
 
 		let templateDom = self.getElement(templateId);
 		if(!templateDom) {
@@ -297,7 +303,7 @@ class Queue {
 				self.reportError('No valid target','I have no valid target to render the template ['+templateId+'] to, check the targetId ['+targetId+']');
 				return false;
 			}
-			self.renderToDom(targetDom,parsedTemplate);
+			self.renderToDom(targetDom,parsedTemplate,mode);
 			self.commandsBind(commands);
 		}
 
@@ -313,27 +319,39 @@ class Queue {
 		let match;
 		let self=this;
 		/*
+		 * Fix any multi level loop references
+		 */
+
+		for(let i in self.activeLoops) {
+			//debugger;
+			let loopRegex = new RegExp("#loop" + i, "g");
+			template = template.replace(loopRegex, memory['for'+i].value.index);
+		}
+
+
+		/*
 		 * Look for {{#for}} loops and execute them
 		 */
 		const forRegex=/{{#([0-9]{0,1})for (.*?)}}([\s\S]*?){{\/for}}/;
 		while (match = forRegex.exec(template)) {
 			let subTemplate='';
 			match[1]=match[1]||0;
+			self.activeLoops.push(match[1]);
 			/*
 			 * loop through making sub templates as we go
 			 *
 			 * NOTE: you will notice that all index methods use 0 at the end. This is to allow
 			 * for the future when we implement for loops in for loops.
 			 */
+			let increment=0;
 			for(let i in eval(match[2])) {
 				/*
 				 * Set a memory 'for0' containing the index. This is an object as in the future it
 				 * may be expanded to contain other info.
 				 */
-				this.setMemory("for"+match[1],{"index":i},"session");
+				this.setMemory("for"+match[1],{"index":i,"increment":increment},"session");
 				/*
-				 * This is the quick way to reference in the index but will now work for templates that
-				 * include others
+				 * This is the quick way to reference in the index using #loop[n]
 				 */
 				let loopRegex=new RegExp("#loop"+match[1],"g");
 				let incrementMatch=match[3].replace(loopRegex,i);
@@ -341,8 +359,10 @@ class Queue {
 				 * Process the template
 				 */
 				subTemplate+=self.templateVars(incrementMatch,i);
+				increment++;
 			}
 			template = template.replace(match[0], subTemplate);
+			self.activeLoops.shift();
 		}
 		/*
 	 	 * Process {{#if}}
@@ -513,10 +533,19 @@ class Queue {
 				let event=commandObj[command].options.queueEvent||"click";
 				let events=event.split(",");
 				for(let e in events) {
-					element.addEventListener(events[e], function () {
-						commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
-						self.commandsQueue.apply(self, [[commandObj[command]]]);
-					});
+					if(events[e]==='handleKeydown') {
+						element.addEventListener(events[e], function (e) {
+							if(e.keyCode===self.DEFINE.KEY_RETURN) {
+								commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
+								self.commandsQueue.apply(self, [[commandObj[command]]]);
+							}
+						});
+					} else {
+						element.addEventListener(events[e], function () {
+							commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
+							self.commandsQueue.apply(self, [[commandObj[command]]]);
+						});
+					}
 				}
 			}
 		}
@@ -785,6 +814,15 @@ class Queue {
 	}
 
 	/**
+	 * Delete a memory element
+	 * @param name
+	 */
+	deleteMemory(name) {
+		window.memory[name]={};
+		delete window.memory[name];
+	}
+
+	/**
 	 * Is there any work to do in the queue?
 	 */
 	isWork() {
@@ -922,6 +960,9 @@ class Queue {
 		switch(mode) {
 			case self.DEFINE.RENDER_INSERT:
 				domObject.innerHTML=text;
+				break;
+			case self.DEFINE.RENDER_APPEND:
+				domObject.insertAdjacentHTML('beforeend',text);
 				break;
 		}
 		return true;

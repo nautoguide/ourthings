@@ -11,6 +11,7 @@ import Api from './Queueable/Api';
 import Openlayers from './Queueable/Openlayers';
 import Browser from './Queueable/Browser';
 import W3Menu from './Queueable/W3Menu';
+import Mapbox from "./Queueable/Mapbox";
 
 /*
  * Start the queue engine
@@ -27,7 +28,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		"api": Api,
 		"openlayers": Openlayers,
 		"browser": Browser,
-		"w3menu": W3Menu
+		"w3menu": W3Menu,
+		"mapbox" : Mapbox
 	});
 	window.queue = queue;
 });

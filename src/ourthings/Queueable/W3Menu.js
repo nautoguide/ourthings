@@ -28,10 +28,13 @@ export default class W3Menu extends Queueable {
 	 */
 	initMenu(pid,json) {
 		let self=this;
+		let options=Object.assign({
+			"hover":true
+		},json);
 		let element=self.queue.getElement(json.targetId);
 		element.setAttribute("data-bound","true");
 		let menubutton = new Menubutton(element);
-		menubutton.init();
+		menubutton.init(options);
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 }
@@ -91,7 +94,7 @@ let Menubutton = function (domNode) {
 	});
 };
 
-Menubutton.prototype.init = function () {
+Menubutton.prototype.init = function (options) {
 
 	this.domNode.setAttribute('aria-haspopup', 'true');
 
@@ -99,12 +102,14 @@ Menubutton.prototype.init = function () {
 	this.domNode.addEventListener('click', this.handleClick.bind(this));
 	this.domNode.addEventListener('focus', this.handleFocus.bind(this));
 	this.domNode.addEventListener('blur', this.handleBlur.bind(this));
-	this.domNode.addEventListener('mouseover', this.handleMouseover.bind(this));
-	this.domNode.addEventListener('mouseout', this.handleMouseout.bind(this));
+	if(options.hover)
+		this.domNode.addEventListener('mouseover', this.handleMouseover.bind(this));
+	if(options.hover)
+		this.domNode.addEventListener('mouseout', this.handleMouseout.bind(this));
 
 	// initialize pop up menus
 
-	var popupMenu = document.getElementById(this.domNode.getAttribute('aria-controls'));
+	let popupMenu = document.getElementById(this.domNode.getAttribute('aria-controls'));
 
 	if (popupMenu) {
 		if (popupMenu.getAttribute('aria-activedescendant')) {
@@ -247,7 +252,6 @@ PopupMenuItem.prototype.init = function () {
 PopupMenuItem.prototype.handleKeydown = function (event) {
 	let flag = false,
 		char = event.key;
-
 	function isPrintableCharacter (str) {
 		return str.length === 1 && str.match(/\S/);
 	}
@@ -321,9 +325,20 @@ PopupMenuItem.prototype.handleKeydown = function (event) {
 };
 
 PopupMenuItem.prototype.handleClick = function (event) {
-	queue.execute(event.srcElement.getAttribute('data-queue'));
+	let attr=event.srcElement.getAttribute('data-queue');
+	if(attr)
+		queue.execute(attr);
+
+	/*
+	 * Is this a keyboard event? If so and the data-click attr is set we send a click to the element.
+	 * This will trigger the ourthings event that is bound to it
+	 */
+	let click=event.srcElement.getAttribute('data-click');
+	if(click==="true"&&event.keyCode)
+		event.srcElement.click();
 	this.popupMenu.setFocusToController();
-	this.popupMenu.close(true);
+	this.popupMenu.close(true)
+
 };
 
 PopupMenuItem.prototype.handleFocus = function (event) {
