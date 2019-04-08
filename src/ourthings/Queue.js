@@ -541,7 +541,9 @@ class Queue {
 							}
 						});
 					} else {
-						element.addEventListener(events[e], function () {
+						element.addEventListener(events[e], function (e) {
+							e.stopPropagation();
+							e.preventDefault();
 							commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
 							self.commandsQueue.apply(self, [[commandObj[command]]]);
 						});
