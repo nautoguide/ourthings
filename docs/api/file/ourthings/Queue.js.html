@@ -120,6 +120,11 @@ class Queue {
 		self.ucid = 0;
 
 		/*
+		 * When processing out loops this keeps a track
+		 */
+		self.activeLoops=[];
+
+		/*
 		 * Default time for process to be executed after
 		 * TODO Platform test / tune
 		 * @type {number}
@@ -361,12 +366,24 @@ class Queue {
 		let match;
 		let self=this;
 		/*
+		 * Fix any multi level loop references
+		 */
+
+		for(let i in self.activeLoops) {
+			//debugger;
+			let loopRegex = new RegExp(&quot;#loop&quot; + i, &quot;g&quot;);
+			template = template.replace(loopRegex, memory[&apos;for&apos;+i].value.index);
+		}
+
+
+		/*
 		 * Look for {{#for}} loops and execute them
 		 */
 		const forRegex=/{{#([0-9]{0,1})for (.*?)}}([\s\S]*?){{\/for}}/;
 		while (match = forRegex.exec(template)) {
 			let subTemplate=&apos;&apos;;
 			match[1]=match[1]||0;
+			self.activeLoops.push(match[1]);
 			/*
 			 * loop through making sub templates as we go
 			 *
@@ -381,8 +398,7 @@ class Queue {
 				 */
 				this.setMemory(&quot;for&quot;+match[1],{&quot;index&quot;:i,&quot;increment&quot;:increment},&quot;session&quot;);
 				/*
-				 * This is the quick way to reference in the index but will now work for templates that
-				 * include others
+				 * This is the quick way to reference in the index using #loop[n]
 				 */
 				let loopRegex=new RegExp(&quot;#loop&quot;+match[1],&quot;g&quot;);
 				let incrementMatch=match[3].replace(loopRegex,i);
@@ -393,6 +409,7 @@ class Queue {
 				increment++;
 			}
 			template = template.replace(match[0], subTemplate);
+			self.activeLoops.shift();
 		}
 		/*
 	 	 * Process {{#if}}
@@ -563,10 +580,21 @@ class Queue {
 				let event=commandObj[command].options.queueEvent||&quot;click&quot;;
 				let events=event.split(&quot;,&quot;);
 				for(let e in events) {
-					element.addEventListener(events[e], function () {
-						commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
-						self.commandsQueue.apply(self, [[commandObj[command]]]);
-					});
+					if(events[e]===&apos;handleKeydown&apos;) {
+						element.addEventListener(events[e], function (e) {
+							if(e.keyCode===self.DEFINE.KEY_RETURN) {
+								commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
+								self.commandsQueue.apply(self, [[commandObj[command]]]);
+							}
+						});
+					} else {
+						element.addEventListener(events[e], function (e) {
+							e.stopPropagation();
+							e.preventDefault();
+							commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
+							self.commandsQueue.apply(self, [[commandObj[command]]]);
+						});
+					}
 				}
 			}
 		}

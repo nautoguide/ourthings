@@ -420,6 +420,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "ourthings/define.js~define#key_return",
+    "class/ourthings/Define.js~Define.html#instance-member-KEY_RETURN",
+    "ourthings/Define.js~Define#KEY_RETURN",
+    "member"
+  ],
+  [
     "ourthings/define.js~define#memory_garbage",
     "class/ourthings/Define.js~Define.html#instance-member-MEMORY_GARBAGE",
     "ourthings/Define.js~Define#MEMORY_GARBAGE",
