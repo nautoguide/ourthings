@@ -960,6 +960,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#animatezoom",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-animateZoom",
+    "ourthings/Queueable/Openlayers.js~Openlayers#animateZoom",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#centeroncoordinate",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-centerOnCoordinate",
     "ourthings/Queueable/Openlayers.js~Openlayers#centerOnCoordinate",
