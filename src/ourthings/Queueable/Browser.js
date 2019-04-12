@@ -22,9 +22,48 @@ export default class Browser extends Queueable {
 	 * @param {string} json.location - Dom location to direct to
 	 */
 	redirect(pid,json) {
-		let self=this;
 		window.top.location = json.location;
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
 
+	/**
+	 * Start the history monitor.
+	 *
+	 * Detects when the user navigates via back / forward button and runs queue based on history item
+	 * added via addHistory
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 */
+	initHistory(pid,json) {
+		window.onpopstate = function(event) {
+			let baseURL = location.href;
+			let match=baseURL.match(/#(.*)/);
+			if(match&&match[1]) {
+				this.queue.execute('history'+match[1]);
+			} else {
+				this.queue.execute('historyRoot');
+			}
+		}
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Add a history entry
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.history - history name to add
+	 */
+	addHistory(pid,json) {
+		let options=Object.assign({
+			"history":"Root",
+		},json);
+		let baseURL = location.href;
+		if(baseURL.match(/#/))
+			baseURL = baseURL.slice(0, location.href.indexOf('#'));
+		location.href = baseURL + '#' + options.history;
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 }
