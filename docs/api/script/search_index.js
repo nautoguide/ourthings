@@ -798,6 +798,18 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "ourthings/queueable/browser.js~browser#addhistory",
+    "class/ourthings/Queueable/Browser.js~Browser.html#instance-method-addHistory",
+    "ourthings/Queueable/Browser.js~Browser#addHistory",
+    "method"
+  ],
+  [
+    "ourthings/queueable/browser.js~browser#inithistory",
+    "class/ourthings/Queueable/Browser.js~Browser.html#instance-method-initHistory",
+    "ourthings/Queueable/Browser.js~Browser#initHistory",
+    "method"
+  ],
+  [
     "ourthings/queueable/browser.js~browser#redirect",
     "class/ourthings/Queueable/Browser.js~Browser.html#instance-method-redirect",
     "ourthings/Queueable/Browser.js~Browser#redirect",
