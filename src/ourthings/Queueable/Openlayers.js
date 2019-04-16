@@ -238,6 +238,10 @@ export default class Openlayers extends Queueable {
 	 * Use the standard openlayers select control
 	 * @param pid
 	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {string} json.mode -  on|off
+	 * @param {string} json.perfix - prefix to use
+	 * @param {array} json.layers - layers to use
 	 *
 	 * @description This select control uses the default openlayers model. Useful for applications with no overlapping features. It does not support selecting hidden features
 	 */
@@ -248,11 +252,15 @@ export default class Openlayers extends Queueable {
 			"mode":"on",
 			"prefix":""
 		},json);
-
+		if(options.layers) {
+			for(let i in options.layers) {
+				options.layers[i]=self.maps[options.map].layers[options.layers[i]];
+			}
+		}
 		let map=self.maps[options.map].object;
 		let selectObj=self.maps[options.map].selectObj;
 		if(selectObj===undefined) {
-			selectObj = new Select();
+			selectObj = new Select({"layers":options.layers});
 			self.maps[options.map].selectObj=selectObj;
 			selectObj.on('select', selectFunction);
 		}
