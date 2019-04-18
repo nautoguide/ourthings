@@ -996,6 +996,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#findfeatures",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-findFeatures",
+    "ourthings/Queueable/Openlayers.js~Openlayers#findFeatures",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#init",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-init",
     "ourthings/Queueable/Openlayers.js~Openlayers#init",

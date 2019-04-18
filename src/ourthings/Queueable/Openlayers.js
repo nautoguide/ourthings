@@ -273,6 +273,8 @@ export default class Openlayers extends Queueable {
 
 		function selectFunction(e) {
 			self.queue.setMemory(options.prefix+'simpleSelect', e, "Session");
+			self.queue.setMemory(options.map+'selectedFeatures', e.selected, "Session");
+
 			if (e.deselected.length > 0 && e.selected.length === 0)
 				self.queue.execute(options.prefix+"simpleDeselect");
 			if (e.selected.length > 0)
@@ -280,6 +282,41 @@ export default class Openlayers extends Queueable {
 		}
 
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Use a filter object to locate features on a single layer
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {array} json.layer - layer to use
+	 * @param {object} json.filter - Filter eg {"feature_id":1}
+	 *
+	 */
+	findFeatures(pid,json) {
+		let options=Object.assign({
+			"map":"default",
+			"layer":"default",
+			"filter":{}
+		},json);
+		let foundFeatures=[];
+		let layer=this.maps[options.map].layers[options.layer];
+		let source=layer.getSource();
+		let features=source.getFeatures();
+		for(let i in features) {
+			for(let f in options.filter) {
+				let check=features[i].get(f);
+				/*
+				 * Note there can be differing types here, hence ==
+				 */
+				if(check==options.filter[f]) {
+					foundFeatures.push(features[i]);
+					this.queue.setMemory('findFeatures', foundFeatures, "Session");
+					this.queue.setMemory(options.map+'selectedFeatures', foundFeatures, "Session");
+				}
+			}
+		}
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 
 	/**
