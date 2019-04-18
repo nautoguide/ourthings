@@ -393,7 +393,10 @@ class Queue {
 		 */
 		const includeRegex=/{{#include (.*?)}}/;
 		while (match = includeRegex.exec(template)) {
-			template = template.replace(match[0], self.templateVars(self.getElement(match[1]).innerHTML));
+			if(match[1].match(/^#/))
+				template = template.replace(match[0], self.templateVars(self.getElement(match[1]).innerHTML));
+			else
+				template = template.replace(match[0], self.templateVars(self.getElement(eval(match[1])).innerHTML));
 		}
 
 		/*
@@ -736,6 +739,18 @@ class Queue {
 	}
 
 	/**
+	 * Delete Memory TODO clean up perms
+	 * @param name
+	 * @return {boolean}
+	 */
+	deleteMemory(name) {
+		let self=this;
+		delete window.memory[name];
+		self._updateMemoryPerms();
+		return true;
+	}
+
+	/**
 	 * Flush any permanent memory to cookies
 	 * @private
 	 */
@@ -965,6 +980,10 @@ class Queue {
 				break;
 			case self.DEFINE.RENDER_APPEND:
 				domObject.insertAdjacentHTML('beforeend',text);
+				break;
+			case self.DEFINE.RENDER_REPLACE:
+				const html = new DOMParser().parseFromString( text , 'text/html');
+				domObject.parentNode.replaceChild(html.body.firstChild, domObject);
 				break;
 		}
 		return true;
