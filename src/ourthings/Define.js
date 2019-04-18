@@ -27,6 +27,7 @@ export default class Define {
 		 */
 		this.RENDER_INSERT = "insert";
 		this.RENDER_APPEND = "append";
+		this.RENDER_REPLACE = "replace";
 
 
 		/**
