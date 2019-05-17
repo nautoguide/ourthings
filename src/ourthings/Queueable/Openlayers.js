@@ -12,6 +12,8 @@ import Disposable from 'ol/Disposable';
 import OSM from 'ol/source/OSM';
 import WMTS from 'ol/source/WMTS';
 import WMTSTileGrid  from 'ol/tilegrid/WMTS';
+import XYZ from 'ol/source/XYZ.js';
+
 import WKT from 'ol/format/WKT';
 import Overlay from 'ol/Overlay';
 import {unByKey} from 'ol/Observable'
@@ -202,6 +204,26 @@ export default class Openlayers extends Queueable {
 
 		return olLayer;
 
+	}
+
+	/**
+	 * Add an xyz layer
+	 * @param options
+	 * @return {TileLayer}
+	 * @private
+	 */
+	_addLayer_xyz(options) {
+		let source= new XYZ({
+			url: options.url
+		});
+		let olLayer = new TileLayer({
+			extent: options.extent,
+			opacity: options.opacity,
+			visible: options.active,
+			name: options.name,
+			source: source
+		});
+		return olLayer;
 	}
 
 	/**
@@ -446,6 +468,17 @@ export default class Openlayers extends Queueable {
         let source = layer.getSource();
         source.clear();
         self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+    }
+
+    toggleLayer(pid,json) {
+	    let options=Object.assign({
+		    "map":"default",
+		    "layer":"default"
+	    },json);
+	    let layer=this.maps[options.map].layers[options.layer];
+	    layer.setVisible(!layer.getVisible());
+	    this.finished(pid,self.queue.DEFINE.FIN_OK);
 
     }
 
