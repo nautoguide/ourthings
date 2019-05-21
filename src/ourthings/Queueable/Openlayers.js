@@ -12,6 +12,8 @@ import Disposable from 'ol/Disposable';
 import OSM from 'ol/source/OSM';
 import WMTS from 'ol/source/WMTS';
 import WMTSTileGrid  from 'ol/tilegrid/WMTS';
+import XYZ from 'ol/source/XYZ.js';
+
 import WKT from 'ol/format/WKT';
 import Overlay from 'ol/Overlay';
 import {unByKey} from 'ol/Observable'
@@ -24,6 +26,8 @@ import {click, pointerMove, altKeyOnly} from 'ol/events/condition.js';
 import proj4 from "proj4";
 import {register} from 'ol/proj/proj4';
 import {get as getProjection} from 'ol/proj'
+
+import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction.js';
 
 proj4.defs([
 	["EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs"]
@@ -81,7 +85,7 @@ export default class Openlayers extends Queueable {
 			"renderer": ['webgl', 'canvas'],
 			"target":"map",
 			"center":[0,0],
-			"projection": "EPSG:3857"
+			"projection": "EPSG:3857",
 		},json);
 		let projection =  getProjection(options.projection);
 		const map = new Map({
@@ -93,7 +97,12 @@ export default class Openlayers extends Queueable {
 				projection: projection,
 				resolutions: options.resolutions,
 				extent: options.extent,
-			})
+			}),
+			interactions: defaultInteractions().extend([
+				new DragRotateAndZoom()
+			]),
+			keyboardEventTarget: document
+
 		});
 		self.maps[options.map]={"object":map,"layers":{}};
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
@@ -202,6 +211,26 @@ export default class Openlayers extends Queueable {
 
 		return olLayer;
 
+	}
+
+	/**
+	 * Add an xyz layer
+	 * @param options
+	 * @return {TileLayer}
+	 * @private
+	 */
+	_addLayer_xyz(options) {
+		let source= new XYZ({
+			url: options.url
+		});
+		let olLayer = new TileLayer({
+			extent: options.extent,
+			opacity: options.opacity,
+			visible: options.active,
+			name: options.name,
+			source: source
+		});
+		return olLayer;
 	}
 
 	/**
@@ -446,6 +475,17 @@ export default class Openlayers extends Queueable {
         let source = layer.getSource();
         source.clear();
         self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+    }
+
+    toggleLayer(pid,json) {
+	    let options=Object.assign({
+		    "map":"default",
+		    "layer":"default"
+	    },json);
+	    let layer=this.maps[options.map].layers[options.layer];
+	    layer.setVisible(!layer.getVisible());
+	    this.finished(pid,self.queue.DEFINE.FIN_OK);
 
     }
 

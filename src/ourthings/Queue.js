@@ -89,6 +89,22 @@ class Queue {
 		console.info(self.DEFINE.CONSOLE_LINE);
 		console.info('ourthings framework https://github.com/nautoguide/ourthings');
 
+		/*
+		 * Listener for our chrome-plugin
+		 */
+		document.addEventListener('ourthings_site', function(e) {
+			switch(e.detail.function) {
+				case 'ping':
+					document.dispatchEvent(new CustomEvent('ourthings_extension', {
+						detail: {"function":"pong"}
+					}));
+					break;
+				case 'menu':
+					self.menu();
+					break;
+			}
+		});
+
 		self.browserClasses();
 
 		/*
@@ -1149,6 +1165,13 @@ class Queue {
 			result[item[0]] = decodeURIComponent(item[1]);
 		});
 		return result;
+	}
+
+	toggleDebug() {
+		alert('toggle');
+	}
+	menu() {
+		document.body.innerHTML+='<div id="ourthingsMenu"><button onclick="queue.toggleDebug()">DEBUG MODE</button></div>';
 	}
 
 }
