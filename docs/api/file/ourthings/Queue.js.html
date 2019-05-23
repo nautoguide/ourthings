@@ -136,6 +136,22 @@ class Queue {
 		console.info(self.DEFINE.CONSOLE_LINE);
 		console.info(&apos;ourthings framework https://github.com/nautoguide/ourthings&apos;);
 
+		/*
+		 * Listener for our chrome-plugin
+		 */
+		document.addEventListener(&apos;ourthings_site&apos;, function(e) {
+			switch(e.detail.function) {
+				case &apos;ping&apos;:
+					document.dispatchEvent(new CustomEvent(&apos;ourthings_extension&apos;, {
+						detail: {&quot;function&quot;:&quot;pong&quot;}
+					}));
+					break;
+				case &apos;menu&apos;:
+					self.menu();
+					break;
+			}
+		});
+
 		self.browserClasses();
 
 		/*
@@ -440,7 +456,10 @@ class Queue {
 		 */
 		const includeRegex=/{{#include (.*?)}}/;
 		while (match = includeRegex.exec(template)) {
-			template = template.replace(match[0], self.templateVars(self.getElement(match[1]).innerHTML));
+			if(match[1].match(/^#/))
+				template = template.replace(match[0], self.templateVars(self.getElement(match[1]).innerHTML));
+			else
+				template = template.replace(match[0], self.templateVars(self.getElement(eval(match[1])).innerHTML));
 		}
 
 		/*
@@ -783,6 +802,18 @@ class Queue {
 	}
 
 	/**
+	 * Delete Memory TODO clean up perms
+	 * @param name
+	 * @return {boolean}
+	 */
+	deleteMemory(name) {
+		let self=this;
+		delete window.memory[name];
+		self._updateMemoryPerms();
+		return true;
+	}
+
+	/**
 	 * Flush any permanent memory to cookies
 	 * @private
 	 */
@@ -1013,6 +1044,10 @@ class Queue {
 			case self.DEFINE.RENDER_APPEND:
 				domObject.insertAdjacentHTML(&apos;beforeend&apos;,text);
 				break;
+			case self.DEFINE.RENDER_REPLACE:
+				const html = new DOMParser().parseFromString( text , &apos;text/html&apos;);
+				domObject.parentNode.replaceChild(html.body.firstChild, domObject);
+				break;
 		}
 		return true;
 	}
@@ -1177,6 +1212,13 @@ class Queue {
 			result[item[0]] = decodeURIComponent(item[1]);
 		});
 		return result;
+	}
+
+	toggleDebug() {
+		alert(&apos;toggle&apos;);
+	}
+	menu() {
+		document.body.innerHTML+=&apos;&lt;div id=&quot;ourthingsMenu&quot;&gt;&lt;button onclick=&quot;queue.toggleDebug()&quot;&gt;DEBUG MODE&lt;/button&gt;&lt;/div&gt;&apos;;
 	}
 
 }
