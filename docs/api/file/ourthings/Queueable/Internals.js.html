@@ -111,6 +111,24 @@ export default class Internals extends Queueable {
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
+
+	/**
+	 * Delete a memory value
+	 *
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.name - name of memory item
+	 * @param {*} json.value - value to set (can be any type)
+	 * @param {string} [json.mode] - [Garbage|Session|Permanent] Memory mode
+	 * @example
+	 * internals.setMemory({&quot;name&quot;:&quot;test&quot;,&quot;mode&quot;:&quot;Session&quot;,&quot;value&quot;:&quot;Test String&quot;});
+	 * internals.setMemory({&quot;name&quot;:&quot;test&quot;,&quot;mode&quot;:&quot;Session&quot;,&quot;value&quot;:{&quot;trueFalse&quot;:[true,false],&quot;objects&quot;:[{&quot;ElementOne&quot;:&quot;Result One&quot;},{&quot;ElementTwo&quot;:&quot;Result Two&quot;}]}});
+	 */
+	deleteMemory(pid,json) {
+		this.queue.deleteMemory(json.name);
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+
+	}
 }
 </code></pre>
 

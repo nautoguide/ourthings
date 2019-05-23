@@ -480,6 +480,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "ourthings/define.js~define#render_replace",
+    "class/ourthings/Define.js~Define.html#instance-member-RENDER_REPLACE",
+    "ourthings/Define.js~Define#RENDER_REPLACE",
+    "member"
+  ],
+  [
     "ourthings/define.js~define#status_error",
     "class/ourthings/Define.js~Define.html#instance-member-STATUS_ERROR",
     "ourthings/Define.js~Define#STATUS_ERROR",
@@ -588,6 +594,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queue.js~queue#deletememory",
+    "class/ourthings/Queue.js~Queue.html#instance-method-deleteMemory",
+    "ourthings/Queue.js~Queue#deleteMemory",
+    "method"
+  ],
+  [
     "ourthings/queue.js~queue#execute",
     "class/ourthings/Queue.js~Queue.html#instance-method-execute",
     "ourthings/Queue.js~Queue#execute",
@@ -654,6 +666,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queue.js~queue#menu",
+    "class/ourthings/Queue.js~Queue.html#instance-method-menu",
+    "ourthings/Queue.js~Queue#menu",
+    "method"
+  ],
+  [
     "ourthings/queue.js~queue#prettycommandobject",
     "class/ourthings/Queue.js~Queue.html#instance-method-prettyCommandObject",
     "ourthings/Queue.js~Queue#prettyCommandObject",
@@ -717,6 +735,12 @@ window.esdocSearchIndex = [
     "ourthings/queue.js~queue#templatevars",
     "class/ourthings/Queue.js~Queue.html#instance-method-templateVars",
     "ourthings/Queue.js~Queue#templateVars",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#toggledebug",
+    "class/ourthings/Queue.js~Queue.html#instance-method-toggleDebug",
+    "ourthings/Queue.js~Queue#toggleDebug",
     "method"
   ],
   [
@@ -828,6 +852,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/elements.js~elements#domcutpaste",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-domCutPaste",
+    "ourthings/Queueable/Elements.js~Elements#domCutPaste",
+    "method"
+  ],
+  [
     "ourthings/queueable/elements.js~elements#formactivitymonitor",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-formActivityMonitor",
     "ourthings/Queueable/Elements.js~Elements#formActivityMonitor",
@@ -900,6 +930,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "ourthings/queueable/internals.js~internals#deletememory",
+    "class/ourthings/Queueable/Internals.js~Internals.html#instance-method-deleteMemory",
+    "ourthings/Queueable/Internals.js~Internals#deleteMemory",
+    "method"
+  ],
+  [
     "ourthings/queueable/internals.js~internals#execute",
     "class/ourthings/Queueable/Internals.js~Internals.html#instance-method-execute",
     "ourthings/Queueable/Internals.js~Internals#execute",
@@ -939,6 +975,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/openlayers.js~openlayers#_addlayer_wmts",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_wmts",
     "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_wmts",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#_addlayer_xyz",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_xyz",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_xyz",
     "method"
   ],
   [
@@ -1047,6 +1089,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/openlayers.js~openlayers#simpleselect",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-simpleSelect",
     "ourthings/Queueable/Openlayers.js~Openlayers#simpleSelect",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#togglelayer",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-toggleLayer",
+    "ourthings/Queueable/Openlayers.js~Openlayers#toggleLayer",
     "method"
   ],
   [

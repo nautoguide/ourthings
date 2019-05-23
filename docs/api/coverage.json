@@ -1,10 +1,10 @@
 {
-  "coverage": "63.81%",
-  "expectCount": 152,
-  "actualCount": 97,
+  "coverage": "63.12%",
+  "expectCount": 160,
+  "actualCount": 101,
   "files": {
     "ourthings/Define.js": {
-      "expectCount": 27,
+      "expectCount": 28,
       "actualCount": 8,
       "undocumentLines": [
         16,
@@ -12,27 +12,30 @@
         22,
         23,
         29,
-        37,
+        30,
         38,
-        44,
+        39,
         45,
         46,
-        53,
+        47,
         54,
-        56,
+        55,
         57,
         58,
-        64,
+        59,
         65,
         66,
-        67
+        67,
+        68
       ]
     },
     "ourthings/Queue.js": {
-      "expectCount": 37,
-      "actualCount": 36,
+      "expectCount": 40,
+      "actualCount": 37,
       "undocumentLines": [
-        167
+        183,
+        1170,
+        1173
       ]
     },
     "ourthings/Queueable/Api.js": {
@@ -46,8 +49,8 @@
       "undocumentLines": []
     },
     "ourthings/Queueable/Elements.js": {
-      "expectCount": 9,
-      "actualCount": 9,
+      "expectCount": 10,
+      "actualCount": 10,
       "undocumentLines": []
     },
     "ourthings/Queueable/Files.js": {
@@ -56,19 +59,20 @@
       "undocumentLines": []
     },
     "ourthings/Queueable/Internals.js": {
-      "expectCount": 4,
-      "actualCount": 4,
+      "expectCount": 5,
+      "actualCount": 5,
       "undocumentLines": []
     },
     "ourthings/Queueable/Openlayers.js": {
-      "expectCount": 24,
-      "actualCount": 19,
+      "expectCount": 26,
+      "actualCount": 20,
       "undocumentLines": [
-        52,
-        53,
-        55,
+        56,
         57,
-        59
+        59,
+        61,
+        63,
+        481
       ]
     },
     "ourthings/Queueable/Templates.js": {
