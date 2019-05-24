@@ -60,6 +60,24 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "@nautoguide/ourthings/ourthings/validator.js~validate",
+    "class/ourthings/validator.js~Validate.html",
+    "<span>Validate</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/validator.js</span>",
+    "class"
+  ],
+  [
+    "@nautoguide/ourthings/ourthings/validator.js~validateemail",
+    "class/ourthings/validator.js~ValidateEmail.html",
+    "<span>ValidateEmail</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/validator.js</span>",
+    "class"
+  ],
+  [
+    "@nautoguide/ourthings/ourthings/validator.js~validatetext",
+    "class/ourthings/validator.js~ValidateText.html",
+    "<span>ValidateText</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/validator.js</span>",
+    "class"
+  ],
+  [
     "@nautoguide/ourthings/ourthings/queueable/w3menu.js~w3menu",
     "class/ourthings/Queueable/W3Menu.js~W3Menu.html",
     "<span>W3Menu</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/W3Menu.js</span>",
@@ -780,6 +798,18 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable.js~queueable#queue",
+    "class/ourthings/Queueable.js~Queueable.html#instance-member-queue",
+    "ourthings/Queueable.js~Queueable#queue",
+    "member"
+  ],
+  [
+    "ourthings/queueable.js~queueable#ready",
+    "class/ourthings/Queueable.js~Queueable.html#instance-member-ready",
+    "ourthings/Queueable.js~Queueable#ready",
+    "member"
+  ],
+  [
     "ourthings/queueable.js~queueable#set",
     "class/ourthings/Queueable.js~Queueable.html#instance-method-set",
     "ourthings/Queueable.js~Queueable#set",
@@ -861,6 +891,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/elements.js~elements#formactivitymonitor",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-formActivityMonitor",
     "ourthings/Queueable/Elements.js~Elements#formActivityMonitor",
+    "method"
+  ],
+  [
+    "ourthings/queueable/elements.js~elements#formvaliditymonitor",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-formValidityMonitor",
+    "ourthings/Queueable/Elements.js~Elements#formValidityMonitor",
     "method"
   ],
   [
@@ -1144,5 +1180,29 @@ window.esdocSearchIndex = [
     "file/ourthings/main.js.html",
     "ourthings/main.js",
     "file"
+  ],
+  [
+    "ourthings/validator.js",
+    "file/ourthings/validator.js.html",
+    "ourthings/validator.js",
+    "file"
+  ],
+  [
+    "ourthings/validator.js~validate#valid",
+    "class/ourthings/validator.js~Validate.html#instance-method-valid",
+    "ourthings/validator.js~Validate#valid",
+    "method"
+  ],
+  [
+    "ourthings/validator.js~validateemail#valid",
+    "class/ourthings/validator.js~ValidateEmail.html#instance-method-valid",
+    "ourthings/validator.js~ValidateEmail#valid",
+    "method"
+  ],
+  [
+    "ourthings/validator.js~validatetext#valid",
+    "class/ourthings/validator.js~ValidateText.html#instance-method-valid",
+    "ourthings/validator.js~ValidateText#valid",
+    "method"
   ]
 ]

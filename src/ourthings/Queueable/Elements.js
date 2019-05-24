@@ -234,9 +234,10 @@ export default class Elements extends Queueable {
 	 * @param {string} json.focusClass - Class to add to focuses elements
 	 * @param {string} json.validClass - Prepared queue to run when element modified
 	 * @param {string} json.errorClass - Prepared queue to run when element modified
+	 * @param {string} json.timeout - Length of time after user has finished typing to update
 	 *
 	 * @example
-	 * elements.formActivityMonitor({"targetId":".functionMonitor","buttonId":".form-save","modifiedClass":"modified"});
+	 * elements.formValidityMonitor({"targetId":".functionMonitor","buttonId":".submit-form","validClass":"valid","focusClass":"focus","errorClass":"error"},{"queueRun":"Instant"});
 
 	 */
 	formValidityMonitor(pid,json) {
@@ -246,6 +247,8 @@ export default class Elements extends Queueable {
 		if(json.buttonId)
 			button=this.queue.getElement(json.buttonId);
 		let modules={};
+		let timerEvent;
+		let timerTimeout=json.timeout||2000;
 		modules['email']=new ValidateEmail();
 		modules['text']=new ValidateText();
 		elements.forEach(function(element) {
@@ -263,31 +266,50 @@ export default class Elements extends Queueable {
 			 * There is a change to the field (normally they exit the field
 			 */
 			element.addEventListener("change", function () {
-				if(element.getAttribute('data-validation')) {
-					let moduleName = element.getAttribute('data-validation').toLowerCase();
-					if (modules[moduleName].valid(element.value, {})) {
-						this.classList.remove(json.errorClass);
-						this.classList.add(json.validClass);
+				if (timerEvent)
+					clearTimeout(timerEvent);
+				changeUpdate(element,this);
+			});
 
-					} else {
-						this.classList.add(json.errorClass);
-						this.classList.remove(json.validClass);
-					}
-					let needValidations=self.queue.getElements(json.targetId+'[data-validation]');
-					let isValidated=self.queue.getElements(json.targetId+'[data-validation].'+json.validClass);
-					if(needValidations.length===isValidated.length) {
-						button.classList.add(json.validClass);
-					} else {
-						button.classList.remove(json.validClass);
-					}
+			/*
+			 * Key up so after the user has finishing typing
+			 */
+			element.addEventListener("keyup", function (e) {
+				if(e.which!==9) {
+					if (timerEvent)
+						clearTimeout(timerEvent);
+					let ptr = this;
+					timerEvent = setTimeout(function () {
+						changeUpdate(element, ptr);
+					}, timerTimeout);
 				}
 			});
 
-			element.addEventListener("keypress", function () {
-
-			});
-
 		});
+
+		/*
+		 * Function to actually update the fields
+		 */
+		function changeUpdate(element,ptr) {
+			if(element.getAttribute('data-validation')) {
+				let moduleName = element.getAttribute('data-validation').toLowerCase();
+				if (modules[moduleName].valid(element.value, {})) {
+					ptr.classList.remove(json.errorClass);
+					ptr.classList.add(json.validClass);
+				} else {
+					ptr.classList.add(json.errorClass);
+					ptr.classList.remove(json.validClass);
+				}
+				let needValidations=self.queue.getElements(json.targetId+'[data-validation]');
+				let isValidated=self.queue.getElements(json.targetId+'[data-validation].'+json.validClass);
+				if(needValidations.length===isValidated.length) {
+					button.classList.add(json.validClass);
+				} else {
+					button.classList.remove(json.validClass);
+				}
+			}
+		}
+
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 }
