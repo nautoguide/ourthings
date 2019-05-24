@@ -32,4 +32,10 @@ class ValidateText extends Validate {
 	}
 }
 
-export {Validate,ValidateEmail,ValidateText};
+class ValidatePassword extends Validate {
+	valid(item,args) {
+		return item.length>=8;
+	}
+}
+
+export {Validate,ValidateEmail,ValidateText,ValidatePassword};

@@ -1,6 +1,6 @@
 /** @module ourthings/Queueable/Elements */
 import Queueable from "../Queueable";
-import {Validate,ValidateEmail,ValidateText} from "../Validator";
+import {Validate, ValidateEmail, ValidatePassword, ValidateText} from "../Validator";
 
 /**
  * @classdesc
@@ -251,6 +251,7 @@ export default class Elements extends Queueable {
 		let timerTimeout=json.timeout||2000;
 		modules['email']=new ValidateEmail();
 		modules['text']=new ValidateText();
+		modules['password']=new ValidatePassword();
 		elements.forEach(function(element) {
 			/*
 			 * Focus is new, clear down focused classes and reclass
