@@ -18,8 +18,7 @@ class Queueable {
 	 *
 	 */
 	constructor() {
-		let self=this;
-		self.ready=false;
+		this.ready=false;
 	}
 
 	/**
@@ -28,9 +27,8 @@ class Queueable {
 	 *
 	 */
 	init(queue) {
-		let self=this;
-		self.queue=queue;
-		self.ready=true;
+		this.queue=queue;
+		this.ready=true;
 	}
 
 	/**

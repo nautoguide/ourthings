@@ -1,5 +1,6 @@
 /** @module ourthings/Queueable/Elements */
 import Queueable from "../Queueable";
+import {Validate,ValidateEmail,ValidateText} from "../Validator";
 
 /**
  * @classdesc
@@ -209,6 +210,7 @@ export default class Elements extends Queueable {
 						button.classList.add(json.modifiedClass);
 				}
 			});
+
 			element.addEventListener("keypress", function () {
 				if(json.modifiedQueue)
 					self.queue.execute(json.modifiedQueue,{});
@@ -220,6 +222,94 @@ export default class Elements extends Queueable {
 			});
 
 		});
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Monitor element(s) in a form and validate
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - elements(s) to monitor for change and add modifiedClass to
+	 * @param {string} json.buttonId - Element to add modifiedClass to
+	 * @param {string} json.focusClass - Class to add to focuses elements
+	 * @param {string} json.validClass - Prepared queue to run when element modified
+	 * @param {string} json.errorClass - Prepared queue to run when element modified
+	 * @param {string} json.timeout - Length of time after user has finished typing to update
+	 *
+	 * @example
+	 * elements.formValidityMonitor({"targetId":".functionMonitor","buttonId":".submit-form","validClass":"valid","focusClass":"focus","errorClass":"error"},{"queueRun":"Instant"});
+
+	 */
+	formValidityMonitor(pid,json) {
+		let self=this;
+		let elements=this.queue.getElements(json.targetId);
+		let button;
+		if(json.buttonId)
+			button=this.queue.getElement(json.buttonId);
+		let modules={};
+		let timerEvent;
+		let timerTimeout=json.timeout||2000;
+		modules['email']=new ValidateEmail();
+		modules['text']=new ValidateText();
+		elements.forEach(function(element) {
+			/*
+			 * Focus is new, clear down focused classes and reclass
+			 */
+			element.addEventListener("focus", function () {
+				elements.forEach(function(element) {
+					element.classList.remove(json.focusClass);
+				});
+				this.classList.add(json.focusClass);
+			});
+
+			/*
+			 * There is a change to the field (normally they exit the field
+			 */
+			element.addEventListener("change", function () {
+				if (timerEvent)
+					clearTimeout(timerEvent);
+				changeUpdate(element,this);
+			});
+
+			/*
+			 * Key up so after the user has finishing typing
+			 */
+			element.addEventListener("keyup", function (e) {
+				if(e.which!==9) {
+					if (timerEvent)
+						clearTimeout(timerEvent);
+					let ptr = this;
+					timerEvent = setTimeout(function () {
+						changeUpdate(element, ptr);
+					}, timerTimeout);
+				}
+			});
+
+		});
+
+		/*
+		 * Function to actually update the fields
+		 */
+		function changeUpdate(element,ptr) {
+			if(element.getAttribute('data-validation')) {
+				let moduleName = element.getAttribute('data-validation').toLowerCase();
+				if (modules[moduleName].valid(element.value, {})) {
+					ptr.classList.remove(json.errorClass);
+					ptr.classList.add(json.validClass);
+				} else {
+					ptr.classList.add(json.errorClass);
+					ptr.classList.remove(json.validClass);
+				}
+				let needValidations=self.queue.getElements(json.targetId+'[data-validation]');
+				let isValidated=self.queue.getElements(json.targetId+'[data-validation].'+json.validClass);
+				if(needValidations.length===isValidated.length) {
+					button.classList.add(json.validClass);
+				} else {
+					button.classList.remove(json.validClass);
+				}
+			}
+		}
+
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 }
