@@ -129,7 +129,7 @@ class Queue {
 		 * Load any perm cookies
 		 */
 		self._loadMemoryPerms();
-		if(window.memory.developer.value===true)
+		if(window.memory.developer&&window.memory.developer.value===true)
 			self.developerMode=true;
 		/*
 		 * Load any url params into memoery
