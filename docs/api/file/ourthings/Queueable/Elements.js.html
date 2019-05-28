@@ -34,6 +34,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~Validate.html">Validate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateEmail.html">ValidateEmail</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidatePassword.html">ValidatePassword</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateText.html">ValidateText</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
@@ -50,7 +51,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queueable/Elements.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module ourthings/Queueable/Elements */
 import Queueable from &quot;../Queueable&quot;;
-import {Validate,ValidateEmail,ValidateText} from &quot;../Validator&quot;;
+import {Validate, ValidateEmail, ValidatePassword, ValidateText} from &quot;../Validator&quot;;
 
 /**
  * @classdesc
@@ -301,6 +302,7 @@ export default class Elements extends Queueable {
 		let timerTimeout=json.timeout||2000;
 		modules[&apos;email&apos;]=new ValidateEmail();
 		modules[&apos;text&apos;]=new ValidateText();
+		modules[&apos;password&apos;]=new ValidatePassword();
 		elements.forEach(function(element) {
 			/*
 			 * Focus is new, clear down focused classes and reclass

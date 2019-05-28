@@ -72,6 +72,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "@nautoguide/ourthings/ourthings/validator.js~validatepassword",
+    "class/ourthings/validator.js~ValidatePassword.html",
+    "<span>ValidatePassword</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/validator.js</span>",
+    "class"
+  ],
+  [
     "@nautoguide/ourthings/ourthings/validator.js~validatetext",
     "class/ourthings/validator.js~ValidateText.html",
     "<span>ValidateText</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/validator.js</span>",
@@ -756,12 +762,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "ourthings/queue.js~queue#toggledebug",
-    "class/ourthings/Queue.js~Queue.html#instance-method-toggleDebug",
-    "ourthings/Queue.js~Queue#toggleDebug",
-    "method"
-  ],
-  [
     "ourthings/queue.js~queue#urltojson",
     "class/ourthings/Queue.js~Queue.html#instance-method-urlToJson",
     "ourthings/Queue.js~Queue#urlToJson",
@@ -1197,6 +1197,12 @@ window.esdocSearchIndex = [
     "ourthings/validator.js~validateemail#valid",
     "class/ourthings/validator.js~ValidateEmail.html#instance-method-valid",
     "ourthings/validator.js~ValidateEmail#valid",
+    "method"
+  ],
+  [
+    "ourthings/validator.js~validatepassword#valid",
+    "class/ourthings/validator.js~ValidatePassword.html#instance-method-valid",
+    "ourthings/validator.js~ValidatePassword#valid",
     "method"
   ],
   [

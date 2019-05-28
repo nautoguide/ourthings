@@ -4,35 +4,35 @@
     "filePath": "ourthings/Queue.js",
     "lines": [
       {
-        "lineNumber": 280,
+        "lineNumber": 304,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 281,
+        "lineNumber": 305,
         "line": "\t * Template processor\r"
       },
       {
-        "lineNumber": 282,
+        "lineNumber": 306,
         "line": "\t * Takes a template, process it and places into the dom\r"
       },
       {
-        "lineNumber": 283,
+        "lineNumber": 307,
         "line": "\t * @param templateId {string} - ID of the template\r"
       },
       {
-        "lineNumber": 284,
+        "lineNumber": 308,
         "line": "\t * @param targetId {string|false} - Place in the dom the put the result. In the event of false we process without dom\r"
       },
       {
-        "lineNumber": 285,
+        "lineNumber": 309,
         "line": "\t * @return {boolean|string} - success status\r"
       },
       {
-        "lineNumber": 286,
+        "lineNumber": 310,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 287,
+        "lineNumber": 311,
         "line": "\ttemplateProcessor(templateId, targetId,mode) {\r"
       }
     ],
@@ -51,35 +51,35 @@
     "filePath": "ourthings/Queue.js",
     "lines": [
       {
-        "lineNumber": 475,
+        "lineNumber": 499,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 476,
+        "lineNumber": 500,
         "line": "\t * Takes a template and runs any template commands contained in it to create a HTML template\r"
       },
       {
-        "lineNumber": 477,
+        "lineNumber": 501,
         "line": "\t * ready to be put into the dom\r"
       },
       {
-        "lineNumber": 478,
+        "lineNumber": 502,
         "line": "\t *\r"
       },
       {
-        "lineNumber": 479,
+        "lineNumber": 503,
         "line": "\t * @param template {string}\r"
       },
       {
-        "lineNumber": 480,
+        "lineNumber": 504,
         "line": "\t * @return {string}\r"
       },
       {
-        "lineNumber": 481,
+        "lineNumber": 505,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 482,
+        "lineNumber": 506,
         "line": "\ttemplateParse(template,commands) {\r"
       }
     ],
@@ -96,31 +96,31 @@
     "filePath": "ourthings/Queue.js",
     "lines": [
       {
-        "lineNumber": 706,
+        "lineNumber": 730,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 707,
+        "lineNumber": 731,
         "line": "\t * Called by queueables to add something to our memory stack\r"
       },
       {
-        "lineNumber": 708,
+        "lineNumber": 732,
         "line": "\t * @param name\r"
       },
       {
-        "lineNumber": 709,
+        "lineNumber": 733,
         "line": "\t * @param value\r"
       },
       {
-        "lineNumber": 710,
+        "lineNumber": 734,
         "line": "\t * @param pid\r"
       },
       {
-        "lineNumber": 711,
+        "lineNumber": 735,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 712,
+        "lineNumber": 736,
         "line": "\tmemory(pid,value) {\r"
       }
     ],
@@ -139,39 +139,39 @@
     "filePath": "ourthings/Queue.js",
     "lines": [
       {
-        "lineNumber": 870,
+        "lineNumber": 894,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 871,
+        "lineNumber": 895,
         "line": "\t *  Called to flag a queue item as finished\r"
       },
       {
-        "lineNumber": 872,
+        "lineNumber": 896,
         "line": "\t *\r"
       },
       {
-        "lineNumber": 873,
+        "lineNumber": 897,
         "line": "\t *  Normally hooked down from queueable this is a queue item saying I have finished in mode (see define.js)\r"
       },
       {
-        "lineNumber": 874,
+        "lineNumber": 898,
         "line": "\t *\r"
       },
       {
-        "lineNumber": 875,
+        "lineNumber": 899,
         "line": "\t * @param pid\r"
       },
       {
-        "lineNumber": 876,
+        "lineNumber": 900,
         "line": "\t * @param mode\r"
       },
       {
-        "lineNumber": 877,
+        "lineNumber": 901,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 878,
+        "lineNumber": 902,
         "line": "\tfinished(pid,mode,error) {\r"
       }
     ],
@@ -190,39 +190,39 @@
     "filePath": "ourthings/Queue.js",
     "lines": [
       {
-        "lineNumber": 938,
+        "lineNumber": 962,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 939,
+        "lineNumber": 963,
         "line": "\t * This will take a command string in the format object.command({},{}); and split it down\r"
       },
       {
-        "lineNumber": 940,
+        "lineNumber": 964,
         "line": "\t * into it parts as an object\r"
       },
       {
-        "lineNumber": 941,
+        "lineNumber": 965,
         "line": "\t *\r"
       },
       {
-        "lineNumber": 942,
+        "lineNumber": 966,
         "line": "\t * TODO no concept of the context of the command IE was it from inside a div that need binding?\r"
       },
       {
-        "lineNumber": 943,
+        "lineNumber": 967,
         "line": "\t * @param command {string}\r"
       },
       {
-        "lineNumber": 944,
+        "lineNumber": 968,
         "line": "\t * @return {object}\r"
       },
       {
-        "lineNumber": 945,
+        "lineNumber": 969,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 946,
+        "lineNumber": 970,
         "line": "\tcommandParse(command,isParent) {\r"
       }
     ],

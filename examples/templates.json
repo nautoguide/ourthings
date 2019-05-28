@@ -1,3 +1,6 @@
-[
-  "actions.html"
-]
+{
+  "version": 1.0,
+  "templates": [
+    "actions.html"
+  ]
+}
