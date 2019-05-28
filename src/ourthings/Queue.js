@@ -84,6 +84,8 @@ class Queue {
 		 */
 		self.defaultTimer = 10;
 
+		self.developerMode=false;
+
 
 		//console.clear();
 		console.info(self.DEFINE.CONSOLE_LINE);
@@ -127,7 +129,8 @@ class Queue {
 		 * Load any perm cookies
 		 */
 		self._loadMemoryPerms();
-
+		if(window.memory.developer.value===true)
+			self.developerMode=true;
 		/*
 		 * Load any url params into memoery
 		 */
@@ -206,12 +209,22 @@ class Queue {
 	 */
 	templateLoader() {
 		let self=this;
+
+		/*
+		 * Version check as we changed the format
+		 */
+		if(this.templates.version!==1.0) {
+			console.info(self.DEFINE.CONSOLE_LINE);
+			console.error('Error:', "Template file has no version, expecting 1.0");
+			console.info("Warning this error is probably fatal as I have no templates to load");
+			return;
+		}
 		/*
 		 *  Are there any templates to load?
 		 *
 		 *  If not then we dump the fragment into the dom
 		 */
-		if (this.templates.length === 0) {
+		if (this.templates.templates.length === 0) {
 			document.head.appendChild(self.fragment);
 			// Clean up the fragment
 			self.fragment=document.createDocumentFragment();
@@ -231,17 +244,28 @@ class Queue {
 			console.info(self.DEFINE.CONSOLE_LINE);
 			console.log('[Online]');
 			console.log('queue.show(); # To debug the queue');
+			if(self.developerMode===true)
+				console.log('-=[ DEVELOPER MODE ]=-');
 			return;
 		}
 
 		/*
-		 * Pop the template off the stack
+	    * Pop the template off the stack
+	    */
+		let template = this.templates.templates.pop();
+
+
+		/*
+		 * Is there a cache?
 		 */
-		let template = this.templates.pop();
+		if(this.templates.cache&&self.developerMode!==true) {
+			template=this.templates.cache;
+			this.templates.templates=[];
+		}
 
 		fetch(template, {
 			headers: {
-				'Content-Type': 'test/html'
+				'Content-Type': 'text/html'
 			}
 		})
 			.then(response => self.handleFetchErrors(response))
@@ -1167,11 +1191,13 @@ class Queue {
 		return result;
 	}
 
-	toggleDebug() {
-		alert('toggle');
-	}
+	/**
+	 *  Work in progress,
+	 */
 	menu() {
-		document.body.innerHTML+='<div id="ourthingsMenu"><button onclick="queue.toggleDebug()">DEBUG MODE</button></div>';
+		queue.setMemory('developer',!this.developerMode,"Permanent");
+		alert('DEVELOPER MODE: '+this.developerMode)
+		//document.body.innerHTML+='<div id="ourthingsMenu"><button onclick="queue.toggleDebug()">DEBUG MODE</button></div>';
 	}
 
 }

@@ -34,6 +34,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~Validate.html">Validate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateEmail.html">ValidateEmail</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidatePassword.html">ValidatePassword</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateText.html">ValidateText</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
@@ -134,6 +135,8 @@ class Queue {
 		 */
 		self.defaultTimer = 10;
 
+		self.developerMode=false;
+
 
 		//console.clear();
 		console.info(self.DEFINE.CONSOLE_LINE);
@@ -177,7 +180,8 @@ class Queue {
 		 * Load any perm cookies
 		 */
 		self._loadMemoryPerms();
-
+		if(window.memory.developer.value===true)
+			self.developerMode=true;
 		/*
 		 * Load any url params into memoery
 		 */
@@ -256,12 +260,22 @@ class Queue {
 	 */
 	templateLoader() {
 		let self=this;
+
+		/*
+		 * Version check as we changed the format
+		 */
+		if(this.templates.version!==1.0) {
+			console.info(self.DEFINE.CONSOLE_LINE);
+			console.error(&apos;Error:&apos;, &quot;Template file has no version, expecting 1.0&quot;);
+			console.info(&quot;Warning this error is probably fatal as I have no templates to load&quot;);
+			return;
+		}
 		/*
 		 *  Are there any templates to load?
 		 *
 		 *  If not then we dump the fragment into the dom
 		 */
-		if (this.templates.length === 0) {
+		if (this.templates.templates.length === 0) {
 			document.head.appendChild(self.fragment);
 			// Clean up the fragment
 			self.fragment=document.createDocumentFragment();
@@ -281,17 +295,28 @@ class Queue {
 			console.info(self.DEFINE.CONSOLE_LINE);
 			console.log(&apos;[Online]&apos;);
 			console.log(&apos;queue.show(); # To debug the queue&apos;);
+			if(self.developerMode===true)
+				console.log(&apos;-=[ DEVELOPER MODE ]=-&apos;);
 			return;
 		}
 
 		/*
-		 * Pop the template off the stack
+	    * Pop the template off the stack
+	    */
+		let template = this.templates.templates.pop();
+
+
+		/*
+		 * Is there a cache?
 		 */
-		let template = this.templates.pop();
+		if(this.templates.cache&amp;&amp;self.developerMode!==true) {
+			template=this.templates.cache;
+			this.templates.templates=[];
+		}
 
 		fetch(template, {
 			headers: {
-				&apos;Content-Type&apos;: &apos;test/html&apos;
+				&apos;Content-Type&apos;: &apos;text/html&apos;
 			}
 		})
 			.then(response =&gt; self.handleFetchErrors(response))
@@ -1217,11 +1242,13 @@ class Queue {
 		return result;
 	}
 
-	toggleDebug() {
-		alert(&apos;toggle&apos;);
-	}
+	/**
+	 *  Work in progress,
+	 */
 	menu() {
-		document.body.innerHTML+=&apos;&lt;div id=&quot;ourthingsMenu&quot;&gt;&lt;button onclick=&quot;queue.toggleDebug()&quot;&gt;DEBUG MODE&lt;/button&gt;&lt;/div&gt;&apos;;
+		queue.setMemory(&apos;developer&apos;,!this.developerMode,&quot;Permanent&quot;);
+		alert(&apos;DEVELOPER MODE: &apos;+this.developerMode)
+		//document.body.innerHTML+=&apos;&lt;div id=&quot;ourthingsMenu&quot;&gt;&lt;button onclick=&quot;queue.toggleDebug()&quot;&gt;DEBUG MODE&lt;/button&gt;&lt;/div&gt;&apos;;
 	}
 
 }
