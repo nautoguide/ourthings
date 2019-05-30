@@ -129,7 +129,7 @@ class Queue {
 		 * Load any perm cookies
 		 */
 		self._loadMemoryPerms();
-		if(window.memory.developer.value===true)
+		if(window.memory.developer&&window.memory.developer.value===true)
 			self.developerMode=true;
 		/*
 		 * Load any url params into memoery
@@ -265,7 +265,7 @@ class Queue {
 
 		fetch(template, {
 			headers: {
-				'Content-Type': 'test/html'
+				'Content-Type': 'text/html'
 			}
 		})
 			.then(response => self.handleFetchErrors(response))
@@ -986,7 +986,7 @@ class Queue {
 		} else {
 			commandObject.json={};
 		}
-		
+
 		if(jsonArray[1]) {
 			commandObject.options = jsonArray[1];
 		} else {
@@ -1191,11 +1191,13 @@ class Queue {
 		return result;
 	}
 
-	toggleDebug() {
-		alert('toggle');
-	}
+	/**
+	 *  Work in progress,
+	 */
 	menu() {
-		document.body.innerHTML+='<div id="ourthingsMenu"><button onclick="queue.toggleDebug()">DEBUG MODE</button></div>';
+		queue.setMemory('developer',!this.developerMode,"Permanent");
+		alert('DEVELOPER MODE: '+this.developerMode)
+		//document.body.innerHTML+='<div id="ourthingsMenu"><button onclick="queue.toggleDebug()">DEBUG MODE</button></div>';
 	}
 
 }
