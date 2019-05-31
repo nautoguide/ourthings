@@ -478,6 +478,13 @@ export default class Openlayers extends Queueable {
 
     }
 
+	/**
+	 * Toggle layer on and off
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to clear
+	 */
     toggleLayer(pid,json) {
 	    let options=Object.assign({
 		    "map":"default",
@@ -543,6 +550,58 @@ export default class Openlayers extends Queueable {
 		view.animate({zoom: view.getZoom() + options.inc,duration :options.delay});
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
+	}
+
+	/**
+	 * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.duration - Delay period of the zoom in ms
+	 * @param {string} json.location - location to fly to
+	 * @example
+	 * openlayers.animateZoom({"inc":"2});
+	 */
+	flyTo(pid,json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"duration": 2000,
+			"location":""
+		}, json);
+		/*
+		 * Pull all our resources
+		 */
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+
+		let zoom = view.getZoom();
+		let parts = 2;
+		let called = false;
+
+		function callback(complete) {
+			--parts;
+			if (called) {
+				return;
+			}
+			if (parts === 0 || !complete) {
+				called = true;
+				self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+			}
+		}
+
+		view.animate({
+			center: options.location,
+			duration: options.duration
+		}, callback);
+		view.animate({
+			zoom: zoom - 1,
+			duration: options.duration / 2
+		}, {
+			zoom: zoom,
+			duration: options.duration / 2
+		}, callback);
 	}
 
 	/**
