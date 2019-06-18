@@ -180,7 +180,7 @@ class Queue {
 		 * Load any perm cookies
 		 */
 		self._loadMemoryPerms();
-		if(window.memory.developer.value===true)
+		if(window.memory.developer&amp;&amp;window.memory.developer.value===true)
 			self.developerMode=true;
 		/*
 		 * Load any url params into memoery
@@ -1037,7 +1037,7 @@ class Queue {
 		} else {
 			commandObject.json={};
 		}
-		
+
 		if(jsonArray[1]) {
 			commandObject.options = jsonArray[1];
 		} else {
