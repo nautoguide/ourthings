@@ -1080,6 +1080,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#flyto",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-flyTo",
+    "ourthings/Queueable/Openlayers.js~Openlayers#flyTo",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#init",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-init",
     "ourthings/Queueable/Openlayers.js~Openlayers#init",
