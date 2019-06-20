@@ -36,15 +36,23 @@ export default class Browser extends Queueable {
 	 * @param {object} json - queue arguments
 	 */
 	initHistory(pid,json) {
-		window.onpopstate = function(event) {
+		let self=this;
+
+		function urlChange() {
 			let baseURL = location.href;
 			let match=baseURL.match(/#(.*)/);
 			if(match&&match[1]) {
-				this.queue.execute('history'+match[1]);
+				self.queue.execute('history'+match[1]);
 			} else {
-				this.queue.execute('historyRoot');
+				self.queue.execute('historyRoot');
 			}
 		}
+
+		window.onpopstate = urlChange;
+		/*
+		 * IE's *sigh*
+		 */
+		window.onhashchange = urlChange;
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 
 	}
