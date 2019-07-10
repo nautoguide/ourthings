@@ -221,7 +221,8 @@ export default class Openlayers extends Queueable {
 	 */
 	_addLayer_xyz(options) {
 		let source= new XYZ({
-			url: options.url
+			url: options.url,
+			crossOrigin: 'Anonymous'
 		});
 		let olLayer = new TileLayer({
 			extent: options.extent,

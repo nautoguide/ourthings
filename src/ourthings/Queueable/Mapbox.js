@@ -29,14 +29,17 @@ export default class Mapbox extends Queueable {
             center: [-74.5, 40],
             style: 'mapbox://styles/mapbox/streets-v11',
             target: 'map',
+            token:'fail',
+            pitch: 0
         }, json);
 
-        MapboxGL.accessToken = 'pk.eyJ1IjoibmF1dG9ndWlkZWx0ZCIsImEiOiJjamx4dHQwYngwY2E1M3dxZGx1MHJoendpIn0.a6m0F2N8dJnx5yzz-OJfFQ';
+        MapboxGL.accessToken = options.token;
         const map = new MapboxGL.Map({
             container: options.target, // container id
             style: options.style, // stylesheet location
             center: options.center, // starting position [lng, lat]
             zoom: options.zoom, // starting zoom
+            pitch: options.pitch
         });
 
         this.maps[options.map]={ map, layers: {} };
