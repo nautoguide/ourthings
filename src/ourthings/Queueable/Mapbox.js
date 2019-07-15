@@ -136,6 +136,31 @@ export default class Mapbox extends Queueable {
 	    })
     }
 
+    addSelect(pid,json) {
+        let self=this;
+        const options = Object.assign({
+            map: 'default',
+            images:[]
+        }, json);
+
+        self.maps[options.map].map.on('click', json.layer, function (e) {
+            const selectDetails={
+                coordinates: e.features[0].geometry.coordinates.slice(),
+                properties: e.features[0].properties
+            }
+
+           /* while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }*/
+            self.queue.setMemory("select",selectDetails,"Session");
+
+            self.queue.execute(json.queue,selectDetails);
+
+        });
+        self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+    }
+
     /**
      * Set the data for a layer
      * @param {int} pid
