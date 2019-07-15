@@ -55,7 +55,8 @@ export default class Mapbox extends Queueable {
      * @param {object} json
      * @param {string} json.map - name for the map (used to reference)
      * @param {string} json.name - Name for the layer/source
-     * @param {string} json.featureType - The type of feature for the layer one of ['Point', 'Line', 'Polygon', 'MultiLineString']
+     * @param {string} json.type - The type of feature for the layer one of ['Point', 'Line', 'Polygon', 'MultiLineString']
+     * @param {string} json.filter - The layer filter
      * @param {string|object} json.data - Set the data of the source, this could also be a url for the data
      * @example
      * mapbox.addSource({"map": "testMap", "name": "newLayer", "featureType": "Point", "data": "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_10m_ports.geojson"});
@@ -67,9 +68,8 @@ export default class Mapbox extends Queueable {
                 type: 'FeatureCollection',
                 features: [],
             },
-            type: 'FeatureCollection',
+            type: 'point',
             name: 'default',
-            featureType: 'Point',
             paint: {},
         }, json);
 
@@ -86,30 +86,54 @@ export default class Mapbox extends Queueable {
     /**
      * Add the layer to the map once a source has been created.
      * @param {object} options
-     * @param {string} options.featureType - The type of feature that the layer is.
+     * @param {string} options.type - The type of feature that the layer is.
      * @param {string} options.name - The name for the layer
      * @param {object} options.paint - The styling for the layer
      * @private
      */
     _addLayer(options) {
-        const Types = {
-            Point: 'circle',
-            Line: 'line',
-            LineString: 'line',
-            Polygon: 'fill',
-        };
 
-        this.maps[options.map].map.addLayer({
-            id: options.name,
-            type: Types[options.featureType],
-            source: options.name,
-            filter: ['==', '$type', options.featureType],
-            paint: options.paint,
-        });
+    	let mapOptions={
+		    id: options.name,
+		    type: options.type,
+		    source: options.name,
+		    paint: options.paint,
+		    layout: options.layout
+	    };
 
-        this.maps[options.map].layers[options.name] = {
-            defaultStyle: options.paint,
-        }
+		if(options.filter)
+    	    mapOptions.filter=options.filter;
+
+        this.maps[options.map].map.addLayer(mapOptions);
+    }
+
+	/**
+	 * Load images for use as icons (needs to be run prior to layer addition)
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - name for the map (used to reference)
+	 * @param {object} json.images - array of images to load in format [{"url":"url to image ","id":"id to use"}]
+	 */
+    addImages(pid,json) {
+	    const options = Object.assign({
+		    map: 'default',
+		    images:[]
+	    }, json);
+	    let self=this;
+	    Promise.all(
+		    options.images.map(img => new Promise((resolve, reject) => {
+			    self.maps[options.map].map.loadImage(img.url, function (error, res) {
+				    if (error) {
+				    	console.error('IMAGE: '+img.url+' - '+img.id);
+					    throw error;
+				    }
+				    self.maps[options.map].map.addImage(img.id, res);
+				    resolve();
+			    })
+		    }))
+	    ).then(function(){
+		    self.finished(pid,self.queue.DEFINE.FIN_OK);
+	    })
     }
 
     /**
