@@ -88,7 +88,8 @@ export default class Mapbox extends Queueable {
      * @param {object} options
      * @param {string} options.type - The type of feature that the layer is.
      * @param {string} options.name - The name for the layer
-     * @param {object} options.paint - The styling for the layer
+     * @param {object} options.paint - The paint styling for the layer
+     * @param {object} options.layout - The layout styling for the layer
      * @private
      */
     _addLayer(options) {
@@ -97,9 +98,11 @@ export default class Mapbox extends Queueable {
 		    id: options.name,
 		    type: options.type,
 		    source: options.name,
-		    paint: options.paint,
-		    layout: options.layout
+		    paint: options.paint
 	    };
+
+	    if(options.layout)
+		    mapOptions.layout=options.layout;
 
 		if(options.filter)
     	    mapOptions.filter=options.filter;
@@ -134,6 +137,31 @@ export default class Mapbox extends Queueable {
 	    ).then(function(){
 		    self.finished(pid,self.queue.DEFINE.FIN_OK);
 	    })
+    }
+
+    addSelect(pid,json) {
+        let self=this;
+        const options = Object.assign({
+            map: 'default',
+            images:[]
+        }, json);
+
+        self.maps[options.map].map.on('click', json.layer, function (e) {
+            const selectDetails={
+                coordinates: e.features[0].geometry.coordinates.slice(),
+                properties: e.features[0].properties
+            }
+
+           /* while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }*/
+            self.queue.setMemory("select",selectDetails,"Session");
+
+            self.queue.execute(json.queue,selectDetails);
+
+        });
+        self.finished(pid,self.queue.DEFINE.FIN_OK);
+
     }
 
     /**
