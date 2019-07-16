@@ -88,7 +88,8 @@ export default class Mapbox extends Queueable {
      * @param {object} options
      * @param {string} options.type - The type of feature that the layer is.
      * @param {string} options.name - The name for the layer
-     * @param {object} options.paint - The styling for the layer
+     * @param {object} options.paint - The paint styling for the layer
+     * @param {object} options.layout - The layout styling for the layer
      * @private
      */
     _addLayer(options) {
@@ -97,9 +98,11 @@ export default class Mapbox extends Queueable {
 		    id: options.name,
 		    type: options.type,
 		    source: options.name,
-		    paint: options.paint,
-		    layout: options.layout
+		    paint: options.paint
 	    };
+
+	    if(options.layout)
+		    mapOptions.layout=options.layout;
 
 		if(options.filter)
     	    mapOptions.filter=options.filter;
