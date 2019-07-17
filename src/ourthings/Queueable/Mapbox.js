@@ -143,24 +143,49 @@ export default class Mapbox extends Queueable {
         let self=this;
         const options = Object.assign({
             map: 'default',
-            images:[]
+            images:[],
+            queue:"select"
         }, json);
 
         self.maps[options.map].map.on('click', json.layer, function (e) {
             const selectDetails={
                 coordinates: e.features[0].geometry.coordinates.slice(),
                 properties: e.features[0].properties
-            }
+            };
 
            /* while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                 coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
             }*/
             self.queue.setMemory("select",selectDetails,"Session");
 
-            self.queue.execute(json.queue,selectDetails);
+            self.queue.execute(options.queue,selectDetails);
 
         });
         self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+    }
+
+    manualSelect(pid,json) {
+
+        const options = Object.assign({
+            map: 'default',
+            layer:'default',
+            queue:"select",
+            filter: []
+        }, json);
+        let selectDetails={};
+        const features=this.maps[options.map].map.getSource(json.layer)._data.features;
+
+        features.forEach(function(feature){
+            let res=eval(feature.properties[options.filter[1]]+' '+options.filter[0]+' '+options.filter[2]);
+            if(res) {
+                selectDetails.properties=feature.properties;
+            }
+        });
+
+        self.queue.setMemory("select",selectDetails,"Session");
+        self.queue.execute(options.queue,selectDetails);
+        this.finished(pid,self.queue.DEFINE.FIN_OK);
 
     }
 
