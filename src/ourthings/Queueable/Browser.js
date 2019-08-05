@@ -74,4 +74,14 @@ export default class Browser extends Queueable {
 		location.href = baseURL + '#' + options.history;
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
+
+	backHistory(pid,json) {
+		window.history.back();
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
+	forwardHistory(pid,json) {
+		window.history.forward();
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
 }
