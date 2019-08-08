@@ -176,6 +176,7 @@ class Queue {
 	 * @returns {Object}
 	 */
 	handleFetchErrors(response) {
+		let self=this;
 		if (!response.ok) {
 			self.status=self.DEFINE.STATUS_ERROR;
 			throw Error(response.statusText);
