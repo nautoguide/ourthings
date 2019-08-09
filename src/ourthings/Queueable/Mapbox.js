@@ -185,8 +185,21 @@ export default class Mapbox extends Queueable {
 
         self.queue.setMemory("select",selectDetails,"Session");
         self.queue.execute(options.queue,selectDetails);
-        this.finished(pid,self.queue.DEFINE.FIN_OK);
+        this.finished(pid,this.queue.DEFINE.FIN_OK);
 
+    }
+
+    addClick(pid,json) {
+        let self=this;
+        const options = Object.assign({
+            map: 'default',
+            queue: 'clicked'
+        }, json);
+        this.maps[options.map].map.on('click', function(e) {
+            self.queue.setMemory("click",e,"Session");
+            self.queue.execute(options.queue,e);
+        });
+        this.finished(pid,this.queue.DEFINE.FIN_OK);
     }
 
     /**
