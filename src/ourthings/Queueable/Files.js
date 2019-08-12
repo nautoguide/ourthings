@@ -21,6 +21,7 @@ export default class Files extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.targetId - Dom location that contains the files input
 	 * @param {string} json.previewId - Dom location to put preview
+	 * @param {string} json.background - Use background rather than src
 	 */
 	clientLoad(pid, json) {
 		let self = this;
@@ -32,7 +33,10 @@ export default class Files extends Queueable {
 			reader.onload = function (evt) {
 				if (json.previewId) {
 					let preview = self.queue.getElement(json.previewId);
-					preview.src = evt.target.result;
+					if(json.background)
+						preview.style['background-image']=evt.target.result;
+					else
+						preview.src = evt.target.result;
 				} else {
 					self.set(pid, evt.target.result);
 				}

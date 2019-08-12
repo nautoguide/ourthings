@@ -101,8 +101,11 @@ export default class Mapbox extends Queueable {
 		    paint: options.paint
 	    };
 
-	    if(options.layout)
-		    mapOptions.layout=options.layout;
+	    if(options.layout) {
+	        if(typeof options.layout !== 'object')
+	            options.layout=window[options.layout];
+            mapOptions.layout = options.layout;
+        }
 
 		if(options.filter)
     	    mapOptions.filter=options.filter;
@@ -196,8 +199,10 @@ export default class Mapbox extends Queueable {
             queue: 'clicked'
         }, json);
         this.maps[options.map].map.on('click', function(e) {
-            self.queue.setMemory("click",e,"Session");
-            self.queue.execute(options.queue,e);
+
+            let data={location:e.lngLat};
+            self.queue.setMemory("click",data,"Session");
+            self.queue.execute(options.queue,data);
         });
         this.finished(pid,this.queue.DEFINE.FIN_OK);
     }
