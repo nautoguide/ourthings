@@ -1,5 +1,6 @@
 /** @module ourthings/Queue */
 import Define from './Define.js';
+import * as consoleBadge from 'console-badge';
 
 /**
  * @classdesc
@@ -87,10 +88,14 @@ class Queue {
 		self.developerMode=false;
 
 
-		//console.clear();
-		console.info(self.DEFINE.CONSOLE_LINE);
-		console.info('ourthings framework https://github.com/nautoguide/ourthings');
-
+		console.clear();
+		consoleBadge.log({
+			mode: 'shields.io',
+			leftText: 'ourthings framework',
+			rightText: 'https://github.com/nautoguide/ourthings 🚀',
+			rightBgColor: '#ffc107',
+			rightTextColor: '#1a1a1a'
+		});
 		/*
 		 * Listener for our chrome-plugin
 		 */
@@ -115,7 +120,6 @@ class Queue {
 		 * This basically passes the queue object (self) though but also for any queueables that require it
 		 * starts any promise functions that will result in them becoming active
 		 */
-		console.log("[Queueables]");
 		for (let i in queueablesList) {
 			self.checkQueueable(i,queueablesList[i]);
 		}
@@ -189,7 +193,13 @@ class Queue {
 		if(self.queueables[name]===undefined) {
 			self.queueables[name]=new obj();
 			self.queueables[name].init(self);
-			console.log('Booting Queueable ['+name+']');
+			consoleBadge.log({
+				mode: 'shields.io',
+				leftText: 'Booting',
+				rightText: name,
+				rightBgColor: '#ffc107',
+				rightTextColor: '#1a1a1a'
+			});
 			return false;
 		}
 		return true;
@@ -242,11 +252,22 @@ class Queue {
 			setTimeout(function(){ self.templateProcessor("#init",false);},100);
 
 			self.status=self.DEFINE.STATUS_RUNNING;
-			console.info(self.DEFINE.CONSOLE_LINE);
-			console.log('[Online]');
-			console.log('queue.show(); # To debug the queue');
-			if(self.developerMode===true)
-				console.log('-=[ DEVELOPER MODE ]=-');
+			consoleBadge.log({
+				mode: 'shields.io',
+				leftText: 'Online',
+				rightText: 'queue.show(); # To debug the queue',
+				rightBgColor: '#ffc107',
+				rightTextColor: '#1a1a1a'
+			});
+			if(self.developerMode===true) {
+				consoleBadge.log({
+					mode: 'shields.io',
+					leftText: 'DEVELOPER MODE',
+					rightText: 'Enabled',
+					rightBgColor: '#ffc107',
+					rightTextColor: '#1a1a1a'
+				});
+			}
 			return;
 		}
 
@@ -424,7 +445,13 @@ class Queue {
 				else
 					template = template.replace(match[0], self.templateVars(elseResult));
 			} catch(e) {
-				console.log('Failed to eval ['+match[1]+']');
+				consoleBadge.log({
+					mode: 'shields.io',
+					leftText: 'Failed to eval',
+					rightText: match[1],
+					rightBgColor: '#ff4d4d',
+					rightTextColor: '#1a1a1a'
+				});
 				template = template.replace(match[0], '');
 			}
 		}
@@ -493,7 +520,13 @@ class Queue {
 		try {
 			ret=eval(parseString);
 		} catch (e) {
-			console.log('Cant resolve ['+parseString+']');
+			consoleBadge.log({
+				mode: 'shields.io',
+				leftText: 'Cant resolve',
+				rightText: parseString,
+				rightBgColor: '#ff4d4d',
+				rightTextColor: '#1a1a1a'
+			});
 		}
 		return ret;
 	}
@@ -618,7 +651,14 @@ class Queue {
 			 */
 			if(commandObj[command].options.queuePrepare!== undefined) {
 				self.prepare[commandObj[command].options.queuePrepare]=self.deepCopy(commandObj[command]);
-				console.log('Added Prepared Queue ['+commandObj[command].options.queuePrepare+']');
+				consoleBadge.log({
+					mode: 'shields.io',
+					leftText: 'Added Prepared Queue',
+					rightText: commandObj[command].options.queuePrepare,
+					rightBgColor: '#aeff79',
+					rightTextColor: '#1a1a1a'
+				});
+
 			}
 		}
 		/*
@@ -1109,6 +1149,10 @@ class Queue {
 
 			}
 		}
+	}
+
+	consoleBadge(options) {
+		consoleBadge.log(options);
 	}
 
 	/**

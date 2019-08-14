@@ -28,6 +28,7 @@ import {register} from 'ol/proj/proj4';
 import {get as getProjection} from 'ol/proj'
 
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction.js';
+import * as consoleBadge from "console-badge";
 
 proj4.defs([
 	["EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs"]
@@ -86,6 +87,7 @@ export default class Openlayers extends Queueable {
 			"target":"map",
 			"center":[0,0],
 			"projection": "EPSG:3857",
+			"debug":false
 		},json);
 		let projection =  getProjection(options.projection);
 		const map = new Map({
@@ -104,8 +106,38 @@ export default class Openlayers extends Queueable {
 			keyboardEventTarget: document
 
 		});
+		if(options.debug===true) {
+			self.queue.consoleBadge({
+				mode: 'shields.io',
+				leftText: 'Map debugger online',
+				rightText: options.map,
+				rightBgColor: '#7277ff',
+				rightTextColor: '#1a1a1a'
+			});
+			map.on('moveend', self._debug);
+		}
 		self.maps[options.map]={"object":map,"layers":{}};
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	_debug(event) {
+		let map = event.map;
+		let extent = map.getView().calculateExtent(map.getSize());
+		let center= map.getView().getCenter();
+		self.queue.consoleBadge({
+			mode: 'shields.io',
+			leftText: 'Map Extent',
+			rightText: extent,
+			rightBgColor: '#7277ff',
+			rightTextColor: '#1a1a1a'
+		});
+		self.queue.consoleBadge({
+			mode: 'shields.io',
+			leftText: 'Map Center',
+			rightText: center,
+			rightBgColor: '#7277ff',
+			rightTextColor: '#1a1a1a'
+		});
 	}
 
 	/**
