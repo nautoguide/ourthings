@@ -41,6 +41,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/W3Menu.js~W3Menu.html">W3Menu</a></span></span></li>
@@ -73,16 +74,25 @@ export default class Api extends Queueable {
 	 * @param {string} json.url - URL to make GET request to
 	 * @param {string} json.contentType=application/json - Content type to request
 	 * @param {string} json.header - header object to send (note Content-Type is overwritten by above setting)
+	 * @param {string} json.name - name of error queue to use
 	 */
 	get(pid,json) {
 		let self=this;
 		json.contentType=json.contentType||&apos;application/json&apos;;
+		json.name=json.name||&apos;apiError&apos;;
 		let headers=json.headers||{};
 		headers[&apos;Content-Type&apos;]=json.contentType||&apos;application/json&apos;;
 		fetch(json.url, {
 			headers: headers,
 		})
-			.then(response =&gt; self.queue.handleFetchErrors(response))
+			.then(function(response) {
+				if (!response.ok) {
+					self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:response},self.queue.DEFINE.MEMORY_SESSION);
+					self.queue.execute(json.name);
+				}
+				self.queue.handleFetchErrors(response);
+				return response;
+			})
 			.then(function(response) {
 				switch(json.contentType) {
 					case &apos;application/json&apos;:
@@ -100,9 +110,11 @@ export default class Api extends Queueable {
 
 			})
 			.catch(function (error) {
+				self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:error},self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.execute(json.name);
 				console.info(self.queue.DEFINE.CONSOLE_LINE);
 				console.error(&apos;Error:&apos;, error);
-				console.info(&quot;Warning this error is probably fatal as I have no templates to load&quot;)
+				console.info(&quot;api.get Warning this error is probably fatal&quot;);
 			});
 
 	}
@@ -116,10 +128,12 @@ export default class Api extends Queueable {
 	 * @param {string} json.contentType=application/json - Content type to request
 	 * @param {string} json.header - header object to send (note Content-Type is overwritten by above setting)
 	 * @param {string} json.body - object to send JSON.stringify is applies to this
+	 * @param {string} json.name - name of error queue to use
 	 */
 	post(pid,json) {
 		let self=this;
 		json.contentType=json.contentType||&apos;application/json&apos;;
+		json.name=json.name||&apos;apiError&apos;;
 		let headers=json.headers||{};
 		headers[&apos;Content-Type&apos;]=json.contentType||&apos;application/json&apos;;
 		fetch(json.url, {
@@ -127,7 +141,14 @@ export default class Api extends Queueable {
 			method: &apos;POST&apos;,
 			body: JSON.stringify(json.body)
 		})
-			.then(response =&gt; self.queue.handleFetchErrors(response))
+			.then(function(response) {
+				if (!response.ok) {
+					self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:response},self.queue.DEFINE.MEMORY_SESSION);
+					self.queue.execute(json.name);
+				}
+				self.queue.handleFetchErrors(response);
+				return response;
+			})
 			.then(function(response) {
 				switch(json.contentType) {
 					case &apos;application/json&apos;:
@@ -145,9 +166,11 @@ export default class Api extends Queueable {
 
 			})
 			.catch(function (error) {
+				self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:error},self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.execute(json.name);
 				console.info(self.queue.DEFINE.CONSOLE_LINE);
 				console.error(&apos;Error:&apos;, error);
-				console.info(&quot;Warning this error is probably fatal as I have no templates to load&quot;)
+				console.info(&quot;api.post Warning this error is probably fatal&quot;);
 			});
 
 	}
@@ -161,10 +184,12 @@ export default class Api extends Queueable {
 	 * @param {string} json.contentType=application/json - Content type to request
 	 * @param {string} json.header - header object to send (note Content-Type is overwritten by above setting)
 	 * @param {string} json.body - object to send JSON.stringify is applies to this
+	 * @param {string} json.name - name of error queue to use
 	 */
 	put(pid,json) {
 		let self=this;
 		json.contentType=json.contentType||&apos;image/png&apos;;
+		json.name=json.name||&apos;apiError&apos;;
 		let headers=json.headers||{};
 		headers[&apos;Content-Type&apos;]=json.contentType;
 		fetch(json.url, {
@@ -172,7 +197,14 @@ export default class Api extends Queueable {
 			method: &apos;PUT&apos;,
 			body: window.atob(json.body)
 		})
-			.then(response =&gt; self.queue.handleFetchErrors(response))
+			.then(function(response) {
+				if (!response.ok) {
+					self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:response},self.queue.DEFINE.MEMORY_SESSION);
+					self.queue.execute(json.name);
+				}
+				self.queue.handleFetchErrors(response);
+				return response;
+			})
 			.then(function(response) {
 				switch(json.contentType) {
 					case &apos;application/json&apos;:
@@ -190,9 +222,11 @@ export default class Api extends Queueable {
 
 			})
 			.catch(function (error) {
+				self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:error},self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.execute(json.name);
 				console.info(self.queue.DEFINE.CONSOLE_LINE);
 				console.error(&apos;Error:&apos;, error);
-				console.info(&quot;Warning this error is probably fatal as I have no templates to load&quot;)
+				console.info(&quot;api.put Warning this error is probably fatal&quot;);
 			});
 
 	}

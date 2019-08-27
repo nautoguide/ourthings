@@ -36,6 +36,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "@nautoguide/ourthings/ourthings/queueable/markdown.js~markdown",
+    "class/ourthings/Queueable/Markdown.js~Markdown.html",
+    "<span>Markdown</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/Markdown.js</span>",
+    "class"
+  ],
+  [
     "@nautoguide/ourthings/ourthings/queueable/openlayers.js~openlayers",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html",
     "<span>Openlayers</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/Openlayers.js</span>",
@@ -600,6 +606,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queue.js~queue#consolebadge",
+    "class/ourthings/Queue.js~Queue.html#instance-method-consoleBadge",
+    "ourthings/Queue.js~Queue#consoleBadge",
+    "method"
+  ],
+  [
     "ourthings/queue.js~queue#constructor",
     "class/ourthings/Queue.js~Queue.html#instance-constructor-constructor",
     "ourthings/Queue.js~Queue#constructor",
@@ -858,6 +870,18 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/browser.js~browser#backhistory",
+    "class/ourthings/Queueable/Browser.js~Browser.html#instance-method-backHistory",
+    "ourthings/Queueable/Browser.js~Browser#backHistory",
+    "method"
+  ],
+  [
+    "ourthings/queueable/browser.js~browser#forwardhistory",
+    "class/ourthings/Queueable/Browser.js~Browser.html#instance-method-forwardHistory",
+    "ourthings/Queueable/Browser.js~Browser#forwardHistory",
+    "method"
+  ],
+  [
     "ourthings/queueable/browser.js~browser#inithistory",
     "class/ourthings/Queueable/Browser.js~Browser.html#instance-method-initHistory",
     "ourthings/Queueable/Browser.js~Browser#initHistory",
@@ -990,6 +1014,18 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/markdown.js",
+    "file/ourthings/Queueable/Markdown.js.html",
+    "ourthings/Queueable/Markdown.js",
+    "file"
+  ],
+  [
+    "ourthings/queueable/markdown.js~markdown#makehtml",
+    "class/ourthings/Queueable/Markdown.js~Markdown.html#instance-method-makeHtml",
+    "ourthings/Queueable/Markdown.js~Markdown#makeHtml",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js",
     "file/ourthings/Queueable/Openlayers.js.html",
     "ourthings/Queueable/Openlayers.js",
@@ -1017,6 +1053,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/openlayers.js~openlayers#_addlayer_xyz",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_xyz",
     "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_xyz",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#_debug",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_debug",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_debug",
     "method"
   ],
   [

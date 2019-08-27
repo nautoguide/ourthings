@@ -41,6 +41,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/W3Menu.js~W3Menu.html">W3Menu</a></span></span></li>
@@ -87,15 +88,23 @@ export default class Browser extends Queueable {
 	 * @param {object} json - queue arguments
 	 */
 	initHistory(pid,json) {
-		window.onpopstate = function(event) {
+		let self=this;
+
+		function urlChange() {
 			let baseURL = location.href;
 			let match=baseURL.match(/#(.*)/);
 			if(match&amp;&amp;match[1]) {
-				this.queue.execute(&apos;history&apos;+match[1]);
+				self.queue.execute(&apos;history&apos;+match[1]);
 			} else {
-				this.queue.execute(&apos;historyRoot&apos;);
+				self.queue.execute(&apos;historyRoot&apos;);
 			}
 		}
+
+		window.onpopstate = urlChange;
+		/*
+		 * IE&apos;s *sigh*
+		 */
+		window.onhashchange = urlChange;
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 
 	}
@@ -115,6 +124,16 @@ export default class Browser extends Queueable {
 		if(baseURL.match(/#/))
 			baseURL = baseURL.slice(0, location.href.indexOf(&apos;#&apos;));
 		location.href = baseURL + &apos;#&apos; + options.history;
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
+	backHistory(pid,json) {
+		window.history.back();
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
+	forwardHistory(pid,json) {
+		window.history.forward();
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 }
