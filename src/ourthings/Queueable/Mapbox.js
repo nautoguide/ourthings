@@ -207,6 +207,15 @@ export default class Mapbox extends Queueable {
         this.finished(pid,this.queue.DEFINE.FIN_OK);
     }
 
+    removeClick(pid,json) {
+        let self=this;
+        const options = Object.assign({
+            map: 'default'
+        }, json);
+        this.maps[options.map].map.off('click', function(e) {});
+        this.finished(pid,this.queue.DEFINE.FIN_OK);
+    }
+
     /**
      * Set the data for a layer
      * @param {int} pid
