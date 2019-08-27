@@ -41,6 +41,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/W3Menu.js~W3Menu.html">W3Menu</a></span></span></li>
@@ -51,6 +52,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queue.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module ourthings/Queue */
 import Define from &apos;./Define.js&apos;;
+import * as consoleBadge from &apos;console-badge&apos;;
 
 /**
  * @classdesc
@@ -138,10 +140,14 @@ class Queue {
 		self.developerMode=false;
 
 
-		//console.clear();
-		console.info(self.DEFINE.CONSOLE_LINE);
-		console.info(&apos;ourthings framework https://github.com/nautoguide/ourthings&apos;);
-
+		console.clear();
+		consoleBadge.log({
+			mode: &apos;shields.io&apos;,
+			leftText: &apos;ourthings framework&apos;,
+			rightText: &apos;https://github.com/nautoguide/ourthings &#x1F680;&apos;,
+			rightBgColor: &apos;#ffc107&apos;,
+			rightTextColor: &apos;#1a1a1a&apos;
+		});
 		/*
 		 * Listener for our chrome-plugin
 		 */
@@ -166,7 +172,6 @@ class Queue {
 		 * This basically passes the queue object (self) though but also for any queueables that require it
 		 * starts any promise functions that will result in them becoming active
 		 */
-		console.log(&quot;[Queueables]&quot;);
 		for (let i in queueablesList) {
 			self.checkQueueable(i,queueablesList[i]);
 		}
@@ -227,6 +232,7 @@ class Queue {
 	 * @returns {Object}
 	 */
 	handleFetchErrors(response) {
+		let self=this;
 		if (!response.ok) {
 			self.status=self.DEFINE.STATUS_ERROR;
 			throw Error(response.statusText);
@@ -239,7 +245,13 @@ class Queue {
 		if(self.queueables[name]===undefined) {
 			self.queueables[name]=new obj();
 			self.queueables[name].init(self);
-			console.log(&apos;Booting Queueable [&apos;+name+&apos;]&apos;);
+			consoleBadge.log({
+				mode: &apos;shields.io&apos;,
+				leftText: &apos;Booting&apos;,
+				rightText: name,
+				rightBgColor: &apos;#ffc107&apos;,
+				rightTextColor: &apos;#1a1a1a&apos;
+			});
 			return false;
 		}
 		return true;
@@ -292,11 +304,22 @@ class Queue {
 			setTimeout(function(){ self.templateProcessor(&quot;#init&quot;,false);},100);
 
 			self.status=self.DEFINE.STATUS_RUNNING;
-			console.info(self.DEFINE.CONSOLE_LINE);
-			console.log(&apos;[Online]&apos;);
-			console.log(&apos;queue.show(); # To debug the queue&apos;);
-			if(self.developerMode===true)
-				console.log(&apos;-=[ DEVELOPER MODE ]=-&apos;);
+			consoleBadge.log({
+				mode: &apos;shields.io&apos;,
+				leftText: &apos;Online&apos;,
+				rightText: &apos;queue.show(); # To debug the queue&apos;,
+				rightBgColor: &apos;#ffc107&apos;,
+				rightTextColor: &apos;#1a1a1a&apos;
+			});
+			if(self.developerMode===true) {
+				consoleBadge.log({
+					mode: &apos;shields.io&apos;,
+					leftText: &apos;DEVELOPER MODE&apos;,
+					rightText: &apos;Enabled&apos;,
+					rightBgColor: &apos;#ffc107&apos;,
+					rightTextColor: &apos;#1a1a1a&apos;
+				});
+			}
 			return;
 		}
 
@@ -474,7 +497,13 @@ class Queue {
 				else
 					template = template.replace(match[0], self.templateVars(elseResult));
 			} catch(e) {
-				console.log(&apos;Failed to eval [&apos;+match[1]+&apos;]&apos;);
+				consoleBadge.log({
+					mode: &apos;shields.io&apos;,
+					leftText: &apos;Failed to eval&apos;,
+					rightText: match[1],
+					rightBgColor: &apos;#ff4d4d&apos;,
+					rightTextColor: &apos;#1a1a1a&apos;
+				});
 				template = template.replace(match[0], &apos;&apos;);
 			}
 		}
@@ -543,7 +572,13 @@ class Queue {
 		try {
 			ret=eval(parseString);
 		} catch (e) {
-			console.log(&apos;Cant resolve [&apos;+parseString+&apos;]&apos;);
+			consoleBadge.log({
+				mode: &apos;shields.io&apos;,
+				leftText: &apos;Cant resolve&apos;,
+				rightText: parseString,
+				rightBgColor: &apos;#ff4d4d&apos;,
+				rightTextColor: &apos;#1a1a1a&apos;
+			});
 		}
 		return ret;
 	}
@@ -668,7 +703,14 @@ class Queue {
 			 */
 			if(commandObj[command].options.queuePrepare!== undefined) {
 				self.prepare[commandObj[command].options.queuePrepare]=self.deepCopy(commandObj[command]);
-				console.log(&apos;Added Prepared Queue [&apos;+commandObj[command].options.queuePrepare+&apos;]&apos;);
+				consoleBadge.log({
+					mode: &apos;shields.io&apos;,
+					leftText: &apos;Added Prepared Queue&apos;,
+					rightText: commandObj[command].options.queuePrepare,
+					rightBgColor: &apos;#aeff79&apos;,
+					rightTextColor: &apos;#1a1a1a&apos;
+				});
+
 			}
 		}
 		/*
@@ -1159,6 +1201,10 @@ class Queue {
 
 			}
 		}
+	}
+
+	consoleBadge(options) {
+		consoleBadge.log(options);
 	}
 
 	/**

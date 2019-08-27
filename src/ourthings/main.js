@@ -12,6 +12,7 @@ import Openlayers from './Queueable/Openlayers';
 import Browser from './Queueable/Browser';
 import W3Menu from './Queueable/W3Menu';
 import Mapbox from "./Queueable/Mapbox";
+import Markdown from "./Queueable/Markdown";
 
 /*
  * Start the queue engine
@@ -29,7 +30,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		"openlayers": Openlayers,
 		"browser": Browser,
 		"w3menu": W3Menu,
-		"mapbox" : Mapbox
+		"mapbox" : Mapbox,
+		"markdown": Markdown
 	});
 	window.queue = queue;
 });

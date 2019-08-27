@@ -1,6 +1,6 @@
 {
   "name": "@nautoguide/ourthings",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Queue based JavaScript framework",
   "scripts": {
     "build": "webpack --config webpack.config.basic.js",
@@ -43,7 +43,8 @@
     "whatwg-fetch": "^3.0.0",
     "http-server": "^0.11.1",
     "mapbox-gl": "^0.53.1",
-    "console-badge": "^1.1.0"
+    "console-badge": "^1.1.0",
+    "showdown": "^1.9.0"
   },
   "publishConfig": {
     "access": "public"
