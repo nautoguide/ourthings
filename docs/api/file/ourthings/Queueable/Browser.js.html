@@ -92,8 +92,10 @@ export default class Browser extends Queueable {
 
 		function urlChange() {
 			let baseURL = location.href;
-			let match=baseURL.match(/#(.*)/);
+			let match=baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
 			if(match&amp;&amp;match[1]) {
+				if(match[2])
+					self.queue.setMemory(&apos;history&apos;, match[2], &quot;Session&quot;);
 				self.queue.execute(&apos;history&apos;+match[1]);
 			} else {
 				self.queue.execute(&apos;historyRoot&apos;);
@@ -105,6 +107,16 @@ export default class Browser extends Queueable {
 		 * IE&apos;s *sigh*
 		 */
 		window.onhashchange = urlChange;
+
+		if(json.checkURL) {
+			let baseURL = location.href;
+			let match=baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
+			if(match&amp;&amp;match[1]) {
+				if(match[2])
+					self.queue.setMemory(&apos;history&apos;, match[2], &quot;Session&quot;);
+				self.queue.execute(&apos;history&apos;+match[1]);
+			}
+		}
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 
 	}

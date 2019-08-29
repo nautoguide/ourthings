@@ -64,6 +64,7 @@ import Openlayers from &apos;./Queueable/Openlayers&apos;;
 import Browser from &apos;./Queueable/Browser&apos;;
 import W3Menu from &apos;./Queueable/W3Menu&apos;;
 import Mapbox from &quot;./Queueable/Mapbox&quot;;
+import Markdown from &quot;./Queueable/Markdown&quot;;
 
 /*
  * Start the queue engine
@@ -81,7 +82,8 @@ document.addEventListener(&quot;DOMContentLoaded&quot;, function(event) {
 		&quot;openlayers&quot;: Openlayers,
 		&quot;browser&quot;: Browser,
 		&quot;w3menu&quot;: W3Menu,
-		&quot;mapbox&quot; : Mapbox
+		&quot;mapbox&quot; : Mapbox,
+		&quot;markdown&quot;: Markdown
 	});
 	window.queue = queue;
 });

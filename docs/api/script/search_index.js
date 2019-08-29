@@ -744,6 +744,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queue.js~queue#setregister",
+    "class/ourthings/Queue.js~Queue.html#instance-method-setRegister",
+    "ourthings/Queue.js~Queue#setRegister",
+    "method"
+  ],
+  [
     "ourthings/queue.js~queue#show",
     "class/ourthings/Queue.js~Queue.html#instance-method-show",
     "ourthings/Queue.js~Queue#show",
@@ -1011,6 +1017,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/internals.js~internals#setmemory",
     "class/ourthings/Queueable/Internals.js~Internals.html#instance-method-setMemory",
     "ourthings/Queueable/Internals.js~Internals#setMemory",
+    "method"
+  ],
+  [
+    "ourthings/queueable/internals.js~internals#setregister",
+    "class/ourthings/Queueable/Internals.js~Internals.html#instance-method-setRegister",
+    "ourthings/Queueable/Internals.js~Internals#setRegister",
     "method"
   ],
   [

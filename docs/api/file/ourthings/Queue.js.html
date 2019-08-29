@@ -101,6 +101,10 @@ class Queue {
 		 */
 		self.templates = [];
 
+		/*
+		 * Register lists
+		 */
+		self.registers = [];
 
 		/*
 		 * Create a fragment for big dom inserts
@@ -768,35 +772,43 @@ class Queue {
 				 * Does this queueable exist?
 				 */
 				if(self.queueables[self.queue[item].queueable]) {
+
 					/*
-					 * Is it online? If not we fail silently as it may come online later
+					 * Check if we have any registers that need setting
 					 */
-					if (self.queueables[self.queue[item].queueable].ready) {
-						/*
-						 * Update our state to be running
-						 */
-						self.queue[item].state = self.DEFINE.QUEUE_RUNNING;
-						/*
-						 * Assign a pid
-						 */
-						if (self.queue[item].pid === undefined) {
-							self.queue[item].pid = self.pid;
-							self.pid++;
-						}
-						/*
-						 * Check if any specific timing is needed
-						 */
-						self.queue[item].options.queueTimer = self.queue[item].options.queueTimer || self.defaultTimer;
+
+					if(!self.queue[item].options.queueRegister||(self.queue[item].options.queueRegister&amp;&amp;self.registers.indexOf(self.queue[item].options.queueRegister)!==-1)) {
 
 						/*
-						 *  Launch the function as a time out (so we get control back)
-						 */
-						if (sync) {
-							self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
-						} else {
-							setTimeout(function () {
+                         * Is it online? If not we fail silently as it may come online later
+                         */
+						if (self.queueables[self.queue[item].queueable].ready) {
+							/*
+                             * Update our state to be running
+                             */
+							self.queue[item].state = self.DEFINE.QUEUE_RUNNING;
+							/*
+                             * Assign a pid
+                             */
+							if (self.queue[item].pid === undefined) {
+								self.queue[item].pid = self.pid;
+								self.pid++;
+							}
+							/*
+                             * Check if any specific timing is needed
+                             */
+							self.queue[item].options.queueTimer = self.queue[item].options.queueTimer || self.defaultTimer;
+
+							/*
+                             *  Launch the function as a time out (so we get control back)
+                             */
+							if (sync) {
 								self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
-							}, self.queue[item].options.queueTimer);
+							} else {
+								setTimeout(function () {
+									self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
+								}, self.queue[item].options.queueTimer);
+							}
 						}
 					}
 				} else {
@@ -868,6 +880,17 @@ class Queue {
 		window.memory[name] = memoryDetails;
 		self._updateMemoryPerms();
 
+		return true;
+	}
+
+	/**
+	 * Set a register
+	 * @param name
+	 * @returns {boolean}
+	 */
+	setRegister(name) {
+		this.registers.push(name);
+		this.queueProcess();
 		return true;
 	}
 
