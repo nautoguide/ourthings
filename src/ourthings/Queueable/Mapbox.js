@@ -235,9 +235,7 @@ export default class Mapbox extends Queueable {
 			},
 		}, json);
 
-		this.maps[options.map].map.getSource(options.name).setData({
-			...options.data,
-		});
+		this.maps[options.map].map.getSource(options.name).setData(options.data);
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
@@ -373,8 +371,10 @@ export default class Mapbox extends Queueable {
 					}
 				}
 			}
-			paint = [...paint, ...options.paint.value];
-
+			// Edge doesn't support ... notation ffs. Don't want to bable edge so changed for now
+			// Untested
+			//paint = [...paint, ...options.paint.value];
+			paint.push(options.paint.value)
 			paint.push(final[0]);
 		} else {
 			paint = options.paint.value;
