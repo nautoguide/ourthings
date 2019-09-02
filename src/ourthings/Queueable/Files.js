@@ -65,6 +65,9 @@ export default class Files extends Queueable {
 	 */
 	filePreview(pid, json) {
 		let self = this;
+		let options=Object.assign({
+			"prefix":"main"
+		},json);
 		let element = self.queue.getElement(json.targetId);
 
 		/**
@@ -134,15 +137,16 @@ export default class Files extends Queueable {
 			let reader = new FileReader();
 			reader.readAsDataURL(file);
 			reader.onload = function (evt) {
-				if (json.previewId) {
+				self.set(pid, evt.target.result);
+				self.queue.execute(options.prefix+"FilePreview");
+				/*if (json.previewId) {
 					let preview = self.queue.getElement(json.previewId);
 					if(json.background)
 						preview.style['background-image']="url("+evt.target.result+")";
 					else
 						preview.src = evt.target.result;
 				} else {
-					self.set(pid, evt.target.result);
-				}
+				}*/
 			};
 			reader.onerror = function (evt) {
 				// TODO Write me!
