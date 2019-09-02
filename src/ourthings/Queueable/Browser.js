@@ -83,7 +83,12 @@ export default class Browser extends Queueable {
 		let baseURL = location.href;
 		if(baseURL.match(/#/))
 			baseURL = baseURL.slice(0, location.href.indexOf('#'));
-		location.href = baseURL + '#' + options.history;
+		/*
+		 * Some browsers 'Looking at you chrome' register a change event even if the URL is the same
+		 * so we filter any matches out
+		 */
+		if(baseURL + '#' + options.history!==location.href)
+			location.href = baseURL + '#' + options.history;
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 
