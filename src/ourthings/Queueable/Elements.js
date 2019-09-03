@@ -42,6 +42,33 @@ export default class Elements extends Queueable {
 	}
 
 	/**
+	 * Set style of a dom element
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.iframeId - iframe target
+	 * @param {string} json.targetId - Dom target
+	 * @param {array} json.style - style array of elements in format [{"name":"background","value":"red"}]
+	 *
+	 * @example
+	 * elements.setStyle({"targetId":".leftPanel","style":[{"name":"background","value":"red"}]});
+	 */
+	setStyle(pid,json) {
+		let self=this;
+		let elements=self.queue.getIframeElements(json.iframeId,json.targetId);
+		self.set(pid,json);
+
+		if(elements!==false) {
+			elements.forEach(function(element) {
+				for(let i in json.style)
+				element.style[json.style[i].name]=json.style[i].value;
+			});
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not add class ['+json.class+'] to ['+json.targetId+']');
+		}
+	}
+
+	/**
 	 * Remove a class to a dom element
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
