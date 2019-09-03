@@ -153,7 +153,8 @@ export default class Mapbox extends Queueable {
 		self.maps[options.map].map.on('click', json.layer, function (e) {
 			const selectDetails = {
 				coordinates: e.features[0].geometry.coordinates.slice(),
-				properties: e.features[0].properties
+				properties: e.features[0].properties,
+				featureJSON: e.features[0].toJSON()
 			};
 
 			/* while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
@@ -177,12 +178,12 @@ export default class Mapbox extends Queueable {
 			filter: []
 		}, json);
 		let selectDetails = {};
-		const features = this.maps[options.map].map.getSource(json.layer)._data.features;
-
+		const features = this.maps[options.map].map.querySourceFeatures(options.layer);
 		features.forEach(function (feature) {
 			let res = eval(feature.properties[options.filter[1]] + ' ' + options.filter[0] + ' ' + options.filter[2]);
 			if (res) {
 				selectDetails.properties = feature.properties;
+				selectDetails.featureJSON = feature.toJSON();
 			}
 		});
 
@@ -228,14 +229,14 @@ export default class Mapbox extends Queueable {
 	setData(pid, json) {
 		const options = Object.assign({
 			map: 'default',
-			name: 'default',
+			layer: 'default',
 			data: {
 				type: 'FeatureCollection',
 				features: [],
 			},
 		}, json);
 
-		this.maps[options.map].map.getSource(options.name).setData(options.data);
+		this.maps[options.map].map.getSource(options.layer).setData(options.data);
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
