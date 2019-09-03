@@ -47,6 +47,13 @@ export default class Mapbox extends Queueable {
 		map.on('load', () => {
 			this.finished(pid, self.queue.DEFINE.FIN_OK);
 		});
+
+		/*
+		 * On idle run a queue (this is needed for blocking access to data before its loaded)
+		 */
+		map.on('idle',function(){
+			self.queue.execute(options.map+'Idle');
+		})
 	};
 
 	/**
@@ -170,7 +177,6 @@ export default class Mapbox extends Queueable {
 	}
 
 	manualSelect(pid, json) {
-
 		const options = Object.assign({
 			map: 'default',
 			layer: 'default',
