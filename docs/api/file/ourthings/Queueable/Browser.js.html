@@ -41,6 +41,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
@@ -135,7 +136,12 @@ export default class Browser extends Queueable {
 		let baseURL = location.href;
 		if(baseURL.match(/#/))
 			baseURL = baseURL.slice(0, location.href.indexOf(&apos;#&apos;));
-		location.href = baseURL + &apos;#&apos; + options.history;
+		/*
+		 * Some browsers &apos;Looking at you chrome&apos; register a change event even if the URL is the same
+		 * so we filter any matches out
+		 */
+		if(baseURL + &apos;#&apos; + options.history!==location.href)
+			location.href = baseURL + &apos;#&apos; + options.history;
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 
