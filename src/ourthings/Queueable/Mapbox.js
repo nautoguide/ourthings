@@ -49,11 +49,15 @@ export default class Mapbox extends Queueable {
 		});
 
 		/*
-		 * On idle run a queue (this is needed for blocking access to data before its loaded)
+		 * On idle run a queue (this is needed for blocking access to data before its loaded). We delay the start of this
+		 * monitor to allow time for setup commands to run
 		 */
-		map.on('idle',function(){
-			self.queue.execute(options.map+'Idle');
-		})
+		setTimeout(function () {
+				map.on('idle',function(){
+					self.queue.execute(options.map+'Idle');
+				})
+		}, 2000);
+
 	};
 
 	/**
@@ -347,6 +351,34 @@ export default class Mapbox extends Queueable {
 			})
 		}
 
+		this.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Zoom in the map
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - The map that the querying layer is on
+	 */
+	zoomIn(pid, json) {
+		const options = Object.assign({
+			map: 'default'
+		}, json);
+		this.maps[options.map].map.zoomIn();
+		this.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Zoom out the map
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - The map that the querying layer is on
+	 */
+	zoomOut(pid, json) {
+		const options = Object.assign({
+			map: 'default'
+		}, json);
+		this.maps[options.map].map.zoomOut();
 		this.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 

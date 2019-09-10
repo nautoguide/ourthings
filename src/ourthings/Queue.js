@@ -838,6 +838,13 @@ class Queue {
 	 */
 	setRegister(name) {
 		this.registers.push(name);
+		consoleBadge.log({
+			mode: 'shields.io',
+			leftText: 'Register set',
+			rightText: name,
+			rightBgColor: '#69ddff',
+			rightTextColor: '#1a1a1a'
+		});
 		this.queueProcess();
 		return true;
 	}

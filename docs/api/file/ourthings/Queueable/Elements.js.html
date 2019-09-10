@@ -41,6 +41,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
@@ -86,6 +87,33 @@ export default class Elements extends Queueable {
 		if(elements!==false) {
 			elements.forEach(function(element) {
 				element.classList.add(json.class);
+			});
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,&apos;Could not add class [&apos;+json.class+&apos;] to [&apos;+json.targetId+&apos;]&apos;);
+		}
+	}
+
+	/**
+	 * Set style of a dom element
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.iframeId - iframe target
+	 * @param {string} json.targetId - Dom target
+	 * @param {array} json.style - style array of elements in format [{&quot;name&quot;:&quot;background&quot;,&quot;value&quot;:&quot;red&quot;}]
+	 *
+	 * @example
+	 * elements.setStyle({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;style&quot;:[{&quot;name&quot;:&quot;background&quot;,&quot;value&quot;:&quot;red&quot;}]});
+	 */
+	setStyle(pid,json) {
+		let self=this;
+		let elements=self.queue.getIframeElements(json.iframeId,json.targetId);
+		self.set(pid,json);
+
+		if(elements!==false) {
+			elements.forEach(function(element) {
+				for(let i in json.style)
+				element.style[json.style[i].name]=json.style[i].value;
 			});
 			self.finished(pid,self.queue.DEFINE.FIN_OK);
 		} else {

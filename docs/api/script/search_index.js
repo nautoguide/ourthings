@@ -36,6 +36,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "@nautoguide/ourthings/ourthings/queueable/mapbox.js~mapbox",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html",
+    "<span>Mapbox</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/Mapbox.js</span>",
+    "class"
+  ],
+  [
     "@nautoguide/ourthings/ourthings/queueable/markdown.js~markdown",
     "class/ourthings/Queueable/Markdown.js~Markdown.html",
     "<span>Markdown</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/Markdown.js</span>",
@@ -960,6 +966,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/elements.js~elements#setstyle",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-setStyle",
+    "ourthings/Queueable/Elements.js~Elements#setStyle",
+    "method"
+  ],
+  [
     "ourthings/queueable/elements.js~elements#toggleclass",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-toggleClass",
     "ourthings/Queueable/Elements.js~Elements#toggleClass",
@@ -1023,6 +1035,144 @@ window.esdocSearchIndex = [
     "ourthings/queueable/internals.js~internals#setregister",
     "class/ourthings/Queueable/Internals.js~Internals.html#instance-method-setRegister",
     "ourthings/Queueable/Internals.js~Internals#setRegister",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js",
+    "file/ourthings/Queueable/Mapbox.js.html",
+    "ourthings/Queueable/Mapbox.js",
+    "file"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#_addlayer",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-_addLayer",
+    "ourthings/Queueable/Mapbox.js~Mapbox#_addLayer",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#addclick",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addClick",
+    "ourthings/Queueable/Mapbox.js~Mapbox#addClick",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#addimages",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addImages",
+    "ourthings/Queueable/Mapbox.js~Mapbox#addImages",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#addmap",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addMap",
+    "ourthings/Queueable/Mapbox.js~Mapbox#addMap",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#addselect",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addSelect",
+    "ourthings/Queueable/Mapbox.js~Mapbox#addSelect",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#addsource",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addSource",
+    "ourthings/Queueable/Mapbox.js~Mapbox#addSource",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#clearlayer",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-clearLayer",
+    "ourthings/Queueable/Mapbox.js~Mapbox#clearLayer",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#init",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-init",
+    "ourthings/Queueable/Mapbox.js~Mapbox#init",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#manualselect",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-manualSelect",
+    "ourthings/Queueable/Mapbox.js~Mapbox#manualSelect",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#maps",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-member-maps",
+    "ourthings/Queueable/Mapbox.js~Mapbox#maps",
+    "member"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#overlays",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-member-overlays",
+    "ourthings/Queueable/Mapbox.js~Mapbox#overlays",
+    "member"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#paintqueryfeatures",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-paintQueryFeatures",
+    "ourthings/Queueable/Mapbox.js~Mapbox#paintQueryFeatures",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#queue",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-member-queue",
+    "ourthings/Queueable/Mapbox.js~Mapbox#queue",
+    "member"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#ready",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-member-ready",
+    "ourthings/Queueable/Mapbox.js~Mapbox#ready",
+    "member"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#removeclick",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-removeClick",
+    "ourthings/Queueable/Mapbox.js~Mapbox#removeClick",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#setdata",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-setData",
+    "ourthings/Queueable/Mapbox.js~Mapbox#setData",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#setlayoutproperty",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-setLayoutProperty",
+    "ourthings/Queueable/Mapbox.js~Mapbox#setLayoutProperty",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#setpaintproperty",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-setPaintProperty",
+    "ourthings/Queueable/Mapbox.js~Mapbox#setPaintProperty",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#zoomin",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-zoomIn",
+    "ourthings/Queueable/Mapbox.js~Mapbox#zoomIn",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#zoomout",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-zoomOut",
+    "ourthings/Queueable/Mapbox.js~Mapbox#zoomOut",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#zoomtobounds",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-zoomToBounds",
+    "ourthings/Queueable/Mapbox.js~Mapbox#zoomToBounds",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#zoomtofeature",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-zoomToFeature",
+    "ourthings/Queueable/Mapbox.js~Mapbox#zoomToFeature",
     "method"
   ],
   [
