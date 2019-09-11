@@ -960,6 +960,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/elements.js~elements#setattribute",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-setAttribute",
+    "ourthings/Queueable/Elements.js~Elements#setAttribute",
+    "method"
+  ],
+  [
     "ourthings/queueable/elements.js~elements#setinputvalue",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-setInputValue",
     "ourthings/Queueable/Elements.js~Elements#setInputValue",

@@ -64,7 +64,34 @@ export default class Elements extends Queueable {
 			});
 			self.finished(pid,self.queue.DEFINE.FIN_OK);
 		} else {
-			self.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not add class ['+json.class+'] to ['+json.targetId+']');
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not set style on ['+json.targetId+']');
+		}
+	}
+
+	/**
+	 * Set attribute of a dom element
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.iframeId - iframe target
+	 * @param {string} json.targetId - Dom target
+	 * @param {array} json.attribute - Attribute to set
+	 * @param {array} json.value - Value to set
+	 *
+	 * @example
+	 * elements.setAttribute({"targetId":".leftPanel","attribute":"src","value":"http://foo/bar.png"});
+	 */
+	setAttribute(pid,json) {
+		let self=this;
+		let elements=self.queue.getIframeElements(json.iframeId,json.targetId);
+		self.set(pid,json);
+
+		if(elements!==false) {
+			elements.forEach(function(element) {
+					element.setAttribute(json.attribute,json.value);
+			});
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not set attribute ['+json.attribute+'] on ['+json.targetId+']');
 		}
 	}
 
