@@ -52,11 +52,21 @@ export default class Mapbox extends Queueable {
 		 * On idle run a queue (this is needed for blocking access to data before its loaded). We delay the start of this
 		 * monitor to allow time for setup commands to run
 		 */
+/*
 		setTimeout(function () {
+*/
 				map.on('idle',function(){
-					self.queue.execute(options.map+'Idle');
+					self.queue.setRegister(options.map+'Idle');
+					//self.queue.execute(options.map+'Idle');
+				});
+				map.on('dataloading',function(data){
+					if(data.isSourceLoaded)
+						self.queue.setRegister(options.map+'DataLoaded');
+					//self.queue.execute(options.map+'Idle');
 				})
-		}, 2000);
+/*
+		}, 5000);
+*/
 
 	};
 
@@ -73,6 +83,8 @@ export default class Mapbox extends Queueable {
 	 * mapbox.addSource({"map": "testMap", "name": "newLayer", "featureType": "Point", "data": "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_10m_ports.geojson"});
 	 */
 	addSource(pid, json) {
+
+
 		const options = Object.assign({
 			map: 'default',
 			data: {
@@ -83,6 +95,7 @@ export default class Mapbox extends Queueable {
 			name: 'default',
 			paint: {},
 		}, json);
+		this.queue.deleteRegister(options.map+'Idle');
 
 		this.maps[options.map].map.addSource(options.name, {
 			type: 'geojson',
@@ -153,11 +166,18 @@ export default class Mapbox extends Queueable {
 		})
 	}
 
+	/**
+	 * Add a select control to a layer
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - name for the map (used to reference)
+	 * @param {string} json.layer - name for the map layer
+	 * @param {object} json.queue - queue to call upon select
+	 */
 	addSelect(pid, json) {
 		let self = this;
 		const options = Object.assign({
 			map: 'default',
-			images: [],
 			queue: "select"
 		}, json);
 
@@ -178,6 +198,29 @@ export default class Mapbox extends Queueable {
 		});
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
+	}
+
+	/**
+	 * Await the source to be valid on a layer because mapbox has no event for this *WARNING SHIT HACK*
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - name for the map (used to reference)
+	 * @param {string} json.layer - name for the map layer
+	 */
+	awaitSourceFeatures(pid, json) {
+		let self=this;
+		const options = Object.assign({
+			map: 'default',
+			layer: 'default'
+		}, json);
+		const features = this.maps[options.map].map.querySourceFeatures(options.layer);
+		if(features.length>0) {
+			this.finished(pid, this.queue.DEFINE.FIN_OK);
+		} else {
+			setTimeout(function () {
+				self.awaitSourceFeatures(pid,json);
+			},500);
+		}
 	}
 
 	manualSelect(pid, json) {
@@ -237,6 +280,7 @@ export default class Mapbox extends Queueable {
 	 * @param {object|string} json.data - The data to set the layer to (this will override old data)
 	 */
 	setData(pid, json) {
+
 		const options = Object.assign({
 			map: 'default',
 			layer: 'default',
@@ -245,7 +289,7 @@ export default class Mapbox extends Queueable {
 				features: [],
 			},
 		}, json);
-
+		this.queue.deleteRegister(options.map+'Idle');
 		this.maps[options.map].map.getSource(options.layer).setData(options.data);
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
@@ -276,10 +320,12 @@ export default class Mapbox extends Queueable {
 	 * @param {string} json.name - The name of the layer to clear
 	 */
 	clearLayer(pid, json) {
+
 		const options = Object.assign({
 			map: 'default',
 			layer: 'default'
 		}, json);
+		this.queue.deleteRegister(options.map+'Idle');
 
 		this.maps[options.map].map.getSource(options.layer).setData({
 			type: 'FeatureCollection',

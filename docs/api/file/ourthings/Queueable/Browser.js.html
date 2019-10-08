@@ -154,6 +154,21 @@ export default class Browser extends Queueable {
 		window.history.forward();
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
+
+	/**
+	 * Add a resize monitor that runs a queue on resize
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.name - queue to run on resize
+	 */
+	resizeMonitor(pid,json) {
+		let self=this;
+		window.onresize = function(event) {
+			self.queue.execute(json.name);
+		};
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
 }
 </code></pre>
 
