@@ -642,6 +642,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queue.js~queue#deleteregister",
+    "class/ourthings/Queue.js~Queue.html#instance-method-deleteRegister",
+    "ourthings/Queue.js~Queue#deleteRegister",
+    "method"
+  ],
+  [
     "ourthings/queue.js~queue#execute",
     "class/ourthings/Queue.js~Queue.html#instance-method-execute",
     "ourthings/Queue.js~Queue#execute",
@@ -906,6 +912,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/browser.js~browser#resizemonitor",
+    "class/ourthings/Queueable/Browser.js~Browser.html#instance-method-resizeMonitor",
+    "ourthings/Queueable/Browser.js~Browser#resizeMonitor",
+    "method"
+  ],
+  [
     "ourthings/queueable/elements.js",
     "file/ourthings/Queueable/Elements.js.html",
     "ourthings/Queueable/Elements.js",
@@ -1083,6 +1095,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/mapbox.js~mapbox#addsource",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addSource",
     "ourthings/Queueable/Mapbox.js~Mapbox#addSource",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#awaitsourcefeatures",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-awaitSourceFeatures",
+    "ourthings/Queueable/Mapbox.js~Mapbox#awaitSourceFeatures",
     "method"
   ],
   [

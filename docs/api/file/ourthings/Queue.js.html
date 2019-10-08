@@ -890,14 +890,52 @@ class Queue {
 	 * @returns {boolean}
 	 */
 	setRegister(name) {
-		this.registers.push(name);
-		consoleBadge.log({
-			mode: &apos;shields.io&apos;,
-			leftText: &apos;Register set&apos;,
-			rightText: name,
-			rightBgColor: &apos;#69ddff&apos;,
-			rightTextColor: &apos;#1a1a1a&apos;
-		});
+		if(this.registers.indexOf(name)===-1) {
+			this.registers.push(name);
+			consoleBadge.log({
+				mode: &apos;shields.io&apos;,
+				leftText: &apos;Register set&apos;,
+				rightText: name,
+				rightBgColor: &apos;#69ddff&apos;,
+				rightTextColor: &apos;#1a1a1a&apos;
+			});
+		} else {
+			consoleBadge.log({
+				mode: &apos;shields.io&apos;,
+				leftText: &apos;Register already set&apos;,
+				rightText: name,
+				rightBgColor: &apos;#69ddff&apos;,
+				rightTextColor: &apos;#1a1a1a&apos;
+			});
+		}
+		this.queueProcess();
+		return true;
+	}
+
+	/**
+	 * delete a register
+	 * @param name
+	 * @returns {boolean}
+	 */
+	deleteRegister(name) {
+		if(this.registers.indexOf(name)!==-1) {
+			this.registers.splice(this.registers.indexOf(name), 1);
+			consoleBadge.log({
+				mode: &apos;shields.io&apos;,
+				leftText: &apos;Register deleted&apos;,
+				rightText: name,
+				rightBgColor: &apos;#ffef6c&apos;,
+				rightTextColor: &apos;#1a1a1a&apos;
+			});
+		} else {
+			consoleBadge.log({
+				mode: &apos;shields.io&apos;,
+				leftText: &apos;Register does not exist for delete&apos;,
+				rightText: name,
+				rightBgColor: &apos;#ff313e&apos;,
+				rightTextColor: &apos;#1a1a1a&apos;
+			});
+		}
 		this.queueProcess();
 		return true;
 	}
