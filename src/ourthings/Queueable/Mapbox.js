@@ -43,6 +43,7 @@ export default class Mapbox extends Queueable {
 		});
 
 		this.maps[options.map] = {map, layers: {}};
+		this.maps[options.map].sources={};
 
 		map.on('load', () => {
 			this.finished(pid, self.queue.DEFINE.FIN_OK);
@@ -231,12 +232,14 @@ export default class Mapbox extends Queueable {
 			filter: []
 		}, json);
 		let selectDetails = {};
-		const features = this.maps[options.map].map.querySourceFeatures(options.layer);
+		//const features = this.maps[options.map].map.querySourceFeatures(options.layer);
+		const features = this.maps[options.map].sources[options.layer];
 		features.forEach(function (feature) {
 			let res = eval(feature.properties[options.filter[1]] + ' ' + options.filter[0] + ' ' + options.filter[2]);
 			if (res) {
 				selectDetails.properties = feature.properties;
-				selectDetails.featureJSON = feature.toJSON();
+				//selectDetails.featureJSON = feature.toJSON();
+				selectDetails.featureJSON = JSON.stringify(feature);
 			}
 		});
 
@@ -253,7 +256,6 @@ export default class Mapbox extends Queueable {
 			queue: 'clicked'
 		}, json);
 		this.maps[options.map].map.on('click', function (e) {
-			console.log(e);
 			let data = {location: e.lngLat};
 			self.queue.setMemory("click", data, "Session");
 			self.queue.execute(options.queue, data);
@@ -291,6 +293,8 @@ export default class Mapbox extends Queueable {
 		}, json);
 		this.queue.deleteRegister(options.map+'Idle');
 		this.maps[options.map].map.getSource(options.layer).setData(options.data);
+		// Make a copy of the source data because the internal call is not reliable
+		this.maps[options.map].sources[options.layer]=options.data.features;
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 

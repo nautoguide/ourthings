@@ -21,9 +21,9 @@ export default class Browser extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.location - Dom location to direct to
 	 */
-	redirect(pid,json) {
+	redirect(pid, json) {
 		window.top.location = json.location;
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 
 	/**
@@ -35,16 +35,16 @@ export default class Browser extends Queueable {
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
 	 */
-	initHistory(pid,json) {
-		let self=this;
+	initHistory(pid, json) {
+		let self = this;
 
 		function urlChange() {
 			let baseURL = location.href;
-			let match=baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
-			if(match&&match[1]) {
-				if(match[2])
+			let match = baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
+			if (match && match[1]) {
+				if (match[2])
 					self.queue.setMemory('history', match[2], "Session");
-				self.queue.execute('history'+match[1]);
+				self.queue.execute('history' + match[1]);
 			} else {
 				self.queue.execute('historyRoot');
 			}
@@ -56,16 +56,17 @@ export default class Browser extends Queueable {
 		 */
 		window.onhashchange = urlChange;
 
-		if(json.checkURL) {
+		if (json.checkURL) {
 			let baseURL = location.href;
-			let match=baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
-			if(match&&match[1]) {
-				if(match[2])
+			let match = baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
+			if (match && match[1]) {
+				if (match[2])
 					self.queue.setMemory('history', match[2], "Session");
-				self.queue.execute('history'+match[1]);
+				self.queue.execute('history' + match[1]);
 			}
 		}
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 
 	}
 
@@ -76,30 +77,33 @@ export default class Browser extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.history - history name to add
 	 */
-	addHistory(pid,json) {
-		let options=Object.assign({
-			"history":"Root",
-		},json);
+	addHistory(pid, json) {
+		let options = Object.assign({
+			"history": "Root",
+		}, json);
 		let baseURL = location.href;
-		if(baseURL.match(/#/))
+
+		if (baseURL.match(/#/))
 			baseURL = baseURL.slice(0, location.href.indexOf('#'));
 		/*
 		 * Some browsers 'Looking at you chrome' register a change event even if the URL is the same
 		 * so we filter any matches out
 		 */
-		if(baseURL + '#' + options.history!==location.href)
-			location.href = baseURL + '#' + options.history;
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+		const newURL=baseURL + '#' + options.history;
+		if (newURL !== location.href) {
+			location.href = newURL;
+		}
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 
-	backHistory(pid,json) {
+	backHistory(pid, json) {
 		window.history.back();
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 
-	forwardHistory(pid,json) {
+	forwardHistory(pid, json) {
 		window.history.forward();
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 
 	/**
@@ -109,11 +113,11 @@ export default class Browser extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.name - queue to run on resize
 	 */
-	resizeMonitor(pid,json) {
-		let self=this;
-		window.onresize = function(event) {
+	resizeMonitor(pid, json) {
+		let self = this;
+		window.onresize = function (event) {
 			self.queue.execute(json.name);
 		};
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 }
