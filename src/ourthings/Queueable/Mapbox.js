@@ -404,6 +404,14 @@ export default class Mapbox extends Queueable {
 		this.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
+	resize(pid,json) {
+		const options = Object.assign({
+			map: 'default'
+		}, json);
+		this.maps[options.map].map.resize();
+		this.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
 	/**
 	 * Zoom in the map
 	 * @param {int} pid
