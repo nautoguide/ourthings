@@ -655,13 +655,23 @@ class Queue {
 			 */
 			if(commandObj[command].options.queuePrepare!== undefined) {
 				self.prepare[commandObj[command].options.queuePrepare]=self.deepCopy(commandObj[command]);
-				consoleBadge.log({
-					mode: 'shields.io',
-					leftText: 'Added Prepared Queue',
-					rightText: commandObj[command].options.queuePrepare,
-					rightBgColor: '#aeff79',
-					rightTextColor: '#1a1a1a'
-				});
+				if(commandObj[command].options.queueRun==self.DEFINE.COMMAND_INSTANT) {
+					consoleBadge.log({
+						mode: 'shields.io',
+						leftText: 'Running Prepared Queue',
+						rightText: commandObj[command].options.queuePrepare,
+						rightBgColor: '#aeff79',
+						rightTextColor: '#1a1a1a'
+					});
+				} else {
+					consoleBadge.log({
+						mode: 'shields.io',
+						leftText: 'Added Prepared Queue',
+						rightText: commandObj[command].options.queuePrepare,
+						rightBgColor: '#ffef6c',
+						rightTextColor: '#1a1a1a'
+					});
+				}
 
 			}
 		}
