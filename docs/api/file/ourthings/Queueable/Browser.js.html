@@ -74,9 +74,9 @@ export default class Browser extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.location - Dom location to direct to
 	 */
-	redirect(pid,json) {
+	redirect(pid, json) {
 		window.top.location = json.location;
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 
 	/**
@@ -88,16 +88,16 @@ export default class Browser extends Queueable {
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
 	 */
-	initHistory(pid,json) {
-		let self=this;
+	initHistory(pid, json) {
+		let self = this;
 
 		function urlChange() {
 			let baseURL = location.href;
-			let match=baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
-			if(match&amp;&amp;match[1]) {
-				if(match[2])
+			let match = baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
+			if (match &amp;&amp; match[1]) {
+				if (match[2])
 					self.queue.setMemory(&apos;history&apos;, match[2], &quot;Session&quot;);
-				self.queue.execute(&apos;history&apos;+match[1]);
+				self.queue.execute(&apos;history&apos; + match[1]);
 			} else {
 				self.queue.execute(&apos;historyRoot&apos;);
 			}
@@ -109,16 +109,17 @@ export default class Browser extends Queueable {
 		 */
 		window.onhashchange = urlChange;
 
-		if(json.checkURL) {
+		if (json.checkURL) {
 			let baseURL = location.href;
-			let match=baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
-			if(match&amp;&amp;match[1]) {
-				if(match[2])
+			let match = baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
+			if (match &amp;&amp; match[1]) {
+				if (match[2])
 					self.queue.setMemory(&apos;history&apos;, match[2], &quot;Session&quot;);
-				self.queue.execute(&apos;history&apos;+match[1]);
+				self.queue.execute(&apos;history&apos; + match[1]);
 			}
 		}
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 
 	}
 
@@ -129,30 +130,33 @@ export default class Browser extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.history - history name to add
 	 */
-	addHistory(pid,json) {
-		let options=Object.assign({
-			&quot;history&quot;:&quot;Root&quot;,
-		},json);
+	addHistory(pid, json) {
+		let options = Object.assign({
+			&quot;history&quot;: &quot;Root&quot;,
+		}, json);
 		let baseURL = location.href;
-		if(baseURL.match(/#/))
+
+		if (baseURL.match(/#/))
 			baseURL = baseURL.slice(0, location.href.indexOf(&apos;#&apos;));
 		/*
 		 * Some browsers &apos;Looking at you chrome&apos; register a change event even if the URL is the same
 		 * so we filter any matches out
 		 */
-		if(baseURL + &apos;#&apos; + options.history!==location.href)
-			location.href = baseURL + &apos;#&apos; + options.history;
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+		const newURL=baseURL + &apos;#&apos; + options.history;
+		if (newURL !== location.href) {
+			location.href = newURL;
+		}
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 
-	backHistory(pid,json) {
+	backHistory(pid, json) {
 		window.history.back();
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 
-	forwardHistory(pid,json) {
+	forwardHistory(pid, json) {
 		window.history.forward();
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 
 	/**
@@ -162,12 +166,12 @@ export default class Browser extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.name - queue to run on resize
 	 */
-	resizeMonitor(pid,json) {
-		let self=this;
-		window.onresize = function(event) {
+	resizeMonitor(pid, json) {
+		let self = this;
+		window.onresize = function (event) {
 			self.queue.execute(json.name);
 		};
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 }
 </code></pre>

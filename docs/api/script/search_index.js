@@ -1158,6 +1158,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/mapbox.js~mapbox#resize",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-resize",
+    "ourthings/Queueable/Mapbox.js~Mapbox#resize",
+    "method"
+  ],
+  [
     "ourthings/queueable/mapbox.js~mapbox#setdata",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-setData",
     "ourthings/Queueable/Mapbox.js~Mapbox#setData",
