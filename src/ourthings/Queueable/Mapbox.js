@@ -1,5 +1,6 @@
 import Queueable from "../Queueable";
 import MapboxGL from 'mapbox-gl';
+import centroid from '@turf/centroid'
 
 export default class Mapbox extends Queueable {
 
@@ -388,14 +389,14 @@ export default class Mapbox extends Queueable {
 		for(const feature of features) {
 			if(feature.properties.hasOwnProperty(options.property))
 				if(feature.properties[options.property] === options.value) {
-					pointGeom = feature.geometry.coordinates;
+					pointGeom = feature;
 					break;
 				}
 		}
 
 		if(pointGeom !== null) {
 			this.maps[options.map].map.flyTo({
-				center: pointGeom,
+				center: centroid(pointGeom.geometry).geometry.coordinates,
 				zoom: options.zoom,
 				minZoom: options.minZoom,
 			})
