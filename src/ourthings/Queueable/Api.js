@@ -4,7 +4,7 @@ import Queueable from "../Queueable";
 /**
  * @classdesc
  *
- * Dom Elements manipulations
+ * API connection methods
  *
  * @author Richard Reynolds richard@nautoguide.com
  *
@@ -178,4 +178,61 @@ export default class Api extends Queueable {
 			});
 
 	}
+
+	/**
+	 * Create a new websocket
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.url - URL to connect websocket too
+	 * @param {string} json.action - What json param will contain the 'action' router
+	 * @param {string} json.queues - Array of {action:"action", queue:"queue" }
+
+	 */
+	websocketInit(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			"url":"ws://localhost",
+			"action":"action",
+			"queues":{}
+		},json);
+		self.socket = new WebSocket(options.url);
+		self.socket.onopen = function(event) {
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		};
+		self.socket.onmessage = function(event) {
+			let stack=[];
+			let jsonData=JSON.parse(event.data);
+			if(memory[`wsStack_${jsonData[options.action]}`])
+				stack=memory[`wsStack_${jsonData[options.action]}`].value;
+			stack.push(jsonData);
+			self.queue.setMemory(`wsStack_${jsonData[options.action]}`,stack,self.queue.DEFINE.MEMORY_SESSION);
+			for(let i in options.queues) {
+				if(jsonData[options.action]===options.queues[i].action) {
+					self.queue.execute(options.queues[i].queue);
+				}
+
+			}
+		};
+	}
+
+	websocketPop(pid,json) {
+		this.set(pid,memory[`wsStack_${json.action}`].value.pop());
+		console.log(memory);
+		this.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Send a json message down the websocket
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.message - JSON message to send
+	 */
+	websocketSend(pid,json) {
+		let self=this;
+		self.socket.send(JSON.stringify(json.message));
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
 }
