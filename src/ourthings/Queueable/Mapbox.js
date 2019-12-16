@@ -184,15 +184,15 @@ export default class Mapbox extends Queueable {
 		}, json);
 
 		self.maps[options.map].map.on('click', json.layer, function (e) {
+			//mapbox converts multi depth objects to strings. Deserialize this
+			for(let i in e.features[0].properties)
+				e.features[0].properties[i]=JSON.parse(e.features[0].properties[i]);
 			const selectDetails = {
 				coordinates: e.features[0].geometry.coordinates.slice(),
 				properties: e.features[0].properties,
 				featureJSON: e.features[0].toJSON()
 			};
 
-			/* while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-				 coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-			 }*/
 			self.queue.setMemory("select", selectDetails, "Session");
 
 			self.queue.execute(options.queue, selectDetails);
