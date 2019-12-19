@@ -936,10 +936,14 @@ class Queue {
 		let self=this;
 		let index=self.getCookie("OT_INDEX");
 		if(index!==null) {
-			index=JSON.parse(index);
-			for(let i in index) {
-				let perm=JSON.parse(window.atob(self.getCookie("OT_"+index[i])));
-				window.memory[index[i]]=perm;
+			try {
+				index = JSON.parse(index);
+				for (let i in index) {
+					let perm = JSON.parse(window.atob(self.getCookie("OT_" + index[i])));
+					window.memory[index[i]] = perm;
+				}
+			} catch(e) {
+				console.error('OT_INDEX seems corrupted');
 			}
 		}
 
