@@ -193,7 +193,7 @@ export default class Api extends Queueable {
 		let self=this;
 		let options=Object.assign({
 			"url":"ws://localhost",
-			"action":"action",
+			"queue":"queue",
 			"queues":{}
 		},json);
 		self.socket = new WebSocket(options.url);
@@ -203,21 +203,17 @@ export default class Api extends Queueable {
 		self.socket.onmessage = function(event) {
 			let stack=[];
 			let jsonData=JSON.parse(event.data);
-			if(memory[`wsStack_${jsonData[options.action]}`])
-				stack=memory[`wsStack_${jsonData[options.action]}`].value;
+			if(memory[`wsStack_${jsonData[options.queue]}`])
+				stack=memory[`wsStack_${jsonData[options.queue]}`].value;
 			stack.push(jsonData);
-			self.queue.setMemory(`wsStack_${jsonData[options.action]}`,stack,self.queue.DEFINE.MEMORY_SESSION);
-			for(let i in options.queues) {
-				if(jsonData[options.action]===options.queues[i].action) {
-					self.queue.execute(options.queues[i].queue);
-				}
+			self.queue.setMemory(`wsStack_${jsonData[options.queue]}`,stack,self.queue.DEFINE.MEMORY_SESSION);
+			self.queue.execute(jsonData[options.queue]);
 
-			}
 		};
 	}
 
 	websocketPop(pid,json) {
-		this.set(pid,memory[`wsStack_${json.action}`].value.pop());
+		this.set(pid,memory[`wsStack_${json.queue}`].value.pop());
 		console.log(memory);
 		this.finished(pid,self.queue.DEFINE.FIN_OK);
 	}

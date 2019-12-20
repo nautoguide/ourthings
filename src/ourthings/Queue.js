@@ -925,7 +925,7 @@ class Queue {
 				perms.push(i);
 			}
 		}
-		self.setCookie('OT_INDEX',JSON.stringify(perms));
+		self.setCookie('OT_INDEX',window.btoa(JSON.stringify(perms)));
 	}
 
 	/**
@@ -937,7 +937,7 @@ class Queue {
 		let index=self.getCookie("OT_INDEX");
 		if(index!==null) {
 			try {
-				index = JSON.parse(index);
+				index = JSON.parse(window.atob(index));
 				for (let i in index) {
 					let perm = JSON.parse(window.atob(self.getCookie("OT_" + index[i])));
 					window.memory[index[i]] = perm;
