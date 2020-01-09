@@ -614,7 +614,7 @@ class Queue {
 				let event=commandObj[command].options.queueEvent||"click";
 				let events=event.split(",");
 				for(let e in events) {
-					if(events[e]==='handleKeydown') {
+					if(events[e]==='keydown') {
 						element.addEventListener(events[e], function (e) {
 							if(e.keyCode===self.DEFINE.KEY_RETURN) {
 								commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
