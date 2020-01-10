@@ -102,6 +102,30 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "@nautoguide/ourthings/ourthings/node_modules/console-badge/dist/console-badge.esm.js~error",
+    "function/index.html#static-function-error",
+    "<span>error</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/node_modules/console-badge/dist/console-badge.esm.js</span>",
+    "function"
+  ],
+  [
+    "@nautoguide/ourthings/ourthings/node_modules/console-badge/dist/console-badge.esm.js~info",
+    "function/index.html#static-function-info",
+    "<span>info</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/node_modules/console-badge/dist/console-badge.esm.js</span>",
+    "function"
+  ],
+  [
+    "@nautoguide/ourthings/ourthings/node_modules/console-badge/dist/console-badge.esm.js~log",
+    "function/index.html#static-function-log",
+    "<span>log</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/node_modules/console-badge/dist/console-badge.esm.js</span>",
+    "function"
+  ],
+  [
+    "@nautoguide/ourthings/ourthings/node_modules/console-badge/dist/console-badge.esm.js~warn",
+    "function/index.html#static-function-warn",
+    "<span>warn</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/node_modules/console-badge/dist/console-badge.esm.js</span>",
+    "function"
+  ],
+  [
     "ourthings/.external-ecmascript.js~array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
     "ourthings/.external-ecmascript.js~Array",
@@ -876,6 +900,24 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/api.js~api#websocketinit",
+    "class/ourthings/Queueable/Api.js~Api.html#instance-method-websocketInit",
+    "ourthings/Queueable/Api.js~Api#websocketInit",
+    "method"
+  ],
+  [
+    "ourthings/queueable/api.js~api#websocketpop",
+    "class/ourthings/Queueable/Api.js~Api.html#instance-method-websocketPop",
+    "ourthings/Queueable/Api.js~Api#websocketPop",
+    "method"
+  ],
+  [
+    "ourthings/queueable/api.js~api#websocketsend",
+    "class/ourthings/Queueable/Api.js~Api.html#instance-method-websocketSend",
+    "ourthings/Queueable/Api.js~Api#websocketSend",
+    "method"
+  ],
+  [
     "ourthings/queueable/browser.js",
     "file/ourthings/Queueable/Browser.js.html",
     "ourthings/Queueable/Browser.js",
@@ -1419,6 +1461,30 @@ window.esdocSearchIndex = [
     "ourthings/main.js",
     "file/ourthings/main.js.html",
     "ourthings/main.js",
+    "file"
+  ],
+  [
+    "ourthings/node_modules/console-badge/dist/console-badge.cjs.js",
+    "file/ourthings/node_modules/console-badge/dist/console-badge.cjs.js.html",
+    "ourthings/node_modules/console-badge/dist/console-badge.cjs.js",
+    "file"
+  ],
+  [
+    "ourthings/node_modules/console-badge/dist/console-badge.esm.js",
+    "file/ourthings/node_modules/console-badge/dist/console-badge.esm.js.html",
+    "ourthings/node_modules/console-badge/dist/console-badge.esm.js",
+    "file"
+  ],
+  [
+    "ourthings/node_modules/console-badge/dist/console-badge.umd.js",
+    "file/ourthings/node_modules/console-badge/dist/console-badge.umd.js.html",
+    "ourthings/node_modules/console-badge/dist/console-badge.umd.js",
+    "file"
+  ],
+  [
+    "ourthings/node_modules/console-badge/dist/console-badge.umd.min.js",
+    "file/ourthings/node_modules/console-badge/dist/console-badge.umd.min.js.html",
+    "ourthings/node_modules/console-badge/dist/console-badge.umd.min.js",
     "file"
   ],
   [

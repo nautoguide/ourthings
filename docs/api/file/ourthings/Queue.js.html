@@ -46,6 +46,10 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/W3Menu.js~W3Menu.html">W3Menu</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#node-modules-console-badge-dist">node_modules/console-badge/dist</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-error">error</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-info">info</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-log">log</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-warn">warn</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -281,9 +285,9 @@ class Queue {
 		/*
 		 * Version check as we changed the format
 		 */
-		if(this.templates.version!==1.0) {
+		if(this.templates.version&lt;1.0) {
 			console.info(self.DEFINE.CONSOLE_LINE);
-			console.error(&apos;Error:&apos;, &quot;Template file has no version, expecting 1.0&quot;);
+			console.error(&apos;Error:&apos;, &quot;Template file has no version, expecting &gt;=1.0&quot;);
 			console.info(&quot;Warning this error is probably fatal as I have no templates to load&quot;);
 			return;
 		}
@@ -332,7 +336,9 @@ class Queue {
 	    * Pop the template off the stack
 	    */
 		let template = this.templates.templates.pop();
-
+		if(typeof template === &quot;string&quot;) {
+			template={&quot;url&quot;:template,&quot;type&quot;:&quot;text/html&quot;}
+		}
 
 		/*
 		 * Is there a cache?
@@ -342,9 +348,9 @@ class Queue {
 			this.templates.templates=[];
 		}
 
-		fetch(template, {
+		fetch(template.url, {
 			headers: {
-				&apos;Content-Type&apos;: &apos;text/html&apos;
+				&apos;Content-Type&apos;: template.type
 			}
 		})
 			.then(response =&gt; self.handleFetchErrors(response))
@@ -366,8 +372,11 @@ class Queue {
 
 				let meta = document.createElement(&apos;meta&apos;);
 				meta.setAttribute(&quot;name&quot;, &quot;generator&quot;);
-				meta.setAttribute(&quot;content&quot;, template);
-				meta.innerHTML=text;
+				meta.setAttribute(&quot;content&quot;, template.url);
+				if(template.type===&apos;text/css&apos;)
+					meta.innerHTML=`&lt;style&gt;${text}&lt;/style&gt;`;
+				else
+					meta.innerHTML=text;
 				self.fragment.appendChild(meta);
 
 				/*
@@ -667,7 +676,7 @@ class Queue {
 				let event=commandObj[command].options.queueEvent||&quot;click&quot;;
 				let events=event.split(&quot;,&quot;);
 				for(let e in events) {
-					if(events[e]===&apos;handleKeydown&apos;) {
+					if(events[e]===&apos;keydown&apos;) {
 						element.addEventListener(events[e], function (e) {
 							if(e.keyCode===self.DEFINE.KEY_RETURN) {
 								commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
@@ -978,7 +987,7 @@ class Queue {
 				perms.push(i);
 			}
 		}
-		self.setCookie(&apos;OT_INDEX&apos;,JSON.stringify(perms));
+		self.setCookie(&apos;OT_INDEX&apos;,window.btoa(JSON.stringify(perms)));
 	}
 
 	/**
@@ -989,10 +998,14 @@ class Queue {
 		let self=this;
 		let index=self.getCookie(&quot;OT_INDEX&quot;);
 		if(index!==null) {
-			index=JSON.parse(index);
-			for(let i in index) {
-				let perm=JSON.parse(window.atob(self.getCookie(&quot;OT_&quot;+index[i])));
-				window.memory[index[i]]=perm;
+			try {
+				index = JSON.parse(window.atob(index));
+				for (let i in index) {
+					let perm = JSON.parse(window.atob(self.getCookie(&quot;OT_&quot; + index[i])));
+					window.memory[index[i]] = perm;
+				}
+			} catch(e) {
+				console.error(&apos;OT_INDEX seems corrupted&apos;);
 			}
 		}
 
