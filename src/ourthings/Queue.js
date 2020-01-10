@@ -228,9 +228,9 @@ class Queue {
 		/*
 		 * Version check as we changed the format
 		 */
-		if(this.templates.version!==1.0) {
+		if(this.templates.version<1.0) {
 			console.info(self.DEFINE.CONSOLE_LINE);
-			console.error('Error:', "Template file has no version, expecting 1.0");
+			console.error('Error:', "Template file has no version, expecting >=1.0");
 			console.info("Warning this error is probably fatal as I have no templates to load");
 			return;
 		}
@@ -279,7 +279,9 @@ class Queue {
 	    * Pop the template off the stack
 	    */
 		let template = this.templates.templates.pop();
-
+		if(typeof template === "string") {
+			template={"url":template,"type":"text/html"}
+		}
 
 		/*
 		 * Is there a cache?
@@ -289,10 +291,12 @@ class Queue {
 			this.templates.templates=[];
 		}
 
-		fetch(template, {
+		fetch(template.url, {
 			headers: {
-				'Content-Type': 'text/html'
-			}
+				'Content-Type': template.type
+			},
+			mode: 'cors',
+			credentials: 'same-origin'
 		})
 			.then(response => self.handleFetchErrors(response))
 			.then(response => response.text())
@@ -313,8 +317,11 @@ class Queue {
 
 				let meta = document.createElement('meta');
 				meta.setAttribute("name", "generator");
-				meta.setAttribute("content", template);
-				meta.innerHTML=text;
+				meta.setAttribute("content", template.url);
+				if(template.type==='text/css')
+					meta.innerHTML=`<style>${text}</style>`;
+				else
+					meta.innerHTML=text;
 				self.fragment.appendChild(meta);
 
 				/*

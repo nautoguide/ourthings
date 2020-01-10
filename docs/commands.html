@@ -147,6 +147,14 @@ than one build. This is useful if you have for example a login page which only n
 <pre><code>[
   "templates/login/actions.html"
 ]</code></pre>
+<p>If you need to include css use the object format</p>
+<pre><code>[
+	"templates/login/actions.html",
+	{
+		url:"css/mycss.css",
+		type:"text/css"
+	}
+]</code></pre>
 <p>To produce unique builds you can use a webpack config like this</p>
 <pre><code>const path = require('path');
 module.exports = {
