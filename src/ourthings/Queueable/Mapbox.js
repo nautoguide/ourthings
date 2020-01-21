@@ -344,23 +344,23 @@ export default class Mapbox extends Queueable {
 	 * @param {int} pid
 	 * @param {object} json
 	 * @param {string} json.map - Name of the map the layer is within
-	 * @param {string} json.name - Name of the layer to zoom in to
+	 * @param {string} json.layer - Name of the layer to zoom in to
 	 * @param {int} json.padding - Padding around the layer zoom
 	 */
 	zoomToBounds(pid, json) {
 		const options = Object.assign({
 			map: 'default',
-			name: '',
+			layer: 'default',
 			padding: 20,
 		}, json);
 
-		let coordinates = this.maps[options.map].map.getSource(json.name)._data.features[0].geometry.coordinates;
-		if (typeof coordinates[0][0] === 'object') {
-			coordinates = coordinates[0]
-		}
-		const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new MapboxGL.LngLatBounds(coordinates[0], coordinates[0]));
-		this.maps[options.map].map.fitBounds(bounds, {padding: options.padding});
+		let bounds = new MapboxGL.LngLatBounds();
 
+		this.maps[options.map].sources[options.layer].forEach(function(feature) {
+			bounds.extend(feature.geometry.coordinates);
+		});
+
+		this.maps[options.map].map.fitBounds(bounds, {padding: options.padding});
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
