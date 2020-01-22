@@ -188,8 +188,13 @@ export default class Mapbox extends Queueable {
 
 		self.maps[options.map].map.on('click', json.layer, function (e) {
 			//mapbox converts multi depth objects to strings. Deserialize this
-			for(let i in e.features[0].properties)
-				e.features[0].properties[i]=JSON.parse(e.features[0].properties[i]);
+			for(let i in e.features[0].properties) {
+				try {
+					e.features[0].properties[i] = JSON.parse(e.features[0].properties[i]);
+				} catch(e) {
+					//do nothing (this was not a multi depth)
+				}
+			}
 			const selectDetails = {
 				coordinates: e.features[0].geometry.coordinates.slice(),
 				properties: e.features[0].properties,
@@ -363,7 +368,7 @@ export default class Mapbox extends Queueable {
 			bounds.extend(feature.geometry.coordinates);
 		});
 
-		this.maps[options.map].map.fitBounds(bounds, options);
+		this.maps[options.map].map.fitBounds(bounds, options.options);
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
@@ -442,6 +447,28 @@ export default class Mapbox extends Queueable {
 		}, json);
 		this.maps[options.map].map.zoomOut();
 		this.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Add a popup to the map
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - The map that the querying layer is on
+	 * @param {array} json.lngLat - The long Lat to place the popup at
+	 * @param {string} json.template - The template to use
+	 */
+	addPopup(pid,json) {
+		const options = Object.assign({
+			map: 'default',
+			lngLat: [-96, 37.8]
+		}, json);
+		let template=this.queue.templateProcessor(options.template,"return");
+		let popup = new MapboxGL.Popup({ closeOnClick: false })
+			.setLngLat(options.lngLat)
+			.setHTML(template)
+			.addTo(this.maps[options.map].map);
+		this.finished(pid,self.queue.DEFINE.FIN_OK);
+
 	}
 
 	/**

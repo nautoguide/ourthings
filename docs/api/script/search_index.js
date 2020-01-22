@@ -1128,6 +1128,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/mapbox.js~mapbox#addpopup",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addPopup",
+    "ourthings/Queueable/Mapbox.js~Mapbox#addPopup",
+    "method"
+  ],
+  [
     "ourthings/queueable/mapbox.js~mapbox#addselect",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addSelect",
     "ourthings/Queueable/Mapbox.js~Mapbox#addSelect",
