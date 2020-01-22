@@ -19,6 +19,7 @@ export default class Mapbox extends Queueable {
 	 * @param {string} json.target - id of element in the page to target
 	 * @param {string} json.style - mapbox style for the map
 	 * @param {int} json.zoom - Set the initial zoom of the map
+	 * @param {int} json.maxZoom - Set the max zoom for the map (default 34)
 	 * @param {array} json.center - Center on
 	 * @example
 	 * mapbox.addMap({"map": "testMap", "target":"mapboxMap", "style": "mapbox://styles/mapbox/streets-v11", "zoom": 8, "center": [-70, 41.2]});
@@ -31,7 +32,8 @@ export default class Mapbox extends Queueable {
 			style: 'mapbox://styles/mapbox/streets-v11',
 			target: 'map',
 			token: 'fail',
-			pitch: 0
+			pitch: 0,
+			mapZoom: 24
 		}, json);
 
 		MapboxGL.accessToken = options.token;
@@ -40,7 +42,8 @@ export default class Mapbox extends Queueable {
 			style: options.style, // stylesheet location
 			center: options.center, // starting position [lng, lat]
 			zoom: options.zoom, // starting zoom
-			pitch: options.pitch
+			pitch: options.pitch,
+			maxZoom: options.maxZoom
 		});
 
 		this.maps[options.map] = {map, layers: {}};
@@ -345,13 +348,13 @@ export default class Mapbox extends Queueable {
 	 * @param {object} json
 	 * @param {string} json.map - Name of the map the layer is within
 	 * @param {string} json.layer - Name of the layer to zoom in to
-	 * @param {int} json.padding - Padding around the layer zoom
+	 * @param {int} json.options - options as per: https://docs.mapbox.com/mapbox-gl-js/api/#map#fitbounds
 	 */
 	zoomToBounds(pid, json) {
 		const options = Object.assign({
 			map: 'default',
 			layer: 'default',
-			padding: 20,
+			options: {}
 		}, json);
 
 		let bounds = new MapboxGL.LngLatBounds();
@@ -360,7 +363,7 @@ export default class Mapbox extends Queueable {
 			bounds.extend(feature.geometry.coordinates);
 		});
 
-		this.maps[options.map].map.fitBounds(bounds, {padding: options.padding});
+		this.maps[options.map].map.fitBounds(bounds, options);
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
