@@ -351,7 +351,9 @@ class Queue {
 		fetch(template.url, {
 			headers: {
 				&apos;Content-Type&apos;: template.type
-			}
+			},
+			mode: &apos;cors&apos;,
+			credentials: &apos;same-origin&apos;
 		})
 			.then(response =&gt; self.handleFetchErrors(response))
 			.then(response =&gt; response.text())
