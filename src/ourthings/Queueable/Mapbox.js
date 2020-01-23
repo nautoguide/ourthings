@@ -247,7 +247,7 @@ export default class Mapbox extends Queueable {
 			let res = eval(feature.properties[options.filter[1]] + ' ' + options.filter[0] + ' ' + options.filter[2]);
 			if (res) {
 				selectDetails.properties = feature.properties;
-				//selectDetails.featureJSON = feature.toJSON();
+				selectDetails.coordinates = feature.geometry.coordinates.slice();
 				selectDetails.featureJSON = JSON.stringify(feature);
 			}
 		});
