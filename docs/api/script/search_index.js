@@ -1158,6 +1158,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/mapbox.js~mapbox#getmapdetails",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-getMapDetails",
+    "ourthings/Queueable/Mapbox.js~Mapbox#getMapDetails",
+    "method"
+  ],
+  [
     "ourthings/queueable/mapbox.js~mapbox#init",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-init",
     "ourthings/Queueable/Mapbox.js~Mapbox#init",
@@ -1174,6 +1180,12 @@ window.esdocSearchIndex = [
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-member-maps",
     "ourthings/Queueable/Mapbox.js~Mapbox#maps",
     "member"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#movetolocation",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-moveToLocation",
+    "ourthings/Queueable/Mapbox.js~Mapbox#moveToLocation",
+    "method"
   ],
   [
     "ourthings/queueable/mapbox.js~mapbox#overlays",

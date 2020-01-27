@@ -373,7 +373,7 @@ export default class Mapbox extends Queueable {
 	}
 
 	/**
-	 * Query and highlight feature depending on the paint features
+	 * Zoom /MapboxGL move to a feature
 	 * @param {int} pid
 	 * @param {object} json
 	 * @param {string} json.map - The map that the querying layer is on
@@ -413,6 +413,31 @@ export default class Mapbox extends Queueable {
 		this.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
+	/**
+	 * Move to a lat long
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - The map that the querying layer is on
+	 * @param {string} json.coordinates - lat long in array format
+	 */
+	moveToLocation(pid, json) {
+		const options = Object.assign({
+			map: 'default'
+		}, json);
+
+			this.maps[options.map].map.flyTo({
+				center: options.coordinates
+			})
+
+		this.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Resize the visible map
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - The map that the querying layer is on
+	 */
 	resize(pid,json) {
 		const options = Object.assign({
 			map: 'default'
@@ -421,6 +446,23 @@ export default class Mapbox extends Queueable {
 		this.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
+	/**
+	 * Set a memory mapDetails to have current info on the state of the map
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - The map that the querying layer is on
+	 */
+	getMapDetails(pid,json) {
+		const options = Object.assign({
+			map: 'default'
+		}, json);
+		let data={
+			center:this.maps[options.map].map.getCenter(),
+			zoom: this.maps[options.map].map.getZoom()
+		};
+		self.queue.setMemory("mapDetails", data, "Session");
+		this.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
 	/**
 	 * Zoom in the map
 	 * @param {int} pid
