@@ -505,7 +505,9 @@ export default class Mapbox extends Queueable {
 			lngLat: [-96, 37.8]
 		}, json);
 
-		let popup = new MapboxGL.Popup({ closeOnClick: false })
+		if(this.popup!==undefined)
+			this.popup.remove();
+		this.popup = new MapboxGL.Popup({ closeOnClick: false })
 			.setLngLat(options.lngLat)
 			.setHTML(`<div id="pu_${pid}"></div>`)
 			.addTo(this.maps[options.map].map);
