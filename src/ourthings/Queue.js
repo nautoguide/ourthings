@@ -472,9 +472,6 @@ class Queue {
 		 */
 		const includeRegex=/{{#include (.*?)}}/;
 		while (match = includeRegex.exec(template)) {
-			if(match[1].match(/^#/))
-				template = template.replace(match[0], self.templateVars(self.getElement(match[1]).innerHTML));
-			else
 				template = template.replace(match[0], self.templateVars(self.getElement(eval(match[1])).innerHTML));
 		}
 
