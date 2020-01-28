@@ -504,11 +504,12 @@ export default class Mapbox extends Queueable {
 			map: 'default',
 			lngLat: [-96, 37.8]
 		}, json);
-		let template=this.queue.templateProcessor(options.template,"return");
+
 		let popup = new MapboxGL.Popup({ closeOnClick: false })
 			.setLngLat(options.lngLat)
-			.setHTML(template)
+			.setHTML(`<div id="pu_${pid}"></div>`)
 			.addTo(this.maps[options.map].map);
+		this.queue.templateProcessor(options.template,`#pu_${pid}`);
 		this.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
