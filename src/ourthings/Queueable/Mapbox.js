@@ -511,7 +511,7 @@ export default class Mapbox extends Queueable {
 			.setLngLat(options.lngLat)
 			.setHTML(`<div id="pu_${pid}"></div>`)
 			.addTo(this.maps[options.map].map);
-		this.queue.templateProcessor(options.template,`#pu_${pid}`);
+		this.queue.templateProcessor(options.template,`#pu_${pid}`,this.queue.DEFINE.RENDER_REPLACE);
 		this.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
