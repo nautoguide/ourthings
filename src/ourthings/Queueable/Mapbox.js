@@ -1,6 +1,7 @@
 import Queueable from "../Queueable";
 import MapboxGL from 'mapbox-gl';
-import centroid from '@turf/centroid'
+import centroid from '@turf/centroid';
+import bbox from '@turf/bbox';
 
 export default class Mapbox extends Queueable {
 
@@ -365,7 +366,12 @@ export default class Mapbox extends Queueable {
 		let bounds = new MapboxGL.LngLatBounds();
 
 		this.maps[options.map].sources[options.layer].forEach(function(feature) {
-			bounds.extend(feature.geometry.coordinates);
+			if(feature.geometry.type==='MultiPolygon') {
+				let fbbox=bbox(feature.geometry);
+				bounds.extend([fbbox[0],fbbox[1]],[fbbox[2],fbbox[3]]);
+			} else {
+				bounds.extend(feature.geometry.coordinates);
+			}
 		});
 
 		this.maps[options.map].map.fitBounds(bounds, options.options);
@@ -427,7 +433,7 @@ export default class Mapbox extends Queueable {
 
 			this.maps[options.map].map.flyTo({
 				center: options.coordinates
-			})
+			});
 
 		this.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
