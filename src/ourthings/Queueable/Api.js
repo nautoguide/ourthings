@@ -210,6 +210,10 @@ export default class Api extends Queueable {
 			self.queue.execute(jsonData[options.queue]);
 
 		};
+
+		self.socket.onclose = function(event) {
+			self.queue.execute("wsClose");
+		};
 	}
 
 	websocketPop(pid,json) {
