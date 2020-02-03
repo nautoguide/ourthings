@@ -97,9 +97,7 @@ export default class Mapbox extends Queueable {
 				type: 'FeatureCollection',
 				features: [],
 			},
-			type: 'point',
-			name: 'default',
-			paint: {},
+			name: 'default'
 		}, json);
 		this.queue.deleteRegister(options.map+'Idle');
 
@@ -108,7 +106,7 @@ export default class Mapbox extends Queueable {
 			data: options.data,
 		});
 
-		this._addLayer(options);
+		//this._addLayer(options);
 
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
@@ -122,12 +120,19 @@ export default class Mapbox extends Queueable {
 	 * @param {object} options.layout - The layout styling for the layer
 	 * @private
 	 */
-	_addLayer(options) {
+	addLayer(pid, json) {
+
+		const options = Object.assign({
+			map: 'default',
+			type: 'point',
+			source: 'default',
+			paint: {},
+		}, json);
 
 		let mapOptions = {
 			id: options.name,
 			type: options.type,
-			source: options.name,
+			source: options.source,
 			paint: options.paint
 		};
 
@@ -137,10 +142,12 @@ export default class Mapbox extends Queueable {
 			mapOptions.layout = options.layout;
 		}
 
-		if (options.filter)
+		if (json.filter)
 			mapOptions.filter = options.filter;
 
 		this.maps[options.map].map.addLayer(mapOptions);
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
+
 	}
 
 	/**
@@ -177,7 +184,7 @@ export default class Mapbox extends Queueable {
 	 * @param {int} pid
 	 * @param {object} json
 	 * @param {string} json.map - name for the map (used to reference)
-	 * @param {string} json.layer - name for the map layer
+	 * @param {string} json.layers - name for the map layers in []
 	 * @param {object} json.queue - queue to call upon select
 	 */
 	addSelect(pid, json) {
@@ -187,19 +194,22 @@ export default class Mapbox extends Queueable {
 			queue: "select"
 		}, json);
 
-		self.maps[options.map].map.on('click', json.layer, function (e) {
+		self.maps[options.map].map.on('click',  function (e) {
+			let f = self.maps[options.map].map.queryRenderedFeatures(e.point, { layers: options.layers });
+			//debugger;
 			//mapbox converts multi depth objects to strings. Deserialize this
-			for(let i in e.features[0].properties) {
+			for(let i in f[0].properties) {
 				try {
-					e.features[0].properties[i] = JSON.parse(e.features[0].properties[i]);
+					f[0].properties[i] = JSON.parse(f[0].properties[i]);
 				} catch(e) {
 					//do nothing (this was not a multi depth)
 				}
 			}
 			const selectDetails = {
-				coordinates: e.features[0].geometry.coordinates.slice(),
-				properties: e.features[0].properties,
-				featureJSON: e.features[0].toJSON()
+				coordinates: f[0].geometry.coordinates.slice(),
+				centroid: centroid(f[0].geometry).geometry.coordinates,
+				properties: f[0].properties,
+				featureJSON: f[0].toJSON()
 			};
 
 			self.queue.setMemory("select", selectDetails, "Session");
@@ -249,6 +259,7 @@ export default class Mapbox extends Queueable {
 			if (res) {
 				selectDetails.properties = feature.properties;
 				selectDetails.coordinates = feature.geometry.coordinates.slice();
+				selectDetails.centroid = centroid(feature.geometry).geometry.coordinates;
 				selectDetails.featureJSON = JSON.stringify(feature);
 			}
 		});
