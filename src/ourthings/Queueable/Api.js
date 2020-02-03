@@ -214,7 +214,6 @@ export default class Api extends Queueable {
 
 	websocketPop(pid,json) {
 		this.set(pid,memory[`wsStack_${json.queue}`].value.pop());
-		console.log(memory);
 		this.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
