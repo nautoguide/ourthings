@@ -396,7 +396,6 @@ class Queue {
 		 */
 
 		for(let i in self.activeLoops) {
-			//debugger;
 			let loopRegex = new RegExp("#loop" + i, "g");
 			template = template.replace(loopRegex, memory['for'+i].value.index);
 		}
@@ -907,9 +906,8 @@ class Queue {
 	 * @return {boolean}
 	 */
 	deleteMemory(name) {
-		let self=this;
 		delete window.memory[name];
-		self._updateMemoryPerms();
+		this._updateMemoryPerms();
 		return true;
 	}
 
@@ -997,14 +995,6 @@ class Queue {
 
 	}
 
-	/**
-	 * Delete a memory element
-	 * @param name
-	 */
-	deleteMemory(name) {
-		window.memory[name]={};
-		delete window.memory[name];
-	}
 
 	/**
 	 * Is there any work to do in the queue?
