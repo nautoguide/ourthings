@@ -48,7 +48,7 @@ export default class Mapbox extends Queueable {
 		});
 
 		this.maps[options.map] = {map, layers: {}};
-		this.maps[options.map].sources={};
+		this.maps[options.map].sources = {};
 
 		map.on('load', () => {
 			this.finished(pid, self.queue.DEFINE.FIN_OK);
@@ -58,21 +58,21 @@ export default class Mapbox extends Queueable {
 		 * On idle run a queue (this is needed for blocking access to data before its loaded). We delay the start of this
 		 * monitor to allow time for setup commands to run
 		 */
-/*
-		setTimeout(function () {
-*/
-				map.on('idle',function(){
-					self.queue.setRegister(options.map+'Idle');
-					//self.queue.execute(options.map+'Idle');
-				});
-				map.on('dataloading',function(data){
-					if(data.isSourceLoaded)
-						self.queue.setRegister(options.map+'DataLoaded');
-					//self.queue.execute(options.map+'Idle');
-				})
-/*
-		}, 5000);
-*/
+		/*
+				setTimeout(function () {
+		*/
+		map.on('idle', function () {
+			self.queue.setRegister(options.map + 'Idle');
+			//self.queue.execute(options.map+'Idle');
+		});
+		map.on('dataloading', function (data) {
+			if (data.isSourceLoaded)
+				self.queue.setRegister(options.map + 'DataLoaded');
+			//self.queue.execute(options.map+'Idle');
+		})
+		/*
+				}, 5000);
+		*/
 
 	};
 
@@ -99,7 +99,7 @@ export default class Mapbox extends Queueable {
 			},
 			name: 'default'
 		}, json);
-		this.queue.deleteRegister(options.map+'Idle');
+		this.queue.deleteRegister(options.map + 'Idle');
 
 		this.maps[options.map].map.addSource(options.name, {
 			type: 'geojson',
@@ -186,35 +186,44 @@ export default class Mapbox extends Queueable {
 	 * @param {string} json.map - name for the map (used to reference)
 	 * @param {string} json.layers - name for the map layers in []
 	 * @param {object} json.queue - queue to call upon select
+	 * @param {object} json.unselectQueue - queue to call upon unselect
 	 */
 	addSelect(pid, json) {
 		let self = this;
 		const options = Object.assign({
 			map: 'default',
-			queue: "select"
+			queue: "select",
+			unselectQueue: "unselect"
 		}, json);
 
-		self.maps[options.map].map.on('click',  function (e) {
-			let f = self.maps[options.map].map.queryRenderedFeatures(e.point, { layers: options.layers });
+		self.maps[options.map].map.on('click', function (e) {
+			let f = self.maps[options.map].map.queryRenderedFeatures(e.point, {layers: options.layers});
 			//debugger;
 			//mapbox converts multi depth objects to strings. Deserialize this
-			for(let i in f[0].properties) {
-				try {
-					f[0].properties[i] = JSON.parse(f[0].properties[i]);
-				} catch(e) {
-					//do nothing (this was not a multi depth)
+			if (f.length >= 1) {
+
+				for (let i in f[0].properties) {
+					try {
+						f[0].properties[i] = JSON.parse(f[0].properties[i]);
+					} catch (e) {
+						//do nothing (this was not a multi depth)
+					}
 				}
+				const selectDetails = {
+					coordinates: f[0].geometry.coordinates.slice(),
+					centroid: centroid(f[0].geometry).geometry.coordinates,
+					properties: f[0].properties,
+					featureJSON: f[0].toJSON()
+				};
+
+				self.queue.setMemory("select", selectDetails, "Session");
+
+				self.queue.execute(options.queue, selectDetails);
+			} else {
+				self.queue.setMemory("select", {}, "Session");
+				self.queue.execute(options.queue);
+
 			}
-			const selectDetails = {
-				coordinates: f[0].geometry.coordinates.slice(),
-				centroid: centroid(f[0].geometry).geometry.coordinates,
-				properties: f[0].properties,
-				featureJSON: f[0].toJSON()
-			};
-
-			self.queue.setMemory("select", selectDetails, "Session");
-
-			self.queue.execute(options.queue, selectDetails);
 
 		});
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
@@ -229,18 +238,18 @@ export default class Mapbox extends Queueable {
 	 * @param {string} json.layer - name for the map layer
 	 */
 	awaitSourceFeatures(pid, json) {
-		let self=this;
+		let self = this;
 		const options = Object.assign({
 			map: 'default',
 			layer: 'default'
 		}, json);
 		const features = this.maps[options.map].map.querySourceFeatures(options.layer);
-		if(features.length>0) {
+		if (features.length > 0) {
 			this.finished(pid, this.queue.DEFINE.FIN_OK);
 		} else {
 			setTimeout(function () {
-				self.awaitSourceFeatures(pid,json);
-			},500);
+				self.awaitSourceFeatures(pid, json);
+			}, 500);
 		}
 	}
 
@@ -312,10 +321,10 @@ export default class Mapbox extends Queueable {
 				features: [],
 			},
 		}, json);
-		this.queue.deleteRegister(options.map+'Idle');
+		this.queue.deleteRegister(options.map + 'Idle');
 		this.maps[options.map].map.getSource(options.layer).setData(options.data);
 		// Make a copy of the source data because the internal call is not reliable
-		this.maps[options.map].sources[options.layer]=options.data.features;
+		this.maps[options.map].sources[options.layer] = options.data.features;
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
@@ -350,7 +359,7 @@ export default class Mapbox extends Queueable {
 			map: 'default',
 			layer: 'default'
 		}, json);
-		this.queue.deleteRegister(options.map+'Idle');
+		this.queue.deleteRegister(options.map + 'Idle');
 
 		this.maps[options.map].map.getSource(options.layer).setData({
 			type: 'FeatureCollection',
@@ -376,10 +385,10 @@ export default class Mapbox extends Queueable {
 
 		let bounds = new MapboxGL.LngLatBounds();
 
-		this.maps[options.map].sources[options.layer].forEach(function(feature) {
-			if(feature.geometry.type==='MultiPolygon') {
-				let fbbox=bbox(feature.geometry);
-				bounds.extend([fbbox[0],fbbox[1]],[fbbox[2],fbbox[3]]);
+		this.maps[options.map].sources[options.layer].forEach(function (feature) {
+			if (feature.geometry.type === 'MultiPolygon') {
+				let fbbox = bbox(feature.geometry);
+				bounds.extend([fbbox[0], fbbox[1]], [fbbox[2], fbbox[3]]);
 			} else {
 				bounds.extend(feature.geometry.coordinates);
 			}
@@ -411,15 +420,15 @@ export default class Mapbox extends Queueable {
 		let features = this.maps[options.map].map.getSource(options.layer)._data.features;
 		let pointGeom = null;
 
-		for(const feature of features) {
-			if(feature.properties.hasOwnProperty(options.property))
-				if(feature.properties[options.property] === options.value) {
+		for (const feature of features) {
+			if (feature.properties.hasOwnProperty(options.property))
+				if (feature.properties[options.property] === options.value) {
 					pointGeom = feature;
 					break;
 				}
 		}
 
-		if(pointGeom !== null) {
+		if (pointGeom !== null) {
 			this.maps[options.map].map.flyTo({
 				center: centroid(pointGeom.geometry).geometry.coordinates,
 				zoom: options.zoom,
@@ -427,7 +436,7 @@ export default class Mapbox extends Queueable {
 			})
 		}
 
-		this.finished(pid,self.queue.DEFINE.FIN_OK);
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
 	/**
@@ -442,11 +451,11 @@ export default class Mapbox extends Queueable {
 			map: 'default'
 		}, json);
 
-			this.maps[options.map].map.flyTo({
-				center: options.coordinates
-			});
+		this.maps[options.map].map.flyTo({
+			center: options.coordinates
+		});
 
-		this.finished(pid,self.queue.DEFINE.FIN_OK);
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
 	/**
@@ -455,12 +464,12 @@ export default class Mapbox extends Queueable {
 	 * @param {object} json
 	 * @param {string} json.map - The map that the querying layer is on
 	 */
-	resize(pid,json) {
+	resize(pid, json) {
 		const options = Object.assign({
 			map: 'default'
 		}, json);
 		this.maps[options.map].map.resize();
-		this.finished(pid,self.queue.DEFINE.FIN_OK);
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
 	/**
@@ -469,17 +478,18 @@ export default class Mapbox extends Queueable {
 	 * @param {object} json
 	 * @param {string} json.map - The map that the querying layer is on
 	 */
-	getMapDetails(pid,json) {
+	getMapDetails(pid, json) {
 		const options = Object.assign({
 			map: 'default'
 		}, json);
-		let data={
-			center:this.maps[options.map].map.getCenter(),
+		let data = {
+			center: this.maps[options.map].map.getCenter(),
 			zoom: this.maps[options.map].map.getZoom()
 		};
 		self.queue.setMemory("mapDetails", data, "Session");
-		this.finished(pid,self.queue.DEFINE.FIN_OK);
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
+
 	/**
 	 * Zoom in the map
 	 * @param {int} pid
@@ -491,7 +501,7 @@ export default class Mapbox extends Queueable {
 			map: 'default'
 		}, json);
 		this.maps[options.map].map.zoomIn();
-		this.finished(pid,self.queue.DEFINE.FIN_OK);
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
 	/**
@@ -505,7 +515,7 @@ export default class Mapbox extends Queueable {
 			map: 'default'
 		}, json);
 		this.maps[options.map].map.zoomOut();
-		this.finished(pid,self.queue.DEFINE.FIN_OK);
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
 	/**
@@ -516,20 +526,38 @@ export default class Mapbox extends Queueable {
 	 * @param {array} json.lngLat - The long Lat to place the popup at
 	 * @param {string} json.template - The template to use
 	 */
-	addPopup(pid,json) {
+	addPopup(pid, json) {
 		const options = Object.assign({
 			map: 'default',
-			lngLat: [-96, 37.8]
+			lngLat: [-96, 37.8],
+			options:{closeOnClick: false}
 		}, json);
 
-		if(this.popup!==undefined)
+		if (this.popup !== undefined)
 			this.popup.remove();
-		this.popup = new MapboxGL.Popup({ closeOnClick: false })
+		this.popup = new MapboxGL.Popup(options.options)
 			.setLngLat(options.lngLat)
 			.setHTML(`<div id="pu_${pid}"></div>`)
 			.addTo(this.maps[options.map].map);
-		this.queue.templateProcessor(options.template,`#pu_${pid}`,this.queue.DEFINE.RENDER_REPLACE);
-		this.finished(pid,self.queue.DEFINE.FIN_OK);
+		this.queue.templateProcessor(options.template, `#pu_${pid}`, this.queue.DEFINE.RENDER_REPLACE);
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Remove a popup from the map
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - The map that the querying layer is on
+	 */
+	removePopup(pid, json) {
+		const options = Object.assign({
+			map: 'default'
+		}, json);
+
+		if (this.popup !== undefined)
+			this.popup.remove();
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
 
