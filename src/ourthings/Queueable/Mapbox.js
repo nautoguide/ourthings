@@ -229,6 +229,24 @@ export default class Mapbox extends Queueable {
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
+	/**
+	 * Set filter on a layer
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - name for the map (used to reference)
+	 * @param {string} json.layer - name for the map layer
+	 * @param {array} json.filter - new filter
+	 */
+	setFilter(pid, json) {
+		const options = Object.assign({
+			map: 'default',
+			layer: 'default',
+			filter: []
+		}, json);
+		this.maps[options.map].map.setFilter(options.layer, options.filter);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+
+	}
 
 	/**
 	 * Await the source to be valid on a layer because mapbox has no event for this *WARNING SHIT HACK*
