@@ -326,23 +326,23 @@ export default class Mapbox extends Queueable {
 	 * @param {int} pid
 	 * @param {object} json
 	 * @param {string} json.map - The name of the map that the layer is on
-	 * @param {string} json.name - The name of the layer that the data will be set on
+	 * @param {string} json.source - The name of the source that the data will be set on
 	 * @param {object|string} json.data - The data to set the layer to (this will override old data)
 	 */
 	setData(pid, json) {
 
 		const options = Object.assign({
 			map: 'default',
-			layer: 'default',
+			source: 'default',
 			data: {
 				type: 'FeatureCollection',
 				features: [],
 			},
 		}, json);
 		this.queue.deleteRegister(options.map + 'Idle');
-		this.maps[options.map].map.getSource(options.layer).setData(options.data);
+		this.maps[options.map].map.getSource(options.source).setData(options.data);
 		// Make a copy of the source data because the internal call is not reliable
-		this.maps[options.map].sources[options.layer] = options.data.features;
+		this.maps[options.map].sources[options.source] = options.data.features;
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
@@ -440,12 +440,13 @@ export default class Mapbox extends Queueable {
 
 		for (const feature of features) {
 			if (feature.properties.hasOwnProperty(options.property))
-				if (feature.properties[options.property] === options.value) {
+				/* Note the == match, this is lose on purpose, due to int/string casting
+				 */
+				if (feature.properties[options.property] == options.value) {
 					pointGeom = feature;
 					break;
 				}
 		}
-
 		if (pointGeom !== null) {
 			this.maps[options.map].map.flyTo({
 				center: centroid(pointGeom.geometry).geometry.coordinates,
