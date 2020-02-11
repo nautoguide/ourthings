@@ -71,6 +71,7 @@ class Queue {
 		 * @type {number}
 		 */
 		self.pid = 0;
+		self.runningPid=-1;
 
 		/*
 		 * Our unique bind ids
@@ -488,15 +489,38 @@ class Queue {
 	}
 
 	/**
-	 * Process a json object and replace {{!}} tags
+	 * Process a json object and replace {{!}} tags + # tags
 	 * @param json
 	 * @return {any}
 	 */
 	jsonVars(json) {
 		let self=this;
 		json=JSON.stringify(json);
-		const commandRegex=/{{(![\^]{0,1})(.*?)}}/;
 		let match;
+
+		/*
+		 * Specials #pid
+		 */
+
+		const pidRegex=/\#pid/;
+		while (match = pidRegex.exec(json)) {
+			json = json.replace(match[0], self.runningPid);
+		}
+
+		/*
+		 * Specials #stack
+		 */
+
+		const stackRegex=/\#stack/;
+		while (match = stackRegex.exec(json)) {
+			json = json.replace(match[0], `queue.queue[${self.runningPid}].stack`);
+		}
+
+		/*
+		 * {{!}} tags
+		 */
+
+		const commandRegex=/{{(![\^]{0,1})(.*?)}}/;
 		while (match = commandRegex.exec(json)) {
 			if(match[1]==='!^')
 				json = json.replace('"'+match[0]+'"', self.varsParser(match[2]));
@@ -648,6 +672,10 @@ class Queue {
 		let self=this;
 		for(let command in commandObj) {
 			/*
+			 * Init the stack
+			 */
+			commandObj[command].stack={};
+			/*
 			 * DEFINE.COMMAND_INSTANT, basically a queue item we need to get running
 			 */
 			if(commandObj[command].options.queueRun===self.DEFINE.COMMAND_INSTANT) {
@@ -763,10 +791,13 @@ class Queue {
 							/*
                              *  Launch the function as a time out (so we get control back)
                              */
+
 							if (sync) {
+								self.runningPid=item;
 								self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
 							} else {
 								setTimeout(function () {
+									self.runningPid=item;
 									self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
 								}, self.queue[item].options.queueTimer);
 							}
@@ -814,12 +845,25 @@ class Queue {
 				origin: origin,
 				value: value
 			};
-			window.memory[origin] = memoryDetails;
+			window.memory[`${pid}_${origin}`] = memoryDetails;
 			return true;
 		} else {
 			this.reportError("Could not set memory","The memory set for pid ["+pid+"] could not be found");
 			return false;
 		}
+	}
+
+	/**
+	 * Set a queue stack item
+	 * @param pid
+	 * @param name
+	 * @param value
+	 * @return {boolean}
+	 */
+	setStack(pid,name,value) {
+		let command=this.findQueueByPid(pid);
+		command.stack[name]=value;
+		return true;
 	}
 
 	/**

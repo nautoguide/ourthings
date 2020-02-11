@@ -217,7 +217,12 @@ export default class Api extends Queueable {
 	}
 
 	websocketPop(pid,json) {
-		this.set(pid,memory[`wsStack_${json.queue}`].value.pop());
+		let options=Object.assign({
+			"prefix":"ws://localhost",
+			"queue":"queue",
+			"queues":{}
+		},json);
+		this.queue.setStack(pid,options.queue,memory[`wsStack_${json.queue}`].value.pop());
 		this.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
