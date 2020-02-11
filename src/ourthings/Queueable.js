@@ -40,11 +40,9 @@ class Queueable {
 	start(pid,command,json) {
 		let self=this;
 		if(self[command]&&typeof self[command] === 'function') {
-
 			/*
 			 * Pass the json through the var processor
 			 */
-
 			json=JSON.parse(self.queue.templateVars(JSON.stringify(json)));
 			/*
 			 * Execute
