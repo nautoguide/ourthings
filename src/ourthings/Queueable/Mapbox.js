@@ -391,28 +391,28 @@ export default class Mapbox extends Queueable {
 	 * @param {int} pid
 	 * @param {object} json
 	 * @param {string} json.map - Name of the map the layer is within
-	 * @param {string} json.layer - Name of the layer to zoom in to
+	 * @param {string} json.source - Name of the layer to zoom in to
 	 * @param {int} json.options - options as per: https://docs.mapbox.com/mapbox-gl-js/api/#map#fitbounds
 	 */
 	zoomToBounds(pid, json) {
 		const options = Object.assign({
 			map: 'default',
-			layer: 'default',
+			source: 'default',
 			options: {}
 		}, json);
 
 		let bounds = new MapboxGL.LngLatBounds();
 
-		this.maps[options.map].sources[options.layer].forEach(function (feature) {
-			if (feature.geometry.type === 'MultiPolygon') {
+		this.maps[options.map].sources[options.source].forEach(function (feature) {
+			if (feature.geometry.type === 'MultiPolygon'||feature.geometry.type === 'Polygon') {
 				let fbbox = bbox(feature.geometry);
 				bounds.extend([fbbox[0], fbbox[1]], [fbbox[2], fbbox[3]]);
 			} else {
 				bounds.extend(feature.geometry.coordinates);
 			}
 		});
-
-		this.maps[options.map].map.fitBounds(bounds, options.options);
+		if(bounds._ne)
+			this.maps[options.map].map.fitBounds(bounds, options.options);
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
