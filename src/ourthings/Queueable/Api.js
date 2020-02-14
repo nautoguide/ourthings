@@ -196,6 +196,7 @@ export default class Api extends Queueable {
 			"queue":"queue",
 			"queues":{}
 		},json);
+		self.frames={};
 		self.socket = new WebSocket(options.url);
 		self.socket.onopen = function(event) {
 			self.finished(pid,self.queue.DEFINE.FIN_OK);
@@ -203,11 +204,38 @@ export default class Api extends Queueable {
 		self.socket.onmessage = function(event) {
 			let stack=[];
 			let jsonData=JSON.parse(event.data);
-			if(memory[`wsStack_${jsonData[options.queue]}`])
-				stack=memory[`wsStack_${jsonData[options.queue]}`].value;
-			stack.push(jsonData);
-			self.queue.setMemory(`wsStack_${jsonData[options.queue]}`,stack,self.queue.DEFINE.MEMORY_SESSION);
-			self.queue.execute(jsonData[options.queue]);
+
+			/*
+			 * Is this part of a multi packet?
+			 *
+			 * For AWS websockets size is limited so we split packets down into frames IE:
+			 *
+			 * { frame: 1, totalFrames: 10, data: "BASE64" }
+			 *
+			 * This decodes those frames, you will need to implement the split in your AWS websocket code
+			 */
+			if(jsonData['frame']) {
+				if(self.frames[jsonData['uuid']]===undefined) {
+					self.frames[jsonData['uuid']]={"total":0,data:new Array(jsonData['frame']['totalFrames'])};
+				}
+				self.frames[jsonData['uuid']].data[jsonData['frame']]=atob(jsonData['data']);
+				self.frames[jsonData['uuid']].total++;
+				if(self.frames[jsonData['uuid']].total===jsonData['totalFrames']) {
+					jsonData=JSON.parse(self.frames[jsonData['uuid']].data.join(''));
+					deployEvent();
+					delete self.frames[jsonData['uuid']];
+				}
+			} else {
+				deployEvent();
+			}
+
+			function deployEvent() {
+				if (memory[`wsStack_${jsonData[options.queue]}`])
+					stack = memory[`wsStack_${jsonData[options.queue]}`].value;
+				stack.push(jsonData);
+				self.queue.setMemory(`wsStack_${jsonData[options.queue]}`, stack, self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.execute(jsonData[options.queue]);
+			}
 
 		};
 
