@@ -404,12 +404,8 @@ export default class Mapbox extends Queueable {
 		let bounds = new MapboxGL.LngLatBounds();
 
 		this.maps[options.map].sources[options.source].forEach(function (feature) {
-			if (feature.geometry.type === 'MultiPolygon'||feature.geometry.type === 'Polygon') {
-				let fbbox = bbox(feature.geometry);
-				bounds.extend([fbbox[0], fbbox[1]], [fbbox[2], fbbox[3]]);
-			} else {
-				bounds.extend(feature.geometry.coordinates);
-			}
+			let fbbox = bbox(feature.geometry);
+			bounds.extend([fbbox[0], fbbox[1]], [fbbox[2], fbbox[3]]);
 		});
 		if(bounds._ne)
 			this.maps[options.map].map.fitBounds(bounds, options.options);
