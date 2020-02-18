@@ -398,7 +398,9 @@ class Queue {
 
 		for(let i in self.activeLoops) {
 			let loopRegex = new RegExp("#loop" + i, "g");
+			let incrementRegex = new RegExp("#increment" + i, "g");
 			template = template.replace(loopRegex, memory['for'+i].value.index);
+			template = template.replace(incrementRegex, memory['for'+i].value.increment);
 		}
 
 
