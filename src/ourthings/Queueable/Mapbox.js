@@ -338,14 +338,31 @@ export default class Mapbox extends Queueable {
 				type: 'FeatureCollection',
 				features: [],
 			},
-			mode: 'clear'
+			mode: 'clear',
+			index: 'id'
 		}, json);
 		this.queue.deleteRegister(options.map + 'Idle');
-		if(options.mode!=='clear') {
+		if(options.mode==='append') {
 			for(let i in this.maps[options.map].sources[options.source]) {
 				options.data.features.push(this.maps[options.map].sources[options.source][i]);
 			}
 		}
+		let newFeatures=[];
+		if(options.mode==='delete') {
+			for(let i in this.maps[options.map].sources[options.source]) {
+				let fdelete=false;
+				for(let j in options.data.features) {
+					if(options.data.features[j].properties[options.index]===this.maps[options.map].sources[options.source][i].properties[options.index]) {
+						fdelete=true;
+						break;
+					}
+				}
+				if(fdelete===false)
+					newFeatures.push(this.maps[options.map].sources[options.source][i]);
+			}
+			options.data.features=newFeatures;
+		}
+
 		this.maps[options.map].map.getSource(options.source).setData(options.data);
 		// Make a copy of the source data because the internal call is not reliable
 		this.maps[options.map].sources[options.source] = options.data.features;
