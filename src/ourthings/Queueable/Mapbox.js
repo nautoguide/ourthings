@@ -543,6 +543,21 @@ export default class Mapbox extends Queueable {
 	}
 
 	/**
+	 * Zoom the map
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - The map that the querying layer is on
+	 */
+	zoomTo(pid, json) {
+		const options = Object.assign({
+			map: 'default',
+			zoom: 1
+		}, json);
+		this.maps[options.map].map.zoomTo(parseInt(options.zoom));
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
 	 * Zoom out the map
 	 * @param {int} pid
 	 * @param {object} json
