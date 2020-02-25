@@ -1,6 +1,7 @@
 /** @module ourthings/Queue */
 import Define from './Define.js';
 import * as consoleBadge from 'console-badge';
+import Memory from "./Memory";
 
 /**
  * @classdesc
@@ -878,12 +879,7 @@ class Queue {
 	setMemory(name,value,mode) {
 		let self=this;
 		mode=mode||self.DEFINE.MEMORY_GARBAGE;
-		let memoryDetails = {
-			pid: -1,
-			mode: mode,
-			origin: 'User',
-			value: value
-		};
+		let memoryDetails=new Memory(-1,mode,'User',value);
 		window.memory[name] = memoryDetails;
 		self._updateMemoryPerms();
 

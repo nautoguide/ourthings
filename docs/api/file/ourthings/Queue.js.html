@@ -30,6 +30,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~Validate.html">Validate</a></span></span></li>
@@ -58,6 +59,7 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module ourthings/Queue */
 import Define from &apos;./Define.js&apos;;
 import * as consoleBadge from &apos;console-badge&apos;;
+import Memory from &quot;./Memory&quot;;
 
 /**
  * @classdesc
@@ -128,6 +130,7 @@ class Queue {
 		 * @type {number}
 		 */
 		self.pid = 0;
+		self.runningPid=-1;
 
 		/*
 		 * Our unique bind ids
@@ -453,9 +456,10 @@ class Queue {
 		 */
 
 		for(let i in self.activeLoops) {
-			//debugger;
 			let loopRegex = new RegExp(&quot;#loop&quot; + i, &quot;g&quot;);
+			let incrementRegex = new RegExp(&quot;#increment&quot; + i, &quot;g&quot;);
 			template = template.replace(loopRegex, memory[&apos;for&apos;+i].value.index);
+			template = template.replace(incrementRegex, memory[&apos;for&apos;+i].value.increment);
 		}
 
 
@@ -529,9 +533,6 @@ class Queue {
 		 */
 		const includeRegex=/{{#include (.*?)}}/;
 		while (match = includeRegex.exec(template)) {
-			if(match[1].match(/^#/))
-				template = template.replace(match[0], self.templateVars(self.getElement(match[1]).innerHTML));
-			else
 				template = template.replace(match[0], self.templateVars(self.getElement(eval(match[1])).innerHTML));
 		}
 
@@ -549,15 +550,38 @@ class Queue {
 	}
 
 	/**
-	 * Process a json object and replace {{!}} tags
+	 * Process a json object and replace {{!}} tags + # tags
 	 * @param json
 	 * @return {any}
 	 */
 	jsonVars(json) {
 		let self=this;
 		json=JSON.stringify(json);
-		const commandRegex=/{{(![\^]{0,1})(.*?)}}/;
 		let match;
+
+		/*
+		 * Specials #pid
+		 */
+
+		const pidRegex=/\#pid/;
+		while (match = pidRegex.exec(json)) {
+			json = json.replace(match[0], self.runningPid);
+		}
+
+		/*
+		 * Specials #stack
+		 */
+
+		const stackRegex=/\#stack/;
+		while (match = stackRegex.exec(json)) {
+			json = json.replace(match[0], `queue.queue[${self.runningPid}].stack`);
+		}
+
+		/*
+		 * {{!}} tags
+		 */
+
+		const commandRegex=/{{(![\^]{0,1})(.*?)}}/;
 		while (match = commandRegex.exec(json)) {
 			if(match[1]===&apos;!^&apos;)
 				json = json.replace(&apos;&quot;&apos;+match[0]+&apos;&quot;&apos;, self.varsParser(match[2]));
@@ -709,6 +733,10 @@ class Queue {
 		let self=this;
 		for(let command in commandObj) {
 			/*
+			 * Init the stack
+			 */
+			commandObj[command].stack={};
+			/*
 			 * DEFINE.COMMAND_INSTANT, basically a queue item we need to get running
 			 */
 			if(commandObj[command].options.queueRun===self.DEFINE.COMMAND_INSTANT) {
@@ -824,10 +852,13 @@ class Queue {
 							/*
                              *  Launch the function as a time out (so we get control back)
                              */
+
 							if (sync) {
+								self.runningPid=item;
 								self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
 							} else {
 								setTimeout(function () {
+									self.runningPid=item;
 									self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
 								}, self.queue[item].options.queueTimer);
 							}
@@ -875,12 +906,25 @@ class Queue {
 				origin: origin,
 				value: value
 			};
-			window.memory[origin] = memoryDetails;
+			window.memory[`${pid}_${origin}`] = memoryDetails;
 			return true;
 		} else {
 			this.reportError(&quot;Could not set memory&quot;,&quot;The memory set for pid [&quot;+pid+&quot;] could not be found&quot;);
 			return false;
 		}
+	}
+
+	/**
+	 * Set a queue stack item
+	 * @param pid
+	 * @param name
+	 * @param value
+	 * @return {boolean}
+	 */
+	setStack(pid,name,value) {
+		let command=this.findQueueByPid(pid);
+		command.stack[name]=value;
+		return true;
 	}
 
 	/**
@@ -893,12 +937,7 @@ class Queue {
 	setMemory(name,value,mode) {
 		let self=this;
 		mode=mode||self.DEFINE.MEMORY_GARBAGE;
-		let memoryDetails = {
-			pid: -1,
-			mode: mode,
-			origin: &apos;User&apos;,
-			value: value
-		};
+		let memoryDetails=new Memory(-1,mode,&apos;User&apos;,value);
 		window.memory[name] = memoryDetails;
 		self._updateMemoryPerms();
 
@@ -967,9 +1006,8 @@ class Queue {
 	 * @return {boolean}
 	 */
 	deleteMemory(name) {
-		let self=this;
 		delete window.memory[name];
-		self._updateMemoryPerms();
+		this._updateMemoryPerms();
 		return true;
 	}
 
@@ -1057,14 +1095,6 @@ class Queue {
 
 	}
 
-	/**
-	 * Delete a memory element
-	 * @param name
-	 */
-	deleteMemory(name) {
-		window.memory[name]={};
-		delete window.memory[name];
-	}
 
 	/**
 	 * Is there any work to do in the queue?

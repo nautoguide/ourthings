@@ -48,6 +48,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "@nautoguide/ourthings/ourthings/memory.js~memory",
+    "class/ourthings/Memory.js~Memory.html",
+    "<span>Memory</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Memory.js</span>",
+    "class"
+  ],
+  [
     "@nautoguide/ourthings/ourthings/queueable/openlayers.js~openlayers",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html",
     "<span>Openlayers</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/Openlayers.js</span>",
@@ -576,6 +582,54 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/memory.js",
+    "file/ourthings/Memory.js.html",
+    "ourthings/Memory.js",
+    "file"
+  ],
+  [
+    "ourthings/memory.js~memory#constructor",
+    "class/ourthings/Memory.js~Memory.html#instance-constructor-constructor",
+    "ourthings/Memory.js~Memory#constructor",
+    "method"
+  ],
+  [
+    "ourthings/memory.js~memory#get",
+    "class/ourthings/Memory.js~Memory.html#instance-method-get",
+    "ourthings/Memory.js~Memory#get",
+    "method"
+  ],
+  [
+    "ourthings/memory.js~memory#mode",
+    "class/ourthings/Memory.js~Memory.html#instance-member-mode",
+    "ourthings/Memory.js~Memory#mode",
+    "member"
+  ],
+  [
+    "ourthings/memory.js~memory#origin",
+    "class/ourthings/Memory.js~Memory.html#instance-member-origin",
+    "ourthings/Memory.js~Memory#origin",
+    "member"
+  ],
+  [
+    "ourthings/memory.js~memory#pid",
+    "class/ourthings/Memory.js~Memory.html#instance-member-pid",
+    "ourthings/Memory.js~Memory#pid",
+    "member"
+  ],
+  [
+    "ourthings/memory.js~memory#toggle",
+    "class/ourthings/Memory.js~Memory.html#instance-method-toggle",
+    "ourthings/Memory.js~Memory#toggle",
+    "method"
+  ],
+  [
+    "ourthings/memory.js~memory#value",
+    "class/ourthings/Memory.js~Memory.html#instance-member-value",
+    "ourthings/Memory.js~Memory#value",
+    "member"
+  ],
+  [
     "ourthings/queue.js",
     "file/ourthings/Queue.js.html",
     "ourthings/Queue.js",
@@ -651,12 +705,6 @@ window.esdocSearchIndex = [
     "ourthings/queue.js~queue#deepcopy",
     "class/ourthings/Queue.js~Queue.html#instance-method-deepCopy",
     "ourthings/Queue.js~Queue#deepCopy",
-    "method"
-  ],
-  [
-    "ourthings/queue.js~queue#deletememory",
-    "class/ourthings/Queue.js~Queue.html#instance-method-deleteMemory",
-    "ourthings/Queue.js~Queue#deleteMemory",
     "method"
   ],
   [
@@ -783,6 +831,12 @@ window.esdocSearchIndex = [
     "ourthings/queue.js~queue#setregister",
     "class/ourthings/Queue.js~Queue.html#instance-method-setRegister",
     "ourthings/Queue.js~Queue#setRegister",
+    "method"
+  ],
+  [
+    "ourthings/queue.js~queue#setstack",
+    "class/ourthings/Queue.js~Queue.html#instance-method-setStack",
+    "ourthings/Queue.js~Queue#setStack",
     "method"
   ],
   [
@@ -1104,12 +1158,6 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "ourthings/queueable/mapbox.js~mapbox#_addlayer",
-    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-_addLayer",
-    "ourthings/Queueable/Mapbox.js~Mapbox#_addLayer",
-    "method"
-  ],
-  [
     "ourthings/queueable/mapbox.js~mapbox#addclick",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addClick",
     "ourthings/Queueable/Mapbox.js~Mapbox#addClick",
@@ -1119,6 +1167,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/mapbox.js~mapbox#addimages",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addImages",
     "ourthings/Queueable/Mapbox.js~Mapbox#addImages",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#addlayer",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addLayer",
+    "ourthings/Queueable/Mapbox.js~Mapbox#addLayer",
     "method"
   ],
   [
@@ -1200,6 +1254,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/mapbox.js~mapbox#popup",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-member-popup",
+    "ourthings/Queueable/Mapbox.js~Mapbox#popup",
+    "member"
+  ],
+  [
     "ourthings/queueable/mapbox.js~mapbox#queue",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-member-queue",
     "ourthings/Queueable/Mapbox.js~Mapbox#queue",
@@ -1218,6 +1278,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/mapbox.js~mapbox#removepopup",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-removePopup",
+    "ourthings/Queueable/Mapbox.js~Mapbox#removePopup",
+    "method"
+  ],
+  [
     "ourthings/queueable/mapbox.js~mapbox#resize",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-resize",
     "ourthings/Queueable/Mapbox.js~Mapbox#resize",
@@ -1227,6 +1293,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/mapbox.js~mapbox#setdata",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-setData",
     "ourthings/Queueable/Mapbox.js~Mapbox#setData",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#setfilter",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-setFilter",
+    "ourthings/Queueable/Mapbox.js~Mapbox#setFilter",
     "method"
   ],
   [
@@ -1242,6 +1314,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/mapbox.js~mapbox#setpitch",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-setPitch",
+    "ourthings/Queueable/Mapbox.js~Mapbox#setPitch",
+    "method"
+  ],
+  [
     "ourthings/queueable/mapbox.js~mapbox#zoomin",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-zoomIn",
     "ourthings/Queueable/Mapbox.js~Mapbox#zoomIn",
@@ -1251,6 +1329,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/mapbox.js~mapbox#zoomout",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-zoomOut",
     "ourthings/Queueable/Mapbox.js~Mapbox#zoomOut",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#zoomto",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-zoomTo",
+    "ourthings/Queueable/Mapbox.js~Mapbox#zoomTo",
     "method"
   ],
   [

@@ -1,7 +1,7 @@
 {
-  "coverage": "59.37%",
-  "expectCount": 224,
-  "actualCount": 133,
+  "coverage": "59.49%",
+  "expectCount": 237,
+  "actualCount": 141,
   "files": {
     "ourthings/Define.js": {
       "expectCount": 28,
@@ -27,6 +27,16 @@
         66,
         67,
         68
+      ]
+    },
+    "ourthings/Memory.js": {
+      "expectCount": 8,
+      "actualCount": 4,
+      "undocumentLines": [
+        24,
+        25,
+        26,
+        27
       ]
     },
     "ourthings/node_modules/console-badge/dist/console-badge.cjs.js": {
@@ -55,15 +65,15 @@
       "expectCount": 42,
       "actualCount": 40,
       "undocumentLines": [
-        195,
-        1243
+        197,
+        1272
       ]
     },
     "ourthings/Queueable/Api.js": {
       "expectCount": 7,
       "actualCount": 6,
       "undocumentLines": [
-        215
+        247
       ]
     },
     "ourthings/Queueable/Browser.js": {
@@ -90,20 +100,21 @@
       "undocumentLines": []
     },
     "ourthings/Queueable/Mapbox.js": {
-      "expectCount": 28,
-      "actualCount": 17,
+      "expectCount": 33,
+      "actualCount": 21,
       "undocumentLines": [
-        5,
-        7,
+        6,
         8,
         9,
         10,
         11,
-        236,
-        261,
-        275,
-        310,
-        319
+        12,
+        274,
+        300,
+        314,
+        372,
+        381,
+        607
       ]
     },
     "ourthings/Queueable/Markdown.js": {
@@ -169,7 +180,7 @@
       "undocumentLines": [
         21,
         30,
-        69
+        67
       ]
     },
     "ourthings/validator.js": {

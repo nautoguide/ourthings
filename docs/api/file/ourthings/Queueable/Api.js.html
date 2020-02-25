@@ -30,6 +30,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~Validate.html">Validate</a></span></span></li>
@@ -253,6 +254,7 @@ export default class Api extends Queueable {
 			&quot;queue&quot;:&quot;queue&quot;,
 			&quot;queues&quot;:{}
 		},json);
+		self.frames={};
 		self.socket = new WebSocket(options.url);
 		self.socket.onopen = function(event) {
 			self.finished(pid,self.queue.DEFINE.FIN_OK);
@@ -260,18 +262,53 @@ export default class Api extends Queueable {
 		self.socket.onmessage = function(event) {
 			let stack=[];
 			let jsonData=JSON.parse(event.data);
-			if(memory[`wsStack_${jsonData[options.queue]}`])
-				stack=memory[`wsStack_${jsonData[options.queue]}`].value;
-			stack.push(jsonData);
-			self.queue.setMemory(`wsStack_${jsonData[options.queue]}`,stack,self.queue.DEFINE.MEMORY_SESSION);
-			self.queue.execute(jsonData[options.queue]);
 
+			/*
+			 * Is this part of a multi packet?
+			 *
+			 * For AWS websockets size is limited so we split packets down into frames IE:
+			 *
+			 * { frame: 1, totalFrames: 10, data: &quot;BASE64&quot; }
+			 *
+			 * This decodes those frames, you will need to implement the split in your AWS websocket code
+			 */
+			if(jsonData[&apos;frame&apos;]) {
+				if(self.frames[jsonData[&apos;uuid&apos;]]===undefined) {
+					self.frames[jsonData[&apos;uuid&apos;]]={&quot;total&quot;:0,data:new Array(jsonData[&apos;frame&apos;][&apos;totalFrames&apos;])};
+				}
+				self.frames[jsonData[&apos;uuid&apos;]].data[jsonData[&apos;frame&apos;]]=atob(jsonData[&apos;data&apos;]);
+				self.frames[jsonData[&apos;uuid&apos;]].total++;
+				if(self.frames[jsonData[&apos;uuid&apos;]].total===jsonData[&apos;totalFrames&apos;]) {
+					jsonData=JSON.parse(self.frames[jsonData[&apos;uuid&apos;]].data.join(&apos;&apos;));
+					deployEvent();
+					delete self.frames[jsonData[&apos;uuid&apos;]];
+				}
+			} else {
+				deployEvent();
+			}
+
+			function deployEvent() {
+				if (memory[`wsStack_${jsonData[options.queue]}`])
+					stack = memory[`wsStack_${jsonData[options.queue]}`].value;
+				stack.push(jsonData);
+				self.queue.setMemory(`wsStack_${jsonData[options.queue]}`, stack, self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.execute(jsonData[options.queue]);
+			}
+
+		};
+
+		self.socket.onclose = function(event) {
+			self.queue.execute(&quot;wsClose&quot;);
 		};
 	}
 
 	websocketPop(pid,json) {
-		this.set(pid,memory[`wsStack_${json.queue}`].value.pop());
-		console.log(memory);
+		let options=Object.assign({
+			&quot;prefix&quot;:&quot;ws://localhost&quot;,
+			&quot;queue&quot;:&quot;queue&quot;,
+			&quot;queues&quot;:{}
+		},json);
+		this.queue.setStack(pid,options.queue,memory[`wsStack_${json.queue}`].value.pop());
 		this.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
