@@ -511,6 +511,22 @@ export default class Mapbox extends Queueable {
 	}
 
 	/**
+	 * Set pitch of the visible map
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - The map that the querying layer is on
+	 * @param {int} json.pitch - The map pitch
+	 */
+	setPitch(pid, json) {
+		const options = Object.assign({
+			map: 'default',
+			pitch: 0
+		}, json);
+		this.maps[options.map].map.setPitch(options.pitch);
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
 	 * Set a memory mapDetails to have current info on the state of the map
 	 * @param {int} pid
 	 * @param {object} json
