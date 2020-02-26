@@ -218,6 +218,22 @@ export default class Elements extends Queueable {
 	}
 
 	/**
+	 * Scroll to bottom of a dom target
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 *
+	 * @example
+	 * elements.scrollToBottom({"targetId":"#ps_1"});
+
+	 */
+	scrollToBottom(pid,json) {
+		let objDiv = this.queue.getElement(json.targetId);
+		objDiv.scrollTop = objDiv.scrollHeight;
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
 	 * Scroll a dom container target to a dom target
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
