@@ -965,7 +965,7 @@ class Queue {
 		let expires = "; expires=" + date.toUTCString();
 		for(let i in window.memory) {
 			if(window.memory[i].mode===self.DEFINE.MEMORY_PERMANENT) {
-				self.setCookie('OT_'+i,window.btoa(JSON.stringify(window.memory[i])));
+				self.setCookie('OT_'+i,window.memory[i]._store());
 				perms.push(i);
 			}
 		}
@@ -983,8 +983,9 @@ class Queue {
 			try {
 				index = JSON.parse(window.atob(index));
 				for (let i in index) {
+					console.log(index[i]);
 					let perm = JSON.parse(window.atob(self.getCookie("OT_" + index[i])));
-					window.memory[index[i]] = perm;
+					window.memory[index[i]] = new Memory(perm.pid,perm.mode,perm.origin,perm.value);
 				}
 			} catch(e) {
 				console.error('OT_INDEX seems corrupted');

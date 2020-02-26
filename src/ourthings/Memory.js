@@ -50,4 +50,18 @@ export default class Memory {
 		this.value=values[pos];
 		return currentValue;
 	}
+
+	/**
+	 * Return an encoded version of the memory for storage in a coookie
+	 * @returns {string}
+	 * @private
+	 */
+	_store() {
+		return window.btoa(JSON.stringify({
+			pid: this.pid,
+			mode: this.mode,
+			origin: this.origin,
+			value: this.value
+		}));
+	}
 };
