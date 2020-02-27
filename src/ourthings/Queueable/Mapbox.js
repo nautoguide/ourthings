@@ -436,6 +436,44 @@ export default class Mapbox extends Queueable {
 	}
 
 	/**
+	 * move to a feature
+	 * @param {int} pid
+	 * @param {object} json
+	 * @param {string} json.map - The map that the querying layer is on
+	 * @param {string} json.name - The name of the layer to query
+	 * @param {string} json.property - The property key to check against
+	 * @param {string} json.value - The value of the property that we'll be looking for
+	 */
+	moveToFeature(pid, json) {
+		const options = Object.assign({
+			map: 'default',
+			layer: 'default',
+			property: '',
+			value: ''
+		}, json);
+
+		let features = this.maps[options.map].map.getSource(options.layer)._data.features;
+		let pointGeom = null;
+
+		for (const feature of features) {
+			if (feature.properties.hasOwnProperty(options.property))
+				/* Note the == match, this is lose on purpose, due to int/string casting
+				 */
+				if (feature.properties[options.property] == options.value) {
+					pointGeom = feature;
+					break;
+				}
+		}
+		if (pointGeom !== null) {
+			this.maps[options.map].map.flyTo({
+				center: centroid(pointGeom.geometry).geometry.coordinates
+			})
+		}
+
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
 	 * Zoom /MapboxGL move to a feature
 	 * @param {int} pid
 	 * @param {object} json
