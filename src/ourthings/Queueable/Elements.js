@@ -233,6 +233,12 @@ export default class Elements extends Queueable {
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 
+	focus(pid, json) {
+		let objDiv = this.queue.getElement(json.targetId);
+		objDiv.focus();
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
 	/**
 	 * Scroll a dom container target to a dom target
 	 * @param {number} pid - Process ID
