@@ -379,8 +379,9 @@ class Queue {
 				return false;
 			}
 			self.renderToDom(targetDom,parsedTemplate,mode);
-			self.commandsBind(commands);
 		}
+
+		self.commandsBind(commands);
 
 		return true;
 	}
@@ -633,8 +634,11 @@ class Queue {
 				/*
 				 * Find its dom entry using the selector we added
 				 */
-				let element=self.getElement("[data-queueable=CMD"+commandObj[command].ucid+"]");
-
+				let element;
+				if(commandObj[command].options.queueBindTarget)
+					element=self.getElement(commandObj[command].options.queueBindTarget);
+				else
+					element=self.getElement("[data-queueable=CMD"+commandObj[command].ucid+"]");
 				/*
 				 * Add the event. We flip it over to an instant event now because we want
 				 * it triggered.
