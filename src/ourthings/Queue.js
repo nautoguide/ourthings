@@ -846,13 +846,8 @@ class Queue {
 			let mode = self.DEFINE.MEMORY_GARBAGE;
 			if (command.options.memoryMode)
 				mode = command.options.memoryMode;
-			let memoryDetails = {
-				pid: pid,
-				mode: mode,
-				origin: origin,
-				value: value
-			};
-			window.memory[`${pid}_${origin}`] = memoryDetails;
+			let memoryDetails=new Memory(pid,mode,origin,value);
+			window.memory[origin] = memoryDetails;
 			return true;
 		} else {
 			this.reportError("Could not set memory","The memory set for pid ["+pid+"] could not be found");
