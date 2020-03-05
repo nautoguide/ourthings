@@ -27,7 +27,8 @@ import proj4 from "proj4";
 import {register} from 'ol/proj/proj4';
 import {get as getProjection} from 'ol/proj'
 
-import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction.js';
+import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
+
 import * as consoleBadge from "console-badge";
 
 proj4.defs([

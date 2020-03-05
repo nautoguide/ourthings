@@ -1,7 +1,7 @@
 <script id="init" type="text/html">
 	<!-- init is always run automatically on startup -->
 	@templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});
-	 -openlayers.addMap({});
+	 -openlayers.addMap({"options":{"debug":true}});
 	 -openlayers.addLayer({"name":"osm","type":"osm"});
 	 -openlayers.addLayer({"name":"data","type":"vector"});
 
@@ -18,7 +18,7 @@
 	</button>
 	<h2>Display the results here</h2>
 	<div id="results"></div>
-	<div id="info">{{#include #noInfo}}</div>
+	<div id="info">{{#include '#noInfo'}}</div>
 </script>
 
 <script id="noInfo" type="text/html">

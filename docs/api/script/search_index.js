@@ -588,6 +588,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "ourthings/memory.js~memory#_store",
+    "class/ourthings/Memory.js~Memory.html#instance-method-_store",
+    "ourthings/Memory.js~Memory#_store",
+    "method"
+  ],
+  [
     "ourthings/memory.js~memory#constructor",
     "class/ourthings/Memory.js~Memory.html#instance-constructor-constructor",
     "ourthings/Memory.js~Memory#constructor",
@@ -1032,6 +1038,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/elements.js~elements#focus",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-focus",
+    "ourthings/Queueable/Elements.js~Elements#focus",
+    "method"
+  ],
+  [
     "ourthings/queueable/elements.js~elements#formactivitymonitor",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-formActivityMonitor",
     "ourthings/Queueable/Elements.js~Elements#formActivityMonitor",
@@ -1065,6 +1077,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/elements.js~elements#scrollintoview",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-scrollIntoView",
     "ourthings/Queueable/Elements.js~Elements#scrollIntoView",
+    "method"
+  ],
+  [
+    "ourthings/queueable/elements.js~elements#scrolltobottom",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-scrollToBottom",
+    "ourthings/Queueable/Elements.js~Elements#scrollToBottom",
     "method"
   ],
   [
@@ -1234,6 +1252,12 @@ window.esdocSearchIndex = [
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-member-maps",
     "ourthings/Queueable/Mapbox.js~Mapbox#maps",
     "member"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#movetofeature",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-moveToFeature",
+    "ourthings/Queueable/Mapbox.js~Mapbox#moveToFeature",
+    "method"
   ],
   [
     "ourthings/queueable/mapbox.js~mapbox#movetolocation",
