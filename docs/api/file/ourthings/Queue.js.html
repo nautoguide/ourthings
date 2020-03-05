@@ -437,8 +437,9 @@ class Queue {
 				return false;
 			}
 			self.renderToDom(targetDom,parsedTemplate,mode);
-			self.commandsBind(commands);
 		}
+
+		self.commandsBind(commands);
 
 		return true;
 	}
@@ -691,31 +692,40 @@ class Queue {
 				/*
 				 * Find its dom entry using the selector we added
 				 */
-				let element=self.getElement(&quot;[data-queueable=CMD&quot;+commandObj[command].ucid+&quot;]&quot;);
+				let element;
+				if(commandObj[command].options.queueBindTarget)
+					element=self.getElement(commandObj[command].options.queueBindTarget);
+				else
+					element=self.getElement(&quot;[data-queueable=CMD&quot;+commandObj[command].ucid+&quot;]&quot;);
+				if(element!==false) {
+					/*
+					 * Add the event. We flip it over to an instant event now because we want
+					 * it triggered.
+					 *
+					 * The user may have specified an event and if so it will be a comma separated list
+					 */
+					let event = commandObj[command].options.queueEvent || &quot;click&quot;;
+					let events = event.split(&quot;,&quot;);
 
-				/*
-				 * Add the event. We flip it over to an instant event now because we want
-				 * it triggered.
-				 *
-				 * The user may have specified an event and if so it will be a comma separated list
-				 */
-				let event=commandObj[command].options.queueEvent||&quot;click&quot;;
-				let events=event.split(&quot;,&quot;);
-				for(let e in events) {
-					if(events[e]===&apos;keydown&apos;) {
-						element.addEventListener(events[e], function (e) {
-							if(e.keyCode===self.DEFINE.KEY_RETURN) {
+					for (let e in events) {
+						if (events[e] === &apos;keydown&apos;) {
+							element.addEventListener(events[e], function (e) {
+								let codes = [self.DEFINE.KEY_RETURN];
+								if (commandObj[command].options.queueEventCodes)
+									codes = commandObj[command].options.queueEventCodes;
+								if (codes.indexOf(e.keyCode) !== -1) {
+									commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
+									self.commandsQueue.apply(self, [[commandObj[command]]]);
+								}
+							});
+						} else {
+							element.addEventListener(events[e], function (e) {
+								e.stopPropagation();
+								e.preventDefault();
 								commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
 								self.commandsQueue.apply(self, [[commandObj[command]]]);
-							}
-						});
-					} else {
-						element.addEventListener(events[e], function (e) {
-							e.stopPropagation();
-							e.preventDefault();
-							commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
-							self.commandsQueue.apply(self, [[commandObj[command]]]);
-						});
+							});
+						}
 					}
 				}
 			}
@@ -900,13 +910,8 @@ class Queue {
 			let mode = self.DEFINE.MEMORY_GARBAGE;
 			if (command.options.memoryMode)
 				mode = command.options.memoryMode;
-			let memoryDetails = {
-				pid: pid,
-				mode: mode,
-				origin: origin,
-				value: value
-			};
-			window.memory[`${pid}_${origin}`] = memoryDetails;
+			let memoryDetails=new Memory(pid,mode,origin,value);
+			window.memory[origin] = memoryDetails;
 			return true;
 		} else {
 			this.reportError(&quot;Could not set memory&quot;,&quot;The memory set for pid [&quot;+pid+&quot;] could not be found&quot;);
@@ -1023,7 +1028,7 @@ class Queue {
 		let expires = &quot;; expires=&quot; + date.toUTCString();
 		for(let i in window.memory) {
 			if(window.memory[i].mode===self.DEFINE.MEMORY_PERMANENT) {
-				self.setCookie(&apos;OT_&apos;+i,window.btoa(JSON.stringify(window.memory[i])));
+				self.setCookie(&apos;OT_&apos;+i,window.memory[i]._store());
 				perms.push(i);
 			}
 		}
@@ -1041,8 +1046,9 @@ class Queue {
 			try {
 				index = JSON.parse(window.atob(index));
 				for (let i in index) {
+					console.log(index[i]);
 					let perm = JSON.parse(window.atob(self.getCookie(&quot;OT_&quot; + index[i])));
-					window.memory[index[i]] = perm;
+					window.memory[index[i]] = new Memory(perm.pid,perm.mode,perm.origin,perm.value);
 				}
 			} catch(e) {
 				console.error(&apos;OT_INDEX seems corrupted&apos;);

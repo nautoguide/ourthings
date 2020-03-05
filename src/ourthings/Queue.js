@@ -638,33 +638,36 @@ class Queue {
 				if(commandObj[command].options.queueBindTarget)
 					element=self.getElement(commandObj[command].options.queueBindTarget);
 				else
-					element=self.getElement("[data-queueable=CMD"+commandObj[command].ucid+"]");
-				/*
-				 * Add the event. We flip it over to an instant event now because we want
-				 * it triggered.
-				 *
-				 * The user may have specified an event and if so it will be a comma separated list
-				 */
-				let event=commandObj[command].options.queueEvent||"click";
-				let events=event.split(",");
-				for(let e in events) {
-					if(events[e]==='keydown') {
-						element.addEventListener(events[e], function (e) {
-							let codes=[self.DEFINE.KEY_RETURN];
-							if(commandObj[command].options.queueEventCodes)
-								codes=commandObj[command].options.queueEventCodes;
-							if(codes.indexOf(e.keyCode)!==-1) {
+					element=self.getElement("[data-queueable=CMD"+commandObj[command].ucid+"]",false);
+				if(element!==false) {
+					/*
+					 * Add the event. We flip it over to an instant event now because we want
+					 * it triggered.
+					 *
+					 * The user may have specified an event and if so it will be a comma separated list
+					 */
+					let event = commandObj[command].options.queueEvent || "click";
+					let events = event.split(",");
+
+					for (let e in events) {
+						if (events[e] === 'keydown') {
+							element.addEventListener(events[e], function (e) {
+								let codes = [self.DEFINE.KEY_RETURN];
+								if (commandObj[command].options.queueEventCodes)
+									codes = commandObj[command].options.queueEventCodes;
+								if (codes.indexOf(e.keyCode) !== -1) {
+									commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
+									self.commandsQueue.apply(self, [[commandObj[command]]]);
+								}
+							});
+						} else {
+							element.addEventListener(events[e], function (e) {
+								e.stopPropagation();
+								e.preventDefault();
 								commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
 								self.commandsQueue.apply(self, [[commandObj[command]]]);
-							}
-						});
-					} else {
-						element.addEventListener(events[e], function (e) {
-							e.stopPropagation();
-							e.preventDefault();
-							commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
-							self.commandsQueue.apply(self, [[commandObj[command]]]);
-						});
+							});
+						}
 					}
 				}
 			}
