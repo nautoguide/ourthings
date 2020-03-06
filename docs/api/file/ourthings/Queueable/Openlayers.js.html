@@ -85,7 +85,8 @@ import proj4 from &quot;proj4&quot;;
 import {register} from &apos;ol/proj/proj4&apos;;
 import {get as getProjection} from &apos;ol/proj&apos;
 
-import {defaults as defaultInteractions, DragRotateAndZoom} from &apos;ol/interaction.js&apos;;
+import {defaults as defaultInteractions, DragRotateAndZoom} from &apos;ol/interaction&apos;;
+
 import * as consoleBadge from &quot;console-badge&quot;;
 
 proj4.defs([
@@ -140,13 +141,24 @@ export default class Openlayers extends Queueable {
 		let self=this;
 		let options=Object.assign({
 			&quot;map&quot;:&quot;default&quot;,
+			&quot;zoom&quot;: 0,
+			&quot;renderer&quot;: [&apos;webgl&apos;, &apos;canvas&apos;],
 			&quot;target&quot;:&quot;map&quot;,
-			&quot;options&quot;:{}
+			&quot;center&quot;:[0,0],
+			&quot;projection&quot;: &quot;EPSG:3857&quot;,
+			&quot;debug&quot;:false
 		},json);
 		let projection =  getProjection(options.projection);
 		const map = new Map({
 			target: options.target,
-			view: new View(options.options),
+			view: new View({
+				center: options.center,
+				zoom: options.zoom,
+				renderer: options.renderer,
+				projection: projection,
+				resolutions: options.resolutions,
+				extent: options.extent,
+			}),
 			interactions: defaultInteractions().extend([
 				new DragRotateAndZoom()
 			]),

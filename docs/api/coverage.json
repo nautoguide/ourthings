@@ -1,7 +1,7 @@
 {
-  "coverage": "59.75%",
-  "expectCount": 241,
-  "actualCount": 144,
+  "coverage": "60.33%",
+  "expectCount": 242,
+  "actualCount": 146,
   "files": {
     "ourthings/Define.js": {
       "expectCount": 28,
@@ -85,11 +85,9 @@
       ]
     },
     "ourthings/Queueable/Elements.js": {
-      "expectCount": 15,
-      "actualCount": 14,
-      "undocumentLines": [
-        236
-      ]
+      "expectCount": 16,
+      "actualCount": 16,
+      "undocumentLines": []
     },
     "ourthings/Queueable/Files.js": {
       "expectCount": 4,
@@ -128,12 +126,12 @@
       "expectCount": 28,
       "actualCount": 22,
       "undocumentLines": [
-        57,
         58,
-        60,
-        62,
-        64,
-        112
+        59,
+        61,
+        63,
+        65,
+        124
       ]
     },
     "ourthings/Queueable/Templates.js": {
