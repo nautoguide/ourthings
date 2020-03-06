@@ -696,7 +696,7 @@ class Queue {
 				if(commandObj[command].options.queueBindTarget)
 					element=self.getElement(commandObj[command].options.queueBindTarget);
 				else
-					element=self.getElement(&quot;[data-queueable=CMD&quot;+commandObj[command].ucid+&quot;]&quot;);
+					element=self.getElement(&quot;[data-queueable=CMD&quot;+commandObj[command].ucid+&quot;]&quot;,false);
 				if(element!==false) {
 					/*
 					 * Add the event. We flip it over to an instant event now because we want

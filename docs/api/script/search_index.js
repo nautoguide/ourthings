@@ -1032,6 +1032,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/elements.js~elements#ariahiddentoggle",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-ariaHiddenToggle",
+    "ourthings/Queueable/Elements.js~Elements#ariaHiddenToggle",
+    "method"
+  ],
+  [
     "ourthings/queueable/elements.js~elements#domcutpaste",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-domCutPaste",
     "ourthings/Queueable/Elements.js~Elements#domCutPaste",

@@ -233,6 +233,45 @@ export default class Elements extends Queueable {
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 
+	/**
+	 * Accessible toggle visible on a target
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target to scroll to*
+	 * @example
+	 * elements.focus({"targetId":"#ps_1"});
+	 */
+	ariaHiddenToggle(pid, json) {
+		let self=this;
+		let options=Object.assign({
+			"class":"hidden",
+		},json);
+		let elements=self.queue.getIframeElements(options.iframeId,options.targetId);
+		if(elements!==false) {
+			elements.forEach(function(element) {
+				if (element.classList.contains(options.class)) {
+					element.classList.remove(options.class);
+					element.setAttribute('aria-hidden','false');
+				} else {
+					element.classList.add(options.class);
+					element.setAttribute('aria-hidden','true');
+				}
+			});
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,'Could not remove class ['+options.class+'] to ['+options.targetId+']');
+		}
+	}
+
+
+	/**
+	 * Focus on a target
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target to scroll to*
+	 * @example
+	 * elements.focus({"targetId":"#ps_1"});
+	 */
 	focus(pid, json) {
 		let objDiv = this.queue.getElement(json.targetId);
 		objDiv.focus();
