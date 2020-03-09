@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Ourthings</title>
+    <link type="text/css" rel="stylesheet" href="css/docs.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/darcula.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+<body>
+<h1><img src="images/logo.png"></h1>
+
+<h1>Accessibility Reference</h1>
+<h2>Headers</h2>
+<p>The document &lt;head&gt; must contain:</p>
+
+<pre><code>	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, shrink-to-fit=no&quot;&gt;</code></pre>
+
+<h2>Forms</h2>
+<p>
+    Forms are landmarks so the aria-label on the form is read first. Then the first input label with focus. IE the following will read : 'Search form to do something. Enter a thing to do a thing'
+
+</p>
+
+<pre><code>
+&lt;form aria-label=&quot;Search form to do something&quot;&gt;
+    &lt;label for=&quot;searchText&quot;&gt;Enter a thing to do a thing&lt;/label&gt;
+    &lt;input type=text id=&quot;searchText&quot; value=&quot;&quot; autofocus&gt;
+
+    &lt;button aria-label=&quot;Submit the search&quot; id=&quot;findButton&quot;&gt;Find&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+<p>Adding our things submit</p>
+
+<pre><code>@do.something({},{"queueBindTarget":"#findButton","queueEvent":"click"});</code></pre>
+
+<p>accessible slider</p>
+
+<pre><code>
+&lt;label for=&quot;maxAge&quot;&gt;Child's maximum age&lt;/label&gt;
+&lt;input type=&quot;range&quot;
+       id=&quot;maxAge&quot;
+       min=&quot;0&quot;
+       max=&quot;25&quot;
+       value=&quot;25&quot;
+       step=&quot;1&quot;
+       aria-valuemin=&quot;1&quot;
+       aria-valuemax=&quot;25&quot;
+       aria-valuenow=&quot;25&quot;
+&gt;
+&lt;output for=&quot;maxAge&quot; id=&quot;maxAgeValue&quot;&gt;25&lt;/output&gt;
+
+@elements.innerHTML({"targetId":"#maxAgeValue","html":"{{!queue.getElement('#maxAge').value}}"},{"queueBindTarget":"#maxAge","queueEvent":"input"});
+
+</code></pre>
+</body>
+
