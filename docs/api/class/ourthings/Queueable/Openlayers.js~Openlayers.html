@@ -445,6 +445,35 @@ TODO: This is old code for getting something working.</p>
           
           
           
+          <span class="code" data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-changed">changed</a></span></span><span class="code" data-ice="signature">(pid: <span>*</span>, json: <span>*</span>)</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Flag a layer as changed (cause redraw).</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
           <span class="code" data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-clearLayer">clearLayer</a></span></span><span class="code" data-ice="signature">(pid: <span>*</span>, json: <span>*</span>)</span>
         </p>
       </div>
@@ -1682,7 +1711,7 @@ TODO: This is old code for getting something working. Needs functionising, not f
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber717">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber735">source</a></span></span>
     </span>
   </h3>
 
@@ -1783,7 +1812,7 @@ TODO: This is old code for getting something working. Needs functionising, not f
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber569">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber587">source</a></span></span>
     </span>
   </h3>
 
@@ -1877,7 +1906,7 @@ TODO: This is old code for getting something working. Needs functionising, not f
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber543">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber561">source</a></span></span>
     </span>
   </h3>
 
@@ -1946,6 +1975,86 @@ TODO: This is old code for getting something working. Needs functionising, not f
       <pre class="prettyprint source-code"><code data-ice="exampleCode">openlayers.centerOnCoordinate({&quot;coordinate&quot;:&quot;{{!^JSON.stringify(memory.simpleSelect.value.selected[0].getGeometry().getCoordinates())}}&quot;});</code></pre>
     </div>
 </div>
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-changed">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">changed</span><span class="code" data-ice="signature">(pid: <span>*</span>, json: <span>*</span>)</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber522">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Flag a layer as changed (cause redraw).</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">pid</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">json</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.map</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Map reference</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.layer</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Layer to flag</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 
   
 
@@ -2197,7 +2306,7 @@ TODO: This is old code for getting something working. Needs functionising, not f
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber599">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber617">source</a></span></span>
     </span>
   </h3>
 
@@ -2352,7 +2461,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber757">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber775">source</a></span></span>
     </span>
   </h3>
 
@@ -2599,7 +2708,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber522">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber540">source</a></span></span>
     </span>
   </h3>
 
@@ -2679,7 +2788,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber685">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber703">source</a></span></span>
     </span>
   </h3>
 
@@ -2759,7 +2868,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber650">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Openlayers.js.html#lineNumber668">source</a></span></span>
     </span>
   </h3>
 

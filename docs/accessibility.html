@@ -57,5 +57,11 @@
 @elements.innerHTML({"targetId":"#maxAgeValue","html":"{{!queue.getElement('#maxAge').value}}"},{"queueBindTarget":"#maxAge","queueEvent":"input"});
 
 </code></pre>
+
+<p>Make an element keyboard accessible</p>
+
+<pre><code>
+ @internals.setMemory({"name":"open","value":"#loop0","mode":"Session"},{"queueEvent":"click,keydown","queueEventCodes":[13,32]});
+</code></pre>
 </body>
 

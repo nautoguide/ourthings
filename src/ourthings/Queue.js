@@ -988,7 +988,6 @@ class Queue {
 			try {
 				index = JSON.parse(window.atob(index));
 				for (let i in index) {
-					console.log(index[i]);
 					let perm = JSON.parse(window.atob(self.getCookie("OT_" + index[i])));
 					window.memory[index[i]] = new Memory(perm.pid,perm.mode,perm.origin,perm.value);
 				}

@@ -1470,6 +1470,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#changed",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-changed",
+    "ourthings/Queueable/Openlayers.js~Openlayers#changed",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#clearlayer",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-clearLayer",
     "ourthings/Queueable/Openlayers.js~Openlayers#clearLayer",
