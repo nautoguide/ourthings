@@ -513,6 +513,24 @@ export default class Openlayers extends Queueable {
     }
 
 	/**
+	 * Flag a layer as changed (cause redraw).
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to flag
+	 */
+    changed(pid,json) {
+	    let self=this;
+	    let options=Object.assign({
+		    "map":"default",
+		    "layer":"default"
+	    },json);
+	    let layer=self.maps[options.map].layers[options.layer];
+		layer.changed();
+	    self.finished(pid,self.queue.DEFINE.FIN_OK);
+    }
+
+	/**
 	 * Toggle layer on and off
 	 * @param pid
 	 * @param json
