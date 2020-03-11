@@ -611,15 +611,17 @@ export default class Openlayers extends Queueable {
 	 * @param {string} json.map - Map reference
 	 * @param {string} json.duration - Delay period of the zoom in ms
 	 * @param {string} json.location - location to fly to
+	 * @param {boolean} json.wait - Wait till end of animation to finish queue item
 	 * @example
-	 * openlayers.animateZoom({"inc":"2});
+	 * openlayers.flyTo({"location":"2});
 	 */
 	flyTo(pid,json) {
 		let self = this;
 		let options = Object.assign({
 			"map": "default",
 			"duration": 2000,
-			"location":""
+			"location":"",
+			"wait":false
 		}, json);
 		/*
 		 * Pull all our resources
@@ -638,7 +640,8 @@ export default class Openlayers extends Queueable {
 			}
 			if (parts === 0 || !complete) {
 				called = true;
-				self.finished(pid,self.queue.DEFINE.FIN_OK);
+				if(options.wait===true)
+					self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 			}
 		}
@@ -654,6 +657,9 @@ export default class Openlayers extends Queueable {
 			zoom: zoom,
 			duration: options.duration / 2
 		}, callback);
+		if(options.wait===false)
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+
 	}
 
 	/**
