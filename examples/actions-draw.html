@@ -1,0 +1,19 @@
+<script id="init" type="text/html">
+	<!-- init is always run automatically on startup -->
+	@templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});
+	 -mapbox.addMap({ "target":"map","center":[-0.593584088592138 , 51.31416663638245], "zoom":12, "maxZoom":20,"pitch":60,"style": "css/zoomstack.json","token": "pk.eyJ1IjoibmF1dG9ndWlkZWx0ZCIsImEiOiJjamx4dHQwYngwY2E1M3dxZGx1MHJoendpIn0.a6m0F2N8dJnx5yzz-OJfFQ"});
+
+	@mapbox.addDrawTools({},{"queuePrepare":"draw"});>
+
+
+</script>
+
+<script id="basic" type="text/html">
+	<h1>Controls</h1>
+	<button id="myButton" @internals.execute({"name":"draw"});>
+		Draw
+	</button>
+
+</script>
+
+

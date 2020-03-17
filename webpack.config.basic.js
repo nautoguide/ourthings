@@ -6,5 +6,8 @@ module.exports = {
 	output: {
 		filename: 'ourthings-full.js',
 		path: path.resolve(__dirname, 'build')
+	},
+	node: {
+		fs: "empty"
 	}
 };
