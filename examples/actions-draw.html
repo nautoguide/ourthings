@@ -1,17 +1,21 @@
 <script id="init" type="text/html">
 	<!-- init is always run automatically on startup -->
 	@templates.render({"targetId":"#content","template":"#basic"},{"queueRun":"Instant"});
-	 -mapbox.addMap({ "target":"map","center":[-0.593584088592138 , 51.31416663638245], "zoom":12, "maxZoom":20,"pitch":60,"style": "css/zoomstack.json","token": "pk.eyJ1IjoibmF1dG9ndWlkZWx0ZCIsImEiOiJjamx4dHQwYngwY2E1M3dxZGx1MHJoendpIn0.a6m0F2N8dJnx5yzz-OJfFQ"});
-
-	@mapbox.addDrawTools({},{"queuePrepare":"draw"});>
-
+	 -mapbox.addMap({ "target":"map","center":[0.18865585327148438,51.390637019843744], "zoom":12, "maxZoom":20,"pitch":60,"style": "css/zoomstack.json","token": "pk.eyJ1IjoibmF1dG9ndWlkZWx0ZCIsImEiOiJjamx4dHQwYngwY2E1M3dxZGx1MHJoendpIn0.a6m0F2N8dJnx5yzz-OJfFQ"});
+	-mapbox.addSource({"name": "locations"});
+	-mapbox.addLayer({"name":"lPolly","type":"fill-extrusion","source": "locations","paint": {"fill-extrusion-color":"red","fill-extrusion-height": 20,"fill-extrusion-base":0,"fill-extrusion-opacity":0.2},"filter": ["==", "$type", "Polygon"]});
+	-mapbox.setData({"source": "locations", "data": {"type": "FeatureCollection","features": [{"type": "Feature","properties": {},"geometry": {"type": "Polygon","coordinates": [[[0.18865585327148438,51.390637019843744],[0.1823902130126953,51.380727536341396],[0.2075386047363281,51.3836738231504],[0.2142333984375,51.39615326183019],[0.18865585327148438,51.390637019843744]]]}}]}});
 
 </script>
 
 <script id="basic" type="text/html">
 	<h1>Controls</h1>
-	<button id="myButton" @internals.execute({"name":"draw"});>
-		Draw
+	<button id="myButton" @mapbox.addEditTools({"source":"locations","layers":["lPolly"]});>
+		Edit
+	</button>
+
+	<button id="myButton2" @mapbox.removeEditTools({});>
+		Stop Edit
 	</button>
 
 </script>
