@@ -2,6 +2,7 @@ import Queueable from "../Queueable";
 import MapboxGL from 'mapbox-gl';
 import centroid from '@turf/centroid';
 import bbox from '@turf/bbox';
+import MapboxDraw from '@mapbox/mapbox-gl-draw';
 
 export default class Mapbox extends Queueable {
 
@@ -708,5 +709,15 @@ export default class Mapbox extends Queueable {
 		this.maps[options.map].map.setPaintProperty(options.name, options.paint.type, paint);
 
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	addDrawTools(pid,json) {
+		const options = Object.assign({
+			map: 'default'
+		}, json);
+		let Draw = new MapboxDraw();
+		this.maps[options.map].map.addControl(Draw, 'top-left');
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
+
 	}
 }
