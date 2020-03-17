@@ -46,7 +46,8 @@
     "@mapbox/mapbox-gl-draw": "^1.1.2",
     "console-badge": "^1.1.0",
     "showdown": "^1.9.0",
-    "@turf/turf": "^5.1.6"
+    "@turf/turf": "^5.1.6",
+    "mapbox-gl-edit": "file://../mapbox-gl-edit/"
   },
   "dependencies": {
     "console-badge": "^1.1.0"

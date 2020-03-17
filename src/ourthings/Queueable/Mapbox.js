@@ -3,6 +3,7 @@ import MapboxGL from 'mapbox-gl';
 import centroid from '@turf/centroid';
 import bbox from '@turf/bbox';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
+import MapboxEdit from 'mapbox-gl-edit';
 
 export default class Mapbox extends Queueable {
 
@@ -50,6 +51,7 @@ export default class Mapbox extends Queueable {
 
 		this.maps[options.map] = {map, layers: {}};
 		this.maps[options.map].sources = {};
+		this.maps[options.map].controls = {};
 
 		map.on('load', () => {
 			this.finished(pid, self.queue.DEFINE.FIN_OK);
@@ -717,6 +719,25 @@ export default class Mapbox extends Queueable {
 		}, json);
 		let Draw = new MapboxDraw();
 		this.maps[options.map].map.addControl(Draw, 'top-left');
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	addEditTools(pid,json) {
+		const options = Object.assign({
+			map: 'default',
+			source: 'default'
+		}, json);
+		this.maps[options.map].controls['Edit']= new MapboxEdit(options);
+		this.maps[options.map].map.addControl(this.maps[options.map].controls['Edit']);
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	removeEditTools(pid,json) {
+		const options = Object.assign({
+			map: 'default'
+		}, json);
+		this.maps[options.map].map.removeControl(this.maps[options.map].controls['Edit']);
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
