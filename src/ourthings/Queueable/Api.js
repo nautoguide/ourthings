@@ -240,7 +240,13 @@ export default class Api extends Queueable {
 		};
 
 		self.socket.onclose = function(event) {
+			self.queue.setMemory('wsCloseDetails', event, self.queue.DEFINE.MEMORY_SESSION);
 			self.queue.execute("wsClose");
+		};
+
+		self.socket.onerror = function(event) {
+			self.queue.setMemory('wsErrorDetails', event, self.queue.DEFINE.MEMORY_SESSION);
+			self.queue.execute("wsError");
 		};
 	}
 
