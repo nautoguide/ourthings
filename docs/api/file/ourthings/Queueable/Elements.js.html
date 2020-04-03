@@ -296,6 +296,7 @@ export default class Elements extends Queueable {
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
 	 * @param {string} json.targetId - Dom target to scroll to*
+	 * @param {string} json.mode - toggle|add|remove
 	 * @example
 	 * elements.focus({&quot;targetId&quot;:&quot;#ps_1&quot;});
 	 */
@@ -303,16 +304,28 @@ export default class Elements extends Queueable {
 		let self=this;
 		let options=Object.assign({
 			&quot;class&quot;:&quot;hidden&quot;,
+			&quot;mode&quot;:&quot;toggle&quot;
 		},json);
 		let elements=self.queue.getIframeElements(options.iframeId,options.targetId);
 		if(elements!==false) {
 			elements.forEach(function(element) {
-				if (element.classList.contains(options.class)) {
-					element.classList.remove(options.class);
-					element.setAttribute(&apos;aria-hidden&apos;,&apos;false&apos;);
+				if(options.mode===&quot;toggle&quot;) {
+					if (element.classList.contains(options.class)) {
+						element.classList.remove(options.class);
+						element.setAttribute(&apos;aria-hidden&apos;, &apos;false&apos;);
+					} else {
+						element.classList.add(options.class);
+						element.setAttribute(&apos;aria-hidden&apos;, &apos;true&apos;);
+					}
 				} else {
-					element.classList.add(options.class);
-					element.setAttribute(&apos;aria-hidden&apos;,&apos;true&apos;);
+					if(options.mode===&quot;add&quot;) {
+						element.setAttribute(&apos;aria-hidden&apos;, &apos;true&apos;);
+						element.classList.add(options.class);
+					}
+					if(options.mode===&quot;remove&quot;) {
+						element.setAttribute(&apos;aria-hidden&apos;, &apos;false&apos;);
+						element.classList.remove(options.class);
+					}
 				}
 			});
 			self.finished(pid,self.queue.DEFINE.FIN_OK);
