@@ -239,43 +239,43 @@
     "filePath": "ourthings/Queueable/Mapbox.js",
     "lines": [
       {
-        "lineNumber": 113,
+        "lineNumber": 116,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 114,
+        "lineNumber": 117,
         "line": "\t * Add the layer to the map once a source has been created.\r"
       },
       {
-        "lineNumber": 115,
+        "lineNumber": 118,
         "line": "\t * @param {object} options\r"
       },
       {
-        "lineNumber": 116,
+        "lineNumber": 119,
         "line": "\t * @param {string} options.type - The type of feature that the layer is.\r"
       },
       {
-        "lineNumber": 117,
+        "lineNumber": 120,
         "line": "\t * @param {string} options.name - The name for the layer\r"
       },
       {
-        "lineNumber": 118,
+        "lineNumber": 121,
         "line": "\t * @param {object} options.paint - The paint styling for the layer\r"
       },
       {
-        "lineNumber": 119,
+        "lineNumber": 122,
         "line": "\t * @param {object} options.layout - The layout styling for the layer\r"
       },
       {
-        "lineNumber": 120,
+        "lineNumber": 123,
         "line": "\t * @private\r"
       },
       {
-        "lineNumber": 121,
+        "lineNumber": 124,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 122,
+        "lineNumber": 125,
         "line": "\taddLayer(pid, json) {\r"
       }
     ],

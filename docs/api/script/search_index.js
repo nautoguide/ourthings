@@ -1188,6 +1188,18 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/mapbox.js~mapbox#adddrawtools",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addDrawTools",
+    "ourthings/Queueable/Mapbox.js~Mapbox#addDrawTools",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#addedittools",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addEditTools",
+    "ourthings/Queueable/Mapbox.js~Mapbox#addEditTools",
+    "method"
+  ],
+  [
     "ourthings/queueable/mapbox.js~mapbox#addimages",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addImages",
     "ourthings/Queueable/Mapbox.js~Mapbox#addImages",
@@ -1305,6 +1317,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/mapbox.js~mapbox#removeclick",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-removeClick",
     "ourthings/Queueable/Mapbox.js~Mapbox#removeClick",
+    "method"
+  ],
+  [
+    "ourthings/queueable/mapbox.js~mapbox#removeedittools",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-removeEditTools",
+    "ourthings/Queueable/Mapbox.js~Mapbox#removeEditTools",
     "method"
   ],
   [

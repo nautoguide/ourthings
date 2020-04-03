@@ -1,6 +1,6 @@
 {
-  "coverage": "60.49%",
-  "expectCount": 243,
+  "coverage": "59.75%",
+  "expectCount": 246,
   "actualCount": 147,
   "files": {
     "ourthings/Define.js": {
@@ -73,7 +73,7 @@
       "expectCount": 7,
       "actualCount": 6,
       "undocumentLines": [
-        247
+        281
       ]
     },
     "ourthings/Queueable/Browser.js": {
@@ -100,21 +100,24 @@
       "undocumentLines": []
     },
     "ourthings/Queueable/Mapbox.js": {
-      "expectCount": 34,
+      "expectCount": 37,
       "actualCount": 22,
       "undocumentLines": [
-        6,
         8,
-        9,
         10,
         11,
         12,
-        274,
-        300,
-        314,
-        372,
-        381,
-        645
+        13,
+        14,
+        277,
+        303,
+        317,
+        375,
+        384,
+        648,
+        716,
+        726,
+        736
       ]
     },
     "ourthings/Queueable/Markdown.js": {
