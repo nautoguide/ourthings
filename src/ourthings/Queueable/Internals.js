@@ -33,6 +33,7 @@ export default class Internals extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.statement - statement to check
 	 * @param {string} json.name - prepared queue to call
+	 * @param {string} json.else - prepared queue to call on else
 	 * @param {object} [json.json] - New arguments to send to queue
 	 * @example
 	 * internals.ifqueue({"statement":"memory.loginAPI.value.token","name":"loggedIn"});
@@ -41,6 +42,9 @@ export default class Internals extends Queueable {
 		let self=this;
 		if(eval(json.statement)) {
 			self.queue.execute(json.name,json.json);
+		} else {
+			if(json.else)
+				self.queue.execute(json.else,json.json);
 
 		}
 		self.finished(pid,self.queue.DEFINE.FIN_OK);

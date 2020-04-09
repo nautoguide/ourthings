@@ -170,6 +170,7 @@ export default class Elements extends Queueable {
      * @param {object} json - queue arguments
      * @param {string} json.targetId - Dom target
      * @param {string} json.html - HTML to add
+     * @param {string} json.append - Append mode
      *
      * @example
      * elements.innerHTML({"targetId":".leftPanel","html":"Hello World"});
@@ -178,7 +179,10 @@ export default class Elements extends Queueable {
 	innerHTML(pid,json) {
 		let self=this;
 		let element=self.queue.getElement(json.targetId);
-		element.innerHTML=json.html;
+		if(json.append)
+			element.insertAdjacentHTML('beforeend',json.html);
+		else
+			element.innerHTML=json.html;
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
