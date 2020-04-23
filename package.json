@@ -1,6 +1,6 @@
 {
   "name": "@nautoguide/ourthings",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Queue based JavaScript framework",
   "scripts": {
     "build": "webpack --config webpack.config.basic.js",
