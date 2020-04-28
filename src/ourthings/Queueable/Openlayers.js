@@ -278,11 +278,7 @@ export default class Openlayers extends Queueable {
 		let source={};
 		let vectorSource;
 		if(options.geojson!==undefined) {
-			if(typeof options.geojson==='object') {
-				source.features = (new GeoJSON({})).readFeatures(options.geojson, {featureProjection: self.maps[options.map].object.getView().getProjection()});
-			} else {
-				source.features = (new GeoJSON({})).readFeatures(eval(options.geojson), {featureProjection: self.maps[options.map].object.getView().getProjection()});
-			}
+			source.features=this._loadGeojson(options.map,options.geojson);
 		}
 		vectorSource = new VectorSource(source);
 		let olLayer = new VectorLayer({
@@ -478,17 +474,27 @@ export default class Openlayers extends Queueable {
 			"layer":"default",
 			"geojson":{}
 		},json);
-		let map=self.maps[options.map].object;
 		let layer=self.maps[options.map].layers[options.layer];
 		let source = layer.getSource();
 
-		let view = map.getView();
-
-		let features = new GeoJSON().readFeatures(options.geojson, {
-			featureProjection: view.getProjection().getCode()
-		});
+		let features = this._loadGeojson(options.map,options.geojson);
 		source.addFeatures(features);
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Loads geojson from var or object
+	 * @param geojson
+	 * @private
+	 */
+	_loadGeojson(map,geojson) {
+		let self=this;
+		if(typeof geojson==='object') {
+			return (new GeoJSON({})).readFeatures(geojson, {featureProjection: self.maps[map].object.getView().getProjection()});
+		} else {
+			return (new GeoJSON({})).readFeatures(eval(geojson), {featureProjection: self.maps[map].object.getView().getProjection()});
+		}
 
 	}
 
