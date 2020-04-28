@@ -37,16 +37,24 @@ export default class Browser extends Queueable {
 	 */
 	initHistory(pid, json) {
 		let self = this;
+		self.lastURL=false;
 
-		function urlChange() {
+		function urlChange(e) {
 			let baseURL = location.href;
-			let match = baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
-			if (match && match[1]) {
-				if (match[2])
-					self.queue.setMemory('history', match[2], "Session");
-				self.queue.execute('history' + match[1]);
-			} else {
-				self.queue.execute('historyRoot');
+			/*
+			 * Do a check to see we are not trying to go to the same url
+			 * In some browsers we will get two events (onpopstate & onhashchange)
+			 */
+			if(self.lastURL===false||baseURL!==self.lastURL) {
+				self.lastURL=baseURL;
+				let match = baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
+				if (match && match[1]) {
+					if (match[2])
+						self.queue.setMemory('history', match[2], "Session");
+					self.queue.execute('history' + match[1]);
+				} else {
+					self.queue.execute('historyRoot');
+				}
 			}
 		}
 
