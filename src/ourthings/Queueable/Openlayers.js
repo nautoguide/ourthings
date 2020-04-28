@@ -21,13 +21,18 @@ import {unByKey} from 'ol/Observable'
 
 import GeoJSON from 'ol/format/GeoJSON';
 import {fromLonLat,units,epsg3857,epsg4326} from 'ol/proj';
-import Select from 'ol/interaction/Select.js';
-import {click, pointerMove, altKeyOnly} from 'ol/events/condition.js';
+
+import Select from 'ol/interaction/Select';
+import Snap from 'ol/interaction/Snap';
+import Modify from 'ol/interaction/Modify';
+
 import proj4 from "proj4";
 import {register} from 'ol/proj/proj4';
 import {get as getProjection} from 'ol/proj'
 
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
+
+import {click,pointerMove, altKeyOnly,shiftKeyOnly,singleClick} from 'ol/events/condition';
 
 import * as consoleBadge from "console-badge";
 
@@ -406,6 +411,74 @@ export default class Openlayers extends Queueable {
 			self.queue.execute(options.prefix+"simpleClick");
 		}
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	multiEdit(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			"map":"default",
+			"mode":"on",
+			"prefix":"",
+			"layer":"default"
+		},json);
+		let map=self.maps[options.map].object;
+		let layer=this.maps[options.map].layers[options.layer];
+		let source=layer.getSource();
+
+
+		let featureCache=[];
+
+		/*
+		 * Modify interaction, does all the hard work
+		 */
+		let modify=new Modify({
+			source: source,
+			pixelTolerance: 10,
+			deleteCondition: function (evt) {
+				return shiftKeyOnly(evt) && singleClick(evt)
+			}
+		});
+		map.addInteraction(modify);
+
+		/*
+		 * When the user starts moving something we take a copy of it for use
+		 * encase we need to revert
+		 */
+		modify.on('modifystart', function (event) {
+			let features = event.features.getArray();
+			featureCache=[];
+			for(let i=0;i<features.length;i++) {
+				featureCache.push(features[i].clone());
+			}
+		});
+
+		/*
+		 * When the user has finished the move / action
+		 */
+		modify.on('modifyend', function (event) {
+			/*let modifiedFeatures=[];
+			self.getMap().forEachFeatureAtPixel(event.mapBrowserEvent.pixel, function (feature, layer) {
+
+				if(layer&&args.layer===layer.get('name')) {
+					modifiedFeatures.push(feature);
+				}
+			});
+			let features_geojson = self.getMap().featuresToGeojson(modifiedFeatures,"EPSG:4326");*/
+			let features = new GeoJSON({}).writeFeaturesObject(event.features.getArray());
+			self.queue.setMemory(options.prefix+'multiEditFeatures', features, "Session");
+			//self.queue.setMemory(options.prefix+'multiEditModifiedFeatures', features_geojson, "Session");
+			self.queue.execute(options.prefix+"multiEdit");
+		});
+		/*
+		 * Snap interaction *must* be last to apply
+		 */
+		map.addInteraction(new Snap({
+			source: source,
+			pixelTolerance: 5
+		}));
+
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
 	}
 
 	/**
