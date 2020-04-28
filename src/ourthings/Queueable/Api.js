@@ -1,5 +1,6 @@
 /** @module Api */
 import Queueable from "../Queueable";
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * @classdesc
@@ -12,6 +13,9 @@ import Queueable from "../Queueable";
  * //
  *
  */
+
+const MAX_BYTES = 50000;
+
 export default class Api extends Queueable {
 
 	/**
@@ -306,12 +310,55 @@ export default class Api extends Queueable {
 			self.bulk=json.bulk;
 			self.bulkQueue=json.bulkQueue;
 			for(let i in self.bulk) {
-				self.socket.send(JSON.stringify(self.bulk[i]));
+				self._websocketSendActual(self.bulk[i])
+				//self.socket.send(JSON.stringify(self.bulk[i]));
 			}
 		} else {
-			self.socket.send(JSON.stringify(json.message));
+			//self.socket.send(JSON.stringify(json.message));
+			self._websocketSendActual(json.message);
 		}
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+
+	_websocketSendActual(json) {
+		let self=this;
+		self.currentPacket = 0;
+		self.totalPackets = 0;
+		self.packetArray = [];
+		self.uuid=uuidv4();
+		const payload=JSON.stringify(json);
+		if (payload.length > MAX_BYTES) {
+			self.totalPackets = Math.ceil(payload.length / MAX_BYTES);
+			for (let i = 0; i < self.totalPackets; i++) {
+				let loc = i * MAX_BYTES;
+				let sub = payload.slice(loc, MAX_BYTES + loc);
+				self.packetArray.push(sub);
+			}
+			self._websocketSendPacket();
+		} else {
+			self.socket.send(payload);
+		}
+	}
+
+	_websocketSendPacket() {
+		let self=this;
+		/*
+		 * more work?
+		 */
+		if (self.currentPacket < self.totalPackets) {
+			let packet = btoa(self.packetArray.shift());
+			self.currentPacket++;
+			//console.log(`packet:${self.currentPacket}-${self.totalPackets} Size: ${packet.length}`);
+
+			self.socket.send(JSON.stringify({
+				"frame": self.currentPacket,
+				"totalFrames": self.totalPackets,
+				"uuid": self.uuid,
+				"data": packet
+			}));
+			self._websocketSendPacket();
+		}
 	}
 
 }
