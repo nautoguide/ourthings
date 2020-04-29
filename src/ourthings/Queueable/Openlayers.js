@@ -425,26 +425,26 @@ export default class Openlayers extends Queueable {
 		let layer=this.maps[options.map].layers[options.layer];
 		let source=layer.getSource();
 
+		if(options.mode==="on") {
 
 		let featureCache=[];
 
 		/*
 		 * Modify interaction, does all the hard work
 		 */
-		let modify=new Modify({
+		self.modify=new Modify({
 			source: source,
 			pixelTolerance: 10,
 			deleteCondition: function (evt) {
 				return shiftKeyOnly(evt) && singleClick(evt)
 			}
 		});
-		map.addInteraction(modify);
 
 		/*
 		 * When the user starts moving something we take a copy of it for use
 		 * encase we need to revert
 		 */
-		modify.on('modifystart', function (event) {
+		self.modify.on('modifystart', function (event) {
 			let features = event.features.getArray();
 			featureCache=[];
 			for(let i=0;i<features.length;i++) {
@@ -455,7 +455,7 @@ export default class Openlayers extends Queueable {
 		/*
 		 * When the user has finished the move / action
 		 */
-		modify.on('modifyend', function (event) {
+		self.modify.on('modifyend', function (event) {
 			/*
 			 * Modified features
 			 */
@@ -466,11 +466,11 @@ export default class Openlayers extends Queueable {
 					modifiedFeatures.push(feature);
 				}
 			});
-			modifiedFeatures = new GeoJSON({}).writeFeaturesObject(modifiedFeatures);
+			modifiedFeatures = new GeoJSON({"dataProjection":"EPSG:4326","featureProjection":"EPSG:3857"}).writeFeaturesObject(modifiedFeatures);
 			/*
 			 * All features
 			 */
-			let features = new GeoJSON({}).writeFeaturesObject(event.features.getArray());
+			let features = new GeoJSON({"dataProjection":"EPSG:4326","featureProjection":"EPSG:3857"}).writeFeaturesObject(event.features.getArray());
 			/*
 			 * Set memory and execute
 			 */
@@ -481,10 +481,23 @@ export default class Openlayers extends Queueable {
 		/*
 		 * Snap interaction *must* be last to apply
 		 */
-		map.addInteraction(new Snap({
-			source: source,
-			pixelTolerance: 5
-		}));
+			console.log('on');
+			map.addInteraction(self.modify);
+
+			map.addInteraction(new Snap({
+				source: source,
+				pixelTolerance: 5
+			}));
+		} else {
+			console.log('off');
+			map.removeInteraction(self.modify);
+
+			map.removeInteraction(new Snap({
+				source: source,
+				pixelTolerance: 5
+			}));
+		}
+
 
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
