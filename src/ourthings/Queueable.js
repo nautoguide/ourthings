@@ -45,6 +45,16 @@ class Queueable {
 			 */
 			json=JSON.parse(self.queue.templateVars(JSON.stringify(json)));
 			/*
+			 * Process pointers IE *memory.foo.value
+			 */
+			const pointerRegex=/^\*([a-zA-Z0-9\.]*)$/;
+			for(let i in json) {
+				let match;
+				if(match = pointerRegex.exec(json[i])) {
+					json[i]=self.queue.deepCopy(eval(match[1]));
+				}
+			}
+			/*
 			 * Execute
 			 */
 			self[command](pid, json);
