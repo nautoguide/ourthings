@@ -456,17 +456,26 @@ export default class Openlayers extends Queueable {
 		 * When the user has finished the move / action
 		 */
 		modify.on('modifyend', function (event) {
-			/*let modifiedFeatures=[];
-			self.getMap().forEachFeatureAtPixel(event.mapBrowserEvent.pixel, function (feature, layer) {
+			/*
+			 * Modified features
+			 */
+			let modifiedFeatures=[];
+			map.forEachFeatureAtPixel(event.mapBrowserEvent.pixel, function (feature, layer) {
 
-				if(layer&&args.layer===layer.get('name')) {
+				if(layer&&layer.get('name')===options.layer) {
 					modifiedFeatures.push(feature);
 				}
 			});
-			let features_geojson = self.getMap().featuresToGeojson(modifiedFeatures,"EPSG:4326");*/
+			modifiedFeatures = new GeoJSON({}).writeFeaturesObject(modifiedFeatures);
+			/*
+			 * All features
+			 */
 			let features = new GeoJSON({}).writeFeaturesObject(event.features.getArray());
+			/*
+			 * Set memory and execute
+			 */
 			self.queue.setMemory(options.prefix+'multiEditFeatures', features, "Session");
-			//self.queue.setMemory(options.prefix+'multiEditModifiedFeatures', features_geojson, "Session");
+			self.queue.setMemory(options.prefix+'multiEditModifiedFeatures', modifiedFeatures, "Session");
 			self.queue.execute(options.prefix+"multiEdit");
 		});
 		/*
