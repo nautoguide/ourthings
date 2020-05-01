@@ -579,6 +579,30 @@ export default class Openlayers extends Queueable {
 	}
 
 	/**
+	 * gets geojson features to a layer
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @param {string} json.gejson - geojson
+	 */
+	getGeojson(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			"map":"default",
+			"layer":"default",
+			"geojson":{}
+		},json);
+		let layer=self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+
+		let features = this._loadGeojson(options.map,options.geojson);
+		source.addFeatures(features);
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
 	 * Loads geojson from var or object
 	 * @param geojson
 	 * @private

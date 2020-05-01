@@ -41,6 +41,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
@@ -79,13 +80,18 @@ import {unByKey} from &apos;ol/Observable&apos;
 
 import GeoJSON from &apos;ol/format/GeoJSON&apos;;
 import {fromLonLat,units,epsg3857,epsg4326} from &apos;ol/proj&apos;;
-import Select from &apos;ol/interaction/Select.js&apos;;
-import {click, pointerMove, altKeyOnly} from &apos;ol/events/condition.js&apos;;
+
+import Select from &apos;ol/interaction/Select&apos;;
+import Snap from &apos;ol/interaction/Snap&apos;;
+import Modify from &apos;ol/interaction/Modify&apos;;
+
 import proj4 from &quot;proj4&quot;;
 import {register} from &apos;ol/proj/proj4&apos;;
 import {get as getProjection} from &apos;ol/proj&apos;
 
 import {defaults as defaultInteractions, DragRotateAndZoom} from &apos;ol/interaction&apos;;
+
+import {click,pointerMove, altKeyOnly,shiftKeyOnly,singleClick} from &apos;ol/events/condition&apos;;
 
 import * as consoleBadge from &quot;console-badge&quot;;
 
@@ -336,11 +342,7 @@ export default class Openlayers extends Queueable {
 		let source={};
 		let vectorSource;
 		if(options.geojson!==undefined) {
-			if(typeof options.geojson===&apos;object&apos;) {
-				source.features = (new GeoJSON({})).readFeatures(options.geojson, {featureProjection: self.maps[options.map].object.getView().getProjection()});
-			} else {
-				source.features = (new GeoJSON({})).readFeatures(eval(options.geojson), {featureProjection: self.maps[options.map].object.getView().getProjection()});
-			}
+			source.features=this._loadGeojson(options.map,options.geojson);
 		}
 		vectorSource = new VectorSource(source);
 		let olLayer = new VectorLayer({
@@ -470,6 +472,96 @@ export default class Openlayers extends Queueable {
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
+	multiEdit(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;map&quot;:&quot;default&quot;,
+			&quot;mode&quot;:&quot;on&quot;,
+			&quot;prefix&quot;:&quot;&quot;,
+			&quot;layer&quot;:&quot;default&quot;
+		},json);
+		let map=self.maps[options.map].object;
+		let layer=this.maps[options.map].layers[options.layer];
+		let source=layer.getSource();
+
+		if(options.mode===&quot;on&quot;) {
+
+		let featureCache=[];
+
+		/*
+		 * Modify interaction, does all the hard work
+		 */
+		self.modify=new Modify({
+			source: source,
+			pixelTolerance: 10,
+			deleteCondition: function (evt) {
+				return shiftKeyOnly(evt) &amp;&amp; singleClick(evt)
+			}
+		});
+
+		/*
+		 * When the user starts moving something we take a copy of it for use
+		 * encase we need to revert
+		 */
+		self.modify.on(&apos;modifystart&apos;, function (event) {
+			let features = event.features.getArray();
+			featureCache=[];
+			for(let i=0;i&lt;features.length;i++) {
+				featureCache.push(features[i].clone());
+			}
+		});
+
+		/*
+		 * When the user has finished the move / action
+		 */
+		self.modify.on(&apos;modifyend&apos;, function (event) {
+			/*
+			 * Modified features
+			 */
+			let modifiedFeatures=[];
+			map.forEachFeatureAtPixel(event.mapBrowserEvent.pixel, function (feature, layer) {
+
+				if(layer&amp;&amp;layer.get(&apos;name&apos;)===options.layer) {
+					modifiedFeatures.push(feature);
+				}
+			});
+			modifiedFeatures = new GeoJSON({&quot;dataProjection&quot;:&quot;EPSG:4326&quot;,&quot;featureProjection&quot;:&quot;EPSG:3857&quot;}).writeFeaturesObject(modifiedFeatures);
+			/*
+			 * All features
+			 */
+			let features = new GeoJSON({&quot;dataProjection&quot;:&quot;EPSG:4326&quot;,&quot;featureProjection&quot;:&quot;EPSG:3857&quot;}).writeFeaturesObject(event.features.getArray());
+			/*
+			 * Set memory and execute
+			 */
+			self.queue.setMemory(options.prefix+&apos;multiEditFeatures&apos;, features, &quot;Session&quot;);
+			self.queue.setMemory(options.prefix+&apos;multiEditModifiedFeatures&apos;, modifiedFeatures, &quot;Session&quot;);
+			self.queue.execute(options.prefix+&quot;multiEdit&quot;);
+		});
+		/*
+		 * Snap interaction *must* be last to apply
+		 */
+			console.log(&apos;on&apos;);
+			map.addInteraction(self.modify);
+
+			map.addInteraction(new Snap({
+				source: source,
+				pixelTolerance: 5
+			}));
+		} else {
+			console.log(&apos;off&apos;);
+			map.removeInteraction(self.modify);
+
+			map.removeInteraction(new Snap({
+				source: source,
+				pixelTolerance: 5
+			}));
+		}
+
+
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
+
 	/**
 	 * Convert a coordinate to WKT
 	 * @param pid
@@ -536,17 +628,51 @@ export default class Openlayers extends Queueable {
 			&quot;layer&quot;:&quot;default&quot;,
 			&quot;geojson&quot;:{}
 		},json);
-		let map=self.maps[options.map].object;
 		let layer=self.maps[options.map].layers[options.layer];
 		let source = layer.getSource();
 
-		let view = map.getView();
-
-		let features = new GeoJSON().readFeatures(options.geojson, {
-			featureProjection: view.getProjection().getCode()
-		});
+		let features = this._loadGeojson(options.map,options.geojson);
 		source.addFeatures(features);
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * gets geojson features to a layer
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @param {string} json.gejson - geojson
+	 */
+	getGeojson(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;map&quot;:&quot;default&quot;,
+			&quot;layer&quot;:&quot;default&quot;,
+			&quot;geojson&quot;:{}
+		},json);
+		let layer=self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+
+		let features = this._loadGeojson(options.map,options.geojson);
+		source.addFeatures(features);
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Loads geojson from var or object
+	 * @param geojson
+	 * @private
+	 */
+	_loadGeojson(map,geojson) {
+		let self=this;
+		if(typeof geojson===&apos;object&apos;) {
+			return (new GeoJSON({})).readFeatures(geojson, {featureProjection: self.maps[map].object.getView().getProjection()});
+		} else {
+			return (new GeoJSON({})).readFeatures(eval(geojson), {featureProjection: self.maps[map].object.getView().getProjection()});
+		}
 
 	}
 

@@ -41,6 +41,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
@@ -58,6 +59,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queueable/Api.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module Api */
 import Queueable from &quot;../Queueable&quot;;
+import { v4 as uuidv4 } from &apos;uuid&apos;;
 
 /**
  * @classdesc
@@ -70,6 +72,9 @@ import Queueable from &quot;../Queueable&quot;;
  * //
  *
  */
+
+const MAX_BYTES = 50000;
+
 export default class Api extends Queueable {
 
 	/**
@@ -364,12 +369,55 @@ export default class Api extends Queueable {
 			self.bulk=json.bulk;
 			self.bulkQueue=json.bulkQueue;
 			for(let i in self.bulk) {
-				self.socket.send(JSON.stringify(self.bulk[i]));
+				self._websocketSendActual(self.bulk[i])
+				//self.socket.send(JSON.stringify(self.bulk[i]));
 			}
 		} else {
-			self.socket.send(JSON.stringify(json.message));
+			//self.socket.send(JSON.stringify(json.message));
+			self._websocketSendActual(json.message);
 		}
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+
+	_websocketSendActual(json) {
+		let self=this;
+		self.currentPacket = 0;
+		self.totalPackets = 0;
+		self.packetArray = [];
+		self.uuid=uuidv4();
+		const payload=JSON.stringify(json);
+		if (payload.length &gt; MAX_BYTES) {
+			self.totalPackets = Math.ceil(payload.length / MAX_BYTES);
+			for (let i = 0; i &lt; self.totalPackets; i++) {
+				let loc = i * MAX_BYTES;
+				let sub = payload.slice(loc, MAX_BYTES + loc);
+				self.packetArray.push(sub);
+			}
+			self._websocketSendPacket();
+		} else {
+			self.socket.send(payload);
+		}
+	}
+
+	_websocketSendPacket() {
+		let self=this;
+		/*
+		 * more work?
+		 */
+		if (self.currentPacket &lt; self.totalPackets) {
+			let packet = btoa(self.packetArray.shift());
+			self.currentPacket++;
+			//console.log(`packet:${self.currentPacket}-${self.totalPackets} Size: ${packet.length}`);
+
+			self.socket.send(JSON.stringify({
+				&quot;frame&quot;: self.currentPacket,
+				&quot;totalFrames&quot;: self.totalPackets,
+				&quot;uuid&quot;: self.uuid,
+				&quot;data&quot;: packet
+			}));
+			self._websocketSendPacket();
+		}
 	}
 
 }

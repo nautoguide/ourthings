@@ -128,4 +128,31 @@ export default class Browser extends Queueable {
 		};
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
+
+	/**
+	 * Toggle a close page trap on and off
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.mode - on|off
+	 */
+	closeEvent(pid,json) {
+
+		if(json.mode==='off') {
+			window.onbeforeunload = function(e) {};
+		} else {
+			window.onbeforeunload = blockClose;
+		}
+
+		function blockClose(e) {
+			e = e || window.event;
+			// For IE and Firefox prior to version 4
+			if (e) {
+				e.returnValue = 'Sure?';
+			}
+			// For Safari
+			return 'Sure?';
+		}
+
+	}
 }
