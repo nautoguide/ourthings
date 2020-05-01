@@ -30,6 +30,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "@nautoguide/ourthings/ourthings/queueable/geojson.js~geojson",
+    "class/ourthings/Queueable/Geojson.js~Geojson.html",
+    "<span>Geojson</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/Geojson.js</span>",
+    "class"
+  ],
+  [
     "@nautoguide/ourthings/ourthings/queueable/internals.js~internals",
     "class/ourthings/Queueable/Internals.js~Internals.html",
     "<span>Internals</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/Internals.js</span>",
@@ -942,6 +948,18 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "ourthings/queueable/api.js~api#_websocketsendactual",
+    "class/ourthings/Queueable/Api.js~Api.html#instance-method-_websocketSendActual",
+    "ourthings/Queueable/Api.js~Api#_websocketSendActual",
+    "method"
+  ],
+  [
+    "ourthings/queueable/api.js~api#_websocketsendpacket",
+    "class/ourthings/Queueable/Api.js~Api.html#instance-method-_websocketSendPacket",
+    "ourthings/Queueable/Api.js~Api#_websocketSendPacket",
+    "method"
+  ],
+  [
     "ourthings/queueable/api.js~api#get",
     "class/ourthings/Queueable/Api.js~Api.html#instance-method-get",
     "ourthings/Queueable/Api.js~Api#get",
@@ -993,6 +1011,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/browser.js~browser#backhistory",
     "class/ourthings/Queueable/Browser.js~Browser.html#instance-method-backHistory",
     "ourthings/Queueable/Browser.js~Browser#backHistory",
+    "method"
+  ],
+  [
+    "ourthings/queueable/browser.js~browser#closeevent",
+    "class/ourthings/Queueable/Browser.js~Browser.html#instance-method-closeEvent",
+    "ourthings/Queueable/Browser.js~Browser#closeEvent",
     "method"
   ],
   [
@@ -1138,6 +1162,48 @@ window.esdocSearchIndex = [
     "class/ourthings/Queueable/Files.js~Files.html#instance-method-putFileToS3",
     "ourthings/Queueable/Files.js~Files#putFileToS3",
     "method"
+  ],
+  [
+    "ourthings/queueable/geojson.js",
+    "file/ourthings/Queueable/Geojson.js.html",
+    "ourthings/Queueable/Geojson.js",
+    "file"
+  ],
+  [
+    "ourthings/queueable/geojson.js~geojson#_compressgeojson",
+    "class/ourthings/Queueable/Geojson.js~Geojson.html#instance-method-_compressGeojson",
+    "ourthings/Queueable/Geojson.js~Geojson#_compressGeojson",
+    "method"
+  ],
+  [
+    "ourthings/queueable/geojson.js~geojson#_makehistoryindex",
+    "class/ourthings/Queueable/Geojson.js~Geojson.html#instance-method-_makeHistoryIndex",
+    "ourthings/Queueable/Geojson.js~Geojson#_makeHistoryIndex",
+    "method"
+  ],
+  [
+    "ourthings/queueable/geojson.js~geojson#historyadd",
+    "class/ourthings/Queueable/Geojson.js~Geojson.html#instance-method-historyAdd",
+    "ourthings/Queueable/Geojson.js~Geojson#historyAdd",
+    "method"
+  ],
+  [
+    "ourthings/queueable/geojson.js~geojson#historyinit",
+    "class/ourthings/Queueable/Geojson.js~Geojson.html#instance-method-historyInit",
+    "ourthings/Queueable/Geojson.js~Geojson#historyInit",
+    "method"
+  ],
+  [
+    "ourthings/queueable/geojson.js~geojson#historyrevert",
+    "class/ourthings/Queueable/Geojson.js~Geojson.html#instance-method-historyRevert",
+    "ourthings/Queueable/Geojson.js~Geojson#historyRevert",
+    "method"
+  ],
+  [
+    "ourthings/queueable/geojson.js~geojson#index",
+    "class/ourthings/Queueable/Geojson.js~Geojson.html#instance-member-index",
+    "ourthings/Queueable/Geojson.js~Geojson#index",
+    "member"
   ],
   [
     "ourthings/queueable/internals.js",
@@ -1446,6 +1512,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#_loadgeojson",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_loadGeojson",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_loadGeojson",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#addfeature",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addFeature",
     "ourthings/Queueable/Openlayers.js~Openlayers#addFeature",
@@ -1518,6 +1590,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#getgeojson",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-getGeojson",
+    "ourthings/Queueable/Openlayers.js~Openlayers#getGeojson",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#init",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-init",
     "ourthings/Queueable/Openlayers.js~Openlayers#init",
@@ -1528,6 +1606,12 @@ window.esdocSearchIndex = [
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-member-maps",
     "ourthings/Queueable/Openlayers.js~Openlayers#maps",
     "member"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#multiedit",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-multiEdit",
+    "ourthings/Queueable/Openlayers.js~Openlayers#multiEdit",
+    "method"
   ],
   [
     "ourthings/queueable/openlayers.js~openlayers#overlays",

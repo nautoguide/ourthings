@@ -1,7 +1,7 @@
 {
-  "coverage": "59.75%",
-  "expectCount": 246,
-  "actualCount": 147,
+  "coverage": "59.23%",
+  "expectCount": 260,
+  "actualCount": 154,
   "files": {
     "ourthings/Define.js": {
       "expectCount": 28,
@@ -70,18 +70,21 @@
       ]
     },
     "ourthings/Queueable/Api.js": {
-      "expectCount": 7,
+      "expectCount": 10,
       "actualCount": 6,
       "undocumentLines": [
-        281
+        19,
+        285,
+        324,
+        344
       ]
     },
     "ourthings/Queueable/Browser.js": {
-      "expectCount": 7,
-      "actualCount": 5,
+      "expectCount": 8,
+      "actualCount": 6,
       "undocumentLines": [
-        99,
-        104
+        107,
+        112
       ]
     },
     "ourthings/Queueable/Elements.js": {
@@ -93,6 +96,15 @@
       "expectCount": 4,
       "actualCount": 4,
       "undocumentLines": []
+    },
+    "ourthings/Queueable/Geojson.js": {
+      "expectCount": 7,
+      "actualCount": 4,
+      "undocumentLines": [
+        31,
+        83,
+        100
+      ]
     },
     "ourthings/Queueable/Internals.js": {
       "expectCount": 6,
@@ -126,15 +138,16 @@
       "undocumentLines": []
     },
     "ourthings/Queueable/Openlayers.js": {
-      "expectCount": 29,
-      "actualCount": 23,
+      "expectCount": 32,
+      "actualCount": 25,
       "undocumentLines": [
-        58,
-        59,
-        61,
         63,
-        65,
-        124
+        64,
+        66,
+        68,
+        70,
+        129,
+        416
       ]
     },
     "ourthings/Queueable/Templates.js": {
@@ -183,7 +196,7 @@
       "undocumentLines": [
         21,
         30,
-        67
+        77
       ]
     },
     "ourthings/validator.js": {

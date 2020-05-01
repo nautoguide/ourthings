@@ -288,35 +288,72 @@
     ]
   },
   {
+    "name": "Openlayers#_loadGeojson",
+    "filePath": "ourthings/Queueable/Openlayers.js",
+    "lines": [
+      {
+        "lineNumber": 604,
+        "line": "\t/**\r"
+      },
+      {
+        "lineNumber": 605,
+        "line": "\t * Loads geojson from var or object\r"
+      },
+      {
+        "lineNumber": 606,
+        "line": "\t * @param geojson\r"
+      },
+      {
+        "lineNumber": 607,
+        "line": "\t * @private\r"
+      },
+      {
+        "lineNumber": 608,
+        "line": "\t */\r"
+      },
+      {
+        "lineNumber": 609,
+        "line": "\t_loadGeojson(map,geojson) {\r"
+      }
+    ],
+    "codeParams": [
+      "map",
+      "geojson"
+    ],
+    "docParams": [
+      "geojson"
+    ]
+  },
+  {
     "name": "Queueable#finished",
     "filePath": "ourthings/Queueable.js",
     "lines": [
       {
-        "lineNumber": 55,
+        "lineNumber": 65,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 56,
+        "lineNumber": 66,
         "line": "\t * Call this method after you command has finished. Failure to do so will result is\r"
       },
       {
-        "lineNumber": 57,
+        "lineNumber": 67,
         "line": "\t * a stalled queue\r"
       },
       {
-        "lineNumber": 58,
+        "lineNumber": 68,
         "line": "\t * @param pid\r"
       },
       {
-        "lineNumber": 59,
+        "lineNumber": 69,
         "line": "\t * @param mode\r"
       },
       {
-        "lineNumber": 60,
+        "lineNumber": 70,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 61,
+        "lineNumber": 71,
         "line": "\tfinished(pid,mode,error='') {\r"
       }
     ],
