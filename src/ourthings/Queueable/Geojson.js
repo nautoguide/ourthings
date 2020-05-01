@@ -154,5 +154,21 @@ export default class Geojson extends Queueable {
 
 	}
 
+	historyCompare(pid,json) {
+		let options = Object.assign({
+			"index": "feature_id"
+		}, json);
+		const index1=this._makeHistoryIndex(options.geojson1);
+		const index2=this._makeHistoryIndex(options.geojson2);
+
+		let deletes=[];
+
+		//TODO iterate to find deletes
+
+		this.queue.setMemory("historyCompare", {"updates":options.geojson2,"deletes":deletes}, "Session");
+
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
 
 }
