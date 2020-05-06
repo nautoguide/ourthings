@@ -47,7 +47,7 @@ class Queueable {
 			/*
 			 * Process pointers IE *memory.foo.value
 			 */
-			const pointerRegex=/^\*([a-zA-Z0-9\.]*)$/;
+			const pointerRegex=/^\*([a-zA-Z0-9\.\[\]]*)$/;
 			for(let i in json) {
 				let match;
 				if(match = pointerRegex.exec(json[i])) {
