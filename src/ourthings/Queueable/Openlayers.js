@@ -36,6 +36,9 @@ import {click,pointerMove, altKeyOnly,shiftKeyOnly,singleClick} from 'ol/events/
 
 import * as consoleBadge from "console-badge";
 
+import { v4 as uuidv4 } from 'uuid';
+
+
 proj4.defs([
 	["EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs"]
 ]);
@@ -409,6 +412,30 @@ export default class Openlayers extends Queueable {
 	}
 
 	/**
+	 * Set a features properties by id
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {array} json.layer - layer to use
+	 * @param {object} json.id - Feature id
+	 * @param {object} json.properties - properties to set
+	 *
+	 */
+	setFeaturePropertyById(pid,json) {
+		let options=Object.assign({
+			"map":"default",
+			"layer":"default",
+			"id":"",
+			"properties":{}
+		},json);
+		let layer=this.maps[options.map].layers[options.layer];
+		let source=layer.getSource();
+		let feature=source.getFeatureById(options.id);
+		feature.setProperties(options.properties);
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
 	 * Use the standard click event
 	 * @param pid
 	 * @param json
@@ -598,9 +625,21 @@ export default class Openlayers extends Queueable {
 		let source = layer.getSource();
 
 		let features = this._loadGeojson(options.map,options.geojson);
-		source.addFeatures(features);
+		source.addFeatures(this._idFeatures(features));
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
+	}
+
+	/**
+	 * Openlayers doesn't ID features by default. This will apply a unique id to all features passed to it
+	 * @param features
+	 * @private
+	 */
+	_idFeatures(features) {
+		for(let i in features) {
+			features[i].setId(uuidv4());
+		}
+		return features;
 	}
 
 	/**
@@ -663,8 +702,12 @@ export default class Openlayers extends Queueable {
             "layer":"default"
         },json);
         let layer=self.maps[options.map].layers[options.layer];
-        let source = layer.getSource();
-        source.clear();
+        if(layer) {
+	        let source = layer.getSource();
+	        source.clear();
+        } else {
+        	console.warn(`No such layer [${options.layer}]`);
+        }
         self.finished(pid,self.queue.DEFINE.FIN_OK);
 
     }

@@ -1530,6 +1530,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#_idfeatures",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_idFeatures",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_idFeatures",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#_loadgeojson",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_loadGeojson",
     "ourthings/Queueable/Openlayers.js~Openlayers#_loadGeojson",
@@ -1653,6 +1659,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/openlayers.js~openlayers#removeoverlay",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-removeOverlay",
     "ourthings/Queueable/Openlayers.js~Openlayers#removeOverlay",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#setfeaturepropertybyid",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-setFeaturePropertyById",
+    "ourthings/Queueable/Openlayers.js~Openlayers#setFeaturePropertyById",
     "method"
   ],
   [

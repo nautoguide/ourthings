@@ -1,7 +1,7 @@
 {
-  "coverage": "59.31%",
-  "expectCount": 263,
-  "actualCount": 156,
+  "coverage": "59.62%",
+  "expectCount": 265,
+  "actualCount": 158,
   "files": {
     "ourthings/Define.js": {
       "expectCount": 28,
@@ -139,16 +139,16 @@
       "undocumentLines": []
     },
     "ourthings/Queueable/Openlayers.js": {
-      "expectCount": 32,
-      "actualCount": 25,
+      "expectCount": 34,
+      "actualCount": 27,
       "undocumentLines": [
-        63,
-        64,
         66,
-        68,
-        70,
-        154,
-        441
+        67,
+        69,
+        71,
+        73,
+        157,
+        468
       ]
     },
     "ourthings/Queueable/Templates.js": {
