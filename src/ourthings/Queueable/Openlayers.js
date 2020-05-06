@@ -122,7 +122,32 @@ export default class Openlayers extends Queueable {
 			});
 			map.on('moveend', self._debug);
 		}
-		self.maps[options.map]={"object":map,"layers":{}};
+		self.maps[options.map]={"object":map,"layers":{},zoom:map.getView().getZoom()};
+
+		map.getView().on('propertychange', function (e) {
+			switch (e.key) {
+				case 'resolution': {
+					/**
+					 *  Check for judder - We only want zoom events that are not a transition
+					 */
+
+					let level = Math.round(map.getView().getZoom());
+					let zoomLevel=self.maps[options.map].zoom;
+
+					if (zoomLevel !== level || map.getView().getZoom() % 1 === 0) {
+						self.queue.setMemory(options.map+'ResolutionChange', {
+							"zoom": map.getView().getZoom(),
+							"resolution": map.getView().getResolution()
+						}, "Session");
+						self.queue.execute(options.map+"ResolutionChange");
+					}
+
+					self.maps[options.map].zoom = zoomLevel;
+					break;
+				}
+			}
+		});
+
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
