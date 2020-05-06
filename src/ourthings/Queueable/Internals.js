@@ -97,6 +97,17 @@ export default class Internals extends Queueable {
 	deleteMemory(pid,json) {
 		this.queue.deleteMemory(json.name);
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
 
+	/**
+	 * NOP - No operation
+	 *
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @example
+	 * internals.nop();
+	 */
+	nop(pid,json) {
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 }
