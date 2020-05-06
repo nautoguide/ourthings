@@ -432,6 +432,7 @@ export default class Openlayers extends Queueable {
 		let source=layer.getSource();
 		let feature=source.getFeatureById(options.id);
 		feature.setProperties(options.properties);
+		this.queue.setMemory('updatedFeature', new GeoJSON({"dataProjection":"EPSG:4326","featureProjection":"EPSG:3857"}).writeFeaturesObject([feature]), "Session");
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 
