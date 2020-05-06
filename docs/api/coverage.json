@@ -1,7 +1,7 @@
 {
-  "coverage": "59.23%",
-  "expectCount": 260,
-  "actualCount": 154,
+  "coverage": "59.16%",
+  "expectCount": 262,
+  "actualCount": 155,
   "files": {
     "ourthings/Define.js": {
       "expectCount": 28,
@@ -88,8 +88,8 @@
       ]
     },
     "ourthings/Queueable/Elements.js": {
-      "expectCount": 16,
-      "actualCount": 16,
+      "expectCount": 17,
+      "actualCount": 17,
       "undocumentLines": []
     },
     "ourthings/Queueable/Files.js": {
@@ -98,12 +98,13 @@
       "undocumentLines": []
     },
     "ourthings/Queueable/Geojson.js": {
-      "expectCount": 7,
+      "expectCount": 8,
       "actualCount": 4,
       "undocumentLines": [
         31,
         83,
-        100
+        100,
+        157
       ]
     },
     "ourthings/Queueable/Internals.js": {

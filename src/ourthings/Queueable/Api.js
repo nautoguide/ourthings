@@ -357,7 +357,7 @@ export default class Api extends Queueable {
 				"uuid": self.uuid,
 				"data": packet
 			}));
-			self._websocketSendPacket();
+			setTimeout(function() {self._websocketSendPacket();},100);
 		}
 	}
 

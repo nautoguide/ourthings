@@ -643,20 +643,27 @@ export default class Openlayers extends Queueable {
 	 * @param json
 	 * @param {string} json.map - Map reference
 	 * @param {string} json.layer - Layer to get extent from
-	 * @param {string} json.gejson - geojson
+	 * @param {string} json.prefix - Prefix for memory
+	 * @param {string} json.projection - Projection to use
 	 */
 	getGeojson(pid,json) {
 		let self=this;
 		let options=Object.assign({
 			&quot;map&quot;:&quot;default&quot;,
 			&quot;layer&quot;:&quot;default&quot;,
-			&quot;geojson&quot;:{}
+			&quot;projection&quot;:&quot;EPSG:4326&quot;,
+			&quot;prefix&quot;:&quot;&quot;
 		},json);
+		let map=self.maps[options.map].object;
+		let view=map.getView();
+
 		let layer=self.maps[options.map].layers[options.layer];
 		let source = layer.getSource();
+		let features=source.getFeatures();
+		let returnJson=new GeoJSON({&quot;dataProjection&quot;:options.projection,&quot;featureProjection&quot;:view.getProjection().getCode()}).writeFeaturesObject(features);
 
-		let features = this._loadGeojson(options.map,options.geojson);
-		source.addFeatures(features);
+		self.queue.setMemory(options.prefix+&apos;getGeojson&apos;, returnJson, &quot;Session&quot;);
+
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
