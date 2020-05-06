@@ -1086,6 +1086,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/elements.js~elements#getcomputedstyle",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-getComputedStyle",
+    "ourthings/Queueable/Elements.js~Elements#getComputedStyle",
+    "method"
+  ],
+  [
     "ourthings/queueable/elements.js~elements#innerhtml",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-innerHTML",
     "ourthings/Queueable/Elements.js~Elements#innerHTML",
@@ -1185,6 +1191,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/geojson.js~geojson#historyadd",
     "class/ourthings/Queueable/Geojson.js~Geojson.html#instance-method-historyAdd",
     "ourthings/Queueable/Geojson.js~Geojson#historyAdd",
+    "method"
+  ],
+  [
+    "ourthings/queueable/geojson.js~geojson#historycompare",
+    "class/ourthings/Queueable/Geojson.js~Geojson.html#instance-method-historyCompare",
+    "ourthings/Queueable/Geojson.js~Geojson#historyCompare",
     "method"
   ],
   [

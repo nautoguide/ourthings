@@ -205,6 +205,29 @@ export default class Elements extends Queueable {
 	}
 
 	/**
+	 * Get the computed style for an element
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.styles - value to get
+	 * @param {string} json.name - memory name to use
+	 *
+	 * @example
+	 * elements.getComputedStyle({"targetId":"#username","styles":"background"});
+
+	 */
+	getComputedStyle(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			"name":"computedStyle"
+		},json);
+		let element=self.queue.getElement(options.targetId);
+		let style=window.getComputedStyle(element).getPropertyValue(options.css);
+		self.queue.setMemory(options.name, style, "Session");
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
 	 * Scroll to a dom target
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
