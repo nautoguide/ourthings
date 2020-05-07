@@ -638,7 +638,9 @@ export default class Openlayers extends Queueable {
 	 */
 	_idFeatures(features) {
 		for(let i in features) {
-			features[i].setId(uuidv4());
+			let uuid=uuidv4();
+			features[i].setId(uuid);
+			features[i].set('uuid',uuid);
 		}
 		return features;
 	}
