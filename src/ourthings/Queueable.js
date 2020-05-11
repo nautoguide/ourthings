@@ -71,7 +71,11 @@ class Queueable {
 	 */
 	finished(pid,mode,error='') {
 		let self=this;
-		self.queue.finished(pid,mode,error);
+		/*
+		 * a -1 pid is called via direct run and so not from our queue
+		 */
+		if(pid!==-1)
+			self.queue.finished(pid,mode,error);
 	}
 
 	set(pid,value) {
