@@ -403,12 +403,13 @@ export default class Openlayers extends Queueable {
 				 */
 				if(check==options.filter[f]) {
 					foundFeatures.push(features[i]);
-					this.queue.setMemory('findFeatures', foundFeatures, "Session");
-					this.queue.setMemory(options.map+'selectedFeatures', foundFeatures, "Session");
 				}
 			}
 		}
+		this.queue.setMemory('findFeatures', foundFeatures, "Session");
+		this.queue.setMemory(options.map+'selectedFeatures', foundFeatures, "Session");
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
+		return foundFeatures;
 	}
 
 	/**
@@ -638,9 +639,11 @@ export default class Openlayers extends Queueable {
 	 */
 	_idFeatures(features) {
 		for(let i in features) {
-			let uuid=uuidv4();
-			features[i].setId(uuid);
-			features[i].set('uuid',uuid);
+			if(features[i].get('uuid')===undefined) {
+				let uuid = uuidv4();
+				features[i].setId(uuid);
+				features[i].set('uuid', uuid);
+			}
 		}
 		return features;
 	}
@@ -953,6 +956,10 @@ export default class Openlayers extends Queueable {
 		 */
 		let map=self.maps[options.map].object;
 
+		if(self.overlays[options.overlay]) {
+			map.removeOverlay(self.overlays[options.overlay].object);
+			delete self.overlays[options.overlay];
+		}
 		/*
 		 * Get the html element from the dom
 		 */
@@ -993,8 +1000,10 @@ export default class Openlayers extends Queueable {
 		 */
 		let map=self.maps[options.map].object;
 
-		map.removeOverlay(self.overlays[options.overlay].object);
-		delete self.overlays[options.overlay];
+		if(self.overlays[options.overlay]) {
+			map.removeOverlay(self.overlays[options.overlay].object);
+			delete self.overlays[options.overlay];
+		}
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 
 	}
