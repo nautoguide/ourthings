@@ -42,6 +42,8 @@ import {v4 as uuidv4} from 'uuid';
 
 import {point,polygon,multiPolygon}  from '@turf/turf';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import buffer from '@turf/buffer';
+import kinks from '@turf/kinks';
 
 proj4.defs([
 	["EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs"]
@@ -472,6 +474,18 @@ export default class Openlayers extends Queueable {
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
+	/**
+	 * MultiEdit tool
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {array} json.layer - layer to use
+	 * @param {object} json.mode - on|off
+	 * @param {object} json.projection - properties to set
+	 * @param {object} json.inside - JSON with single feature to use
+	 * @param {object} json.buffer - buffer in meters around the inside
+	 *
+	 */
 	multiEdit(pid, json) {
 		let self = this;
 		let options = Object.assign({
@@ -480,7 +494,8 @@ export default class Openlayers extends Queueable {
 			"prefix": "",
 			"layer": "default",
 			"projection": "EPSG:4326",
-			"inside": undefined
+			"inside": undefined,
+			"buffer": 10
 		}, json);
 		let map = self.maps[options.map].object;
 		let view = map.getView();
@@ -501,6 +516,9 @@ export default class Openlayers extends Queueable {
 					return shiftKeyOnly(evt) && singleClick(evt)
 				}
 			});
+			let maskFeature=buffer(options.inside.features[0],options.buffer,{units:"meters"});
+			let bufferedMask=polygon(maskFeature.geometry.coordinates);
+
 
 			/*
 			 * When the user starts moving something we take a copy of it for use
@@ -550,14 +568,26 @@ export default class Openlayers extends Queueable {
 				 */
 
 				let isInside=true;
+				let isKink=false;
 				if(options.inside) {
-					isInside=booleanPointInPolygon(turfPoint, multiPolygon(options.inside.features[0].geometry.coordinates));
+					isInside=booleanPointInPolygon(turfPoint, bufferedMask);
+				}
+
+				/*
+				 * Check for any kinks in the modified features
+				 */
+				for(let i in modifiedFeaturesJSON.features) {
+					let kinkres = kinks(modifiedFeaturesJSON.features[i]);
+					if(kinkres.features.length>0) {
+						isKink=true;
+						break;
+					}
 				}
 
 				/*
 				 * Set memory and execute
 				 */
-				if(isInside) {
+				if(isInside===true&&isKink===false) {
 					self.queue.setMemory(options.prefix + 'multiEditFeatures', features, "Session");
 					self.queue.setMemory(options.prefix + 'multiEditModifiedFeatures', modifiedFeaturesJSON, "Session");
 					self.queue.execute(options.prefix + "multiEdit");
