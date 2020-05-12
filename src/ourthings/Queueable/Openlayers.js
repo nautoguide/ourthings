@@ -11,7 +11,7 @@ import {Point} from 'ol/geom.js';
 import Disposable from 'ol/Disposable';
 import OSM from 'ol/source/OSM';
 import WMTS from 'ol/source/WMTS';
-import WMTSTileGrid  from 'ol/tilegrid/WMTS';
+import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import XYZ from 'ol/source/XYZ.js';
 
 import WKT from 'ol/format/WKT';
@@ -20,7 +20,7 @@ import {unByKey} from 'ol/Observable'
 
 
 import GeoJSON from 'ol/format/GeoJSON';
-import {fromLonLat,units,epsg3857,epsg4326} from 'ol/proj';
+import {fromLonLat, units, epsg3857, epsg4326} from 'ol/proj';
 
 import Select from 'ol/interaction/Select';
 import Snap from 'ol/interaction/Snap';
@@ -30,22 +30,24 @@ import proj4 from "proj4";
 import {register} from 'ol/proj/proj4';
 import {get as getProjection} from 'ol/proj'
 
+import {transform} from 'ol/proj';
+
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
 
-import {click,pointerMove, altKeyOnly,shiftKeyOnly,singleClick} from 'ol/events/condition';
+import {click, pointerMove, altKeyOnly, shiftKeyOnly, singleClick} from 'ol/events/condition';
 
 import * as consoleBadge from "console-badge";
 
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
+import {point,polygon,multiPolygon}  from '@turf/turf';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
 proj4.defs([
 	["EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs"]
 ]);
 
 register(proj4);
-
-
 
 
 /**
@@ -64,13 +66,13 @@ register(proj4);
 export default class Openlayers extends Queueable {
 
 	init(queue) {
-		this.queue=queue;
+		this.queue = queue;
 
-		this.maps={};
+		this.maps = {};
 
-		this.overlays={};
+		this.overlays = {};
 
-		this.ready=true;
+		this.ready = true;
 	}
 
 	/**
@@ -87,18 +89,18 @@ export default class Openlayers extends Queueable {
 	 * openlayer.addMap();
 	 *
 	 */
-	addMap(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
+	addMap(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
 			"zoom": 0,
 			"renderer": ['webgl', 'canvas'],
-			"target":"map",
-			"center":[0,0],
+			"target": "map",
+			"center": [0, 0],
 			"projection": "EPSG:3857",
-			"debug":false
-		},json);
-		let projection =  getProjection(options.projection);
+			"debug": false
+		}, json);
+		let projection = getProjection(options.projection);
 		const map = new Map({
 			target: options.target,
 			view: new View({
@@ -115,7 +117,7 @@ export default class Openlayers extends Queueable {
 			keyboardEventTarget: document
 
 		});
-		if(options.debug===true) {
+		if (options.debug === true) {
 			self.queue.consoleBadge({
 				mode: 'shields.io',
 				leftText: 'Map debugger online',
@@ -125,7 +127,7 @@ export default class Openlayers extends Queueable {
 			});
 			map.on('moveend', self._debug);
 		}
-		self.maps[options.map]={"object":map,"layers":{},zoom:map.getView().getZoom()};
+		self.maps[options.map] = {"object": map, "layers": {}, zoom: map.getView().getZoom()};
 
 		map.getView().on('propertychange', function (e) {
 			switch (e.key) {
@@ -135,14 +137,14 @@ export default class Openlayers extends Queueable {
 					 */
 
 					let level = Math.round(map.getView().getZoom());
-					let zoomLevel=self.maps[options.map].zoom;
+					let zoomLevel = self.maps[options.map].zoom;
 
 					if (zoomLevel !== level || map.getView().getZoom() % 1 === 0) {
-						self.queue.setMemory(options.map+'ResolutionChange', {
+						self.queue.setMemory(options.map + 'ResolutionChange', {
 							"zoom": map.getView().getZoom(),
 							"resolution": map.getView().getResolution()
 						}, "Session");
-						self.queue.execute(options.map+"ResolutionChange");
+						self.queue.execute(options.map + "ResolutionChange");
 					}
 
 					self.maps[options.map].zoom = zoomLevel;
@@ -151,13 +153,13 @@ export default class Openlayers extends Queueable {
 			}
 		});
 
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
 	_debug(event) {
 		let map = event.map;
 		let extent = map.getView().calculateExtent(map.getSize());
-		let center= map.getView().getCenter();
+		let center = map.getView().getCenter();
 		self.queue.consoleBadge({
 			mode: 'shields.io',
 			leftText: 'Map Extent',
@@ -192,23 +194,23 @@ export default class Openlayers extends Queueable {
 	 *
 	 */
 
-	addLayer(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-			"name":"default",
+	addLayer(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"name": "default",
 			"opacity": 1,
 			"transparent": false,
 			"active": true
-		},json);
-		let map=self.maps[options.map].object;
+		}, json);
+		let map = self.maps[options.map].object;
 		let olLayer = null;
 
 		/*
 		 * If we had a style specified then we need to check if it needs expanding
 		 */
-		if(options.style!==undefined&&typeof options.style!=='object')
-			options.style=eval(options.style);
+		if (options.style !== undefined && typeof options.style !== 'object')
+			options.style = eval(options.style);
 
 		/*
 		 * Find the requested layer type as a function
@@ -216,17 +218,16 @@ export default class Openlayers extends Queueable {
 		let layerFunction = self["_addLayer_" + options.type];
 		if (typeof layerFunction === "function") {
 			olLayer = layerFunction.apply(self, [options]);
-		}
-		else {
-			self.finished(pid,self.queue.DEFINE.FIN_ERROR,"No add layer function for " + options.type);
+		} else {
+			self.finished(pid, self.queue.DEFINE.FIN_ERROR, "No add layer function for " + options.type);
 			return false;
 		}
 		/*
 		 * Add the layer and update the the maps object with the new layers
 		 */
 		map.addLayer(olLayer);
-		self.maps[options.map].layers[options.name]=olLayer;
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		self.maps[options.map].layers[options.name] = olLayer;
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
 
@@ -237,7 +238,7 @@ export default class Openlayers extends Queueable {
 	 * @private
 	 */
 	_addLayer_osm(options) {
-		let olLayer=new TileLayer({
+		let olLayer = new TileLayer({
 			source: new OSM()
 		});
 		return olLayer;
@@ -250,10 +251,10 @@ export default class Openlayers extends Queueable {
 	 * @private
 	 */
 	_addLayer_wmts(options) {
-		let self=this;
-		let map=self.maps[options.map].object;
-		let view=map.getView();
-		let source= new WMTS({
+		let self = this;
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+		let source = new WMTS({
 			url: options.url,
 			layer: options.layer,
 			matrixSet: options.matrixSet,
@@ -286,7 +287,7 @@ export default class Openlayers extends Queueable {
 	 * @private
 	 */
 	_addLayer_xyz(options) {
-		let source= new XYZ({
+		let source = new XYZ({
 			url: options.url,
 			crossOrigin: 'Anonymous'
 		});
@@ -307,11 +308,11 @@ export default class Openlayers extends Queueable {
 	 * @private
 	 */
 	_addLayer_vector(options) {
-		let self=this;
-		let source={};
+		let self = this;
+		let source = {};
 		let vectorSource;
-		if(options.geojson!==undefined) {
-			source.features=this._loadGeojson(options.map,options.geojson);
+		if (options.geojson !== undefined) {
+			source.features = this._loadGeojson(options.map, options.geojson);
 		}
 		vectorSource = new VectorSource(source);
 		let olLayer = new VectorLayer({
@@ -337,26 +338,26 @@ export default class Openlayers extends Queueable {
 	 *
 	 * @description This select control uses the default openlayers model. Useful for applications with no overlapping features. It does not support selecting hidden features
 	 */
-	simpleSelect(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-			"mode":"on",
-			"prefix":""
-		},json);
-		if(options.layers) {
-			for(let i in options.layers) {
-				options.layers[i]=self.maps[options.map].layers[options.layers[i]];
+	simpleSelect(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"mode": "on",
+			"prefix": ""
+		}, json);
+		if (options.layers) {
+			for (let i in options.layers) {
+				options.layers[i] = self.maps[options.map].layers[options.layers[i]];
 			}
 		}
-		let map=self.maps[options.map].object;
-		let selectObj=self.maps[options.map].selectObj;
-		if(selectObj===undefined) {
-			selectObj = new Select({"layers":options.layers});
-			self.maps[options.map].selectObj=selectObj;
+		let map = self.maps[options.map].object;
+		let selectObj = self.maps[options.map].selectObj;
+		if (selectObj === undefined) {
+			selectObj = new Select({"layers": options.layers});
+			self.maps[options.map].selectObj = selectObj;
 			selectObj.on('select', selectFunction);
 		}
-		if(options.mode==='on') {
+		if (options.mode === 'on') {
 
 			map.addInteraction(selectObj);
 		} else {
@@ -364,16 +365,16 @@ export default class Openlayers extends Queueable {
 		}
 
 		function selectFunction(e) {
-			self.queue.setMemory(options.prefix+'simpleSelect', e, "Session");
-			self.queue.setMemory(options.map+'selectedFeatures', e.selected, "Session");
+			self.queue.setMemory(options.prefix + 'simpleSelect', e, "Session");
+			self.queue.setMemory(options.map + 'selectedFeatures', e.selected, "Session");
 
 			if (e.deselected.length > 0 && e.selected.length === 0)
-				self.queue.execute(options.prefix+"simpleDeselect");
+				self.queue.execute(options.prefix + "simpleDeselect");
 			if (e.selected.length > 0)
-				self.queue.execute(options.prefix+"simpleSelect");
+				self.queue.execute(options.prefix + "simpleSelect");
 		}
 
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
 	/**
@@ -385,30 +386,30 @@ export default class Openlayers extends Queueable {
 	 * @param {object} json.filter - Filter eg {"feature_id":1}
 	 *
 	 */
-	findFeatures(pid,json) {
-		let options=Object.assign({
-			"map":"default",
-			"layer":"default",
-			"filter":{}
-		},json);
-		let foundFeatures=[];
-		let layer=this.maps[options.map].layers[options.layer];
-		let source=layer.getSource();
-		let features=source.getFeatures();
-		for(let i in features) {
-			for(let f in options.filter) {
-				let check=features[i].get(f);
+	findFeatures(pid, json) {
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"filter": {}
+		}, json);
+		let foundFeatures = [];
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let features = source.getFeatures();
+		for (let i in features) {
+			for (let f in options.filter) {
+				let check = features[i].get(f);
 				/*
 				 * Note there can be differing types here, hence ==
 				 */
-				if(check==options.filter[f]) {
+				if (check == options.filter[f]) {
 					foundFeatures.push(features[i]);
 				}
 			}
 		}
 		this.queue.setMemory('findFeatures', foundFeatures, "Session");
-		this.queue.setMemory(options.map+'selectedFeatures', foundFeatures, "Session");
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+		this.queue.setMemory(options.map + 'selectedFeatures', foundFeatures, "Session");
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 		return foundFeatures;
 	}
 
@@ -422,19 +423,22 @@ export default class Openlayers extends Queueable {
 	 * @param {object} json.properties - properties to set
 	 *
 	 */
-	setFeaturePropertyById(pid,json) {
-		let options=Object.assign({
-			"map":"default",
-			"layer":"default",
-			"id":"",
-			"properties":{}
-		},json);
-		let layer=this.maps[options.map].layers[options.layer];
-		let source=layer.getSource();
-		let feature=source.getFeatureById(options.id);
+	setFeaturePropertyById(pid, json) {
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"id": "",
+			"properties": {}
+		}, json);
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let feature = source.getFeatureById(options.id);
 		feature.setProperties(options.properties);
-		this.queue.setMemory('updatedFeature', new GeoJSON({"dataProjection":"EPSG:4326","featureProjection":"EPSG:3857"}).writeFeaturesObject([feature]), "Session");
-		this.finished(pid,this.queue.DEFINE.FIN_OK);
+		this.queue.setMemory('updatedFeature', new GeoJSON({
+			"dataProjection": "EPSG:4326",
+			"featureProjection": "EPSG:3857"
+		}).writeFeaturesObject([feature]), "Session");
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 
 	/**
@@ -444,16 +448,16 @@ export default class Openlayers extends Queueable {
 	 *
 	 * @description This select control uses the default openlayers model. Useful for applications with no overlapping features. It does not support selecting hidden features
 	 */
-	simpleClick(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-			"mode":"on",
-			"prefix":""
-		},json);
-		let map=self.maps[options.map].object;
-		if(options.mode==="on") {
-			self.maps[options.map].clickTag=map.on('click', clickfunction);
+	simpleClick(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"mode": "on",
+			"prefix": ""
+		}, json);
+		let map = self.maps[options.map].object;
+		if (options.mode === "on") {
+			self.maps[options.map].clickTag = map.on('click', clickfunction);
 		} else {
 			console.log('off');
 			unByKey(self.maps[options.map].clickTag);
@@ -461,80 +465,117 @@ export default class Openlayers extends Queueable {
 
 		function clickfunction(e) {
 			console.log(e);
-			self.queue.setMemory(options.prefix+'simpleClick', e, "Session");
-			self.queue.execute(options.prefix+"simpleClick");
+			self.queue.setMemory(options.prefix + 'simpleClick', e, "Session");
+			self.queue.execute(options.prefix + "simpleClick");
 		}
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
-	multiEdit(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-			"mode":"on",
-			"prefix":"",
-			"layer":"default"
-		},json);
-		let map=self.maps[options.map].object;
-		let layer=this.maps[options.map].layers[options.layer];
-		let source=layer.getSource();
+	multiEdit(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"mode": "on",
+			"prefix": "",
+			"layer": "default",
+			"projection": "EPSG:4326",
+			"inside": undefined
+		}, json);
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
 
-		if(options.mode==="on") {
+		if (options.mode === "on") {
 
-		let featureCache=[];
+			let featureCache = [];
 
-		/*
-		 * Modify interaction, does all the hard work
-		 */
-		self.modify=new Modify({
-			source: source,
-			pixelTolerance: 10,
-			deleteCondition: function (evt) {
-				return shiftKeyOnly(evt) && singleClick(evt)
-			}
-		});
-
-		/*
-		 * When the user starts moving something we take a copy of it for use
-		 * encase we need to revert
-		 */
-		self.modify.on('modifystart', function (event) {
-			let features = event.features.getArray();
-			featureCache=[];
-			for(let i=0;i<features.length;i++) {
-				featureCache.push(features[i].clone());
-			}
-		});
-
-		/*
-		 * When the user has finished the move / action
-		 */
-		self.modify.on('modifyend', function (event) {
 			/*
-			 * Modified features
+			 * Modify interaction, does all the hard work
 			 */
-			let modifiedFeatures=[];
-			map.forEachFeatureAtPixel(event.mapBrowserEvent.pixel, function (feature, layer) {
-
-				if(layer&&layer.get('name')===options.layer) {
-					modifiedFeatures.push(feature);
+			self.modify = new Modify({
+				source: source,
+				pixelTolerance: 10,
+				deleteCondition: function (evt) {
+					return shiftKeyOnly(evt) && singleClick(evt)
 				}
 			});
-			modifiedFeatures = new GeoJSON({"dataProjection":"EPSG:4326","featureProjection":"EPSG:3857"}).writeFeaturesObject(modifiedFeatures);
+
 			/*
-			 * All features
+			 * When the user starts moving something we take a copy of it for use
+			 * encase we need to revert
 			 */
-			let features = new GeoJSON({"dataProjection":"EPSG:4326","featureProjection":"EPSG:3857"}).writeFeaturesObject(event.features.getArray());
+			self.modify.on('modifystart', function (event) {
+				let features = event.features.getArray();
+				featureCache = [];
+				for (let i = 0; i < features.length; i++) {
+					featureCache.push(features[i].clone());
+				}
+			});
+
 			/*
-			 * Set memory and execute
+			 * When the user has finished the move / action
 			 */
-			self.queue.setMemory(options.prefix+'multiEditFeatures', features, "Session");
-			self.queue.setMemory(options.prefix+'multiEditModifiedFeatures', modifiedFeatures, "Session");
-			self.queue.execute(options.prefix+"multiEdit");
-		});
-		/*
-		 * Snap interaction *must* be last to apply
-		 */
+			self.modify.on('modifyend', function (event) {
+
+				/*
+				 * What point did we move?
+				 */
+				let movedPoint = transform(event.mapBrowserEvent.coordinate, view.getProjection().getCode(), "EPSG:4326");
+				let turfPoint = point(movedPoint);
+				/*
+				 * Modified features
+				 */
+				let modifiedFeatures = [];
+				map.forEachFeatureAtPixel(event.mapBrowserEvent.pixel, function (feature, layer) {
+
+					if (layer && layer.get('name') === options.layer) {
+						modifiedFeatures.push(feature);
+					}
+				});
+				let modifiedFeaturesJSON = new GeoJSON({
+					"dataProjection": options.projection,
+					"featureProjection": view.getProjection().getCode()
+				}).writeFeaturesObject(modifiedFeatures);
+				/*
+				 * All features
+				 */
+				let features = new GeoJSON({
+					"dataProjection": options.projection,
+					"featureProjection": view.getProjection().getCode()
+				}).writeFeaturesObject(event.features.getArray());
+				/*
+				 * Check inside
+				 */
+
+				let isInside=true;
+				if(options.inside) {
+					isInside=booleanPointInPolygon(turfPoint, multiPolygon(options.inside.features[0].geometry.coordinates));
+				}
+
+				/*
+				 * Set memory and execute
+				 */
+				if(isInside) {
+					self.queue.setMemory(options.prefix + 'multiEditFeatures', features, "Session");
+					self.queue.setMemory(options.prefix + 'multiEditModifiedFeatures', modifiedFeaturesJSON, "Session");
+					self.queue.execute(options.prefix + "multiEdit");
+				} else {
+					for(let i=0;i<featureCache.length;i++) {
+						for(let j=0;j<modifiedFeatures.length;j++) {
+							if(featureCache[i].get('uuid')===modifiedFeatures[j].get('uuid')) {
+								modifiedFeatures[j].setGeometry(featureCache[i].getGeometry());
+								break;
+							}
+						}
+					}
+					self.queue.execute(options.prefix + "multiEditOutside");
+				}
+			});
+			/*
+			 * Snap interaction *must* be last to apply
+			 */
 			console.log('on');
 			map.addInteraction(self.modify);
 
@@ -553,7 +594,7 @@ export default class Openlayers extends Queueable {
 		}
 
 
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
 
@@ -564,16 +605,16 @@ export default class Openlayers extends Queueable {
 	 *
 	 * @description Convert a coordinate to WKT
 	 */
-	coordinatesToWKT(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-		},json);
+	coordinatesToWKT(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+		}, json);
 		let olGeom = new Point(options.coordinate);
 		let format = new WKT();
-		let wktRepresenation  = format.writeGeometry(olGeom);
-		self.set(pid,{"wkt":wktRepresenation});
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		let wktRepresenation = format.writeGeometry(olGeom);
+		self.set(pid, {"wkt": wktRepresenation});
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
 
@@ -583,18 +624,18 @@ export default class Openlayers extends Queueable {
 	 * @param pid
 	 * @param json
 	 */
-	addFeature(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-			"layer":"default",
-			"values":{}
-		},json);
+	addFeature(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"values": {}
+		}, json);
 
-		let map=self.maps[options.map].object;
-		let layer=self.maps[options.map].layers[options.layer];
-		let view=map.getView();
-		let source=layer.getSource();
+		let map = self.maps[options.map].object;
+		let layer = self.maps[options.map].layers[options.layer];
+		let view = map.getView();
+		let source = layer.getSource();
 		console.log(layer);
 
 		let projection = "EPSG:" + options.geometry.match(/SRID=(.*?);/)[1];
@@ -604,7 +645,7 @@ export default class Openlayers extends Queueable {
 		let feature = format.readFeature(wkt);
 		options.values.geometry = feature.getGeometry().transform(projection, view.getProjection().getCode());
 		source.addFeature(new Feature(options.values));
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
 
@@ -616,19 +657,19 @@ export default class Openlayers extends Queueable {
 	 * @param {string} json.layer - Layer to get extent from
 	 * @param {string} json.gejson - geojson
 	 */
-	addGeojson(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-			"layer":"default",
-			"geojson":{}
-		},json);
-		let layer=self.maps[options.map].layers[options.layer];
+	addGeojson(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"geojson": {}
+		}, json);
+		let layer = self.maps[options.map].layers[options.layer];
 		let source = layer.getSource();
 
-		let features = this._loadGeojson(options.map,options.geojson);
+		let features = this._loadGeojson(options.map, options.geojson);
 		source.addFeatures(this._idFeatures(features));
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
 
@@ -638,8 +679,8 @@ export default class Openlayers extends Queueable {
 	 * @private
 	 */
 	_idFeatures(features) {
-		for(let i in features) {
-			if(features[i].get('uuid')===undefined) {
+		for (let i in features) {
+			if (features[i].get('uuid') === undefined) {
 				let uuid = uuidv4();
 				features[i].setId(uuid);
 				features[i].set('uuid', uuid);
@@ -659,25 +700,28 @@ export default class Openlayers extends Queueable {
 	 * @param {string} json.prefix - Prefix for memory
 	 * @param {string} json.projection - Projection to use
 	 */
-	getGeojson(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-			"layer":"default",
-			"projection":"EPSG:4326",
-			"prefix":""
-		},json);
-		let map=self.maps[options.map].object;
-		let view=map.getView();
+	getGeojson(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"projection": "EPSG:4326",
+			"prefix": ""
+		}, json);
+		let map = self.maps[options.map].object;
+		let view = map.getView();
 
-		let layer=self.maps[options.map].layers[options.layer];
+		let layer = self.maps[options.map].layers[options.layer];
 		let source = layer.getSource();
-		let features=source.getFeatures();
-		let returnJson=new GeoJSON({"dataProjection":options.projection,"featureProjection":view.getProjection().getCode()}).writeFeaturesObject(features);
+		let features = source.getFeatures();
+		let returnJson = new GeoJSON({
+			"dataProjection": options.projection,
+			"featureProjection": view.getProjection().getCode()
+		}).writeFeaturesObject(features);
 
-		self.queue.setMemory(options.prefix+'getGeojson', returnJson, "Session");
+		self.queue.setMemory(options.prefix + 'getGeojson', returnJson, "Session");
 
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
 
@@ -686,9 +730,9 @@ export default class Openlayers extends Queueable {
 	 * @param geojson
 	 * @private
 	 */
-	_loadGeojson(map,geojson) {
-		let self=this;
-		if(typeof geojson==='object') {
+	_loadGeojson(map, geojson) {
+		let self = this;
+		if (typeof geojson === 'object') {
 			return (new GeoJSON({})).readFeatures(geojson, {featureProjection: self.maps[map].object.getView().getProjection()});
 		} else {
 			return (new GeoJSON({})).readFeatures(eval(geojson), {featureProjection: self.maps[map].object.getView().getProjection()});
@@ -696,29 +740,29 @@ export default class Openlayers extends Queueable {
 
 	}
 
-    /**
-     * Remove the data from a layer on the map.
-     * @param pid
-     * @param json
-     * @param {string} json.map - Map reference
-     * @param {string} json.layer - Layer to clear
-     */
-    clearLayer(pid, json) {
-        let self=this;
-        let options=Object.assign({
-            "map":"default",
-            "layer":"default"
-        },json);
-        let layer=self.maps[options.map].layers[options.layer];
-        if(layer) {
-	        let source = layer.getSource();
-	        source.clear();
-        } else {
-        	console.warn(`No such layer [${options.layer}]`);
-        }
-        self.finished(pid,self.queue.DEFINE.FIN_OK);
+	/**
+	 * Remove the data from a layer on the map.
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to clear
+	 */
+	clearLayer(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default"
+		}, json);
+		let layer = self.maps[options.map].layers[options.layer];
+		if (layer) {
+			let source = layer.getSource();
+			source.clear();
+		} else {
+			console.warn(`No such layer [${options.layer}]`);
+		}
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
-    }
+	}
 
 	/**
 	 * Flag a layer as changed (cause redraw).
@@ -727,16 +771,16 @@ export default class Openlayers extends Queueable {
 	 * @param {string} json.map - Map reference
 	 * @param {string} json.layer - Layer to flag
 	 */
-    changed(pid,json) {
-	    let self=this;
-	    let options=Object.assign({
-		    "map":"default",
-		    "layer":"default"
-	    },json);
-	    let layer=self.maps[options.map].layers[options.layer];
+	changed(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default"
+		}, json);
+		let layer = self.maps[options.map].layers[options.layer];
 		layer.changed();
-	    self.finished(pid,self.queue.DEFINE.FIN_OK);
-    }
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
 
 	/**
 	 * Toggle layer on and off
@@ -745,16 +789,16 @@ export default class Openlayers extends Queueable {
 	 * @param {string} json.map - Map reference
 	 * @param {string} json.layer - Layer to clear
 	 */
-    toggleLayer(pid,json) {
-	    let options=Object.assign({
-		    "map":"default",
-		    "layer":"default"
-	    },json);
-	    let layer=this.maps[options.map].layers[options.layer];
-	    layer.setVisible(!layer.getVisible());
-	    this.finished(pid,self.queue.DEFINE.FIN_OK);
+	toggleLayer(pid, json) {
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default"
+		}, json);
+		let layer = this.maps[options.map].layers[options.layer];
+		layer.setVisible(!layer.getVisible());
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
 
-    }
+	}
 
 	/**
 	 *  Move the map so the cords are at the center
@@ -766,19 +810,19 @@ export default class Openlayers extends Queueable {
 	 * openlayers.centerOnCoordinate({"coordinate":"{{!^JSON.stringify(memory.simpleSelect.value.selected[0].getGeometry().getCoordinates())}}"});
 	 *
 	 */
-	centerOnCoordinate(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-		},json);
+	centerOnCoordinate(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+		}, json);
 		/*
 		 * Pull all our resources
 		 */
-		let map=self.maps[options.map].object;
+		let map = self.maps[options.map].object;
 		let view = map.getView();
-		let size=map.getSize();
-		view.centerOn(json.coordinate,size,[size[0]/2,size[1]/2]);
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		let size = map.getSize();
+		view.centerOn(json.coordinate, size, [size[0] / 2, size[1] / 2]);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
 
@@ -792,23 +836,23 @@ export default class Openlayers extends Queueable {
 	 * @example
 	 * openlayers.animateZoom({"inc":"2});
 	 */
-	animateZoom(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-			"inc":+1,
-			"delay":100
-		},json);
+	animateZoom(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"inc": +1,
+			"delay": 100
+		}, json);
 		/*
 		 * Pull all our resources
 		 */
-		let map=self.maps[options.map].object;
+		let map = self.maps[options.map].object;
 		let view = map.getView();
 		/*
 		 * Animate a zoom
 		 */
-		view.animate({zoom: view.getZoom() + options.inc,duration :options.delay});
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		view.animate({zoom: view.getZoom() + options.inc, duration: options.delay});
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
 
@@ -823,13 +867,13 @@ export default class Openlayers extends Queueable {
 	 * @example
 	 * openlayers.flyTo({"location":"2});
 	 */
-	flyTo(pid,json) {
+	flyTo(pid, json) {
 		let self = this;
 		let options = Object.assign({
 			"map": "default",
 			"duration": 2000,
-			"location":"",
-			"wait":false
+			"location": "",
+			"wait": false
 		}, json);
 		/*
 		 * Pull all our resources
@@ -848,8 +892,8 @@ export default class Openlayers extends Queueable {
 			}
 			if (parts === 0 || !complete) {
 				called = true;
-				if(options.wait===true)
-					self.finished(pid,self.queue.DEFINE.FIN_OK);
+				if (options.wait === true)
+					self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 			}
 		}
@@ -865,8 +909,8 @@ export default class Openlayers extends Queueable {
 			zoom: zoom,
 			duration: options.duration / 2
 		}, callback);
-		if(options.wait===false)
-			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		if (options.wait === false)
+			self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
 
@@ -879,18 +923,18 @@ export default class Openlayers extends Queueable {
 	 * @example
 	 * openlayers.zoomToLayerExtent({"map":"map_1","layer":"data"});
 	 */
-	zoomToLayerExtent(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-			"layer":"default"
-		},json);
+	zoomToLayerExtent(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default"
+		}, json);
 		/*
 		 * Pull all our resources
 		 */
-		let map=self.maps[options.map].object;
+		let map = self.maps[options.map].object;
 		let view = map.getView();
-		let layer=self.maps[options.map].layers[options.layer];
+		let layer = self.maps[options.map].layers[options.layer];
 		let source = layer.getSource();
 		/*
 		 * Get the extent of the features and fit them
@@ -898,14 +942,15 @@ export default class Openlayers extends Queueable {
 		let extent = source.getExtent();
 		try {
 			view.fit(extent, map.getSize());
-		} catch(e) {
+		} catch (e) {
 			/*
 			 * Fitting when the layer is empty fill cause OL to error
 			 */
 		}
 
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
+
 	/**
 	 * Update size of map (in the event of resize or rotation this will fix it)
 	 * @param pid
@@ -914,24 +959,24 @@ export default class Openlayers extends Queueable {
 	 * @example
 	 * openlayers.updateSize({"map":"map_1"});
 	 */
-	updateSize(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-		},json);
+	updateSize(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+		}, json);
 		/*
 		 * Pull all our resources
 		 */
-		if(json.map==="*") {
-			for(let i in self.maps) {
-				let map=self.maps[i].object;
+		if (json.map === "*") {
+			for (let i in self.maps) {
+				let map = self.maps[i].object;
 				map.updateSize();
 			}
 		} else {
 			let map = self.maps[options.map].object;
 			map.updateSize();
 		}
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
 
@@ -946,26 +991,26 @@ export default class Openlayers extends Queueable {
 	 * @example
 	 * openlayers.addOverlay({"targetId":"#functionOverlay","coordinate":"{{!^JSON.stringify(memory.simpleSelect.value.mapBrowserEvent.coordinate)}}"});
 	 */
-	addOverlay(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-			"overlay":"default",
-		},json);
+	addOverlay(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"overlay": "default",
+		}, json);
 
 		/*
 		 * Pull all our resources
 		 */
-		let map=self.maps[options.map].object;
+		let map = self.maps[options.map].object;
 
-		if(self.overlays[options.overlay]) {
+		if (self.overlays[options.overlay]) {
 			map.removeOverlay(self.overlays[options.overlay].object);
 			delete self.overlays[options.overlay];
 		}
 		/*
 		 * Get the html element from the dom
 		 */
-		let element=self.queue.getElement(options.targetId);
+		let element = self.queue.getElement(options.targetId);
 		/*
 		 * Make an overlay and add to the map
 		 */
@@ -977,8 +1022,8 @@ export default class Openlayers extends Queueable {
 		/*
 		 * Store the object for later (destroy)
 		 */
-		self.overlays[options.overlay]={"object":overlay};
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		self.overlays[options.overlay] = {"object": overlay};
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
 	/**
@@ -990,23 +1035,23 @@ export default class Openlayers extends Queueable {
 	 * @example
 	 * openlayers.removeOverlay();
 	 */
-	removeOverlay(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			"map":"default",
-			"overlay":"default",
-		},json);
+	removeOverlay(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"overlay": "default",
+		}, json);
 
 		/*
 		 * Pull all our resources
 		 */
-		let map=self.maps[options.map].object;
+		let map = self.maps[options.map].object;
 
-		if(self.overlays[options.overlay]) {
+		if (self.overlays[options.overlay]) {
 			map.removeOverlay(self.overlays[options.overlay].object);
 			delete self.overlays[options.overlay];
 		}
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
 }
