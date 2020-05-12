@@ -212,6 +212,7 @@ export default class Browser extends Queueable {
 			// For Safari
 			return &apos;Sure?&apos;;
 		}
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 
 	}
 }
