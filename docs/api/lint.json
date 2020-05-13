@@ -292,27 +292,27 @@
     "filePath": "ourthings/Queueable/Openlayers.js",
     "lines": [
       {
-        "lineNumber": 757,
+        "lineNumber": 778,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 758,
+        "lineNumber": 779,
         "line": "\t * Loads geojson from var or object\r"
       },
       {
-        "lineNumber": 759,
+        "lineNumber": 780,
         "line": "\t * @param geojson\r"
       },
       {
-        "lineNumber": 760,
+        "lineNumber": 781,
         "line": "\t * @private\r"
       },
       {
-        "lineNumber": 761,
+        "lineNumber": 782,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 762,
+        "lineNumber": 783,
         "line": "\t_loadGeojson(map, geojson) {\r"
       }
     ],

@@ -1602,6 +1602,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#deletefeaturebyid",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-deleteFeatureById",
+    "ourthings/Queueable/Openlayers.js~Openlayers#deleteFeatureById",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#findfeatures",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-findFeatures",
     "ourthings/Queueable/Openlayers.js~Openlayers#findFeatures",

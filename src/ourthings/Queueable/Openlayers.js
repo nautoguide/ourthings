@@ -353,17 +353,14 @@ export default class Openlayers extends Queueable {
 			}
 		}
 		let map = self.maps[options.map].object;
-		let selectObj = self.maps[options.map].selectObj;
-		if (selectObj === undefined) {
-			selectObj = new Select({"layers": options.layers});
+
+		if (options.mode === 'on') {
+			let selectObj = new Select({"layers": options.layers});
 			self.maps[options.map].selectObj = selectObj;
 			selectObj.on('select', selectFunction);
-		}
-		if (options.mode === 'on') {
-
 			map.addInteraction(selectObj);
 		} else {
-			map.removeInteraction(selectObj);
+			map.removeInteraction(self.maps[options.map].selectObj);
 		}
 
 		function selectFunction(e) {
@@ -675,6 +672,30 @@ export default class Openlayers extends Queueable {
 		let feature = format.readFeature(wkt);
 		options.values.geometry = feature.getGeometry().transform(projection, view.getProjection().getCode());
 		source.addFeature(new Feature(options.values));
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Delete features from layer by id
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @param {string} json.id - id of feature
+	 */
+	deleteFeatureById(pid,json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"id": ""
+		}, json);
+		let map = self.maps[options.map].object;
+		let layer = self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let feature = source.getFeatureById(options.id);
+		source.removeFeature(feature);
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
