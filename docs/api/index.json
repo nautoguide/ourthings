@@ -7801,7 +7801,7 @@
     "__docId__": 248,
     "kind": "file",
     "name": "ourthings/Queueable/Openlayers.js",
-    "content": "/** @module Openlayers */\r\nimport Queueable from \"../Queueable\";\r\nimport {Map, View, Feature} from 'ol';\r\nimport {getWidth, getTopLeft} from 'ol/extent.js';\r\n\r\nimport TileLayer from 'ol/layer/Tile';\r\nimport VectorLayer from 'ol/layer/Vector';\r\nimport VectorSource from 'ol/source/Vector';\r\nimport {Point} from 'ol/geom.js';\r\n\r\nimport Disposable from 'ol/Disposable';\r\nimport OSM from 'ol/source/OSM';\r\nimport WMTS from 'ol/source/WMTS';\r\nimport WMTSTileGrid from 'ol/tilegrid/WMTS';\r\nimport XYZ from 'ol/source/XYZ.js';\r\n\r\nimport WKT from 'ol/format/WKT';\r\nimport Overlay from 'ol/Overlay';\r\nimport {unByKey} from 'ol/Observable'\r\n\r\n\r\nimport GeoJSON from 'ol/format/GeoJSON';\r\nimport {fromLonLat, units, epsg3857, epsg4326} from 'ol/proj';\r\n\r\nimport Select from 'ol/interaction/Select';\r\nimport Snap from 'ol/interaction/Snap';\r\nimport Modify from 'ol/interaction/Modify';\r\n\r\nimport proj4 from \"proj4\";\r\nimport {register} from 'ol/proj/proj4';\r\nimport {get as getProjection} from 'ol/proj'\r\n\r\nimport {transform} from 'ol/proj';\r\n\r\nimport {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';\r\n\r\nimport {click, pointerMove, altKeyOnly, shiftKeyOnly, singleClick} from 'ol/events/condition';\r\n\r\nimport * as consoleBadge from \"console-badge\";\r\n\r\nimport {v4 as uuidv4} from 'uuid';\r\n\r\nimport {point,polygon,multiPolygon}  from '@turf/turf';\r\nimport booleanPointInPolygon from '@turf/boolean-point-in-polygon';\r\nimport buffer from '@turf/buffer';\r\nimport kinks from '@turf/kinks';\r\n\r\nproj4.defs([\r\n\t[\"EPSG:27700\", \"+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs\"]\r\n]);\r\n\r\nregister(proj4);\r\n\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Openlayers Hook\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n * @description You need to add \"ol\": \"^5.3.0\" to your package.json to build with openlayers\r\n *\r\n */\r\nexport default class Openlayers extends Queueable {\r\n\r\n\tinit(queue) {\r\n\t\tthis.queue = queue;\r\n\r\n\t\tthis.maps = {};\r\n\r\n\t\tthis.overlays = {};\r\n\r\n\t\tthis.ready = true;\r\n\t}\r\n\r\n\t/**\r\n\t *\r\n\t * Create a new map\r\n\t * @param {int} pid - process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.map - name for the map (used to reference)\r\n\t * @param {string} json.target - id of element in the page to target\r\n\t * @param {int} json.zoom - statement to check\r\n\t * @param {array} json.center - Center on\r\n\t * @param {string} json.renderer - Renderers to use\r\n\t * @example\r\n\t * openlayer.addMap();\r\n\t *\r\n\t */\r\n\taddMap(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"zoom\": 0,\r\n\t\t\t\"renderer\": ['webgl', 'canvas'],\r\n\t\t\t\"target\": \"map\",\r\n\t\t\t\"center\": [0, 0],\r\n\t\t\t\"projection\": \"EPSG:3857\",\r\n\t\t\t\"debug\": false\r\n\t\t}, json);\r\n\t\tlet projection = getProjection(options.projection);\r\n\t\tconst map = new Map({\r\n\t\t\ttarget: options.target,\r\n\t\t\tview: new View({\r\n\t\t\t\tcenter: options.center,\r\n\t\t\t\tzoom: options.zoom,\r\n\t\t\t\trenderer: options.renderer,\r\n\t\t\t\tprojection: projection,\r\n\t\t\t\tresolutions: options.resolutions,\r\n\t\t\t\textent: options.extent,\r\n\t\t\t}),\r\n\t\t\tinteractions: defaultInteractions().extend([\r\n\t\t\t\tnew DragRotateAndZoom()\r\n\t\t\t]),\r\n\t\t\tkeyboardEventTarget: document\r\n\r\n\t\t});\r\n\t\tif (options.debug === true) {\r\n\t\t\tself.queue.consoleBadge({\r\n\t\t\t\tmode: 'shields.io',\r\n\t\t\t\tleftText: 'Map debugger online',\r\n\t\t\t\trightText: options.map,\r\n\t\t\t\trightBgColor: '#7277ff',\r\n\t\t\t\trightTextColor: '#1a1a1a'\r\n\t\t\t});\r\n\t\t\tmap.on('moveend', self._debug);\r\n\t\t}\r\n\t\tself.maps[options.map] = {\"object\": map, \"layers\": {}, zoom: map.getView().getZoom()};\r\n\r\n\t\tmap.getView().on('propertychange', function (e) {\r\n\t\t\tswitch (e.key) {\r\n\t\t\t\tcase 'resolution': {\r\n\t\t\t\t\t/**\r\n\t\t\t\t\t *  Check for judder - We only want zoom events that are not a transition\r\n\t\t\t\t\t */\r\n\r\n\t\t\t\t\tlet level = Math.round(map.getView().getZoom());\r\n\t\t\t\t\tlet zoomLevel = self.maps[options.map].zoom;\r\n\r\n\t\t\t\t\tif (zoomLevel !== level || map.getView().getZoom() % 1 === 0) {\r\n\t\t\t\t\t\tself.queue.setMemory(options.map + 'ResolutionChange', {\r\n\t\t\t\t\t\t\t\"zoom\": map.getView().getZoom(),\r\n\t\t\t\t\t\t\t\"resolution\": map.getView().getResolution()\r\n\t\t\t\t\t\t}, \"Session\");\r\n\t\t\t\t\t\tself.queue.execute(options.map + \"ResolutionChange\");\r\n\t\t\t\t\t}\r\n\r\n\t\t\t\t\tself.maps[options.map].zoom = zoomLevel;\r\n\t\t\t\t\tbreak;\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t});\r\n\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t_debug(event) {\r\n\t\tlet map = event.map;\r\n\t\tlet extent = map.getView().calculateExtent(map.getSize());\r\n\t\tlet center = map.getView().getCenter();\r\n\t\tself.queue.consoleBadge({\r\n\t\t\tmode: 'shields.io',\r\n\t\t\tleftText: 'Map Extent',\r\n\t\t\trightText: extent,\r\n\t\t\trightBgColor: '#7277ff',\r\n\t\t\trightTextColor: '#1a1a1a'\r\n\t\t});\r\n\t\tself.queue.consoleBadge({\r\n\t\t\tmode: 'shields.io',\r\n\t\t\tleftText: 'Map Center',\r\n\t\t\trightText: center,\r\n\t\t\trightBgColor: '#7277ff',\r\n\t\t\trightTextColor: '#1a1a1a'\r\n\t\t});\r\n\t}\r\n\r\n\t/**\r\n\t *\r\n\t * Add a layer to the map\r\n\t * @param {int} pid - process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.map - name for the map (used to reference)\r\n\t * @param {string} json.name - name for the layer (used to reference)\r\n\t * @param {string} json.typr - Layer type osm,vector\r\n\t * @param {float} json.opacity - layer opacity\r\n\t * @param {boolean} json.transparent - is the layer transparent?\r\n\t * @param {string} json.style - Style object to use\r\n\t * @param {boolean} json.active - Is the layer active\r\n\t * @param {object|string} json.geojson - geojson to add to the layer (vector)\r\n\t * @example\r\n\t * openlayer.addLayer();\r\n\t *\r\n\t */\r\n\r\n\taddLayer(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"name\": \"default\",\r\n\t\t\t\"opacity\": 1,\r\n\t\t\t\"transparent\": false,\r\n\t\t\t\"active\": true\r\n\t\t}, json);\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet olLayer = null;\r\n\r\n\t\t/*\r\n\t\t * If we had a style specified then we need to check if it needs expanding\r\n\t\t */\r\n\t\tif (options.style !== undefined && typeof options.style !== 'object')\r\n\t\t\toptions.style = eval(options.style);\r\n\r\n\t\t/*\r\n\t\t * Find the requested layer type as a function\r\n\t\t */\r\n\t\tlet layerFunction = self[\"_addLayer_\" + options.type];\r\n\t\tif (typeof layerFunction === \"function\") {\r\n\t\t\tolLayer = layerFunction.apply(self, [options]);\r\n\t\t} else {\r\n\t\t\tself.finished(pid, self.queue.DEFINE.FIN_ERROR, \"No add layer function for \" + options.type);\r\n\t\t\treturn false;\r\n\t\t}\r\n\t\t/*\r\n\t\t * Add the layer and update the the maps object with the new layers\r\n\t\t */\r\n\t\tmap.addLayer(olLayer);\r\n\t\tself.maps[options.map].layers[options.name] = olLayer;\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Add an osm layer\r\n\t * @param options\r\n\t * @return {TileLayer}\r\n\t * @private\r\n\t */\r\n\t_addLayer_osm(options) {\r\n\t\tlet olLayer = new TileLayer({\r\n\t\t\tsource: new OSM()\r\n\t\t});\r\n\t\treturn olLayer;\r\n\t}\r\n\r\n\t/**\r\n\t * Add an wmts layer\r\n\t * @param options\r\n\t * @return {TileLayer}\r\n\t * @private\r\n\t */\r\n\t_addLayer_wmts(options) {\r\n\t\tlet self = this;\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\t\tlet source = new WMTS({\r\n\t\t\turl: options.url,\r\n\t\t\tlayer: options.layer,\r\n\t\t\tmatrixSet: options.matrixSet,\r\n\t\t\tformat: 'image/png',\r\n\t\t\tcrossOrigin: 'anonymous',\r\n\t\t\tprojection: view.getProjection(),\r\n\t\t\ttileGrid: new WMTSTileGrid({\r\n\t\t\t\tresolutions: view.getResolutions(),\r\n\t\t\t\tmatrixIds: options.matrix,\r\n\t\t\t\torigin: options.origin\r\n\r\n\t\t\t})\r\n\t\t});\r\n\t\tlet olLayer = new TileLayer({\r\n\t\t\textent: options.extent,\r\n\t\t\topacity: options.opacity,\r\n\t\t\tvisible: options.active,\r\n\t\t\tname: options.name,\r\n\t\t\tsource: source\r\n\t\t});\r\n\r\n\t\treturn olLayer;\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Add an xyz layer\r\n\t * @param options\r\n\t * @return {TileLayer}\r\n\t * @private\r\n\t */\r\n\t_addLayer_xyz(options) {\r\n\t\tlet source = new XYZ({\r\n\t\t\turl: options.url,\r\n\t\t\tcrossOrigin: 'Anonymous'\r\n\t\t});\r\n\t\tlet olLayer = new TileLayer({\r\n\t\t\textent: options.extent,\r\n\t\t\topacity: options.opacity,\r\n\t\t\tvisible: options.active,\r\n\t\t\tname: options.name,\r\n\t\t\tsource: source\r\n\t\t});\r\n\t\treturn olLayer;\r\n\t}\r\n\r\n\t/**\r\n\t * Add a vector layer\r\n\t * @param options\r\n\t * @return {VectorLayer}\r\n\t * @private\r\n\t */\r\n\t_addLayer_vector(options) {\r\n\t\tlet self = this;\r\n\t\tlet source = {};\r\n\t\tlet vectorSource;\r\n\t\tif (options.geojson !== undefined) {\r\n\t\t\tsource.features = this._loadGeojson(options.map, options.geojson);\r\n\t\t}\r\n\t\tvectorSource = new VectorSource(source);\r\n\t\tlet olLayer = new VectorLayer({\r\n\t\t\tname: options.name,\r\n\t\t\tvisible: options.active,\r\n\t\t\tsource: vectorSource,\r\n\t\t\tstyle: options.style,\r\n\t\t\topacity: options.opacity,\r\n\t\t\tselectable: options.selectable,\r\n\t\t\thover: options.hover\r\n\t\t});\r\n\t\treturn olLayer;\r\n\t}\r\n\r\n\t/**\r\n\t * Use the standard openlayers select control\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map name\r\n\t * @param {string} json.mode -  on|off\r\n\t * @param {string} json.perfix - prefix to use\r\n\t * @param {array} json.layers - layers to use\r\n\t *\r\n\t * @description This select control uses the default openlayers model. Useful for applications with no overlapping features. It does not support selecting hidden features\r\n\t */\r\n\tsimpleSelect(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"mode\": \"on\",\r\n\t\t\t\"prefix\": \"\"\r\n\t\t}, json);\r\n\t\tif (options.layers) {\r\n\t\t\tfor (let i in options.layers) {\r\n\t\t\t\toptions.layers[i] = self.maps[options.map].layers[options.layers[i]];\r\n\t\t\t}\r\n\t\t}\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet selectObj = self.maps[options.map].selectObj;\r\n\t\tif (selectObj === undefined) {\r\n\t\t\tselectObj = new Select({\"layers\": options.layers});\r\n\t\t\tself.maps[options.map].selectObj = selectObj;\r\n\t\t\tselectObj.on('select', selectFunction);\r\n\t\t}\r\n\t\tif (options.mode === 'on') {\r\n\r\n\t\t\tmap.addInteraction(selectObj);\r\n\t\t} else {\r\n\t\t\tmap.removeInteraction(selectObj);\r\n\t\t}\r\n\r\n\t\tfunction selectFunction(e) {\r\n\t\t\tself.queue.setMemory(options.prefix + 'simpleSelect', e, \"Session\");\r\n\t\t\tself.queue.setMemory(options.map + 'selectedFeatures', e.selected, \"Session\");\r\n\r\n\t\t\tif (e.deselected.length > 0 && e.selected.length === 0)\r\n\t\t\t\tself.queue.execute(options.prefix + \"simpleDeselect\");\r\n\t\t\tif (e.selected.length > 0)\r\n\t\t\t\tself.queue.execute(options.prefix + \"simpleSelect\");\r\n\t\t}\r\n\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * Use a filter object to locate features on a single layer\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map name\r\n\t * @param {array} json.layer - layer to use\r\n\t * @param {object} json.filter - Filter eg {\"feature_id\":1}\r\n\t *\r\n\t */\r\n\tfindFeatures(pid, json) {\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\",\r\n\t\t\t\"filter\": {}\r\n\t\t}, json);\r\n\t\tlet foundFeatures = [];\r\n\t\tlet layer = this.maps[options.map].layers[options.layer];\r\n\t\tlet source = layer.getSource();\r\n\t\tlet features = source.getFeatures();\r\n\t\tfor (let i in features) {\r\n\t\t\tfor (let f in options.filter) {\r\n\t\t\t\tlet check = features[i].get(f);\r\n\t\t\t\t/*\r\n\t\t\t\t * Note there can be differing types here, hence ==\r\n\t\t\t\t */\r\n\t\t\t\tif (check == options.filter[f]) {\r\n\t\t\t\t\tfoundFeatures.push(features[i]);\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\t\tthis.queue.setMemory('findFeatures', foundFeatures, \"Session\");\r\n\t\tthis.queue.setMemory(options.map + 'selectedFeatures', foundFeatures, \"Session\");\r\n\t\tthis.finished(pid, this.queue.DEFINE.FIN_OK);\r\n\t\treturn foundFeatures;\r\n\t}\r\n\r\n\t/**\r\n\t * Set a features properties by id\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map name\r\n\t * @param {array} json.layer - layer to use\r\n\t * @param {object} json.id - Feature id\r\n\t * @param {object} json.properties - properties to set\r\n\t *\r\n\t */\r\n\tsetFeaturePropertyById(pid, json) {\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\",\r\n\t\t\t\"id\": \"\",\r\n\t\t\t\"properties\": {}\r\n\t\t}, json);\r\n\t\tlet layer = this.maps[options.map].layers[options.layer];\r\n\t\tlet source = layer.getSource();\r\n\t\tlet feature = source.getFeatureById(options.id);\r\n\t\tfeature.setProperties(options.properties);\r\n\t\tthis.queue.setMemory('updatedFeature', new GeoJSON({\r\n\t\t\t\"dataProjection\": \"EPSG:4326\",\r\n\t\t\t\"featureProjection\": \"EPSG:3857\"\r\n\t\t}).writeFeaturesObject([feature]), \"Session\");\r\n\t\tthis.finished(pid, this.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * Use the standard click event\r\n\t * @param pid\r\n\t * @param json\r\n\t *\r\n\t * @description This select control uses the default openlayers model. Useful for applications with no overlapping features. It does not support selecting hidden features\r\n\t */\r\n\tsimpleClick(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"mode\": \"on\",\r\n\t\t\t\"prefix\": \"\"\r\n\t\t}, json);\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tif (options.mode === \"on\") {\r\n\t\t\tself.maps[options.map].clickTag = map.on('click', clickfunction);\r\n\t\t} else {\r\n\t\t\tconsole.log('off');\r\n\t\t\tunByKey(self.maps[options.map].clickTag);\r\n\t\t}\r\n\r\n\t\tfunction clickfunction(e) {\r\n\t\t\tconsole.log(e);\r\n\t\t\tself.queue.setMemory(options.prefix + 'simpleClick', e, \"Session\");\r\n\t\t\tself.queue.execute(options.prefix + \"simpleClick\");\r\n\t\t}\r\n\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * MultiEdit tool\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map name\r\n\t * @param {array} json.layer - layer to use\r\n\t * @param {object} json.mode - on|off\r\n\t * @param {object} json.projection - properties to set\r\n\t * @param {object} json.inside - JSON with single feature to use\r\n\t * @param {object} json.buffer - buffer in meters around the inside\r\n\t *\r\n\t */\r\n\tmultiEdit(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"mode\": \"on\",\r\n\t\t\t\"prefix\": \"\",\r\n\t\t\t\"layer\": \"default\",\r\n\t\t\t\"projection\": \"EPSG:4326\",\r\n\t\t\t\"inside\": undefined,\r\n\t\t\t\"buffer\": 10\r\n\t\t}, json);\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\t\tlet layer = this.maps[options.map].layers[options.layer];\r\n\t\tlet source = layer.getSource();\r\n\r\n\t\tif (options.mode === \"on\") {\r\n\r\n\t\t\tlet featureCache = [];\r\n\r\n\t\t\t/*\r\n\t\t\t * Modify interaction, does all the hard work\r\n\t\t\t */\r\n\t\t\tself.modify = new Modify({\r\n\t\t\t\tsource: source,\r\n\t\t\t\tpixelTolerance: 10,\r\n\t\t\t\tdeleteCondition: function (evt) {\r\n\t\t\t\t\treturn shiftKeyOnly(evt) && singleClick(evt)\r\n\t\t\t\t}\r\n\t\t\t});\r\n\t\t\tlet maskFeature=buffer(options.inside.features[0],options.buffer,{units:\"meters\"});\r\n\t\t\tlet bufferedMask=polygon(maskFeature.geometry.coordinates);\r\n\r\n\r\n\t\t\t/*\r\n\t\t\t * When the user starts moving something we take a copy of it for use\r\n\t\t\t * encase we need to revert\r\n\t\t\t */\r\n\t\t\tself.modify.on('modifystart', function (event) {\r\n\t\t\t\tlet features = event.features.getArray();\r\n\t\t\t\tfeatureCache = [];\r\n\t\t\t\tfor (let i = 0; i < features.length; i++) {\r\n\t\t\t\t\tfeatureCache.push(features[i].clone());\r\n\t\t\t\t}\r\n\t\t\t});\r\n\r\n\t\t\t/*\r\n\t\t\t * When the user has finished the move / action\r\n\t\t\t */\r\n\t\t\tself.modify.on('modifyend', function (event) {\r\n\r\n\t\t\t\t/*\r\n\t\t\t\t * What point did we move?\r\n\t\t\t\t */\r\n\t\t\t\tlet movedPoint = transform(event.mapBrowserEvent.coordinate, view.getProjection().getCode(), \"EPSG:4326\");\r\n\t\t\t\tlet turfPoint = point(movedPoint);\r\n\t\t\t\t/*\r\n\t\t\t\t * Modified features\r\n\t\t\t\t */\r\n\t\t\t\tlet modifiedFeatures = [];\r\n\t\t\t\tmap.forEachFeatureAtPixel(event.mapBrowserEvent.pixel, function (feature, layer) {\r\n\r\n\t\t\t\t\tif (layer && layer.get('name') === options.layer) {\r\n\t\t\t\t\t\tmodifiedFeatures.push(feature);\r\n\t\t\t\t\t}\r\n\t\t\t\t});\r\n\t\t\t\tlet modifiedFeaturesJSON = new GeoJSON({\r\n\t\t\t\t\t\"dataProjection\": options.projection,\r\n\t\t\t\t\t\"featureProjection\": view.getProjection().getCode()\r\n\t\t\t\t}).writeFeaturesObject(modifiedFeatures);\r\n\t\t\t\t/*\r\n\t\t\t\t * All features\r\n\t\t\t\t */\r\n\t\t\t\tlet features = new GeoJSON({\r\n\t\t\t\t\t\"dataProjection\": options.projection,\r\n\t\t\t\t\t\"featureProjection\": view.getProjection().getCode()\r\n\t\t\t\t}).writeFeaturesObject(event.features.getArray());\r\n\t\t\t\t/*\r\n\t\t\t\t * Check inside\r\n\t\t\t\t */\r\n\r\n\t\t\t\tlet isInside=true;\r\n\t\t\t\tlet isKink=false;\r\n\t\t\t\tif(options.inside) {\r\n\t\t\t\t\tisInside=booleanPointInPolygon(turfPoint, bufferedMask);\r\n\t\t\t\t}\r\n\r\n\t\t\t\t/*\r\n\t\t\t\t * Check for any kinks in the modified features\r\n\t\t\t\t */\r\n\t\t\t\tfor(let i in modifiedFeaturesJSON.features) {\r\n\t\t\t\t\tlet kinkres = kinks(modifiedFeaturesJSON.features[i]);\r\n\t\t\t\t\tif(kinkres.features.length>0) {\r\n\t\t\t\t\t\tisKink=true;\r\n\t\t\t\t\t\tbreak;\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\r\n\t\t\t\t/*\r\n\t\t\t\t * Set memory and execute\r\n\t\t\t\t */\r\n\t\t\t\tif(isInside===true&&isKink===false) {\r\n\t\t\t\t\tself.queue.setMemory(options.prefix + 'multiEditFeatures', features, \"Session\");\r\n\t\t\t\t\tself.queue.setMemory(options.prefix + 'multiEditModifiedFeatures', modifiedFeaturesJSON, \"Session\");\r\n\t\t\t\t\tself.queue.execute(options.prefix + \"multiEdit\");\r\n\t\t\t\t} else {\r\n\t\t\t\t\tfor(let i=0;i<featureCache.length;i++) {\r\n\t\t\t\t\t\tfor(let j=0;j<modifiedFeatures.length;j++) {\r\n\t\t\t\t\t\t\tif(featureCache[i].get('uuid')===modifiedFeatures[j].get('uuid')) {\r\n\t\t\t\t\t\t\t\tmodifiedFeatures[j].setGeometry(featureCache[i].getGeometry());\r\n\t\t\t\t\t\t\t\tbreak;\r\n\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t}\r\n\t\t\t\t\tself.queue.execute(options.prefix + \"multiEditOutside\");\r\n\t\t\t\t}\r\n\t\t\t});\r\n\t\t\t/*\r\n\t\t\t * Snap interaction *must* be last to apply\r\n\t\t\t */\r\n\t\t\tconsole.log('on');\r\n\t\t\tmap.addInteraction(self.modify);\r\n\r\n\t\t\tmap.addInteraction(new Snap({\r\n\t\t\t\tsource: source,\r\n\t\t\t\tpixelTolerance: 5\r\n\t\t\t}));\r\n\t\t} else {\r\n\t\t\tconsole.log('off');\r\n\t\t\tmap.removeInteraction(self.modify);\r\n\r\n\t\t\tmap.removeInteraction(new Snap({\r\n\t\t\t\tsource: source,\r\n\t\t\t\tpixelTolerance: 5\r\n\t\t\t}));\r\n\t\t}\r\n\r\n\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Convert a coordinate to WKT\r\n\t * @param pid\r\n\t * @param json\r\n\t *\r\n\t * @description Convert a coordinate to WKT\r\n\t */\r\n\tcoordinatesToWKT(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t}, json);\r\n\t\tlet olGeom = new Point(options.coordinate);\r\n\t\tlet format = new WKT();\r\n\t\tlet wktRepresenation = format.writeGeometry(olGeom);\r\n\t\tself.set(pid, {\"wkt\": wktRepresenation});\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Add a feature to the Map\r\n\t * TODO: This is old code for getting something working. Needs functionising, not for production\r\n\t * @param pid\r\n\t * @param json\r\n\t */\r\n\taddFeature(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\",\r\n\t\t\t\"values\": {}\r\n\t\t}, json);\r\n\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet layer = self.maps[options.map].layers[options.layer];\r\n\t\tlet view = map.getView();\r\n\t\tlet source = layer.getSource();\r\n\t\tconsole.log(layer);\r\n\r\n\t\tlet projection = \"EPSG:\" + options.geometry.match(/SRID=(.*?);/)[1];\r\n\t\tlet wkt = options.geometry.replace(/SRID=(.*?);/, '');\r\n\r\n\t\tlet format = new WKT();\r\n\t\tlet feature = format.readFeature(wkt);\r\n\t\toptions.values.geometry = feature.getGeometry().transform(projection, view.getProjection().getCode());\r\n\t\tsource.addFeature(new Feature(options.values));\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Add geojson features to a layer\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.layer - Layer to get extent from\r\n\t * @param {string} json.gejson - geojson\r\n\t */\r\n\taddGeojson(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\",\r\n\t\t\t\"geojson\": {}\r\n\t\t}, json);\r\n\t\tlet layer = self.maps[options.map].layers[options.layer];\r\n\t\tlet source = layer.getSource();\r\n\r\n\t\tlet features = this._loadGeojson(options.map, options.geojson);\r\n\t\tsource.addFeatures(this._idFeatures(features));\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Openlayers doesn't ID features by default. This will apply a unique id to all features passed to it\r\n\t * @param features\r\n\t * @private\r\n\t */\r\n\t_idFeatures(features) {\r\n\t\tfor (let i in features) {\r\n\t\t\tif (features[i].get('uuid') === undefined) {\r\n\t\t\t\tlet uuid = uuidv4();\r\n\t\t\t\tfeatures[i].setId(uuid);\r\n\t\t\t\tfeatures[i].set('uuid', uuid);\r\n\t\t\t} else {\r\n\t\t\t\tfeatures[i].setId(features[i].get('uuid'));\r\n\t\t\t}\r\n\t\t}\r\n\t\treturn features;\r\n\t}\r\n\r\n\t/**\r\n\t * gets geojson features to a layer\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.layer - Layer to get extent from\r\n\t * @param {string} json.prefix - Prefix for memory\r\n\t * @param {string} json.projection - Projection to use\r\n\t */\r\n\tgetGeojson(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\",\r\n\t\t\t\"projection\": \"EPSG:4326\",\r\n\t\t\t\"prefix\": \"\"\r\n\t\t}, json);\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\r\n\t\tlet layer = self.maps[options.map].layers[options.layer];\r\n\t\tlet source = layer.getSource();\r\n\t\tlet features = source.getFeatures();\r\n\t\tlet returnJson = new GeoJSON({\r\n\t\t\t\"dataProjection\": options.projection,\r\n\t\t\t\"featureProjection\": view.getProjection().getCode()\r\n\t\t}).writeFeaturesObject(features);\r\n\r\n\t\tself.queue.setMemory(options.prefix + 'getGeojson', returnJson, \"Session\");\r\n\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Loads geojson from var or object\r\n\t * @param geojson\r\n\t * @private\r\n\t */\r\n\t_loadGeojson(map, geojson) {\r\n\t\tlet self = this;\r\n\t\tif (typeof geojson === 'object') {\r\n\t\t\treturn (new GeoJSON({})).readFeatures(geojson, {featureProjection: self.maps[map].object.getView().getProjection()});\r\n\t\t} else {\r\n\t\t\treturn (new GeoJSON({})).readFeatures(eval(geojson), {featureProjection: self.maps[map].object.getView().getProjection()});\r\n\t\t}\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Remove the data from a layer on the map.\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.layer - Layer to clear\r\n\t */\r\n\tclearLayer(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\"\r\n\t\t}, json);\r\n\t\tlet layer = self.maps[options.map].layers[options.layer];\r\n\t\tif (layer) {\r\n\t\t\tlet source = layer.getSource();\r\n\t\t\tsource.clear();\r\n\t\t} else {\r\n\t\t\tconsole.warn(`No such layer [${options.layer}]`);\r\n\t\t}\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Flag a layer as changed (cause redraw).\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.layer - Layer to flag\r\n\t */\r\n\tchanged(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\"\r\n\t\t}, json);\r\n\t\tlet layer = self.maps[options.map].layers[options.layer];\r\n\t\tlayer.changed();\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * Toggle layer on and off\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.layer - Layer to clear\r\n\t */\r\n\ttoggleLayer(pid, json) {\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\"\r\n\t\t}, json);\r\n\t\tlet layer = this.maps[options.map].layers[options.layer];\r\n\t\tlayer.setVisible(!layer.getVisible());\r\n\t\tthis.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t *  Move the map so the cords are at the center\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.coordinate - Coordinate to use\r\n\t * @example\r\n\t * openlayers.centerOnCoordinate({\"coordinate\":\"{{!^JSON.stringify(memory.simpleSelect.value.selected[0].getGeometry().getCoordinates())}}\"});\r\n\t *\r\n\t */\r\n\tcenterOnCoordinate(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t}, json);\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\t\tlet size = map.getSize();\r\n\t\tview.centerOn(json.coordinate, size, [size[0] / 2, size[1] / 2]);\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.inc - Increment of he zoom EG 1|-1|2|-2|etc\r\n\t * @param {string} json.delay - Delay period of the zoom in ms\r\n\t * @example\r\n\t * openlayers.animateZoom({\"inc\":\"2});\r\n\t */\r\n\tanimateZoom(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"inc\": +1,\r\n\t\t\t\"delay\": 100\r\n\t\t}, json);\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\t\t/*\r\n\t\t * Animate a zoom\r\n\t\t */\r\n\t\tview.animate({zoom: view.getZoom() + options.inc, duration: options.delay});\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.duration - Delay period of the zoom in ms\r\n\t * @param {string} json.location - location to fly to\r\n\t * @param {boolean} json.wait - Wait till end of animation to finish queue item\r\n\t * @example\r\n\t * openlayers.flyTo({\"location\":\"2});\r\n\t */\r\n\tflyTo(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"duration\": 2000,\r\n\t\t\t\"location\": \"\",\r\n\t\t\t\"wait\": false\r\n\t\t}, json);\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\r\n\t\tlet zoom = view.getZoom();\r\n\t\tlet parts = 2;\r\n\t\tlet called = false;\r\n\r\n\t\tfunction callback(complete) {\r\n\t\t\t--parts;\r\n\t\t\tif (called) {\r\n\t\t\t\treturn;\r\n\t\t\t}\r\n\t\t\tif (parts === 0 || !complete) {\r\n\t\t\t\tcalled = true;\r\n\t\t\t\tif (options.wait === true)\r\n\t\t\t\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\tview.animate({\r\n\t\t\tcenter: options.location,\r\n\t\t\tduration: options.duration\r\n\t\t}, callback);\r\n\t\tview.animate({\r\n\t\t\tzoom: zoom - 1,\r\n\t\t\tduration: options.duration / 2\r\n\t\t}, {\r\n\t\t\tzoom: zoom,\r\n\t\t\tduration: options.duration / 2\r\n\t\t}, callback);\r\n\t\tif (options.wait === false)\r\n\t\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.layer - Layer to get extent from\r\n\t * @example\r\n\t * openlayers.zoomToLayerExtent({\"map\":\"map_1\",\"layer\":\"data\"});\r\n\t */\r\n\tzoomToLayerExtent(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\"\r\n\t\t}, json);\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\t\tlet layer = self.maps[options.map].layers[options.layer];\r\n\t\tlet source = layer.getSource();\r\n\t\t/*\r\n\t\t * Get the extent of the features and fit them\r\n\t\t */\r\n\t\tlet extent = source.getExtent();\r\n\t\ttry {\r\n\t\t\tview.fit(extent, map.getSize());\r\n\t\t} catch (e) {\r\n\t\t\t/*\r\n\t\t\t * Fitting when the layer is empty fill cause OL to error\r\n\t\t\t */\r\n\t\t}\r\n\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * Update size of map (in the event of resize or rotation this will fix it)\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference can be * and all maps will be targeted\r\n\t * @example\r\n\t * openlayers.updateSize({\"map\":\"map_1\"});\r\n\t */\r\n\tupdateSize(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t}, json);\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tif (json.map === \"*\") {\r\n\t\t\tfor (let i in self.maps) {\r\n\t\t\t\tlet map = self.maps[i].object;\r\n\t\t\t\tmap.updateSize();\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tlet map = self.maps[options.map].object;\r\n\t\t\tmap.updateSize();\r\n\t\t}\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Add an overlay to the map\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.overlay - Overlay reference to use\r\n\t * @param {string} json.targetId - Dom element to use\r\n\t * @param {string} json.coordinate - coordinate to place it (Event.coordinate) for clicks\r\n\t * @example\r\n\t * openlayers.addOverlay({\"targetId\":\"#functionOverlay\",\"coordinate\":\"{{!^JSON.stringify(memory.simpleSelect.value.mapBrowserEvent.coordinate)}}\"});\r\n\t */\r\n\taddOverlay(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"overlay\": \"default\",\r\n\t\t}, json);\r\n\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tlet map = self.maps[options.map].object;\r\n\r\n\t\tif (self.overlays[options.overlay]) {\r\n\t\t\tmap.removeOverlay(self.overlays[options.overlay].object);\r\n\t\t\tdelete self.overlays[options.overlay];\r\n\t\t}\r\n\t\t/*\r\n\t\t * Get the html element from the dom\r\n\t\t */\r\n\t\tlet element = self.queue.getElement(options.targetId);\r\n\t\t/*\r\n\t\t * Make an overlay and add to the map\r\n\t\t */\r\n\t\tlet overlay = new Overlay({\r\n\t\t\telement: element,\r\n\t\t\tposition: options.coordinate\r\n\t\t});\r\n\t\tmap.addOverlay(overlay);\r\n\t\t/*\r\n\t\t * Store the object for later (destroy)\r\n\t\t */\r\n\t\tself.overlays[options.overlay] = {\"object\": overlay};\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * Remove an overlay from the map\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.overlay - Overlay reference to use\r\n\t * @example\r\n\t * openlayers.removeOverlay();\r\n\t */\r\n\tremoveOverlay(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"overlay\": \"default\",\r\n\t\t}, json);\r\n\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tlet map = self.maps[options.map].object;\r\n\r\n\t\tif (self.overlays[options.overlay]) {\r\n\t\t\tmap.removeOverlay(self.overlays[options.overlay].object);\r\n\t\t\tdelete self.overlays[options.overlay];\r\n\t\t}\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n}\r\n",
+    "content": "/** @module Openlayers */\r\nimport Queueable from \"../Queueable\";\r\nimport {Map, View, Feature} from 'ol';\r\nimport {getWidth, getTopLeft} from 'ol/extent.js';\r\n\r\nimport TileLayer from 'ol/layer/Tile';\r\nimport VectorLayer from 'ol/layer/Vector';\r\nimport VectorSource from 'ol/source/Vector';\r\nimport {Point} from 'ol/geom.js';\r\n\r\nimport Disposable from 'ol/Disposable';\r\nimport OSM from 'ol/source/OSM';\r\nimport WMTS from 'ol/source/WMTS';\r\nimport WMTSTileGrid from 'ol/tilegrid/WMTS';\r\nimport XYZ from 'ol/source/XYZ.js';\r\n\r\nimport WKT from 'ol/format/WKT';\r\nimport Overlay from 'ol/Overlay';\r\nimport {unByKey} from 'ol/Observable'\r\n\r\n\r\nimport GeoJSON from 'ol/format/GeoJSON';\r\nimport {fromLonLat, units, epsg3857, epsg4326} from 'ol/proj';\r\n\r\nimport Select from 'ol/interaction/Select';\r\nimport Snap from 'ol/interaction/Snap';\r\nimport Modify from 'ol/interaction/Modify';\r\n\r\nimport proj4 from \"proj4\";\r\nimport {register} from 'ol/proj/proj4';\r\nimport {get as getProjection} from 'ol/proj'\r\n\r\nimport {transform} from 'ol/proj';\r\n\r\nimport {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';\r\n\r\nimport {click, pointerMove, altKeyOnly, shiftKeyOnly, singleClick} from 'ol/events/condition';\r\n\r\nimport * as consoleBadge from \"console-badge\";\r\n\r\nimport {v4 as uuidv4} from 'uuid';\r\n\r\nimport {point,polygon,multiPolygon}  from '@turf/turf';\r\nimport booleanPointInPolygon from '@turf/boolean-point-in-polygon';\r\nimport buffer from '@turf/buffer';\r\nimport kinks from '@turf/kinks';\r\n\r\nproj4.defs([\r\n\t[\"EPSG:27700\", \"+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs\"]\r\n]);\r\n\r\nregister(proj4);\r\n\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Openlayers Hook\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * //\r\n *\r\n * @description You need to add \"ol\": \"^5.3.0\" to your package.json to build with openlayers\r\n *\r\n */\r\nexport default class Openlayers extends Queueable {\r\n\r\n\tinit(queue) {\r\n\t\tthis.queue = queue;\r\n\r\n\t\tthis.maps = {};\r\n\r\n\t\tthis.overlays = {};\r\n\r\n\t\tthis.ready = true;\r\n\t}\r\n\r\n\t/**\r\n\t *\r\n\t * Create a new map\r\n\t * @param {int} pid - process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.map - name for the map (used to reference)\r\n\t * @param {string} json.target - id of element in the page to target\r\n\t * @param {int} json.zoom - statement to check\r\n\t * @param {array} json.center - Center on\r\n\t * @param {string} json.renderer - Renderers to use\r\n\t * @example\r\n\t * openlayer.addMap();\r\n\t *\r\n\t */\r\n\taddMap(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"zoom\": 0,\r\n\t\t\t\"renderer\": ['webgl', 'canvas'],\r\n\t\t\t\"target\": \"map\",\r\n\t\t\t\"center\": [0, 0],\r\n\t\t\t\"projection\": \"EPSG:3857\",\r\n\t\t\t\"debug\": false\r\n\t\t}, json);\r\n\t\tlet projection = getProjection(options.projection);\r\n\t\tconst map = new Map({\r\n\t\t\ttarget: options.target,\r\n\t\t\tview: new View({\r\n\t\t\t\tcenter: options.center,\r\n\t\t\t\tzoom: options.zoom,\r\n\t\t\t\trenderer: options.renderer,\r\n\t\t\t\tprojection: projection,\r\n\t\t\t\tresolutions: options.resolutions,\r\n\t\t\t\textent: options.extent,\r\n\t\t\t}),\r\n\t\t\tinteractions: defaultInteractions().extend([\r\n\t\t\t\tnew DragRotateAndZoom()\r\n\t\t\t]),\r\n\t\t\tkeyboardEventTarget: document\r\n\r\n\t\t});\r\n\t\tif (options.debug === true) {\r\n\t\t\tself.queue.consoleBadge({\r\n\t\t\t\tmode: 'shields.io',\r\n\t\t\t\tleftText: 'Map debugger online',\r\n\t\t\t\trightText: options.map,\r\n\t\t\t\trightBgColor: '#7277ff',\r\n\t\t\t\trightTextColor: '#1a1a1a'\r\n\t\t\t});\r\n\t\t\tmap.on('moveend', self._debug);\r\n\t\t}\r\n\t\tself.maps[options.map] = {\"object\": map, \"layers\": {}, zoom: map.getView().getZoom()};\r\n\r\n\t\tmap.getView().on('propertychange', function (e) {\r\n\t\t\tswitch (e.key) {\r\n\t\t\t\tcase 'resolution': {\r\n\t\t\t\t\t/**\r\n\t\t\t\t\t *  Check for judder - We only want zoom events that are not a transition\r\n\t\t\t\t\t */\r\n\r\n\t\t\t\t\tlet level = Math.round(map.getView().getZoom());\r\n\t\t\t\t\tlet zoomLevel = self.maps[options.map].zoom;\r\n\r\n\t\t\t\t\tif (zoomLevel !== level || map.getView().getZoom() % 1 === 0) {\r\n\t\t\t\t\t\tself.queue.setMemory(options.map + 'ResolutionChange', {\r\n\t\t\t\t\t\t\t\"zoom\": map.getView().getZoom(),\r\n\t\t\t\t\t\t\t\"resolution\": map.getView().getResolution()\r\n\t\t\t\t\t\t}, \"Session\");\r\n\t\t\t\t\t\tself.queue.execute(options.map + \"ResolutionChange\");\r\n\t\t\t\t\t}\r\n\r\n\t\t\t\t\tself.maps[options.map].zoom = zoomLevel;\r\n\t\t\t\t\tbreak;\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t});\r\n\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t_debug(event) {\r\n\t\tlet map = event.map;\r\n\t\tlet extent = map.getView().calculateExtent(map.getSize());\r\n\t\tlet center = map.getView().getCenter();\r\n\t\tself.queue.consoleBadge({\r\n\t\t\tmode: 'shields.io',\r\n\t\t\tleftText: 'Map Extent',\r\n\t\t\trightText: extent,\r\n\t\t\trightBgColor: '#7277ff',\r\n\t\t\trightTextColor: '#1a1a1a'\r\n\t\t});\r\n\t\tself.queue.consoleBadge({\r\n\t\t\tmode: 'shields.io',\r\n\t\t\tleftText: 'Map Center',\r\n\t\t\trightText: center,\r\n\t\t\trightBgColor: '#7277ff',\r\n\t\t\trightTextColor: '#1a1a1a'\r\n\t\t});\r\n\t}\r\n\r\n\t/**\r\n\t *\r\n\t * Add a layer to the map\r\n\t * @param {int} pid - process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.map - name for the map (used to reference)\r\n\t * @param {string} json.name - name for the layer (used to reference)\r\n\t * @param {string} json.typr - Layer type osm,vector\r\n\t * @param {float} json.opacity - layer opacity\r\n\t * @param {boolean} json.transparent - is the layer transparent?\r\n\t * @param {string} json.style - Style object to use\r\n\t * @param {boolean} json.active - Is the layer active\r\n\t * @param {object|string} json.geojson - geojson to add to the layer (vector)\r\n\t * @example\r\n\t * openlayer.addLayer();\r\n\t *\r\n\t */\r\n\r\n\taddLayer(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"name\": \"default\",\r\n\t\t\t\"opacity\": 1,\r\n\t\t\t\"transparent\": false,\r\n\t\t\t\"active\": true\r\n\t\t}, json);\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet olLayer = null;\r\n\r\n\t\t/*\r\n\t\t * If we had a style specified then we need to check if it needs expanding\r\n\t\t */\r\n\t\tif (options.style !== undefined && typeof options.style !== 'object')\r\n\t\t\toptions.style = eval(options.style);\r\n\r\n\t\t/*\r\n\t\t * Find the requested layer type as a function\r\n\t\t */\r\n\t\tlet layerFunction = self[\"_addLayer_\" + options.type];\r\n\t\tif (typeof layerFunction === \"function\") {\r\n\t\t\tolLayer = layerFunction.apply(self, [options]);\r\n\t\t} else {\r\n\t\t\tself.finished(pid, self.queue.DEFINE.FIN_ERROR, \"No add layer function for \" + options.type);\r\n\t\t\treturn false;\r\n\t\t}\r\n\t\t/*\r\n\t\t * Add the layer and update the the maps object with the new layers\r\n\t\t */\r\n\t\tmap.addLayer(olLayer);\r\n\t\tself.maps[options.map].layers[options.name] = olLayer;\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Add an osm layer\r\n\t * @param options\r\n\t * @return {TileLayer}\r\n\t * @private\r\n\t */\r\n\t_addLayer_osm(options) {\r\n\t\tlet olLayer = new TileLayer({\r\n\t\t\tsource: new OSM()\r\n\t\t});\r\n\t\treturn olLayer;\r\n\t}\r\n\r\n\t/**\r\n\t * Add an wmts layer\r\n\t * @param options\r\n\t * @return {TileLayer}\r\n\t * @private\r\n\t */\r\n\t_addLayer_wmts(options) {\r\n\t\tlet self = this;\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\t\tlet source = new WMTS({\r\n\t\t\turl: options.url,\r\n\t\t\tlayer: options.layer,\r\n\t\t\tmatrixSet: options.matrixSet,\r\n\t\t\tformat: 'image/png',\r\n\t\t\tcrossOrigin: 'anonymous',\r\n\t\t\tprojection: view.getProjection(),\r\n\t\t\ttileGrid: new WMTSTileGrid({\r\n\t\t\t\tresolutions: view.getResolutions(),\r\n\t\t\t\tmatrixIds: options.matrix,\r\n\t\t\t\torigin: options.origin\r\n\r\n\t\t\t})\r\n\t\t});\r\n\t\tlet olLayer = new TileLayer({\r\n\t\t\textent: options.extent,\r\n\t\t\topacity: options.opacity,\r\n\t\t\tvisible: options.active,\r\n\t\t\tname: options.name,\r\n\t\t\tsource: source\r\n\t\t});\r\n\r\n\t\treturn olLayer;\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Add an xyz layer\r\n\t * @param options\r\n\t * @return {TileLayer}\r\n\t * @private\r\n\t */\r\n\t_addLayer_xyz(options) {\r\n\t\tlet source = new XYZ({\r\n\t\t\turl: options.url,\r\n\t\t\tcrossOrigin: 'Anonymous'\r\n\t\t});\r\n\t\tlet olLayer = new TileLayer({\r\n\t\t\textent: options.extent,\r\n\t\t\topacity: options.opacity,\r\n\t\t\tvisible: options.active,\r\n\t\t\tname: options.name,\r\n\t\t\tsource: source\r\n\t\t});\r\n\t\treturn olLayer;\r\n\t}\r\n\r\n\t/**\r\n\t * Add a vector layer\r\n\t * @param options\r\n\t * @return {VectorLayer}\r\n\t * @private\r\n\t */\r\n\t_addLayer_vector(options) {\r\n\t\tlet self = this;\r\n\t\tlet source = {};\r\n\t\tlet vectorSource;\r\n\t\tif (options.geojson !== undefined) {\r\n\t\t\tsource.features = this._loadGeojson(options.map, options.geojson);\r\n\t\t}\r\n\t\tvectorSource = new VectorSource(source);\r\n\t\tlet olLayer = new VectorLayer({\r\n\t\t\tname: options.name,\r\n\t\t\tvisible: options.active,\r\n\t\t\tsource: vectorSource,\r\n\t\t\tstyle: options.style,\r\n\t\t\topacity: options.opacity,\r\n\t\t\tselectable: options.selectable,\r\n\t\t\thover: options.hover\r\n\t\t});\r\n\t\treturn olLayer;\r\n\t}\r\n\r\n\t/**\r\n\t * Use the standard openlayers select control\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map name\r\n\t * @param {string} json.mode -  on|off\r\n\t * @param {string} json.perfix - prefix to use\r\n\t * @param {array} json.layers - layers to use\r\n\t *\r\n\t * @description This select control uses the default openlayers model. Useful for applications with no overlapping features. It does not support selecting hidden features\r\n\t */\r\n\tsimpleSelect(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"mode\": \"on\",\r\n\t\t\t\"prefix\": \"\"\r\n\t\t}, json);\r\n\t\tif (options.layers) {\r\n\t\t\tfor (let i in options.layers) {\r\n\t\t\t\toptions.layers[i] = self.maps[options.map].layers[options.layers[i]];\r\n\t\t\t}\r\n\t\t}\r\n\t\tlet map = self.maps[options.map].object;\r\n\r\n\t\tif (options.mode === 'on') {\r\n\t\t\tlet selectObj = new Select({\"layers\": options.layers});\r\n\t\t\tself.maps[options.map].selectObj = selectObj;\r\n\t\t\tselectObj.on('select', selectFunction);\r\n\t\t\tmap.addInteraction(selectObj);\r\n\t\t} else {\r\n\t\t\tmap.removeInteraction(self.maps[options.map].selectObj);\r\n\t\t}\r\n\r\n\t\tfunction selectFunction(e) {\r\n\t\t\tself.queue.setMemory(options.prefix + 'simpleSelect', e, \"Session\");\r\n\t\t\tself.queue.setMemory(options.map + 'selectedFeatures', e.selected, \"Session\");\r\n\r\n\t\t\tif (e.deselected.length > 0 && e.selected.length === 0)\r\n\t\t\t\tself.queue.execute(options.prefix + \"simpleDeselect\");\r\n\t\t\tif (e.selected.length > 0)\r\n\t\t\t\tself.queue.execute(options.prefix + \"simpleSelect\");\r\n\t\t}\r\n\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * Use a filter object to locate features on a single layer\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map name\r\n\t * @param {array} json.layer - layer to use\r\n\t * @param {object} json.filter - Filter eg {\"feature_id\":1}\r\n\t *\r\n\t */\r\n\tfindFeatures(pid, json) {\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\",\r\n\t\t\t\"filter\": {}\r\n\t\t}, json);\r\n\t\tlet foundFeatures = [];\r\n\t\tlet layer = this.maps[options.map].layers[options.layer];\r\n\t\tlet source = layer.getSource();\r\n\t\tlet features = source.getFeatures();\r\n\t\tfor (let i in features) {\r\n\t\t\tfor (let f in options.filter) {\r\n\t\t\t\tlet check = features[i].get(f);\r\n\t\t\t\t/*\r\n\t\t\t\t * Note there can be differing types here, hence ==\r\n\t\t\t\t */\r\n\t\t\t\tif (check == options.filter[f]) {\r\n\t\t\t\t\tfoundFeatures.push(features[i]);\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\t\tthis.queue.setMemory('findFeatures', foundFeatures, \"Session\");\r\n\t\tthis.queue.setMemory(options.map + 'selectedFeatures', foundFeatures, \"Session\");\r\n\t\tthis.finished(pid, this.queue.DEFINE.FIN_OK);\r\n\t\treturn foundFeatures;\r\n\t}\r\n\r\n\t/**\r\n\t * Set a features properties by id\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map name\r\n\t * @param {array} json.layer - layer to use\r\n\t * @param {object} json.id - Feature id\r\n\t * @param {object} json.properties - properties to set\r\n\t *\r\n\t */\r\n\tsetFeaturePropertyById(pid, json) {\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\",\r\n\t\t\t\"id\": \"\",\r\n\t\t\t\"properties\": {}\r\n\t\t}, json);\r\n\t\tlet layer = this.maps[options.map].layers[options.layer];\r\n\t\tlet source = layer.getSource();\r\n\t\tlet feature = source.getFeatureById(options.id);\r\n\t\tfeature.setProperties(options.properties);\r\n\t\tthis.queue.setMemory('updatedFeature', new GeoJSON({\r\n\t\t\t\"dataProjection\": \"EPSG:4326\",\r\n\t\t\t\"featureProjection\": \"EPSG:3857\"\r\n\t\t}).writeFeaturesObject([feature]), \"Session\");\r\n\t\tthis.finished(pid, this.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * Use the standard click event\r\n\t * @param pid\r\n\t * @param json\r\n\t *\r\n\t * @description This select control uses the default openlayers model. Useful for applications with no overlapping features. It does not support selecting hidden features\r\n\t */\r\n\tsimpleClick(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"mode\": \"on\",\r\n\t\t\t\"prefix\": \"\"\r\n\t\t}, json);\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tif (options.mode === \"on\") {\r\n\t\t\tself.maps[options.map].clickTag = map.on('click', clickfunction);\r\n\t\t} else {\r\n\t\t\tconsole.log('off');\r\n\t\t\tunByKey(self.maps[options.map].clickTag);\r\n\t\t}\r\n\r\n\t\tfunction clickfunction(e) {\r\n\t\t\tconsole.log(e);\r\n\t\t\tself.queue.setMemory(options.prefix + 'simpleClick', e, \"Session\");\r\n\t\t\tself.queue.execute(options.prefix + \"simpleClick\");\r\n\t\t}\r\n\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * MultiEdit tool\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map name\r\n\t * @param {array} json.layer - layer to use\r\n\t * @param {object} json.mode - on|off\r\n\t * @param {object} json.projection - properties to set\r\n\t * @param {object} json.inside - JSON with single feature to use\r\n\t * @param {object} json.buffer - buffer in meters around the inside\r\n\t *\r\n\t */\r\n\tmultiEdit(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"mode\": \"on\",\r\n\t\t\t\"prefix\": \"\",\r\n\t\t\t\"layer\": \"default\",\r\n\t\t\t\"projection\": \"EPSG:4326\",\r\n\t\t\t\"inside\": undefined,\r\n\t\t\t\"buffer\": 10\r\n\t\t}, json);\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\t\tlet layer = this.maps[options.map].layers[options.layer];\r\n\t\tlet source = layer.getSource();\r\n\r\n\t\tif (options.mode === \"on\") {\r\n\r\n\t\t\tlet featureCache = [];\r\n\r\n\t\t\t/*\r\n\t\t\t * Modify interaction, does all the hard work\r\n\t\t\t */\r\n\t\t\tself.modify = new Modify({\r\n\t\t\t\tsource: source,\r\n\t\t\t\tpixelTolerance: 10,\r\n\t\t\t\tdeleteCondition: function (evt) {\r\n\t\t\t\t\treturn shiftKeyOnly(evt) && singleClick(evt)\r\n\t\t\t\t}\r\n\t\t\t});\r\n\t\t\tlet maskFeature=buffer(options.inside.features[0],options.buffer,{units:\"meters\"});\r\n\t\t\tlet bufferedMask=polygon(maskFeature.geometry.coordinates);\r\n\r\n\r\n\t\t\t/*\r\n\t\t\t * When the user starts moving something we take a copy of it for use\r\n\t\t\t * encase we need to revert\r\n\t\t\t */\r\n\t\t\tself.modify.on('modifystart', function (event) {\r\n\t\t\t\tlet features = event.features.getArray();\r\n\t\t\t\tfeatureCache = [];\r\n\t\t\t\tfor (let i = 0; i < features.length; i++) {\r\n\t\t\t\t\tfeatureCache.push(features[i].clone());\r\n\t\t\t\t}\r\n\t\t\t});\r\n\r\n\t\t\t/*\r\n\t\t\t * When the user has finished the move / action\r\n\t\t\t */\r\n\t\t\tself.modify.on('modifyend', function (event) {\r\n\r\n\t\t\t\t/*\r\n\t\t\t\t * What point did we move?\r\n\t\t\t\t */\r\n\t\t\t\tlet movedPoint = transform(event.mapBrowserEvent.coordinate, view.getProjection().getCode(), \"EPSG:4326\");\r\n\t\t\t\tlet turfPoint = point(movedPoint);\r\n\t\t\t\t/*\r\n\t\t\t\t * Modified features\r\n\t\t\t\t */\r\n\t\t\t\tlet modifiedFeatures = [];\r\n\t\t\t\tmap.forEachFeatureAtPixel(event.mapBrowserEvent.pixel, function (feature, layer) {\r\n\r\n\t\t\t\t\tif (layer && layer.get('name') === options.layer) {\r\n\t\t\t\t\t\tmodifiedFeatures.push(feature);\r\n\t\t\t\t\t}\r\n\t\t\t\t});\r\n\t\t\t\tlet modifiedFeaturesJSON = new GeoJSON({\r\n\t\t\t\t\t\"dataProjection\": options.projection,\r\n\t\t\t\t\t\"featureProjection\": view.getProjection().getCode()\r\n\t\t\t\t}).writeFeaturesObject(modifiedFeatures);\r\n\t\t\t\t/*\r\n\t\t\t\t * All features\r\n\t\t\t\t */\r\n\t\t\t\tlet features = new GeoJSON({\r\n\t\t\t\t\t\"dataProjection\": options.projection,\r\n\t\t\t\t\t\"featureProjection\": view.getProjection().getCode()\r\n\t\t\t\t}).writeFeaturesObject(event.features.getArray());\r\n\t\t\t\t/*\r\n\t\t\t\t * Check inside\r\n\t\t\t\t */\r\n\r\n\t\t\t\tlet isInside=true;\r\n\t\t\t\tlet isKink=false;\r\n\t\t\t\tif(options.inside) {\r\n\t\t\t\t\tisInside=booleanPointInPolygon(turfPoint, bufferedMask);\r\n\t\t\t\t}\r\n\r\n\t\t\t\t/*\r\n\t\t\t\t * Check for any kinks in the modified features\r\n\t\t\t\t */\r\n\t\t\t\tfor(let i in modifiedFeaturesJSON.features) {\r\n\t\t\t\t\tlet kinkres = kinks(modifiedFeaturesJSON.features[i]);\r\n\t\t\t\t\tif(kinkres.features.length>0) {\r\n\t\t\t\t\t\tisKink=true;\r\n\t\t\t\t\t\tbreak;\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\r\n\t\t\t\t/*\r\n\t\t\t\t * Set memory and execute\r\n\t\t\t\t */\r\n\t\t\t\tif(isInside===true&&isKink===false) {\r\n\t\t\t\t\tself.queue.setMemory(options.prefix + 'multiEditFeatures', features, \"Session\");\r\n\t\t\t\t\tself.queue.setMemory(options.prefix + 'multiEditModifiedFeatures', modifiedFeaturesJSON, \"Session\");\r\n\t\t\t\t\tself.queue.execute(options.prefix + \"multiEdit\");\r\n\t\t\t\t} else {\r\n\t\t\t\t\tfor(let i=0;i<featureCache.length;i++) {\r\n\t\t\t\t\t\tfor(let j=0;j<modifiedFeatures.length;j++) {\r\n\t\t\t\t\t\t\tif(featureCache[i].get('uuid')===modifiedFeatures[j].get('uuid')) {\r\n\t\t\t\t\t\t\t\tmodifiedFeatures[j].setGeometry(featureCache[i].getGeometry());\r\n\t\t\t\t\t\t\t\tbreak;\r\n\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t}\r\n\t\t\t\t\tself.queue.execute(options.prefix + \"multiEditOutside\");\r\n\t\t\t\t}\r\n\t\t\t});\r\n\t\t\t/*\r\n\t\t\t * Snap interaction *must* be last to apply\r\n\t\t\t */\r\n\t\t\tconsole.log('on');\r\n\t\t\tmap.addInteraction(self.modify);\r\n\r\n\t\t\tmap.addInteraction(new Snap({\r\n\t\t\t\tsource: source,\r\n\t\t\t\tpixelTolerance: 5\r\n\t\t\t}));\r\n\t\t} else {\r\n\t\t\tconsole.log('off');\r\n\t\t\tmap.removeInteraction(self.modify);\r\n\r\n\t\t\tmap.removeInteraction(new Snap({\r\n\t\t\t\tsource: source,\r\n\t\t\t\tpixelTolerance: 5\r\n\t\t\t}));\r\n\t\t}\r\n\r\n\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Convert a coordinate to WKT\r\n\t * @param pid\r\n\t * @param json\r\n\t *\r\n\t * @description Convert a coordinate to WKT\r\n\t */\r\n\tcoordinatesToWKT(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t}, json);\r\n\t\tlet olGeom = new Point(options.coordinate);\r\n\t\tlet format = new WKT();\r\n\t\tlet wktRepresenation = format.writeGeometry(olGeom);\r\n\t\tself.set(pid, {\"wkt\": wktRepresenation});\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Add a feature to the Map\r\n\t * TODO: This is old code for getting something working. Needs functionising, not for production\r\n\t * @param pid\r\n\t * @param json\r\n\t */\r\n\taddFeature(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\",\r\n\t\t\t\"values\": {}\r\n\t\t}, json);\r\n\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet layer = self.maps[options.map].layers[options.layer];\r\n\t\tlet view = map.getView();\r\n\t\tlet source = layer.getSource();\r\n\t\tconsole.log(layer);\r\n\r\n\t\tlet projection = \"EPSG:\" + options.geometry.match(/SRID=(.*?);/)[1];\r\n\t\tlet wkt = options.geometry.replace(/SRID=(.*?);/, '');\r\n\r\n\t\tlet format = new WKT();\r\n\t\tlet feature = format.readFeature(wkt);\r\n\t\toptions.values.geometry = feature.getGeometry().transform(projection, view.getProjection().getCode());\r\n\t\tsource.addFeature(new Feature(options.values));\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Delete features from layer by id\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.layer - Layer to get extent from\r\n\t * @param {string} json.id - id of feature\r\n\t */\r\n\tdeleteFeatureById(pid,json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\",\r\n\t\t\t\"id\": \"\"\r\n\t\t}, json);\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet layer = self.maps[options.map].layers[options.layer];\r\n\t\tlet source = layer.getSource();\r\n\t\tlet feature = source.getFeatureById(options.id);\r\n\t\tsource.removeFeature(feature);\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Add geojson features to a layer\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.layer - Layer to get extent from\r\n\t * @param {string} json.gejson - geojson\r\n\t */\r\n\taddGeojson(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\",\r\n\t\t\t\"geojson\": {}\r\n\t\t}, json);\r\n\t\tlet layer = self.maps[options.map].layers[options.layer];\r\n\t\tlet source = layer.getSource();\r\n\r\n\t\tlet features = this._loadGeojson(options.map, options.geojson);\r\n\t\tsource.addFeatures(this._idFeatures(features));\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Openlayers doesn't ID features by default. This will apply a unique id to all features passed to it\r\n\t * @param features\r\n\t * @private\r\n\t */\r\n\t_idFeatures(features) {\r\n\t\tfor (let i in features) {\r\n\t\t\tif (features[i].get('uuid') === undefined) {\r\n\t\t\t\tlet uuid = uuidv4();\r\n\t\t\t\tfeatures[i].setId(uuid);\r\n\t\t\t\tfeatures[i].set('uuid', uuid);\r\n\t\t\t} else {\r\n\t\t\t\tfeatures[i].setId(features[i].get('uuid'));\r\n\t\t\t}\r\n\t\t}\r\n\t\treturn features;\r\n\t}\r\n\r\n\t/**\r\n\t * gets geojson features to a layer\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.layer - Layer to get extent from\r\n\t * @param {string} json.prefix - Prefix for memory\r\n\t * @param {string} json.projection - Projection to use\r\n\t */\r\n\tgetGeojson(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\",\r\n\t\t\t\"projection\": \"EPSG:4326\",\r\n\t\t\t\"prefix\": \"\"\r\n\t\t}, json);\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\r\n\t\tlet layer = self.maps[options.map].layers[options.layer];\r\n\t\tlet source = layer.getSource();\r\n\t\tlet features = source.getFeatures();\r\n\t\tlet returnJson = new GeoJSON({\r\n\t\t\t\"dataProjection\": options.projection,\r\n\t\t\t\"featureProjection\": view.getProjection().getCode()\r\n\t\t}).writeFeaturesObject(features);\r\n\r\n\t\tself.queue.setMemory(options.prefix + 'getGeojson', returnJson, \"Session\");\r\n\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Loads geojson from var or object\r\n\t * @param geojson\r\n\t * @private\r\n\t */\r\n\t_loadGeojson(map, geojson) {\r\n\t\tlet self = this;\r\n\t\tif (typeof geojson === 'object') {\r\n\t\t\treturn (new GeoJSON({})).readFeatures(geojson, {featureProjection: self.maps[map].object.getView().getProjection()});\r\n\t\t} else {\r\n\t\t\treturn (new GeoJSON({})).readFeatures(eval(geojson), {featureProjection: self.maps[map].object.getView().getProjection()});\r\n\t\t}\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Remove the data from a layer on the map.\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.layer - Layer to clear\r\n\t */\r\n\tclearLayer(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\"\r\n\t\t}, json);\r\n\t\tlet layer = self.maps[options.map].layers[options.layer];\r\n\t\tif (layer) {\r\n\t\t\tlet source = layer.getSource();\r\n\t\t\tsource.clear();\r\n\t\t} else {\r\n\t\t\tconsole.warn(`No such layer [${options.layer}]`);\r\n\t\t}\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Flag a layer as changed (cause redraw).\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.layer - Layer to flag\r\n\t */\r\n\tchanged(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\"\r\n\t\t}, json);\r\n\t\tlet layer = self.maps[options.map].layers[options.layer];\r\n\t\tlayer.changed();\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * Toggle layer on and off\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.layer - Layer to clear\r\n\t */\r\n\ttoggleLayer(pid, json) {\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\"\r\n\t\t}, json);\r\n\t\tlet layer = this.maps[options.map].layers[options.layer];\r\n\t\tlayer.setVisible(!layer.getVisible());\r\n\t\tthis.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t *  Move the map so the cords are at the center\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.coordinate - Coordinate to use\r\n\t * @example\r\n\t * openlayers.centerOnCoordinate({\"coordinate\":\"{{!^JSON.stringify(memory.simpleSelect.value.selected[0].getGeometry().getCoordinates())}}\"});\r\n\t *\r\n\t */\r\n\tcenterOnCoordinate(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t}, json);\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\t\tlet size = map.getSize();\r\n\t\tview.centerOn(json.coordinate, size, [size[0] / 2, size[1] / 2]);\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.inc - Increment of he zoom EG 1|-1|2|-2|etc\r\n\t * @param {string} json.delay - Delay period of the zoom in ms\r\n\t * @example\r\n\t * openlayers.animateZoom({\"inc\":\"2});\r\n\t */\r\n\tanimateZoom(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"inc\": +1,\r\n\t\t\t\"delay\": 100\r\n\t\t}, json);\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\t\t/*\r\n\t\t * Animate a zoom\r\n\t\t */\r\n\t\tview.animate({zoom: view.getZoom() + options.inc, duration: options.delay});\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.duration - Delay period of the zoom in ms\r\n\t * @param {string} json.location - location to fly to\r\n\t * @param {boolean} json.wait - Wait till end of animation to finish queue item\r\n\t * @example\r\n\t * openlayers.flyTo({\"location\":\"2});\r\n\t */\r\n\tflyTo(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"duration\": 2000,\r\n\t\t\t\"location\": \"\",\r\n\t\t\t\"wait\": false\r\n\t\t}, json);\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\r\n\t\tlet zoom = view.getZoom();\r\n\t\tlet parts = 2;\r\n\t\tlet called = false;\r\n\r\n\t\tfunction callback(complete) {\r\n\t\t\t--parts;\r\n\t\t\tif (called) {\r\n\t\t\t\treturn;\r\n\t\t\t}\r\n\t\t\tif (parts === 0 || !complete) {\r\n\t\t\t\tcalled = true;\r\n\t\t\t\tif (options.wait === true)\r\n\t\t\t\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\tview.animate({\r\n\t\t\tcenter: options.location,\r\n\t\t\tduration: options.duration\r\n\t\t}, callback);\r\n\t\tview.animate({\r\n\t\t\tzoom: zoom - 1,\r\n\t\t\tduration: options.duration / 2\r\n\t\t}, {\r\n\t\t\tzoom: zoom,\r\n\t\t\tduration: options.duration / 2\r\n\t\t}, callback);\r\n\t\tif (options.wait === false)\r\n\t\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.layer - Layer to get extent from\r\n\t * @example\r\n\t * openlayers.zoomToLayerExtent({\"map\":\"map_1\",\"layer\":\"data\"});\r\n\t */\r\n\tzoomToLayerExtent(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"layer\": \"default\"\r\n\t\t}, json);\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tlet map = self.maps[options.map].object;\r\n\t\tlet view = map.getView();\r\n\t\tlet layer = self.maps[options.map].layers[options.layer];\r\n\t\tlet source = layer.getSource();\r\n\t\t/*\r\n\t\t * Get the extent of the features and fit them\r\n\t\t */\r\n\t\tlet extent = source.getExtent();\r\n\t\ttry {\r\n\t\t\tview.fit(extent, map.getSize());\r\n\t\t} catch (e) {\r\n\t\t\t/*\r\n\t\t\t * Fitting when the layer is empty fill cause OL to error\r\n\t\t\t */\r\n\t\t}\r\n\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * Update size of map (in the event of resize or rotation this will fix it)\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference can be * and all maps will be targeted\r\n\t * @example\r\n\t * openlayers.updateSize({\"map\":\"map_1\"});\r\n\t */\r\n\tupdateSize(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t}, json);\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tif (json.map === \"*\") {\r\n\t\t\tfor (let i in self.maps) {\r\n\t\t\t\tlet map = self.maps[i].object;\r\n\t\t\t\tmap.updateSize();\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tlet map = self.maps[options.map].object;\r\n\t\t\tmap.updateSize();\r\n\t\t}\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n\r\n\t/**\r\n\t * Add an overlay to the map\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.overlay - Overlay reference to use\r\n\t * @param {string} json.targetId - Dom element to use\r\n\t * @param {string} json.coordinate - coordinate to place it (Event.coordinate) for clicks\r\n\t * @example\r\n\t * openlayers.addOverlay({\"targetId\":\"#functionOverlay\",\"coordinate\":\"{{!^JSON.stringify(memory.simpleSelect.value.mapBrowserEvent.coordinate)}}\"});\r\n\t */\r\n\taddOverlay(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"overlay\": \"default\",\r\n\t\t}, json);\r\n\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tlet map = self.maps[options.map].object;\r\n\r\n\t\tif (self.overlays[options.overlay]) {\r\n\t\t\tmap.removeOverlay(self.overlays[options.overlay].object);\r\n\t\t\tdelete self.overlays[options.overlay];\r\n\t\t}\r\n\t\t/*\r\n\t\t * Get the html element from the dom\r\n\t\t */\r\n\t\tlet element = self.queue.getElement(options.targetId);\r\n\t\t/*\r\n\t\t * Make an overlay and add to the map\r\n\t\t */\r\n\t\tlet overlay = new Overlay({\r\n\t\t\telement: element,\r\n\t\t\tposition: options.coordinate\r\n\t\t});\r\n\t\tmap.addOverlay(overlay);\r\n\t\t/*\r\n\t\t * Store the object for later (destroy)\r\n\t\t */\r\n\t\tself.overlays[options.overlay] = {\"object\": overlay};\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\t}\r\n\r\n\t/**\r\n\t * Remove an overlay from the map\r\n\t * @param pid\r\n\t * @param json\r\n\t * @param {string} json.map - Map reference\r\n\t * @param {string} json.overlay - Overlay reference to use\r\n\t * @example\r\n\t * openlayers.removeOverlay();\r\n\t */\r\n\tremoveOverlay(pid, json) {\r\n\t\tlet self = this;\r\n\t\tlet options = Object.assign({\r\n\t\t\t\"map\": \"default\",\r\n\t\t\t\"overlay\": \"default\",\r\n\t\t}, json);\r\n\r\n\t\t/*\r\n\t\t * Pull all our resources\r\n\t\t */\r\n\t\tlet map = self.maps[options.map].object;\r\n\r\n\t\tif (self.overlays[options.overlay]) {\r\n\t\t\tmap.removeOverlay(self.overlays[options.overlay].object);\r\n\t\t\tdelete self.overlays[options.overlay];\r\n\t\t}\r\n\t\tself.finished(pid, self.queue.DEFINE.FIN_OK);\r\n\r\n\t}\r\n}\r\n",
     "static": true,
     "longname": "C:/Users/xrout/Dropbox/machine/Work/webstorm/ourthings/src/ourthings/Queueable/Openlayers.js",
     "access": "public",
@@ -8395,7 +8395,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#findFeatures",
     "access": "public",
     "description": "Use a filter object to locate features on a single layer",
-    "lineNumber": 391,
+    "lineNumber": 388,
     "params": [
       {
         "nullable": null,
@@ -8465,7 +8465,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#setFeaturePropertyById",
     "access": "public",
     "description": "Set a features properties by id",
-    "lineNumber": 428,
+    "lineNumber": 425,
     "params": [
       {
         "nullable": null,
@@ -8541,7 +8541,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#simpleClick",
     "access": "public",
     "description": "Use the standard click event",
-    "lineNumber": 453,
+    "lineNumber": 450,
     "unknown": [
       {
         "tagName": "@description",
@@ -8583,7 +8583,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#multiEdit",
     "access": "public",
     "description": "MultiEdit tool",
-    "lineNumber": 489,
+    "lineNumber": 486,
     "params": [
       {
         "nullable": null,
@@ -8679,7 +8679,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#coordinatesToWKT",
     "access": "public",
     "description": "Convert a coordinate to WKT",
-    "lineNumber": 638,
+    "lineNumber": 635,
     "unknown": [
       {
         "tagName": "@description",
@@ -8721,7 +8721,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#addFeature",
     "access": "public",
     "description": "Add a feature to the Map\nTODO: This is old code for getting something working. Needs functionising, not for production",
-    "lineNumber": 657,
+    "lineNumber": 654,
     "params": [
       {
         "nullable": null,
@@ -8749,6 +8749,72 @@
   {
     "__docId__": 269,
     "kind": "method",
+    "name": "deleteFeatureById",
+    "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "ourthings/Queueable/Openlayers.js~Openlayers#deleteFeatureById",
+    "access": "public",
+    "description": "Delete features from layer by id",
+    "lineNumber": 687,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "pid",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.map",
+        "description": "Map reference"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.layer",
+        "description": "Layer to get extent from"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "json.id",
+        "description": "id of feature"
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 270,
+    "kind": "method",
     "name": "addGeojson",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
     "generator": false,
@@ -8757,7 +8823,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#addGeojson",
     "access": "public",
     "description": "Add geojson features to a layer",
-    "lineNumber": 690,
+    "lineNumber": 711,
     "params": [
       {
         "nullable": null,
@@ -8813,7 +8879,7 @@
     "return": null
   },
   {
-    "__docId__": 270,
+    "__docId__": 271,
     "kind": "method",
     "name": "_idFeatures",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -8823,7 +8889,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#_idFeatures",
     "access": "private",
     "description": "Openlayers doesn't ID features by default. This will apply a unique id to all features passed to it",
-    "lineNumber": 711,
+    "lineNumber": 732,
     "params": [
       {
         "nullable": null,
@@ -8843,7 +8909,7 @@
     }
   },
   {
-    "__docId__": 271,
+    "__docId__": 272,
     "kind": "method",
     "name": "getGeojson",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -8853,7 +8919,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#getGeojson",
     "access": "public",
     "description": "gets geojson features to a layer",
-    "lineNumber": 733,
+    "lineNumber": 754,
     "params": [
       {
         "nullable": null,
@@ -8919,7 +8985,7 @@
     "return": null
   },
   {
-    "__docId__": 272,
+    "__docId__": 273,
     "kind": "method",
     "name": "_loadGeojson",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -8929,7 +8995,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#_loadGeojson",
     "access": "private",
     "description": "Loads geojson from var or object",
-    "lineNumber": 763,
+    "lineNumber": 784,
     "params": [
       {
         "nullable": null,
@@ -8949,7 +9015,7 @@
     }
   },
   {
-    "__docId__": 273,
+    "__docId__": 274,
     "kind": "method",
     "name": "clearLayer",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -8959,7 +9025,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#clearLayer",
     "access": "public",
     "description": "Remove the data from a layer on the map.",
-    "lineNumber": 780,
+    "lineNumber": 801,
     "params": [
       {
         "nullable": null,
@@ -9005,7 +9071,7 @@
     "return": null
   },
   {
-    "__docId__": 274,
+    "__docId__": 275,
     "kind": "method",
     "name": "changed",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -9015,7 +9081,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#changed",
     "access": "public",
     "description": "Flag a layer as changed (cause redraw).",
-    "lineNumber": 804,
+    "lineNumber": 825,
     "params": [
       {
         "nullable": null,
@@ -9061,7 +9127,7 @@
     "return": null
   },
   {
-    "__docId__": 275,
+    "__docId__": 276,
     "kind": "method",
     "name": "toggleLayer",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -9071,7 +9137,7 @@
     "longname": "ourthings/Queueable/Openlayers.js~Openlayers#toggleLayer",
     "access": "public",
     "description": "Toggle layer on and off",
-    "lineNumber": 822,
+    "lineNumber": 843,
     "params": [
       {
         "nullable": null,
@@ -9117,7 +9183,7 @@
     "return": null
   },
   {
-    "__docId__": 276,
+    "__docId__": 277,
     "kind": "method",
     "name": "centerOnCoordinate",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -9130,7 +9196,7 @@
     "examples": [
       "openlayers.centerOnCoordinate({\"coordinate\":\"{{!^JSON.stringify(memory.simpleSelect.value.selected[0].getGeometry().getCoordinates())}}\"});"
     ],
-    "lineNumber": 843,
+    "lineNumber": 864,
     "params": [
       {
         "nullable": null,
@@ -9176,7 +9242,7 @@
     "return": null
   },
   {
-    "__docId__": 277,
+    "__docId__": 278,
     "kind": "method",
     "name": "animateZoom",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -9189,7 +9255,7 @@
     "examples": [
       "openlayers.animateZoom({\"inc\":\"2});"
     ],
-    "lineNumber": 869,
+    "lineNumber": 890,
     "params": [
       {
         "nullable": null,
@@ -9245,7 +9311,7 @@
     "return": null
   },
   {
-    "__docId__": 278,
+    "__docId__": 279,
     "kind": "method",
     "name": "flyTo",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -9258,7 +9324,7 @@
     "examples": [
       "openlayers.flyTo({\"location\":\"2});"
     ],
-    "lineNumber": 900,
+    "lineNumber": 921,
     "params": [
       {
         "nullable": null,
@@ -9324,7 +9390,7 @@
     "return": null
   },
   {
-    "__docId__": 279,
+    "__docId__": 280,
     "kind": "method",
     "name": "zoomToLayerExtent",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -9337,7 +9403,7 @@
     "examples": [
       "openlayers.zoomToLayerExtent({\"map\":\"map_1\",\"layer\":\"data\"});"
     ],
-    "lineNumber": 956,
+    "lineNumber": 977,
     "params": [
       {
         "nullable": null,
@@ -9383,7 +9449,7 @@
     "return": null
   },
   {
-    "__docId__": 280,
+    "__docId__": 281,
     "kind": "method",
     "name": "updateSize",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -9396,7 +9462,7 @@
     "examples": [
       "openlayers.updateSize({\"map\":\"map_1\"});"
     ],
-    "lineNumber": 992,
+    "lineNumber": 1013,
     "params": [
       {
         "nullable": null,
@@ -9432,7 +9498,7 @@
     "return": null
   },
   {
-    "__docId__": 281,
+    "__docId__": 282,
     "kind": "method",
     "name": "addOverlay",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -9445,7 +9511,7 @@
     "examples": [
       "openlayers.addOverlay({\"targetId\":\"#functionOverlay\",\"coordinate\":\"{{!^JSON.stringify(memory.simpleSelect.value.mapBrowserEvent.coordinate)}}\"});"
     ],
-    "lineNumber": 1024,
+    "lineNumber": 1045,
     "params": [
       {
         "nullable": null,
@@ -9511,7 +9577,7 @@
     "return": null
   },
   {
-    "__docId__": 282,
+    "__docId__": 283,
     "kind": "method",
     "name": "removeOverlay",
     "memberof": "ourthings/Queueable/Openlayers.js~Openlayers",
@@ -9524,7 +9590,7 @@
     "examples": [
       "openlayers.removeOverlay();"
     ],
-    "lineNumber": 1068,
+    "lineNumber": 1089,
     "params": [
       {
         "nullable": null,
@@ -9570,7 +9636,7 @@
     "return": null
   },
   {
-    "__docId__": 283,
+    "__docId__": 284,
     "kind": "file",
     "name": "ourthings/Queueable/Templates.js",
     "content": "/** @module ourthings/Queueable/Templates */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Template manipulations\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * templates.render({\"targetId\":\"content\",\"template\":\"basic\"});\r\n *\r\n */\r\nclass Templates extends Queueable {\r\n\r\n\t/**\r\n\t * Render a template into the dom using the queues templateProcessor\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.template - dom id of template to use\r\n\t * @param {string} [json.target] - dom id of render target\r\n\t * @param {string} [json.mode] - \"insert|append\"\r\n\t * @example\r\n\t * templates.render({\"targetId\":\"content\",\"template\":\"basic\"});\r\n\t */\r\n\trender(pid,json) {\r\n\t\tlet self=this;\r\n\t\tjson.mode=json.mode||\"insert\";\r\n\t\tself.set(pid,json);\r\n\t\tif(!self.queue.templateProcessor(json.template,json.targetId,json.mode))\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_ERROR,'Could not render template');\r\n\t\telse\r\n\t\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n}\r\n\r\nexport default Templates;",
@@ -9581,7 +9647,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 284,
+    "__docId__": 285,
     "kind": "class",
     "name": "Templates",
     "memberof": "ourthings/Queueable/Templates.js",
@@ -9612,7 +9678,7 @@
     ]
   },
   {
-    "__docId__": 285,
+    "__docId__": 286,
     "kind": "method",
     "name": "render",
     "memberof": "ourthings/Queueable/Templates.js~Templates",
@@ -9681,7 +9747,7 @@
     "return": null
   },
   {
-    "__docId__": 286,
+    "__docId__": 287,
     "kind": "file",
     "name": "ourthings/Queueable/W3Menu.js",
     "content": "/** @module ourthings/Queueable/W3Menu */\r\nimport Queueable from \"../Queueable\";\r\n\r\n/**\r\n * @classdesc W3C Menu implementation\r\n **\r\n * For queue intergration you can add 'data-queue' attribute to cause a menu item to run a prepared queue\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * \tw3menu.initMenu({\"targetId\":\"#menubutton1\"});\r\n *\r\n */\r\nexport default class W3Menu extends Queueable {\r\n\r\n\t/**\r\n\t * Start the menu on assigned targetId\r\n\t *\r\n\t * @description W3C Menu implementation see: https://www.w3.org/TR/wai-aria-practices/examples/menu-button/menu-button-actions.html\r\n\t *\r\n\t * @param {number} pid - Process ID\r\n\t * @param {object} json - queue arguments\r\n\t * @param {string} json.targetId - Dom target of the w3c menu html\r\n\t *\r\n\t * @example\r\n\t * w3menu.initMenu({\"targetId\":\"#menubutton1\"});\r\n\t */\r\n\tinitMenu(pid,json) {\r\n\t\tlet self=this;\r\n\t\tlet options=Object.assign({\r\n\t\t\t\"hover\":true\r\n\t\t},json);\r\n\t\tlet element=self.queue.getElement(json.targetId);\r\n\t\telement.setAttribute(\"data-bound\",\"true\");\r\n\t\tlet menubutton = new Menubutton(element);\r\n\t\tmenubutton.init(options);\r\n\t\tself.finished(pid,self.queue.DEFINE.FIN_OK);\r\n\t}\r\n}\r\n\r\n/*\r\n*   This content is licensed according to the W3C Software License at\r\n*   https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document\r\n*\r\n*   File:   Menubutton.js\r\n*\r\n*   Desc:   Menubutton widget that implements ARIA Authoring Practices\r\n*/\r\n\r\n/*\r\n*   @constructor MenuButton\r\n*\r\n*   @desc\r\n*       Object that configures menu item elements by setting tabIndex\r\n*       and registering itself to handle pertinent events.\r\n*\r\n*       While menuitem elements handle many keydown events, as well as\r\n*       focus and blur events, they do not maintain any state variables,\r\n*       delegating those responsibilities to its associated menu object.\r\n*\r\n*       Consequently, it is only necessary to create one instance of\r\n*       MenubuttonItem from within the menu object; its configure method\r\n*       can then be called on each menuitem element.\r\n*\r\n*   @param domNode\r\n*       The DOM element node that serves as the menu item container.\r\n*       The menuObj PopupMenu is responsible for checking that it has\r\n*       requisite metadata, e.g. role=\"menuitem\".\r\n*\r\n*\r\n*/\r\nlet Menubutton = function (domNode) {\r\n\r\n\tthis.domNode   = domNode;\r\n\tthis.popupMenu = false;\r\n\r\n\tthis.hasFocus = false;\r\n\tthis.hasHover = false;\r\n\r\n\tthis.keyCode = Object.freeze({\r\n\t\t'TAB': 9,\r\n\t\t'RETURN': 13,\r\n\t\t'ESC': 27,\r\n\t\t'SPACE': 32,\r\n\t\t'PAGEUP': 33,\r\n\t\t'PAGEDOWN': 34,\r\n\t\t'END': 35,\r\n\t\t'HOME': 36,\r\n\t\t'LEFT': 37,\r\n\t\t'UP': 38,\r\n\t\t'RIGHT': 39,\r\n\t\t'DOWN': 40\r\n\t});\r\n};\r\n\r\nMenubutton.prototype.init = function (options) {\r\n\r\n\tthis.domNode.setAttribute('aria-haspopup', 'true');\r\n\r\n\tthis.domNode.addEventListener('keydown', this.handleKeydown.bind(this));\r\n\tthis.domNode.addEventListener('click', this.handleClick.bind(this));\r\n\tthis.domNode.addEventListener('focus', this.handleFocus.bind(this));\r\n\tthis.domNode.addEventListener('blur', this.handleBlur.bind(this));\r\n\tif(options.hover)\r\n\t\tthis.domNode.addEventListener('mouseover', this.handleMouseover.bind(this));\r\n\tif(options.hover)\r\n\t\tthis.domNode.addEventListener('mouseout', this.handleMouseout.bind(this));\r\n\r\n\t// initialize pop up menus\r\n\r\n\tlet popupMenu = document.getElementById(this.domNode.getAttribute('aria-controls'));\r\n\r\n\tif (popupMenu) {\r\n\t\tif (popupMenu.getAttribute('aria-activedescendant')) {\r\n\t\t\tthis.popupMenu = new PopupMenuActionActivedescendant(popupMenu, this);\r\n\t\t\tthis.popupMenu.init();\r\n\t\t}\r\n\t\telse {\r\n\t\t\tthis.popupMenu = new PopupMenuAction(popupMenu, this);\r\n\t\t\tthis.popupMenu.init();\r\n\t\t}\r\n\t}\r\n\r\n};\r\n\r\nMenubutton.prototype.handleKeydown = function (event) {\r\n\tlet flag = false;\r\n\r\n\tswitch (event.keyCode) {\r\n\t\tcase this.keyCode.SPACE:\r\n\t\tcase this.keyCode.RETURN:\r\n\t\tcase this.keyCode.DOWN:\r\n\t\t\tif (this.popupMenu) {\r\n\t\t\t\tthis.popupMenu.open();\r\n\t\t\t\tthis.popupMenu.setFocusToFirstItem();\r\n\t\t\t}\r\n\t\t\tflag = true;\r\n\t\t\tbreak;\r\n\r\n\t\tcase this.keyCode.UP:\r\n\t\t\tif (this.popupMenu) {\r\n\t\t\t\tthis.popupMenu.open();\r\n\t\t\t\tthis.popupMenu.setFocusToLastItem();\r\n\t\t\t\tflag = true;\r\n\t\t\t}\r\n\t\t\tbreak;\r\n\r\n\t\tdefault:\r\n\t\t\tbreak;\r\n\t}\r\n\r\n\tif (flag) {\r\n\t\tevent.stopPropagation();\r\n\t\tevent.preventDefault();\r\n\t}\r\n};\r\n\r\nMenubutton.prototype.handleClick = function (event) {\r\n\tif (this.domNode.getAttribute('aria-expanded') == 'true') {\r\n\t\tthis.popupMenu.close(true);\r\n\t}\r\n\telse {\r\n\t\tthis.popupMenu.open();\r\n\t\tthis.popupMenu.setFocusToFirstItem();\r\n\t}\r\n};\r\n\r\nMenubutton.prototype.handleFocus = function (event) {\r\n\tthis.popupMenu.hasFocus = true;\r\n};\r\n\r\nMenubutton.prototype.handleBlur = function (event) {\r\n\tthis.popupMenu.hasFocus = false;\r\n\tsetTimeout(this.popupMenu.close.bind(this.popupMenu, false), 300);\r\n\r\n};\r\n\r\nMenubutton.prototype.handleMouseover = function (event) {\r\n\tthis.hasHover = true;\r\n\tthis.popupMenu.open();\r\n};\r\n\r\nMenubutton.prototype.handleMouseout = function (event) {\r\n\tthis.hasHover = false;\r\n\tsetTimeout(this.popupMenu.close.bind(this.popupMenu, false), 300);\r\n};\r\n\r\n/*\r\n*   This content is licensed according to the W3C Software License at\r\n*   https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document\r\n*\r\n*   File:   MenuItem.js\r\n*\r\n*   Desc:   Popup Menu Menuitem widget that implements ARIA Authoring Practices\r\n*/\r\n\r\n/*\r\n*   @constructor MenuItem\r\n*\r\n*   @desc\r\n*       Wrapper object for a simple menu item in a popup menu\r\n*\r\n*   @param domNode\r\n*       The DOM element node that serves as the menu item container.\r\n*       The menuObj PopupMenu is responsible for checking that it has\r\n*       requisite metadata, e.g. role=\"menuitem\".\r\n*\r\n*   @param menuObj\r\n*       The object that is a wrapper for the PopupMenu DOM element that\r\n*       contains the menu item DOM element. See PopupMenuAction.js\r\n*/\r\nlet PopupMenuItem = function (domNode, popupMenuObj) {\r\n\r\n\tthis.domNode   = domNode;\r\n\tthis.popupMenu = popupMenuObj;\r\n\r\n\tthis.keyCode = Object.freeze({\r\n\t\t'TAB': 9,\r\n\t\t'RETURN': 13,\r\n\t\t'ESC': 27,\r\n\t\t'SPACE': 32,\r\n\t\t'PAGEUP': 33,\r\n\t\t'PAGEDOWN': 34,\r\n\t\t'END': 35,\r\n\t\t'HOME': 36,\r\n\t\t'LEFT': 37,\r\n\t\t'UP': 38,\r\n\t\t'RIGHT': 39,\r\n\t\t'DOWN': 40\r\n\t});\r\n};\r\n\r\nPopupMenuItem.prototype.init = function () {\r\n\tthis.domNode.tabIndex = -1;\r\n\r\n\tif (!this.domNode.getAttribute('role')) {\r\n\t\tthis.domNode.setAttribute('role', 'menuitem');\r\n\t}\r\n\r\n\tthis.domNode.addEventListener('keydown',    this.handleKeydown.bind(this));\r\n\tthis.domNode.addEventListener('click',      this.handleClick.bind(this));\r\n\tthis.domNode.addEventListener('focus',      this.handleFocus.bind(this));\r\n\tthis.domNode.addEventListener('blur',       this.handleBlur.bind(this));\r\n\tthis.domNode.addEventListener('mouseover',  this.handleMouseover.bind(this));\r\n\tthis.domNode.addEventListener('mouseout',   this.handleMouseout.bind(this));\r\n\r\n};\r\n\r\n/* EVENT HANDLERS */\r\n\r\nPopupMenuItem.prototype.handleKeydown = function (event) {\r\n\tlet flag = false,\r\n\t\tchar = event.key;\r\n\tfunction isPrintableCharacter (str) {\r\n\t\treturn str.length === 1 && str.match(/\\S/);\r\n\t}\r\n\r\n\tif (event.ctrlKey || event.altKey  || event.metaKey) {\r\n\t\treturn;\r\n\t}\r\n\r\n\tif (event.shiftKey) {\r\n\t\tif (isPrintableCharacter(char)) {\r\n\t\t\tthis.popupMenu.setFocusByFirstCharacter(this, char);\r\n\t\t}\r\n\t}\r\n\telse {\r\n\r\n\t\tswitch (event.keyCode) {\r\n\t\t\tcase this.keyCode.SPACE:\r\n\t\t\t\tflag = true;\r\n\t\t\t\tbreak;\r\n\r\n\t\t\tcase this.keyCode.RETURN:\r\n\t\t\t\tthis.handleClick(event);\r\n\t\t\t\tflag = true;\r\n\t\t\t\tbreak;\r\n\r\n\t\t\tcase this.keyCode.ESC:\r\n\t\t\t\tthis.popupMenu.setFocusToController();\r\n\t\t\t\tthis.popupMenu.close(true);\r\n\t\t\t\tflag = true;\r\n\t\t\t\tbreak;\r\n\r\n\t\t\tcase this.keyCode.UP:\r\n\t\t\t\tthis.popupMenu.setFocusToPreviousItem(this);\r\n\t\t\t\tflag = true;\r\n\t\t\t\tbreak;\r\n\r\n\t\t\tcase this.keyCode.DOWN:\r\n\t\t\t\tthis.popupMenu.setFocusToNextItem(this);\r\n\t\t\t\tflag = true;\r\n\t\t\t\tbreak;\r\n\r\n\t\t\tcase this.keyCode.HOME:\r\n\t\t\tcase this.keyCode.PAGEUP:\r\n\t\t\t\tthis.popupMenu.setFocusToFirstItem();\r\n\t\t\t\tflag = true;\r\n\t\t\t\tbreak;\r\n\r\n\t\t\tcase this.keyCode.END:\r\n\t\t\tcase this.keyCode.PAGEDOWN:\r\n\t\t\t\tthis.popupMenu.setFocusToLastItem();\r\n\t\t\t\tflag = true;\r\n\t\t\t\tbreak;\r\n\r\n\t\t\tcase this.keyCode.TAB:\r\n\t\t\t\tthis.popupMenu.setFocusToController();\r\n\t\t\t\tthis.popupMenu.close(true);\r\n\t\t\t\tbreak;\r\n\r\n\t\t\tdefault:\r\n\t\t\t\tif (isPrintableCharacter(char)) {\r\n\t\t\t\t\tthis.popupMenu.setFocusByFirstCharacter(this, char);\r\n\t\t\t\t}\r\n\t\t\t\tbreak;\r\n\t\t}\r\n\t}\r\n\r\n\tif (flag) {\r\n\t\tevent.stopPropagation();\r\n\t\tevent.preventDefault();\r\n\t}\r\n};\r\n\r\nPopupMenuItem.prototype.handleClick = function (event) {\r\n\tlet attr=event.target.getAttribute('data-queue');\r\n\tif(attr)\r\n\t\tqueue.execute(attr);\r\n\r\n\t/*\r\n\t * Is this a keyboard event? If so and the data-click attr is set we send a click to the element.\r\n\t * This will trigger the ourthings event that is bound to it\r\n\t */\r\n\tlet click=event.target.getAttribute('data-click');\r\n\tif(click===\"true\"&&event.keyCode)\r\n\t\tevent.target.click();\r\n\tthis.popupMenu.setFocusToController();\r\n\tlet noClose=event.target.getAttribute('data-noclose');\r\n\tif(!noClose)\r\n\t\tthis.popupMenu.close(true)\r\n\r\n};\r\n\r\nPopupMenuItem.prototype.handleFocus = function (event) {\r\n\tthis.popupMenu.hasFocus = true;\r\n};\r\n\r\nPopupMenuItem.prototype.handleBlur = function (event) {\r\n\tthis.popupMenu.hasFocus = false;\r\n\tsetTimeout(this.popupMenu.close.bind(this.popupMenu, false), 300);\r\n};\r\n\r\nPopupMenuItem.prototype.handleMouseover = function (event) {\r\n\tthis.popupMenu.hasHover = true;\r\n\tthis.popupMenu.open();\r\n\r\n};\r\n\r\nPopupMenuItem.prototype.handleMouseout = function (event) {\r\n\tthis.popupMenu.hasHover = false;\r\n\tsetTimeout(this.popupMenu.close.bind(this.popupMenu, false), 300);\r\n};\r\n\r\n/*\r\n*   This content is licensed according to the W3C Software License at\r\n*   https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document\r\n*\r\n*   File:   PopupMenuAction.js\r\n*\r\n*   Desc:   Popup menu widget that implements ARIA Authoring Practices\r\n*/\r\n\r\n/*\r\n*   @constructor PopupMenuAction\r\n*\r\n*   @desc\r\n*       Wrapper object for a simple popup menu (without nested submenus)\r\n*\r\n*   @param domNode\r\n*       The DOM element node that serves as the popup menu container. Each\r\n*       child element of domNode that represents a menuitem must have a\r\n*       'role' attribute with value 'menuitem'.\r\n*\r\n*   @param controllerObj\r\n*       The object that is a wrapper for the DOM element that controls the\r\n*       menu, e.g. a button element, with an 'aria-controls' attribute that\r\n*       references this menu's domNode. See MenuButton.js\r\n*\r\n*       The controller object is expected to have the following properties:\r\n*       1. domNode: The controller object's DOM element node, needed for\r\n*          retrieving positioning information.\r\n*       2. hasHover: boolean that indicates whether the controller object's\r\n*          domNode has responded to a mouseover event with no subsequent\r\n*          mouseout event having occurred.\r\n*/\r\nlet PopupMenuAction = function (domNode, controllerObj) {\r\n\tlet elementChildren,\r\n\t\tmsgPrefix = 'PopupMenu constructor argument domNode ';\r\n\r\n\t// Check whether domNode is a DOM element\r\n\tif (!domNode instanceof Element) {\r\n\t\tthrow new TypeError(msgPrefix + 'is not a DOM Element.');\r\n\t}\r\n\r\n\t// Check whether domNode has child elements\r\n\tif (domNode.childElementCount === 0) {\r\n\t\tthrow new Error(msgPrefix + 'has no element children.');\r\n\t}\r\n\r\n\t// Check whether domNode child elements are A elements\r\n\tlet childElement = domNode.firstElementChild;\r\n\twhile (childElement) {\r\n\t\tlet menuitem = childElement.firstElementChild;\r\n\t\tif (menuitem && menuitem === 'A') {\r\n\t\t\tthrow new Error(msgPrefix + 'Cannot have descendant elements are A elements.');\r\n\t\t}\r\n\t\tchildElement = childElement.nextElementSibling;\r\n\t}\r\n\r\n\tthis.domNode = domNode;\r\n\tthis.controller = controllerObj;\r\n\r\n\tthis.menuitems  = [];      // see PopupMenu init method\r\n\tthis.firstChars = [];      // see PopupMenu init method\r\n\r\n\tthis.firstItem  = null;    // see PopupMenu init method\r\n\tthis.lastItem   = null;    // see PopupMenu init method\r\n\r\n\tthis.hasFocus   = false;   // see MenuItem handleFocus, handleBlur\r\n\tthis.hasHover   = false;   // see PopupMenu handleMouseover, handleMouseout\r\n};\r\n\r\n/*\r\n*   @method PopupMenuAction.prototype.init\r\n*\r\n*   @desc\r\n*       Add domNode event listeners for mouseover and mouseout. Traverse\r\n*       domNode children to configure each menuitem and populate menuitems\r\n*       array. Initialize firstItem and lastItem properties.\r\n*/\r\nPopupMenuAction.prototype.init = function () {\r\n\tlet childElement, menuElement, firstChildElement, menuItem, textContent, numItems, label;\r\n\r\n\t// Configure the domNode itself\r\n\tthis.domNode.tabIndex = -1;\r\n\r\n\tthis.domNode.setAttribute('role', 'menu');\r\n\r\n\tif (!this.domNode.getAttribute('aria-labelledby') && !this.domNode.getAttribute('aria-label') && !this.domNode.getAttribute('title')) {\r\n\t\tlabel = this.controller.domNode.innerHTML;\r\n\t\tthis.domNode.setAttribute('aria-label', label);\r\n\t}\r\n\r\n\tthis.domNode.addEventListener('mouseover', this.handleMouseover.bind(this));\r\n\tthis.domNode.addEventListener('mouseout',  this.handleMouseout.bind(this));\r\n\r\n\t// Traverse the element children of domNode: configure each with\r\n\t// menuitem role behavior and store reference in menuitems array.\r\n\tlet menuElements = this.domNode.getElementsByTagName('LI');\r\n\r\n\tfor (let i = 0; i < menuElements.length; i++) {\r\n\r\n\t\tmenuElement = menuElements[i];\r\n\r\n\t\tif (!menuElement.firstElementChild && menuElement.getAttribute('role') != 'separator') {\r\n\t\t\tmenuItem = new PopupMenuItem(menuElement, this);\r\n\t\t\tmenuItem.init();\r\n\t\t\tthis.menuitems.push(menuItem);\r\n\t\t\ttextContent = menuElement.textContent.trim();\r\n\t\t\tthis.firstChars.push(textContent.substring(0, 1).toLowerCase());\r\n\t\t}\r\n\t}\r\n\r\n\t// Use populated menuitems array to initialize firstItem and lastItem.\r\n\tnumItems = this.menuitems.length;\r\n\tif (numItems > 0) {\r\n\t\tthis.firstItem = this.menuitems[0];\r\n\t\tthis.lastItem  = this.menuitems[numItems - 1];\r\n\t}\r\n};\r\n\r\n/* EVENT HANDLERS */\r\n\r\nPopupMenuAction.prototype.handleMouseover = function (event) {\r\n\tthis.hasHover = true;\r\n};\r\n\r\nPopupMenuAction.prototype.handleMouseout = function (event) {\r\n\tthis.hasHover = false;\r\n\tsetTimeout(this.close.bind(this, false), 300);\r\n};\r\n\r\n/* FOCUS MANAGEMENT METHODS */\r\n\r\nPopupMenuAction.prototype.setFocusToController = function (command) {\r\n\tif (typeof command !== 'string') {\r\n\t\tcommand = '';\r\n\t}\r\n\r\n\tif (command === 'previous') {\r\n\t\tthis.controller.menubutton.setFocusToPreviousItem(this.controller);\r\n\t}\r\n\telse {\r\n\t\tif (command === 'next') {\r\n\t\t\tthis.controller.menubutton.setFocusToNextItem(this.controller);\r\n\t\t}\r\n\t\telse {\r\n\t\t\tthis.controller.domNode.focus();\r\n\t\t}\r\n\t}\r\n};\r\n\r\nPopupMenuAction.prototype.setFocusToFirstItem = function () {\r\n\tthis.firstItem.domNode.focus();\r\n};\r\n\r\nPopupMenuAction.prototype.setFocusToLastItem = function () {\r\n\tthis.lastItem.domNode.focus();\r\n};\r\n\r\nPopupMenuAction.prototype.setFocusToPreviousItem = function (currentItem) {\r\n\tlet index;\r\n\r\n\tif (currentItem === this.firstItem) {\r\n\t\tthis.lastItem.domNode.focus();\r\n\t}\r\n\telse {\r\n\t\tindex = this.menuitems.indexOf(currentItem);\r\n\t\tthis.menuitems[index - 1].domNode.focus();\r\n\t}\r\n};\r\n\r\nPopupMenuAction.prototype.setFocusToNextItem = function (currentItem) {\r\n\tlet index;\r\n\r\n\tif (currentItem === this.lastItem) {\r\n\t\tthis.firstItem.domNode.focus();\r\n\t}\r\n\telse {\r\n\t\tindex = this.menuitems.indexOf(currentItem);\r\n\t\tthis.menuitems[index + 1].domNode.focus();\r\n\t}\r\n};\r\n\r\nPopupMenuAction.prototype.setFocusByFirstCharacter = function (currentItem, char) {\r\n\tlet start, index;\r\n\tchar = char.toLowerCase();\r\n\r\n\t// Get start index for search based on position of currentItem\r\n\tstart = this.menuitems.indexOf(currentItem) + 1;\r\n\tif (start === this.menuitems.length) {\r\n\t\tstart = 0;\r\n\t}\r\n\r\n\t// Check remaining slots in the menu\r\n\tindex = this.getIndexFirstChars(start, char);\r\n\r\n\t// If not found in remaining slots, check from beginning\r\n\tif (index === -1) {\r\n\t\tindex = this.getIndexFirstChars(0, char);\r\n\t}\r\n\r\n\t// If match was found...\r\n\tif (index > -1) {\r\n\t\tthis.menuitems[index].domNode.focus();\r\n\t}\r\n};\r\n\r\nPopupMenuAction.prototype.getIndexFirstChars = function (startIndex, char) {\r\n\tfor (let i = startIndex; i < this.firstChars.length; i++) {\r\n\t\tif (char === this.firstChars[i]) {\r\n\t\t\treturn i;\r\n\t\t}\r\n\t}\r\n\treturn -1;\r\n};\r\n\r\n/* MENU DISPLAY METHODS */\r\n\r\nPopupMenuAction.prototype.open = function () {\r\n\t// get bounding rectangle of controller object's DOM node\r\n\tlet rect = this.controller.domNode.getBoundingClientRect();\r\n\r\n\t// set CSS properties\r\n\tthis.domNode.style.display = 'block';\r\n\tthis.domNode.style.position = 'absolute';\r\n\t//this.domNode.style.top  = rect.height + 'px';\r\n\t//this.domNode.style.left = '0px';\r\n\r\n\t// set aria-expanded attribute\r\n\tthis.controller.domNode.setAttribute('aria-expanded', 'true');\r\n};\r\n\r\nPopupMenuAction.prototype.close = function (force) {\r\n\tif (typeof force !== 'boolean') {\r\n\t\tforce = false;\r\n\t}\r\n\r\n\tif (force || (!this.hasFocus && !this.hasHover && !this.controller.hasHover)) {\r\n\t\tthis.domNode.style.display = 'none';\r\n\t\tthis.controller.domNode.removeAttribute('aria-expanded');\r\n\t}\r\n};",
@@ -9692,7 +9758,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 287,
+    "__docId__": 288,
     "kind": "class",
     "name": "W3Menu",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -9723,7 +9789,7 @@
     ]
   },
   {
-    "__docId__": 288,
+    "__docId__": 289,
     "kind": "method",
     "name": "initMenu",
     "memberof": "ourthings/Queueable/W3Menu.js~W3Menu",
@@ -9778,7 +9844,7 @@
     "return": null
   },
   {
-    "__docId__": 289,
+    "__docId__": 290,
     "kind": "function",
     "name": "Menubutton",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -9805,7 +9871,7 @@
     "ignore": true
   },
   {
-    "__docId__": 290,
+    "__docId__": 291,
     "kind": "function",
     "name": "init",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -9832,7 +9898,7 @@
     "ignore": true
   },
   {
-    "__docId__": 291,
+    "__docId__": 292,
     "kind": "function",
     "name": "handleKeydown",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -9859,7 +9925,7 @@
     "ignore": true
   },
   {
-    "__docId__": 292,
+    "__docId__": 293,
     "kind": "function",
     "name": "handleClick",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -9886,7 +9952,7 @@
     "ignore": true
   },
   {
-    "__docId__": 293,
+    "__docId__": 294,
     "kind": "function",
     "name": "handleFocus",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -9913,7 +9979,7 @@
     "ignore": true
   },
   {
-    "__docId__": 294,
+    "__docId__": 295,
     "kind": "function",
     "name": "handleBlur",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -9940,7 +10006,7 @@
     "ignore": true
   },
   {
-    "__docId__": 295,
+    "__docId__": 296,
     "kind": "function",
     "name": "handleMouseover",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -9967,7 +10033,7 @@
     "ignore": true
   },
   {
-    "__docId__": 296,
+    "__docId__": 297,
     "kind": "function",
     "name": "handleMouseout",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -9994,7 +10060,7 @@
     "ignore": true
   },
   {
-    "__docId__": 297,
+    "__docId__": 298,
     "kind": "function",
     "name": "PopupMenuItem",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10027,7 +10093,7 @@
     "ignore": true
   },
   {
-    "__docId__": 298,
+    "__docId__": 299,
     "kind": "function",
     "name": "init",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10047,7 +10113,7 @@
     "ignore": true
   },
   {
-    "__docId__": 299,
+    "__docId__": 300,
     "kind": "function",
     "name": "handleKeydown",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10074,7 +10140,7 @@
     "ignore": true
   },
   {
-    "__docId__": 300,
+    "__docId__": 301,
     "kind": "function",
     "name": "handleClick",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10101,7 +10167,7 @@
     "ignore": true
   },
   {
-    "__docId__": 301,
+    "__docId__": 302,
     "kind": "function",
     "name": "handleFocus",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10128,7 +10194,7 @@
     "ignore": true
   },
   {
-    "__docId__": 302,
+    "__docId__": 303,
     "kind": "function",
     "name": "handleBlur",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10155,7 +10221,7 @@
     "ignore": true
   },
   {
-    "__docId__": 303,
+    "__docId__": 304,
     "kind": "function",
     "name": "handleMouseover",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10182,7 +10248,7 @@
     "ignore": true
   },
   {
-    "__docId__": 304,
+    "__docId__": 305,
     "kind": "function",
     "name": "handleMouseout",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10209,7 +10275,7 @@
     "ignore": true
   },
   {
-    "__docId__": 305,
+    "__docId__": 306,
     "kind": "function",
     "name": "PopupMenuAction",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10242,7 +10308,7 @@
     "ignore": true
   },
   {
-    "__docId__": 306,
+    "__docId__": 307,
     "kind": "function",
     "name": "init",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10262,7 +10328,7 @@
     "ignore": true
   },
   {
-    "__docId__": 307,
+    "__docId__": 308,
     "kind": "function",
     "name": "handleMouseover",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10289,7 +10355,7 @@
     "ignore": true
   },
   {
-    "__docId__": 308,
+    "__docId__": 309,
     "kind": "function",
     "name": "handleMouseout",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10316,7 +10382,7 @@
     "ignore": true
   },
   {
-    "__docId__": 309,
+    "__docId__": 310,
     "kind": "function",
     "name": "setFocusToController",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10343,7 +10409,7 @@
     "ignore": true
   },
   {
-    "__docId__": 310,
+    "__docId__": 311,
     "kind": "function",
     "name": "setFocusToFirstItem",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10363,7 +10429,7 @@
     "ignore": true
   },
   {
-    "__docId__": 311,
+    "__docId__": 312,
     "kind": "function",
     "name": "setFocusToLastItem",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10383,7 +10449,7 @@
     "ignore": true
   },
   {
-    "__docId__": 312,
+    "__docId__": 313,
     "kind": "function",
     "name": "setFocusToPreviousItem",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10410,7 +10476,7 @@
     "ignore": true
   },
   {
-    "__docId__": 313,
+    "__docId__": 314,
     "kind": "function",
     "name": "setFocusToNextItem",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10437,7 +10503,7 @@
     "ignore": true
   },
   {
-    "__docId__": 314,
+    "__docId__": 315,
     "kind": "function",
     "name": "setFocusByFirstCharacter",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10470,7 +10536,7 @@
     "ignore": true
   },
   {
-    "__docId__": 315,
+    "__docId__": 316,
     "kind": "function",
     "name": "getIndexFirstChars",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10507,7 +10573,7 @@
     "ignore": true
   },
   {
-    "__docId__": 316,
+    "__docId__": 317,
     "kind": "function",
     "name": "open",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10527,7 +10593,7 @@
     "ignore": true
   },
   {
-    "__docId__": 317,
+    "__docId__": 318,
     "kind": "function",
     "name": "close",
     "memberof": "ourthings/Queueable/W3Menu.js",
@@ -10554,7 +10620,7 @@
     "ignore": true
   },
   {
-    "__docId__": 318,
+    "__docId__": 319,
     "kind": "file",
     "name": "ourthings/Queueable.js",
     "content": "/** @module ourthings/Queueable */\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * The base class for queueable things\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * // queue = new Queue();\r\n *\r\n */\r\nclass Queueable {\r\n\r\n\t/**\r\n\t * Constructor, Sets our status to be false (flipped on init)\r\n\t *\r\n\t */\r\n\tconstructor() {\r\n\t\tthis.ready=false;\r\n\t}\r\n\r\n\t/**\r\n\t * init, override this for any promise based inits setting\r\n\t * the self.ready=true after the promise\r\n\t *\r\n\t */\r\n\tinit(queue) {\r\n\t\tthis.queue=queue;\r\n\t\tthis.ready=true;\r\n\t}\r\n\r\n\t/**\r\n\t * Called from queue, starts running the actual command\r\n\t * @param pid\r\n\t * @param command\r\n\t * @param json\r\n\t */\r\n\tstart(pid,command,json) {\r\n\t\tlet self=this;\r\n\t\tif(self[command]&&typeof self[command] === 'function') {\r\n\t\t\t/*\r\n\t\t\t * Pass the json through the var processor\r\n\t\t\t */\r\n\t\t\tjson=JSON.parse(self.queue.templateVars(JSON.stringify(json)));\r\n\t\t\t/*\r\n\t\t\t * Process pointers IE *memory.foo.value\r\n\t\t\t */\r\n\t\t\tconst pointerRegex=/^\\*([a-zA-Z0-9\\.\\[\\]]*)$/;\r\n\t\t\tfor(let i in json) {\r\n\t\t\t\tlet match;\r\n\t\t\t\tif(match = pointerRegex.exec(json[i])) {\r\n\t\t\t\t\tjson[i]=self.queue.deepCopy(eval(match[1]));\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\t/*\r\n\t\t\t * Execute\r\n\t\t\t */\r\n\t\t\tself[command](pid, json);\r\n\t\t} else {\r\n\t\t\tself.queue.finished(pid,self.queue.DEFINE.FIN_ERROR,'No such command ['+command+']');\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Call this method after you command has finished. Failure to do so will result is\r\n\t * a stalled queue\r\n\t * @param pid\r\n\t * @param mode\r\n\t */\r\n\tfinished(pid,mode,error='') {\r\n\t\tlet self=this;\r\n\t\t/*\r\n\t\t * a -1 pid is called via direct run and so not from our queue\r\n\t\t */\r\n\t\tif(pid!==-1)\r\n\t\t\tself.queue.finished(pid,mode,error);\r\n\t}\r\n\r\n\tset(pid,value) {\r\n\t\tlet self=this;\r\n\t\tself.queue.memory(pid,value);\r\n\t}\r\n}\r\n\r\nexport default Queueable;",
@@ -10565,7 +10631,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 319,
+    "__docId__": 320,
     "kind": "class",
     "name": "Queueable",
     "memberof": "ourthings/Queueable.js",
@@ -10593,7 +10659,7 @@
     "interface": false
   },
   {
-    "__docId__": 320,
+    "__docId__": 321,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "ourthings/Queueable.js~Queueable",
@@ -10606,7 +10672,7 @@
     "lineNumber": 20
   },
   {
-    "__docId__": 321,
+    "__docId__": 322,
     "kind": "member",
     "name": "ready",
     "memberof": "ourthings/Queueable.js~Queueable",
@@ -10623,7 +10689,7 @@
     }
   },
   {
-    "__docId__": 322,
+    "__docId__": 323,
     "kind": "method",
     "name": "init",
     "memberof": "ourthings/Queueable.js~Queueable",
@@ -10645,7 +10711,7 @@
     "return": null
   },
   {
-    "__docId__": 323,
+    "__docId__": 324,
     "kind": "member",
     "name": "queue",
     "memberof": "ourthings/Queueable.js~Queueable",
@@ -10662,7 +10728,7 @@
     }
   },
   {
-    "__docId__": 325,
+    "__docId__": 326,
     "kind": "method",
     "name": "start",
     "memberof": "ourthings/Queueable.js~Queueable",
@@ -10708,7 +10774,7 @@
     "return": null
   },
   {
-    "__docId__": 326,
+    "__docId__": 327,
     "kind": "method",
     "name": "finished",
     "memberof": "ourthings/Queueable.js~Queueable",
@@ -10744,7 +10810,7 @@
     "return": null
   },
   {
-    "__docId__": 327,
+    "__docId__": 328,
     "kind": "method",
     "name": "set",
     "memberof": "ourthings/Queueable.js~Queueable",
@@ -10773,7 +10839,7 @@
     "return": null
   },
   {
-    "__docId__": 328,
+    "__docId__": 329,
     "kind": "file",
     "name": "ourthings/validator.js",
     "content": "/** @module Validate */\r\n\r\n\r\n/**\r\n * @classdesc\r\n *\r\n * Our validate class\r\n *\r\n * @author Richard Reynolds richard@nautoguide.com\r\n *\r\n * @example\r\n * // validate = new Validate();\r\n *\r\n */\r\nclass Validate {\r\n\tvalid(item,args) {\r\n\t\treturn true;\r\n\t}\r\n\r\n}\r\n\r\nclass ValidateEmail extends Validate {\r\n\tvalid(item,args) {\r\n\t\tlet re = /^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$/;\r\n\t\treturn re.test(String(item).toLowerCase());\r\n\t}\r\n}\r\n\r\nclass ValidateText extends Validate {\r\n\tvalid(item,args) {\r\n\t\treturn item.length>3;\r\n\t}\r\n}\r\n\r\nclass ValidatePassword extends Validate {\r\n\tvalid(item,args) {\r\n\t\treturn item.length>=8;\r\n\t}\r\n}\r\n\r\nexport {Validate,ValidateEmail,ValidateText,ValidatePassword};\r\n",
@@ -10784,7 +10850,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 329,
+    "__docId__": 330,
     "kind": "class",
     "name": "Validate",
     "memberof": "ourthings/validator.js",
@@ -10812,7 +10878,7 @@
     "interface": false
   },
   {
-    "__docId__": 330,
+    "__docId__": 331,
     "kind": "method",
     "name": "valid",
     "memberof": "ourthings/validator.js~Validate",
@@ -10845,7 +10911,7 @@
     }
   },
   {
-    "__docId__": 331,
+    "__docId__": 332,
     "kind": "class",
     "name": "ValidateEmail",
     "memberof": "ourthings/validator.js",
@@ -10864,7 +10930,7 @@
     ]
   },
   {
-    "__docId__": 332,
+    "__docId__": 333,
     "kind": "method",
     "name": "valid",
     "memberof": "ourthings/validator.js~ValidateEmail",
@@ -10897,7 +10963,7 @@
     }
   },
   {
-    "__docId__": 333,
+    "__docId__": 334,
     "kind": "class",
     "name": "ValidateText",
     "memberof": "ourthings/validator.js",
@@ -10916,7 +10982,7 @@
     ]
   },
   {
-    "__docId__": 334,
+    "__docId__": 335,
     "kind": "method",
     "name": "valid",
     "memberof": "ourthings/validator.js~ValidateText",
@@ -10949,7 +11015,7 @@
     }
   },
   {
-    "__docId__": 335,
+    "__docId__": 336,
     "kind": "class",
     "name": "ValidatePassword",
     "memberof": "ourthings/validator.js",
@@ -10968,7 +11034,7 @@
     ]
   },
   {
-    "__docId__": 336,
+    "__docId__": 337,
     "kind": "method",
     "name": "valid",
     "memberof": "ourthings/validator.js~ValidatePassword",
