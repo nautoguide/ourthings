@@ -355,12 +355,19 @@ export default class Openlayers extends Queueable {
 		let map = self.maps[options.map].object;
 
 		if (options.mode === 'on') {
-			let selectObj = new Select({"layers": options.layers});
-			self.maps[options.map].selectObj = selectObj;
-			selectObj.on('select', selectFunction);
-			map.addInteraction(selectObj);
+			if(self.maps[options.map].selectObj) {
+				off();
+			}
+			self.maps[options.map].selectObj =  new Select({"layers": options.layers});
+			self.maps[options.map].selectObj.on('select', selectFunction);
+			map.addInteraction(self.maps[options.map].selectObj);
 		} else {
+			off();
+		}
+
+		function off() {
 			map.removeInteraction(self.maps[options.map].selectObj);
+			delete  self.maps[options.map].selectObj;
 		}
 
 		function selectFunction(e) {
@@ -697,7 +704,6 @@ export default class Openlayers extends Queueable {
 		let feature = source.getFeatureById(options.id);
 		source.removeFeature(feature);
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
-
 	}
 
 	/**
