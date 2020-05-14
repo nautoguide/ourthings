@@ -387,28 +387,25 @@ export default class Openlayers extends Queueable {
 		let self = this;
 		let options = Object.assign({
 			"map": "default",
-			"mode": "on",
 			"names": ["ss"]
 		}, json);
 		let map = self.maps[options.map].object;
 		let controls = self.maps[options.map].controls;
 
 		/*
-		 * Toggle out what we don't want on
+		 * Toggle out all controls. We do this rather than be selective
+		 * due to snap always needing to be the last added
 		 */
 		for (let i in controls) {
-			if (options.names.indexOf(i)===-1) {
-				if (controls[i].state === options.mode)
-					this._toggleControl(map, controls[i]);
-			}
+			this._toggleControl(map, controls[i],'off');
+
 		}
 
 		/*
 		 * Toggle in the ones we do need (in order this is important for the likes of snap
 		 */
 		for (let i in options.names) {
-				if (controls[options.names[i]].state !== options.mode)
-					this._toggleControl(map, controls[options.names[i]]);
+					this._toggleControl(map, controls[options.names[i]],'on');
 		}
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
@@ -419,11 +416,12 @@ export default class Openlayers extends Queueable {
 	 * @param control
 	 * @private
 	 */
-	_toggleControl(map, control) {
-		if (control.state === 'on') {
+	_toggleControl(map, control,mode) {
+		if (control.state === 'on'&&mode==='off') {
 			map.removeInteraction(control.obj);
 			control.state = 'off';
-		} else {
+		}
+		if (control.state === 'off'&&mode==='on') {
 			map.addInteraction(control.obj);
 			control.state = 'on';
 		}
@@ -609,6 +607,7 @@ export default class Openlayers extends Queueable {
 	}
 
 	_control_drawFeature( json) {
+		let self=this;
 		let options = Object.assign({
 			"map": "default",
 			"prefix": "",
@@ -616,13 +615,42 @@ export default class Openlayers extends Queueable {
 			"projection": "EPSG:4326",
 			"type": "Polygon"
 		}, json);
+		let map = self.maps[options.map].object;
+
 		let layer = this.maps[options.map].layers[options.layer];
 		let source = layer.getSource();
+		let view = map.getView();
 
+		let bufferedMask;
+		if (options.inside) {
+			let maskFeature = buffer(options.inside.features[0], options.buffer, {units: "meters"});
+			bufferedMask = polygon(maskFeature.geometry.coordinates);
+		}
 		let control= new Draw({
 				source: source,
 				type: options.type
 			});
+		control.on('drawend', function (event) {
+			/*
+			 * Add a uuid
+			 */
+			self._idFeatures([event.feature]);
+
+			let features = new GeoJSON({
+				"dataProjection": options.projection,
+				"featureProjection": view.getProjection().getCode()
+			}).writeFeaturesObject([event.feature]);
+
+			let isInside = true;
+			let isKink = false;
+			if (options.inside) {
+				isInside = booleanPointInPolygon(turfPoint, bufferedMask);
+			}
+
+
+			self.queue.setMemory(options.prefix + 'drawFeatures', features, "Session");
+			self.queue.execute(options.prefix + "drawFeature");
+		});
 		return control;
 
 	}
