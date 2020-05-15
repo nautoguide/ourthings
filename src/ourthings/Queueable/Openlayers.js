@@ -25,6 +25,7 @@ import {fromLonLat, units, epsg3857, epsg4326} from 'ol/proj';
 import Select from 'ol/interaction/Select';
 import Snap from 'ol/interaction/Snap';
 import Modify from 'ol/interaction/Modify';
+import Draw from 'ol/interaction/Draw';
 
 import proj4 from "proj4";
 import {register} from 'ol/proj/proj4';
@@ -40,8 +41,9 @@ import * as consoleBadge from "console-badge";
 
 import {v4 as uuidv4} from 'uuid';
 
-import {point,polygon,multiPolygon}  from '@turf/turf';
+import {point, polygon, multiPolygon} from '@turf/turf';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import booleanContains from '@turf/boolean-contains';
 import buffer from '@turf/buffer';
 import kinks from '@turf/kinks';
 
@@ -129,7 +131,7 @@ export default class Openlayers extends Queueable {
 			});
 			map.on('moveend', self._debug);
 		}
-		self.maps[options.map] = {"object": map, "layers": {}, zoom: map.getView().getZoom()};
+		self.maps[options.map] = {"object": map, "layers": {}, zoom: map.getView().getZoom(), "controls": {}};
 
 		map.getView().on('propertychange', function (e) {
 			switch (e.key) {
@@ -330,8 +332,112 @@ export default class Openlayers extends Queueable {
 	}
 
 	/**
-	 * Use the standard openlayers select control
+	 * Make a new control
+	 *
 	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {string} json.mode -  on|off
+	 * @param {array} json.name - What to call it (used later to reference)
+	 * @param {array} json.control - The control function to use
+	 *
+	 */
+	makeControl(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"mode": "on",
+			"control": "simpleSelect",
+			"name": "ss"
+		}, json);
+		let map = self.maps[options.map].object;
+		let control;
+		/*
+		 * Find the requested control type as a function
+		 */
+		let controlFunction = self["_control_" + options.control];
+		if (typeof controlFunction === "function") {
+			control = controlFunction.apply(self, [options]);
+		} else {
+			self.finished(pid, self.queue.DEFINE.FIN_ERROR, "No control function for " + options.control);
+			return false;
+		}
+
+		self.maps[options.map].controls[options.name] =
+			{
+				state: options.mode,
+				obj: control
+			};
+
+		if (options.mode === "on")
+			map.addInteraction(control);
+
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Set a controls(s) to the requested mode and set others to opposit state
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {string} json.mode -  on|off
+	 * @param {array} json.name - control to set
+	 *
+	 */
+	controlSet(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"names": ["ss"]
+		}, json);
+		let map = self.maps[options.map].object;
+		let controls = self.maps[options.map].controls;
+
+		/*
+		 * Toggle out all controls. We do this rather than be selective
+		 * due to snap always needing to be the last added
+		 */
+		for (let i in controls) {
+			this._toggleControl(map, controls[i],'off');
+
+		}
+
+		/*
+		 * Toggle in the ones we do need (in order this is important for the likes of snap
+		 */
+		for (let i in options.names) {
+					this._toggleControl(map, controls[options.names[i]],'on');
+		}
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Toggle a control between on/off
+	 * @param map
+	 * @param control
+	 * @private
+	 */
+	_toggleControl(map, control,mode) {
+		if (control.state === 'on'&&mode==='off') {
+			map.removeInteraction(control.obj);
+			control.state = 'off';
+		}
+		if (control.state === 'off'&&mode==='on') {
+			map.addInteraction(control.obj);
+			control.state = 'on';
+		}
+	}
+
+	/**
+	 *
+	 *   CONTROLS
+	 *
+	 *
+	 */
+
+
+	/**
+	 * Use the standard openlayers select control
 	 * @param json
 	 * @param {string} json.map - Map name
 	 * @param {string} json.mode -  on|off
@@ -340,7 +446,7 @@ export default class Openlayers extends Queueable {
 	 *
 	 * @description This select control uses the default openlayers model. Useful for applications with no overlapping features. It does not support selecting hidden features
 	 */
-	simpleSelect(pid, json) {
+	_control_simpleSelect(json) {
 		let self = this;
 		let options = Object.assign({
 			"map": "default",
@@ -354,21 +460,8 @@ export default class Openlayers extends Queueable {
 		}
 		let map = self.maps[options.map].object;
 
-		if (options.mode === 'on') {
-			if(self.maps[options.map].selectObj) {
-				off();
-			}
-			self.maps[options.map].selectObj =  new Select({"layers": options.layers});
-			self.maps[options.map].selectObj.on('select', selectFunction);
-			map.addInteraction(self.maps[options.map].selectObj);
-		} else {
-			off();
-		}
-
-		function off() {
-			map.removeInteraction(self.maps[options.map].selectObj);
-			delete  self.maps[options.map].selectObj;
-		}
+		let control = new Select({"layers": options.layers});
+		control.on('select', selectFunction);
 
 		function selectFunction(e) {
 			self.queue.setMemory(options.prefix + 'simpleSelect', e, "Session");
@@ -380,9 +473,255 @@ export default class Openlayers extends Queueable {
 				self.queue.execute(options.prefix + "simpleSelect");
 		}
 
-		self.finished(pid, self.queue.DEFINE.FIN_OK);
+		return control;
 	}
 
+	/**
+	 * MultiEdit tool
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {array} json.layer - layer to use
+	 * @param {object} json.mode - on|off
+	 * @param {object} json.projection - properties to set
+	 * @param {object} json.inside - JSON with single feature to use
+	 * @param {object} json.buffer - buffer in meters around the inside
+	 *
+	 */
+	_control_multiEdit(json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"prefix": "",
+			"layer": "default",
+			"projection": "EPSG:4326",
+			"inside": undefined,
+			"buffer": 10
+		}, json);
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+
+
+		let featureCache = [];
+
+		/*
+		 * Modify interaction, does all the hard work
+		 */
+		let control = new Modify({
+			source: source,
+			pixelTolerance: 10,
+			deleteCondition: function (evt) {
+				return shiftKeyOnly(evt) && singleClick(evt)
+			}
+		});
+		let maskFeature = buffer(options.inside.features[0], options.buffer, {units: "meters"});
+		let bufferedMask = polygon(maskFeature.geometry.coordinates);
+
+
+		/*
+		 * When the user starts moving something we take a copy of it for use
+		 * encase we need to revert
+		 */
+		control.on('modifystart', function (event) {
+			let features = event.features.getArray();
+			featureCache = [];
+			for (let i = 0; i < features.length; i++) {
+				featureCache.push(features[i].clone());
+			}
+		});
+
+		/*
+		 * When the user has finished the move / action
+		 */
+		control.on('modifyend', function (event) {
+
+			/*
+			 * What point did we move?
+			 */
+			let movedPoint = transform(event.mapBrowserEvent.coordinate, view.getProjection().getCode(), "EPSG:4326");
+			let turfPoint = point(movedPoint);
+			/*
+			 * Modified features
+			 */
+			let modifiedFeatures = [];
+			map.forEachFeatureAtPixel(event.mapBrowserEvent.pixel, function (feature, layer) {
+
+				if (layer && layer.get('name') === options.layer) {
+					modifiedFeatures.push(feature);
+				}
+			});
+
+
+
+			let modifiedFeaturesJSON = new GeoJSON({
+				"dataProjection": options.projection,
+				"featureProjection": view.getProjection().getCode()
+			}).writeFeaturesObject(modifiedFeatures);
+
+			/*
+            * Flag any inside feature valid
+            */
+			for(let i in modifiedFeaturesJSON.features) {
+				let polygons=[modifiedFeaturesJSON.features[i]];
+				if(polygons[0].geometry.type==="MultiPolygon")
+					polygons=self._multiFeatureToPolygon(modifiedFeaturesJSON.features[i]);
+
+				for(let p in polygons) {
+					if (booleanContains(bufferedMask, polygons[p])) {
+						modifiedFeatures[i].set('invalid', false);
+					}
+				}
+			}
+			/*
+			 * All features
+			 */
+			let features = new GeoJSON({
+				"dataProjection": options.projection,
+				"featureProjection": view.getProjection().getCode()
+			}).writeFeaturesObject(event.features.getArray());
+			/*
+			 * Check inside
+			 */
+
+			let isInside = true;
+			let isKink = false;
+			if (options.inside) {
+				isInside = booleanPointInPolygon(turfPoint, bufferedMask);
+			}
+
+			/*
+			 * Check for any kinks in the modified features
+			 */
+			for (let i in modifiedFeaturesJSON.features) {
+				let kinkres = kinks(modifiedFeaturesJSON.features[i]);
+				if (kinkres.features.length > 0) {
+					isKink = true;
+					break;
+				}
+			}
+
+			/*
+			 * Set memory and execute
+			 */
+			if (isInside === true && isKink === false) {
+				self.queue.setMemory(options.prefix + 'multiEditFeatures', features, "Session");
+				self.queue.setMemory(options.prefix + 'multiEditModifiedFeatures', modifiedFeaturesJSON, "Session");
+				self.queue.execute(options.prefix + "multiEdit");
+			} else {
+				for (let i = 0; i < featureCache.length; i++) {
+					for (let j = 0; j < modifiedFeatures.length; j++) {
+						if (featureCache[i].get('uuid') === modifiedFeatures[j].get('uuid')) {
+							modifiedFeatures[j].setGeometry(featureCache[i].getGeometry());
+							break;
+						}
+					}
+				}
+				self.queue.execute(options.prefix + "multiEditOutside");
+			}
+		});
+
+		return control;
+
+	}
+
+	_control_drawFeature( json) {
+		let self=this;
+		let options = Object.assign({
+			"map": "default",
+			"prefix": "",
+			"layer": "default",
+			"projection": "EPSG:4326",
+			"type": "Polygon",
+			"buffer":10
+		}, json);
+		let map = self.maps[options.map].object;
+
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let view = map.getView();
+
+		let bufferedMask;
+		if (options.inside) {
+			let maskFeature = buffer(options.inside.features[0], options.buffer, {units: "meters"});
+			bufferedMask = polygon(maskFeature.geometry.coordinates);
+		}
+		let control= new Draw({
+				source: source,
+				type: options.type
+			});
+
+		control.on('drawend', function (event) {
+			/*
+			 * Add a uuid
+			 */
+			self._idFeatures([event.feature]);
+
+			let features = new GeoJSON({
+				"dataProjection": options.projection,
+				"featureProjection": view.getProjection().getCode()
+			}).writeFeaturesObject([event.feature]);
+			let isInside = true;
+			let isKink = false;
+			if (options.inside) {
+				isInside = booleanContains(bufferedMask,features.features[0]);
+			}
+
+
+
+			if(!isInside)
+				event.feature.set('invalid',true);
+
+			self.queue.setMemory(options.prefix + 'drawFeatures', features, "Session");
+			self.queue.execute(options.prefix + "drawFeature");
+		});
+		return control;
+
+	}
+
+	_control_snap( json) {
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"pixelTolerance": 5
+		}, json);
+
+
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+
+		let control= new Snap({
+			source: source,
+			pixelTolerance: options.pixelTolerance
+		});
+		return control;
+	}
+
+	/**
+	 *
+	 *  END CONTROLS
+	 *
+	 */
+
+	/**
+	 * Convert a feature of multiPolygon to a featue(s) of Polygons. No properies are copied
+	 * @param feature
+	 * @returns {[]}
+	 * @private
+	 */
+	_multiFeatureToPolygon(feature) {
+		let features=[];
+		for(let i in feature.geometry.coordinates) {
+			features.push({
+				type: "Feature",
+				geometry:{
+					coordinates:feature.geometry.coordinates[i],
+					type: "Polygon"
+				}
+			})
+		}
+		return features;
+	}
 	/**
 	 * Use a filter object to locate features on a single layer
 	 * @param pid
@@ -478,159 +817,6 @@ export default class Openlayers extends Queueable {
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
-	/**
-	 * MultiEdit tool
-	 * @param pid
-	 * @param json
-	 * @param {string} json.map - Map name
-	 * @param {array} json.layer - layer to use
-	 * @param {object} json.mode - on|off
-	 * @param {object} json.projection - properties to set
-	 * @param {object} json.inside - JSON with single feature to use
-	 * @param {object} json.buffer - buffer in meters around the inside
-	 *
-	 */
-	multiEdit(pid, json) {
-		let self = this;
-		let options = Object.assign({
-			"map": "default",
-			"mode": "on",
-			"prefix": "",
-			"layer": "default",
-			"projection": "EPSG:4326",
-			"inside": undefined,
-			"buffer": 10
-		}, json);
-		let map = self.maps[options.map].object;
-		let view = map.getView();
-		let layer = this.maps[options.map].layers[options.layer];
-		let source = layer.getSource();
-
-		if (options.mode === "on") {
-
-			let featureCache = [];
-
-			/*
-			 * Modify interaction, does all the hard work
-			 */
-			self.modify = new Modify({
-				source: source,
-				pixelTolerance: 10,
-				deleteCondition: function (evt) {
-					return shiftKeyOnly(evt) && singleClick(evt)
-				}
-			});
-			let maskFeature=buffer(options.inside.features[0],options.buffer,{units:"meters"});
-			let bufferedMask=polygon(maskFeature.geometry.coordinates);
-
-
-			/*
-			 * When the user starts moving something we take a copy of it for use
-			 * encase we need to revert
-			 */
-			self.modify.on('modifystart', function (event) {
-				let features = event.features.getArray();
-				featureCache = [];
-				for (let i = 0; i < features.length; i++) {
-					featureCache.push(features[i].clone());
-				}
-			});
-
-			/*
-			 * When the user has finished the move / action
-			 */
-			self.modify.on('modifyend', function (event) {
-
-				/*
-				 * What point did we move?
-				 */
-				let movedPoint = transform(event.mapBrowserEvent.coordinate, view.getProjection().getCode(), "EPSG:4326");
-				let turfPoint = point(movedPoint);
-				/*
-				 * Modified features
-				 */
-				let modifiedFeatures = [];
-				map.forEachFeatureAtPixel(event.mapBrowserEvent.pixel, function (feature, layer) {
-
-					if (layer && layer.get('name') === options.layer) {
-						modifiedFeatures.push(feature);
-					}
-				});
-				let modifiedFeaturesJSON = new GeoJSON({
-					"dataProjection": options.projection,
-					"featureProjection": view.getProjection().getCode()
-				}).writeFeaturesObject(modifiedFeatures);
-				/*
-				 * All features
-				 */
-				let features = new GeoJSON({
-					"dataProjection": options.projection,
-					"featureProjection": view.getProjection().getCode()
-				}).writeFeaturesObject(event.features.getArray());
-				/*
-				 * Check inside
-				 */
-
-				let isInside=true;
-				let isKink=false;
-				if(options.inside) {
-					isInside=booleanPointInPolygon(turfPoint, bufferedMask);
-				}
-
-				/*
-				 * Check for any kinks in the modified features
-				 */
-				for(let i in modifiedFeaturesJSON.features) {
-					let kinkres = kinks(modifiedFeaturesJSON.features[i]);
-					if(kinkres.features.length>0) {
-						isKink=true;
-						break;
-					}
-				}
-
-				/*
-				 * Set memory and execute
-				 */
-				if(isInside===true&&isKink===false) {
-					self.queue.setMemory(options.prefix + 'multiEditFeatures', features, "Session");
-					self.queue.setMemory(options.prefix + 'multiEditModifiedFeatures', modifiedFeaturesJSON, "Session");
-					self.queue.execute(options.prefix + "multiEdit");
-				} else {
-					for(let i=0;i<featureCache.length;i++) {
-						for(let j=0;j<modifiedFeatures.length;j++) {
-							if(featureCache[i].get('uuid')===modifiedFeatures[j].get('uuid')) {
-								modifiedFeatures[j].setGeometry(featureCache[i].getGeometry());
-								break;
-							}
-						}
-					}
-					self.queue.execute(options.prefix + "multiEditOutside");
-				}
-			});
-			/*
-			 * Snap interaction *must* be last to apply
-			 */
-			console.log('on');
-			map.addInteraction(self.modify);
-
-			map.addInteraction(new Snap({
-				source: source,
-				pixelTolerance: 5
-			}));
-		} else {
-			console.log('off');
-			map.removeInteraction(self.modify);
-
-			map.removeInteraction(new Snap({
-				source: source,
-				pixelTolerance: 5
-			}));
-		}
-
-
-		self.finished(pid, self.queue.DEFINE.FIN_OK);
-
-	}
 
 	/**
 	 * Convert a coordinate to WKT
@@ -691,7 +877,7 @@ export default class Openlayers extends Queueable {
 	 * @param {string} json.layer - Layer to get extent from
 	 * @param {string} json.id - id of feature
 	 */
-	deleteFeatureById(pid,json) {
+	deleteFeatureById(pid, json) {
 		let self = this;
 		let options = Object.assign({
 			"map": "default",
