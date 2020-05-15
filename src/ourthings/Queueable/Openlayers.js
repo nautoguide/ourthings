@@ -43,6 +43,7 @@ import {v4 as uuidv4} from 'uuid';
 
 import {point, polygon, multiPolygon} from '@turf/turf';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import booleanContains from '@turf/boolean-contains';
 import buffer from '@turf/buffer';
 import kinks from '@turf/kinks';
 
@@ -550,10 +551,28 @@ export default class Openlayers extends Queueable {
 					modifiedFeatures.push(feature);
 				}
 			});
+
+
+
 			let modifiedFeaturesJSON = new GeoJSON({
 				"dataProjection": options.projection,
 				"featureProjection": view.getProjection().getCode()
 			}).writeFeaturesObject(modifiedFeatures);
+
+			/*
+            * Flag any inside feature valid
+            */
+			for(let i in modifiedFeaturesJSON.features) {
+				let polygons=[modifiedFeaturesJSON.features[i]];
+				if(polygons[0].geometry.type==="MultiPolygon")
+					polygons=self._multiFeatureToPolygon(modifiedFeaturesJSON.features[i]);
+
+				for(let p in polygons) {
+					if (booleanContains(bufferedMask, polygons[p])) {
+						modifiedFeatures[i].set('invalid', false);
+					}
+				}
+			}
 			/*
 			 * All features
 			 */
@@ -613,7 +632,8 @@ export default class Openlayers extends Queueable {
 			"prefix": "",
 			"layer": "default",
 			"projection": "EPSG:4326",
-			"type": "Polygon"
+			"type": "Polygon",
+			"buffer":10
 		}, json);
 		let map = self.maps[options.map].object;
 
@@ -630,6 +650,7 @@ export default class Openlayers extends Queueable {
 				source: source,
 				type: options.type
 			});
+
 		control.on('drawend', function (event) {
 			/*
 			 * Add a uuid
@@ -640,13 +661,16 @@ export default class Openlayers extends Queueable {
 				"dataProjection": options.projection,
 				"featureProjection": view.getProjection().getCode()
 			}).writeFeaturesObject([event.feature]);
-
 			let isInside = true;
 			let isKink = false;
 			if (options.inside) {
-				isInside = booleanPointInPolygon(turfPoint, bufferedMask);
+				isInside = booleanContains(bufferedMask,features.features[0]);
 			}
 
+
+
+			if(!isInside)
+				event.feature.set('invalid',true);
 
 			self.queue.setMemory(options.prefix + 'drawFeatures', features, "Session");
 			self.queue.execute(options.prefix + "drawFeature");
@@ -679,7 +703,25 @@ export default class Openlayers extends Queueable {
 	 *
 	 */
 
-
+	/**
+	 * Convert a feature of multiPolygon to a featue(s) of Polygons. No properies are copied
+	 * @param feature
+	 * @returns {[]}
+	 * @private
+	 */
+	_multiFeatureToPolygon(feature) {
+		let features=[];
+		for(let i in feature.geometry.coordinates) {
+			features.push({
+				type: "Feature",
+				geometry:{
+					coordinates:feature.geometry.coordinates[i],
+					type: "Polygon"
+				}
+			})
+		}
+		return features;
+	}
 	/**
 	 * Use a filter object to locate features on a single layer
 	 * @param pid
