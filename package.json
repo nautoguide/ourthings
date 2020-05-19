@@ -1,6 +1,6 @@
 {
   "name": "@nautoguide/ourthings",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Queue based JavaScript framework",
   "scripts": {
     "build": "webpack --config webpack.config.basic.js",
@@ -29,9 +29,6 @@
     "esdoc-standard-plugin": "^1.0.0",
     "mocha": "^5.2.0",
     "mocha-headless-chrome": "^2.0.1",
-    "ol": "^6.2.1",
-    "proj4": "^2.5.0",
-    "uuid": "^7.0.3",
     "path": "^0.12.7",
     "webpack": "^4.26.1",
     "shelljs": "^0.8.3",
@@ -43,15 +40,18 @@
     "babel-loader": "^8.0.5",
     "whatwg-fetch": "^3.0.0",
     "http-server": "^0.11.1",
-    "mapbox-gl": "^1.6.0",
     "@mapbox/mapbox-gl-draw": "^1.1.2",
     "console-badge": "^1.1.0",
     "showdown": "^1.9.0",
-    "@turf/turf": "^5.1.6",
     "mapbox-gl-edit": "file://../mapbox-gl-edit/"
   },
   "dependencies": {
-    "console-badge": "^1.1.0"
+    "console-badge": "^1.1.0",
+    "ol": "^6.2.1",
+    "proj4": "^2.5.0",
+    "uuid": "^7.0.3",
+    "mapbox-gl": "^1.6.0",
+    "@turf/turf": "^5.1.6"
   },
   "publishConfig": {
     "access": "public"
