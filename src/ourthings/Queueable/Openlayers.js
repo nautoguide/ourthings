@@ -46,6 +46,8 @@ import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import booleanContains from '@turf/boolean-contains';
 import buffer from '@turf/buffer';
 import kinks from '@turf/kinks';
+import bboxPolygon from '@turf/bbox-polygon';
+import bbox from '@turf/bbox';
 
 proj4.defs([
 	["EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs"]
@@ -1170,7 +1172,9 @@ export default class Openlayers extends Queueable {
 		let self = this;
 		let options = Object.assign({
 			"map": "default",
-			"layer": "default"
+			"layer": "default",
+			"buffer": 100,
+			"unit" :"meters",
 		}, json);
 		/*
 		 * Pull all our resources
@@ -1182,9 +1186,21 @@ export default class Openlayers extends Queueable {
 		/*
 		 * Get the extent of the features and fit them
 		 */
-		let extent = source.getExtent();
+
+		let featuresGeojson = new GeoJSON({
+			"dataProjection": "EPSG:4326",
+			"featureProjection": view.getProjection().getCode()
+		}).writeFeaturesObject(source.getFeatures());
+
+		let featuresBbox=bbox(featuresGeojson);
+		let extentPolygon=bboxPolygon(featuresBbox);
+		let bufferedFeature = buffer(extentPolygon, options.buffer, {units: options.unit});
+		let bufferedExtent=bbox(bufferedFeature);
+		let transformedExtentP1=transform([bufferedExtent[0],bufferedExtent[1]], "EPSG:4326",view.getProjection().getCode());
+		let transformedExtentP2=transform([bufferedExtent[2],bufferedExtent[3]], "EPSG:4326",view.getProjection().getCode());
+		let transformedExtent=[transformedExtentP1[0],transformedExtentP1[1],transformedExtentP2[0],transformedExtentP2[1]]
 		try {
-			view.fit(extent, map.getSize());
+			view.fit(transformedExtent, map.getSize());
 		} catch (e) {
 			/*
 			 * Fitting when the layer is empty fill cause OL to error
