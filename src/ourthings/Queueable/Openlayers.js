@@ -13,6 +13,7 @@ import OSM from 'ol/source/OSM';
 import WMTS from 'ol/source/WMTS';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import XYZ from 'ol/source/XYZ.js';
+import TileWMS from 'ol/source/TileWMS';
 
 import WKT from 'ol/format/WKT';
 import Overlay from 'ol/Overlay';
@@ -284,6 +285,34 @@ export default class Openlayers extends Queueable {
 
 		return olLayer;
 
+	}
+
+	/**
+	 * Add a wms layer
+	 * @param options
+	 * @return {TileLayer}
+	 * @private
+	 */
+	_addLayer_wms(json) {
+		let options = Object.assign({
+			serverType: '',
+			params: {},
+			crossOrigin: null
+		}, json);
+		let source = new TileWMS({
+			url: options.url,
+			crossOrigin: options.crossOrigin,
+			params:options.params,
+			serverType: options.serverType
+		});
+		let olLayer = new TileLayer({
+			extent: options.extent,
+			opacity: options.opacity,
+			visible: options.active,
+			name: options.name,
+			source: source
+		});
+		return olLayer;
 	}
 
 	/**
