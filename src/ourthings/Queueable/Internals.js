@@ -17,13 +17,14 @@ export default class Internals extends Queueable {
 	 * @param {int} pid - process ID
 	 * @param {object} json - queue arguments
 	 * @param {string} json.name - prepared queue to call
+	 * @param {boolean} json.silentFail - fail the queue silently?
 	 * @param {object} [json.json] - New arguments to send to queue
 	 * @example
 	 * internals.execute({"name":"myQueue"});
 	 */
 	execute(pid,json) {
 		let self=this;
-		self.queue.execute(json.name,json.json);
+		self.queue.execute(json.name,json.json,json.silentFail);
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 

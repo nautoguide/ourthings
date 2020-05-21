@@ -58,14 +58,6 @@ export default class Define {
 		this.MEMORY_SESSION="Session";
 		this.MEMORY_PERMANENT="Permanent";
 
-		/**
-		 *  Console outputs
-		 */
-		this.CONSOLE_LINE="-==ourthings======================================================-";
-		this.CONSOLE_COL_VT="background: #222; color: #bada55";
-		this.CONSOLE_COL_GREEN="background: #222; color: #0f0";
-		this.CONSOLE_COL_RED="background: #222; color: #f00";
-		this.CONSOLE_COL_AMBER="background: #222; color: #f90";
 
 		/**
 		 *  Keycodes

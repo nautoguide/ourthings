@@ -174,9 +174,7 @@ class Queue {
 				self.templateLoader();
 			})
 			.catch(function (error) {
-				console.info(self.DEFINE.CONSOLE_LINE);
-				console.error('Error:', error);
-				console.info("Warning this error is probably fatal as I have no templates to load")
+				self.reportError(error,'Warning this error is probably fatal as I have no templates to load');
 			});
 	}
 
@@ -231,9 +229,7 @@ class Queue {
 		 * Version check as we changed the format
 		 */
 		if(this.templates.version<1.0) {
-			console.info(self.DEFINE.CONSOLE_LINE);
-			console.error('Error:', "Template file has no version, expecting >=1.0");
-			console.info("Warning this error is probably fatal as I have no templates to load");
+			self.reportError("Template file has no version, expecting >=1.0","Warning this error is probably fatal as I have no templates to load");
 			return;
 		}
 		/*
@@ -730,8 +726,9 @@ class Queue {
 	 *
 	 * @param prepareName {string} Name of the prepared queue
 	 * @param json {object}
+	 * @param silentFail {boolean}
 	 */
-	execute(prepareName,json) {
+	execute(prepareName,json,silentFail) {
 		let self=this;
 		if(self.prepare[prepareName]!==undefined) {
 			/*
@@ -745,7 +742,8 @@ class Queue {
 			self.commandsQueue.apply(self,[[dereferenceCommand]]);
 			return true;
 		} else {
-			self.reportError("Can not execute prepare ["+prepareName+"]","The prepared queue you requested does not exist");
+			if(silentFail!==true)
+				self.reportError("Can not execute prepare ["+prepareName+"]","The prepared queue you requested does not exist");
 			return false;
 		}
 
@@ -1024,7 +1022,7 @@ class Queue {
 		let date = new Date();
 		date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
 		let expires = "; expires=" + date.toUTCString();
-		document.cookie = name + "=" + value + expires + "; path=/";
+		document.cookie = name + "=" + value + expires + "; path=/;Secure; SameSite=Strict";
 	}
 
 	/**
@@ -1311,9 +1309,13 @@ class Queue {
 	 * @param message
 	 */
 	reportError(error,message) {
-		console.info(this.DEFINE.CONSOLE_LINE);
-		console.error('Error:', error);
-		console.info(message);
+		consoleBadge.log({
+			mode: 'shields.io',
+			leftText: error,
+			rightText: message,
+			rightBgColor: '#ff0707',
+			rightTextColor: '#1a1a1a'
+		});
 	}
 
 	/**
