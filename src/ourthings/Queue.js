@@ -174,9 +174,7 @@ class Queue {
 				self.templateLoader();
 			})
 			.catch(function (error) {
-				console.info(self.DEFINE.CONSOLE_LINE);
-				console.error('Error:', error);
-				console.info("Warning this error is probably fatal as I have no templates to load")
+				self.reportError(error,'Warning this error is probably fatal as I have no templates to load');
 			});
 	}
 
@@ -231,9 +229,7 @@ class Queue {
 		 * Version check as we changed the format
 		 */
 		if(this.templates.version<1.0) {
-			console.info(self.DEFINE.CONSOLE_LINE);
-			console.error('Error:', "Template file has no version, expecting >=1.0");
-			console.info("Warning this error is probably fatal as I have no templates to load");
+			self.reportError("Template file has no version, expecting >=1.0","Warning this error is probably fatal as I have no templates to load");
 			return;
 		}
 		/*
@@ -1313,9 +1309,13 @@ class Queue {
 	 * @param message
 	 */
 	reportError(error,message) {
-		console.info(this.DEFINE.CONSOLE_LINE);
-		console.error('Error:', error);
-		console.info(message);
+		consoleBadge.log({
+			mode: 'shields.io',
+			leftText: error,
+			rightText: message,
+			rightBgColor: '#ff0707',
+			rightTextColor: '#1a1a1a'
+		});
 	}
 
 	/**
