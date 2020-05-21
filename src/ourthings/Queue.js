@@ -730,8 +730,9 @@ class Queue {
 	 *
 	 * @param prepareName {string} Name of the prepared queue
 	 * @param json {object}
+	 * @param silentFail {boolean}
 	 */
-	execute(prepareName,json) {
+	execute(prepareName,json,silentFail) {
 		let self=this;
 		if(self.prepare[prepareName]!==undefined) {
 			/*
@@ -745,7 +746,8 @@ class Queue {
 			self.commandsQueue.apply(self,[[dereferenceCommand]]);
 			return true;
 		} else {
-			self.reportError("Can not execute prepare ["+prepareName+"]","The prepared queue you requested does not exist");
+			if(silentFail!==true)
+				self.reportError("Can not execute prepare ["+prepareName+"]","The prepared queue you requested does not exist");
 			return false;
 		}
 

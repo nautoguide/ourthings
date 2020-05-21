@@ -151,7 +151,8 @@ export default class Openlayers extends Queueable {
 							"zoom": map.getView().getZoom(),
 							"resolution": map.getView().getResolution()
 						}, "Session");
-						self.queue.execute(options.map + "ResolutionChange");
+						// Silent Fail this as its not critical
+						self.queue.execute(options.map + "ResolutionChange",{},true);
 					}
 
 					self.maps[options.map].zoom = zoomLevel;
