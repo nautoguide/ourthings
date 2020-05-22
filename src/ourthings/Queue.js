@@ -884,8 +884,9 @@ class Queue {
 		mode=mode||self.DEFINE.MEMORY_GARBAGE;
 		let memoryDetails=new Memory(-1,mode,'User',value);
 		window.memory[name] = memoryDetails;
-		self._updateMemoryPerms();
-
+		// Are we updating perms? If so we need to sync them
+		if(mode==self.DEFINE.MEMORY_PERMANENT)
+			self._updateMemoryPerms();
 		return true;
 	}
 
