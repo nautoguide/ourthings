@@ -84,6 +84,7 @@ export default class Browser extends Queueable {
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
 	 * @param {string} json.history - history name to add
+	 * @param {string} json.force - force history on same url
 	 */
 	addHistory(pid, json) {
 		let options = Object.assign({
@@ -98,7 +99,7 @@ export default class Browser extends Queueable {
 		 * so we filter any matches out
 		 */
 		const newURL=baseURL + '#' + options.history;
-		if (newURL !== location.href) {
+		if (newURL !== location.href||options.force==true) {
 			location.href = newURL;
 		}
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
