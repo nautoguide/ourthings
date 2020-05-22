@@ -71,7 +71,13 @@ export default class Browser extends Queueable {
 				if (match[2])
 					self.queue.setMemory('history', match[2], "Session");
 				self.queue.execute('history' + match[1]);
+				this.finished(pid, this.queue.DEFINE.FIN_OK);
+				return;
 			}
+		}
+
+		if(json.default) {
+			self.addHistory(-1,{"history":json.default});
 		}
 
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
