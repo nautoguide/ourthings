@@ -337,7 +337,13 @@ export default class Api extends Queueable {
 			}
 			self._websocketSendPacket();
 		} else {
-			self.socket.send(payload);
+			try {
+				self.socket.send(payload);
+			} catch(event) {
+				self.queue.setMemory('wsErrorDetails', event, self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.execute("wsError");
+
+			}
 		}
 	}
 
@@ -351,12 +357,17 @@ export default class Api extends Queueable {
 			self.currentPacket++;
 			//console.log(`packet:${self.currentPacket}-${self.totalPackets} Size: ${packet.length}`);
 
-			self.socket.send(JSON.stringify({
-				"frame": self.currentPacket,
-				"totalFrames": self.totalPackets,
-				"uuid": self.uuid,
-				"data": packet
-			}));
+			try {
+				self.socket.send(JSON.stringify({
+					"frame": self.currentPacket,
+					"totalFrames": self.totalPackets,
+					"uuid": self.uuid,
+					"data": packet
+				}));
+			} catch(event) {
+				self.queue.setMemory('wsErrorDetails', event, self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.execute("wsError");
+			}
 			setTimeout(function() {self._websocketSendPacket();},100);
 		}
 	}
