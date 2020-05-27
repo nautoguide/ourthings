@@ -50,7 +50,7 @@ export default class Browser extends Queueable {
 				let match = baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
 				if (match && match[1]) {
 					if (match[2])
-						self.queue.setMemory('history', match[2], "Session");
+						self.queue.setMemory('history', match[2].split('/'), "Session");
 					self.queue.execute('history' + match[1]);
 				} else {
 					self.queue.execute('historyRoot');
@@ -69,7 +69,7 @@ export default class Browser extends Queueable {
 			let match = baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
 			if (match && match[1]) {
 				if (match[2])
-					self.queue.setMemory('history', match[2], "Session");
+					self.queue.setMemory('history', match[2].split('/'), "Session");
 				self.queue.execute('history' + match[1]);
 				this.finished(pid, this.queue.DEFINE.FIN_OK);
 				return;
