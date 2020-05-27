@@ -96,6 +96,7 @@ let Menubutton = function (domNode) {
 
 Menubutton.prototype.init = function (options) {
 
+	this.class=options.class;
 	this.domNode.setAttribute('aria-haspopup', 'true');
 
 	this.domNode.addEventListener('keydown', this.handleKeydown.bind(this));
@@ -591,6 +592,9 @@ PopupMenuAction.prototype.open = function () {
 
 	// set aria-expanded attribute
 	this.controller.domNode.setAttribute('aria-expanded', 'true');
+	if( this.class) {
+		this.domNode.classList.add(this.class);
+	}
 };
 
 PopupMenuAction.prototype.close = function (force) {
@@ -601,5 +605,10 @@ PopupMenuAction.prototype.close = function (force) {
 	if (force || (!this.hasFocus && !this.hasHover && !this.controller.hasHover)) {
 		this.domNode.style.display = 'none';
 		this.controller.domNode.removeAttribute('aria-expanded');
+		if( this.class) {
+			this.domNode.classList.remove(this.class);
+		}
 	}
+
+
 };

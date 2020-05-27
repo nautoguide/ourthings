@@ -1096,9 +1096,37 @@ export default class Openlayers extends Queueable {
 		let map = self.maps[options.map].object;
 		let view = map.getView();
 		let size = map.getSize();
-		view.centerOn(json.coordinate, size, [size[0] / 2, size[1] / 2]);
+		view.centerOn(this._decodeCoords(json.coordinate, view.getProjection().getCode()), size, [size[0] / 2, size[1] / 2]);
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
+	}
+
+	/**
+	 * Clean up coordinates in any format and reproject
+	 * @param cords
+	 * @param projection
+	 * @returns {number[]}
+	 * @private
+	 */
+	_decodeCoords(cords,projection) {
+		let returnCords=[];
+		const srid=/^SRID=(.*?);POINT\((.*?)\)/;
+		if(typeof cords === 'string') {
+			const match=cords.match(srid);
+			if(match) {
+				returnCords=match[2].split(' ');
+
+				returnCords = transform(returnCords, "EPSG:"+match[1],projection);
+			}
+
+		} else {
+			returnCords=cords;
+		}
+		// Clean up any strings
+		returnCords=returnCords.map(function (str) {
+			return parseFloat(str);
+		})
+		return returnCords;
 	}
 
 	/**
