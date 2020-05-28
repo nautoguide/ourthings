@@ -298,13 +298,15 @@ export default class Openlayers extends Queueable {
 		let options = Object.assign({
 			serverType: '',
 			params: {},
-			crossOrigin: null
+			crossOrigin: null,
+			hidpi: true
 		}, json);
 		let source = new TileWMS({
 			url: options.url,
 			crossOrigin: options.crossOrigin,
 			params:options.params,
-			serverType: options.serverType
+			serverType: options.serverType,
+			hidpi: options.hidpi
 		});
 		let olLayer = new TileLayer({
 			extent: options.extent,
@@ -1115,7 +1117,9 @@ export default class Openlayers extends Queueable {
 			const match=cords.match(srid);
 			if(match) {
 				returnCords=match[2].split(' ');
-
+				returnCords=returnCords.map(function (str) {
+					return parseFloat(str);
+				})
 				returnCords = transform(returnCords, "EPSG:"+match[1],projection);
 			}
 
