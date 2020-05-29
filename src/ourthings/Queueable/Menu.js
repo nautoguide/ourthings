@@ -9,7 +9,7 @@ import Queueable from "../Queueable";
  * @author Richard Reynolds richard@nautoguide.com
  *
  * @example
- * menu.init({"targetId":"menu1"});
+ * menu.initMenu({"targetId":"menu1"});
  *
  */
 class Menu extends Queueable {
@@ -20,11 +20,11 @@ class Menu extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.targetId - dom id of menu
 	 * @example
-	 * menu.init({"targetId":"menu1"});
+	 * menu.initMenu({"targetId":"menu1"});
 	 */
 	initMenu(pid,json) {
 		let self=this;
-		let options = Object.assign({
+		const options = Object.assign({
 			"classModifiers":[
 				{"targetId":".main-menu","class":"open-this-menu"},
 				{"targetId":".page-header","clas":"open-search"}
@@ -33,24 +33,38 @@ class Menu extends Queueable {
 		}, json);
 		const element=this.queue.getElement(options.targetId);
 
+		const menuTop=self.queue.getElement(options.menuTop);
+
 		element.addEventListener("click", function (e) {
-			const menuTop=self.queue.getElement(options.menuTop);
 			if(menuTop.getAttribute('aria-expanded')==='true') {
 				// Close
 				for (let i in options.classModifiers) {
 					const modElement = self.queue.getElement(options.classModifiers[i].targetId);
 					modElement.classList.remove(options.classModifiers[i].class);
 				}
-				menuTop.setAttribute('aria-expanded','false')
+				menuTop.setAttribute('aria-expanded','false');
 			} else {
 				// Open
 				for (let i in options.classModifiers) {
 					const modElement = self.queue.getElement(options.classModifiers[i].targetId);
 					modElement.classList.add(options.classModifiers[i].class);
 				}
-				menuTop.setAttribute('aria-expanded','true')
+				menuTop.setAttribute('aria-expanded','true');
 			}
 		});
+
+		/*
+		 * add the menu children click events
+		 */
+		for(let i=0;i<menuTop.children.length;i++) {
+			menuTop.children[i].addEventListener("click", function (e) {
+				for (let i in options.classModifiers) {
+					const modElement = self.queue.getElement(options.classModifiers[i].targetId);
+					modElement.classList.remove(options.classModifiers[i].class);
+				}
+				menuTop.setAttribute('aria-expanded','false');
+			});
+		}
 
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
