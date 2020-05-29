@@ -1169,7 +1169,7 @@ export default class Openlayers extends Queueable {
 	 * @param json
 	 * @param {string} json.map - Map reference
 	 * @param {string} json.duration - Delay period of the zoom in ms
-	 * @param {string} json.location - location to fly to
+	 * @param {string} json.coordinate - location to fly to
 	 * @param {boolean} json.wait - Wait till end of animation to finish queue item
 	 * @example
 	 * openlayers.flyTo({"location":"2});
@@ -1179,7 +1179,7 @@ export default class Openlayers extends Queueable {
 		let options = Object.assign({
 			"map": "default",
 			"duration": 2000,
-			"location": "",
+			"coordinate": "",
 			"wait": false
 		}, json);
 		/*
@@ -1206,7 +1206,7 @@ export default class Openlayers extends Queueable {
 		}
 
 		view.animate({
-			center: options.location,
+			center: this._decodeCoords(options.coordinate, view.getProjection().getCode()),
 			duration: options.duration
 		}, callback);
 		view.animate({
@@ -1375,4 +1375,6 @@ export default class Openlayers extends Queueable {
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
+
+
 }
