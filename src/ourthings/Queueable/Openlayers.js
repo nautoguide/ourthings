@@ -49,6 +49,8 @@ import buffer from '@turf/buffer';
 import kinks from '@turf/kinks';
 import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
+import union from '@turf/union';
+import truncate from '@turf/truncate';
 
 proj4.defs([
 	["EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs"]
@@ -926,6 +928,37 @@ export default class Openlayers extends Queueable {
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
+	mergeFeaturesById(pid,json) {
+		let self=this;
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"ids": []
+		}, json);
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+		let layer = self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let sourceFeatures=[];
+		for(let i=0;i<options.ids.length;i++) {
+			const feature=source.getFeatureById(options.ids[i]);
+			sourceFeatures.push(feature);
+			source.removeFeature(feature);
+		}
+
+		let sourceFeaturesJSON=this._featuresToGeojson('EPSG:4326',view.getProjection().getCode(),sourceFeatures);
+		let targetFeaturePolygon=multiPolygon(sourceFeaturesJSON.features[0].geometry.coordinates);
+		let targetFeatureProperties=sourceFeaturesJSON.features[0].properties;
+		for(let i=1;i<sourceFeatures.length;i++) {
+			targetFeaturePolygon = union(targetFeaturePolygon, multiPolygon(sourceFeaturesJSON.features[i].geometry.coordinates));
+		}
+		targetFeaturePolygon.properties=targetFeatureProperties;
+		let features = this._loadGeojson(options.map, {type: "FeatureCollection",features:[targetFeaturePolygon]});
+		source.addFeatures(this._idFeatures(features));
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
 	/**
 	 * Add geojson features to a layer
 	 * @param pid
@@ -1015,6 +1048,14 @@ export default class Openlayers extends Queueable {
 			return (new GeoJSON({})).readFeatures(eval(geojson), {featureProjection: self.maps[map].object.getView().getProjection()});
 		}
 
+	}
+
+	_featuresToGeojson(toProjection,fromProjection,features) {
+		let returnJson = new GeoJSON({
+			"dataProjection": toProjection,
+			"featureProjection": fromProjection
+		}).writeFeaturesObject(features);
+		return returnJson;
 	}
 
 	/**
