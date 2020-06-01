@@ -69,6 +69,28 @@ export default class Internals extends Queueable {
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
+	/**
+	 * push a value to an array memory value
+	 *
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.name - name of memory item
+	 * @param {*} json.value - value to set (can be any type)
+	 * @param {string} [json.mode] - [Garbage|Session|Permanent] Memory mode
+	 * @example
+	 * internals.pushMemory({"name":"test","mode":"Session","value":"Test String"});
+	 * internals.pushMemory({"name":"test","mode":"Session","value":{"trueFalse":[true,false],"objects":[{"ElementOne":"Result One"},{"ElementTwo":"Result Two"}]}});
+	 */
+	pushMemory(pid,json) {
+		let self=this;
+		let modArray=[];
+		if(memory[json.name])
+			modArray=memory[json.name].value;
+		modArray.push(json.value)
+		self.queue.setMemory(json.name,modArray,json.mode);
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
     /**
      * Set a register
      * @param {int} pid - process ID
