@@ -51,6 +51,7 @@ import bboxPolygon from '@turf/bbox-polygon';
 import bbox from '@turf/bbox';
 import union from '@turf/union';
 import truncate from '@turf/truncate';
+import clean from '@turf/clean-coords';
 
 proj4.defs([
 	["EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs"]
@@ -928,6 +929,14 @@ export default class Openlayers extends Queueable {
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
+	/**
+	 * merge features from layer by id
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @param {string} json.ids - ids of features to merge
+	 */
 	mergeFeaturesById(pid,json) {
 		let self=this;
 		let options = Object.assign({
@@ -940,18 +949,46 @@ export default class Openlayers extends Queueable {
 		let layer = self.maps[options.map].layers[options.layer];
 		let source = layer.getSource();
 		let sourceFeatures=[];
+
+		/*
+		 * Build up the features into an array and purge them from the layer
+		 */
 		for(let i=0;i<options.ids.length;i++) {
 			const feature=source.getFeatureById(options.ids[i]);
 			sourceFeatures.push(feature);
 			source.removeFeature(feature);
 		}
 
+		/*
+		 * Convert to JSON for turf
+		 */
 		let sourceFeaturesJSON=this._featuresToGeojson('EPSG:4326',view.getProjection().getCode(),sourceFeatures);
+
+		/*
+		 * Our first feature is the one we will merge all the others to, keep it properties.
+		 */
 		let targetFeaturePolygon=multiPolygon(sourceFeaturesJSON.features[0].geometry.coordinates);
 		let targetFeatureProperties=sourceFeaturesJSON.features[0].properties;
+		/*
+		 * Merge them
+		 */
 		for(let i=1;i<sourceFeatures.length;i++) {
 			targetFeaturePolygon = union(targetFeaturePolygon, multiPolygon(sourceFeaturesJSON.features[i].geometry.coordinates));
 		}
+
+		/*
+		 * Cleanup any duplicate points
+		 */
+		//targetFeaturePolygon=truncate(targetFeaturePolygon,{precision: 3, coordinates: 2});
+		targetFeaturePolygon=clean(targetFeaturePolygon);
+		/*
+		 * Convert to a multi-polygon if polygon because if its a polygon and we replay a merge its not supported
+		 */
+		if(targetFeaturePolygon.geometry.type==='Polygon')
+			targetFeaturePolygon=multiPolygon([targetFeaturePolygon.geometry.coordinates]);
+		/*
+		 * Rebuild properties then add the feature back to the map
+		 */
 		targetFeaturePolygon.properties=targetFeatureProperties;
 		let features = this._loadGeojson(options.map, {type: "FeatureCollection",features:[targetFeaturePolygon]});
 		source.addFeatures(this._idFeatures(features));
