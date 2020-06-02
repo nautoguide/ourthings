@@ -488,7 +488,8 @@ export default class Openlayers extends Queueable {
 		let options = Object.assign({
 			"map": "default",
 			"mode": "on",
-			"prefix": ""
+			"prefix": "",
+			"style":""
 		}, json);
 		if (options.layers) {
 			for (let i in options.layers) {
@@ -497,7 +498,7 @@ export default class Openlayers extends Queueable {
 		}
 		let map = self.maps[options.map].object;
 
-		let control = new Select({"layers": options.layers});
+		let control = new Select({"layers": options.layers,"style":options.style});
 		control.on('select', selectFunction);
 
 		function selectFunction(e) {

@@ -51,7 +51,8 @@ class Queueable {
 			for(let i in json) {
 				let match;
 				if(match = pointerRegex.exec(json[i])) {
-					json[i]=self.queue.deepCopy(eval(match[1]));
+					//json[i]=self.queue.deepCopy(eval(match[1]));
+					json[i]=eval(match[1]);
 				}
 			}
 			/*
