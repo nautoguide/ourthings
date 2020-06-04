@@ -829,6 +829,11 @@ export default class Openlayers extends Queueable {
 		}
 
 	}
+
+	makeContiguous(pid, json) {
+		this._makeContiguous(json.geojson, json.tolerance);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
 	/**
 	 * Use a filter object to locate features on a single layer
 	 * @param pid
