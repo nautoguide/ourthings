@@ -770,6 +770,70 @@ export default class Openlayers extends Queueable {
 		}
 		return features;
 	}
+
+	_makeContiguous(featuresJSON,tolerance) {
+
+		/*
+		 * make a collision box for each feature
+		 */
+		for(let i in featuresJSON.features) {
+			let featureBbox=bbox(featuresJSON.features[i]);
+			let featureBboxPolygon=bboxPolygon(featureBbox);
+			let featureBboxPolygonBuffered = buffer(featureBboxPolygon, tolerance, {units: 'meters'});
+			let bufferedExtent=bbox(featureBboxPolygonBuffered);
+			//console.log(bufferedExtent);
+			featuresJSON.features[i].properties.collisionBox=bufferedExtent;
+		}
+		const realTolerance=tolerance/1000000;
+		/*
+		 * Loop our features looking for collisions
+		 */
+		for(let target in featuresJSON.features) {
+			for(let source in featuresJSON.features) {
+				// ignore self ;)
+				if(target!==source) {
+					const rect1Width = featuresJSON.features[target].properties.collisionBox[2] - featuresJSON.features[target].properties.collisionBox[0];
+					const rect2Width = featuresJSON.features[source].properties.collisionBox[2] - featuresJSON.features[source].properties.collisionBox[0];
+					const rect1Height = featuresJSON.features[target].properties.collisionBox[3] - featuresJSON.features[target].properties.collisionBox[1];
+					const rect2Height = featuresJSON.features[source].properties.collisionBox[3] - featuresJSON.features[source].properties.collisionBox[1];
+
+					// Box collision
+					if (featuresJSON.features[target].properties.collisionBox[0] < featuresJSON.features[source].properties.collisionBox[0] + rect2Width &&
+						featuresJSON.features[target].properties.collisionBox[0] + rect1Width > featuresJSON.features[source].properties.collisionBox[0] &&
+						featuresJSON.features[target].properties.collisionBox[1] < featuresJSON.features[source].properties.collisionBox[1] + rect2Height &&
+						featuresJSON.features[target].properties.collisionBox[1] + rect1Height > featuresJSON.features[source].properties.collisionBox[1]) {
+						// collision detected!
+						console.log('Collision detected');
+						// now we brute force
+						for(let targetPoints in featuresJSON.features[target].geometry.coordinates[0]) {
+							let targetCircle = {radius: realTolerance, x: featuresJSON.features[target].geometry.coordinates[0][targetPoints][0], y: featuresJSON.features[target].geometry.coordinates[0][targetPoints][1]};
+							for(let sourcePoints in featuresJSON.features[source].geometry.coordinates[0]) {
+								let sourceCircle = {radius: realTolerance, x: featuresJSON.features[source].geometry.coordinates[0][sourcePoints][0], y: featuresJSON.features[source].geometry.coordinates[0][sourcePoints][1]};
+								let dx = targetCircle.x - sourceCircle.x;
+								let dy = targetCircle.y - sourceCircle.y;
+								let distance = Math.sqrt(dx * dx + dy * dy);
+
+								if (distance < targetCircle.radius + sourceCircle.radius) {
+									console.log('Point collision');
+									console.log(targetCircle);
+									console.log(sourceCircle);
+									featuresJSON.features[source].geometry.coordinates[0][sourcePoints]=featuresJSON.features[target].geometry.coordinates[0][targetPoints];
+									// collision detected!
+								}
+							}
+						}
+					}
+				}
+
+			}
+		}
+
+	}
+
+	makeContiguous(pid, json) {
+		this._makeContiguous(json.geojson, json.tolerance);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
 	/**
 	 * Use a filter object to locate features on a single layer
 	 * @param pid
@@ -973,13 +1037,13 @@ export default class Openlayers extends Queueable {
 				// We only attempt to insersect anything that has 1 || 2 points, anything else is too complex
 				if(intersectPoints.features.length===1||intersectPoints.features.length===2) {
 					if(intersectPoints.features.length===1) {
-						console.log('Edge piece');
-						console.log(intersectPoints);
+						//console.log('Edge piece');
+						//console.log(intersectPoints);
 						// Here we need to stitch in verticies
 					} else {
 						// Full split
-						console.log('Master piece');
-						console.log(intersectPoints);
+						//console.log('Master piece');
+						//console.log(intersectPoints);
 						let offsetLine = lineOffset(line, (0.01 ), {units: 'meters'});
 						let thickLineCorners = featureCollection([line, offsetLine]);
 						let thickLinePolygon = convex(explode(thickLineCorners));
@@ -987,19 +1051,20 @@ export default class Openlayers extends Queueable {
 
 						if(clipped.geometry.coordinates.length>1) {
 							let newPolygons = this._multiFeatureToPolygon(clipped);
-
+							newPolygons[0].properties={};
+							newPolygons[1].properties={};
 							source.removeFeature(source.getFeatureById(sourceFeaturesJSON.features[i].properties.uuid));
 							//let newFeature = this._loadGeojson(options.map, {type: "FeatureCollection",features:[clipped]});
 
-							console.log(clipped);
-							source.addFeatures(this._idFeatures(this._loadGeojson(options.map, {
+							let newFeaturesGeoJSON= {
 								type: "FeatureCollection",
-								features: [newPolygons[0]]
-							})));
-							source.addFeatures(this._idFeatures(this._loadGeojson(options.map, {
-								type: "FeatureCollection",
-								features: [newPolygons[1]]
-							})));
+								features: [newPolygons[0],newPolygons[1]]
+							};
+							this._makeContiguous(newFeaturesGeoJSON,10);
+							console.log(newFeaturesGeoJSON);
+							let openlayersFeatures=this._idFeatures(this._loadGeojson(options.map,newFeaturesGeoJSON));
+							source.addFeatures(openlayersFeatures);
+
 						} else {
 							self.queue.setMemory(options.prefix + 'splitFeatures', `Split geometry failed`, "Session");
 							self.queue.execute(options.prefix + "splitFeatures");
