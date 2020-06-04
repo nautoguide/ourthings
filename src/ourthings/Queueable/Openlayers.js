@@ -42,7 +42,7 @@ import * as consoleBadge from "console-badge";
 
 import {v4 as uuidv4} from 'uuid';
 
-import {point, polygon, multiPolygon} from '@turf/turf';
+import {point, polygon, multiPolygon,featureCollection} from '@turf/turf';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import booleanContains from '@turf/boolean-contains';
 import buffer from '@turf/buffer';
@@ -52,6 +52,11 @@ import bbox from '@turf/bbox';
 import union from '@turf/union';
 import truncate from '@turf/truncate';
 import clean from '@turf/clean-coords';
+import lineIntersect from '@turf/line-intersect';
+import lineOffset from '@turf/line-offset';
+import convex from '@turf/convex';
+import explode from '@turf/explode';
+import difference from '@turf/difference';
 
 proj4.defs([
 	["EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs"]
@@ -749,14 +754,19 @@ export default class Openlayers extends Queueable {
 	 */
 	_multiFeatureToPolygon(feature) {
 		let features=[];
-		for(let i in feature.geometry.coordinates) {
-			features.push({
-				type: "Feature",
-				geometry:{
-					coordinates:feature.geometry.coordinates[i],
-					type: "Polygon"
-				}
-			})
+		// Ignore non MultiPolygons
+		if(feature.geometry.type==="MultiPolygon") {
+			for (let i in feature.geometry.coordinates) {
+				features.push({
+					type: "Feature",
+					geometry: {
+						coordinates: feature.geometry.coordinates[i],
+						type: "Polygon"
+					}
+				})
+			}
+		} else {
+			features.push(feature);
 		}
 		return features;
 	}
@@ -928,6 +938,85 @@ export default class Openlayers extends Queueable {
 		let feature = source.getFeatureById(options.id);
 		source.removeFeature(feature);
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+
+	splitFeatures(pid, json) {
+		let self=this;
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"lineString":"",
+			"prefix":""
+		}, json);
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+		let layer = self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		const line=options.lineString.features[0].geometry;
+		if(line.type!=='LineString') {
+			self.finished(pid, self.queue.DEFINE.FIN_ERROR, "lineString needs to be a geoJSON containing a linestring feature");
+			return false;
+		}
+
+
+
+
+		const features=source.getFeatures();
+		let sourceFeaturesJSON=this._featuresToGeojson('EPSG:4326',view.getProjection().getCode(),features);
+
+		for(let i in sourceFeaturesJSON.features) {
+			let polygons=this._multiFeatureToPolygon(sourceFeaturesJSON.features[i]);
+			for(let p in polygons) {
+				let intersectPoints = lineIntersect(polygons[p], line);
+
+				// We only attempt to insersect anything that has 1 || 2 points, anything else is too complex
+				if(intersectPoints.features.length===1||intersectPoints.features.length===2) {
+					if(intersectPoints.features.length===1) {
+						console.log('Edge piece');
+						console.log(intersectPoints);
+						// Here we need to stitch in verticies
+					} else {
+						// Full split
+						console.log('Master piece');
+						console.log(intersectPoints);
+						let offsetLine = lineOffset(line, (0.01 ), {units: 'meters'});
+						let thickLineCorners = featureCollection([line, offsetLine]);
+						let thickLinePolygon = convex(explode(thickLineCorners));
+						let clipped = difference(polygons[p], thickLinePolygon);
+
+						if(clipped.geometry.coordinates.length>1) {
+							let newPolygons = this._multiFeatureToPolygon(clipped);
+
+							source.removeFeature(source.getFeatureById(sourceFeaturesJSON.features[i].properties.uuid));
+							//let newFeature = this._loadGeojson(options.map, {type: "FeatureCollection",features:[clipped]});
+
+							console.log(clipped);
+							source.addFeatures(this._idFeatures(this._loadGeojson(options.map, {
+								type: "FeatureCollection",
+								features: [newPolygons[0]]
+							})));
+							source.addFeatures(this._idFeatures(this._loadGeojson(options.map, {
+								type: "FeatureCollection",
+								features: [newPolygons[1]]
+							})));
+						} else {
+							self.queue.setMemory(options.prefix + 'splitFeatures', `Split geometry failed`, "Session");
+							self.queue.execute(options.prefix + "splitFeatures");
+						}
+					}
+				} else {
+					if(intersectPoints.features.length!==0) {
+						self.queue.setMemory(options.prefix + 'splitFeatures', `Can not intersect complex [${intersectPoints.features.length}] points`, "Session");
+						self.queue.execute(options.prefix + "splitFeatures");
+					}
+				}
+			}
+
+		}
+
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
 	}
 
 	/**
