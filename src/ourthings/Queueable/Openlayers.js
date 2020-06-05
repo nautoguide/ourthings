@@ -772,17 +772,22 @@ export default class Openlayers extends Queueable {
 	}
 
 	_makeContiguous(featuresJSON,tolerance) {
-
+		let collisionLog=[];
 		/*
 		 * make a collision box for each feature
 		 */
 		for(let i in featuresJSON.features) {
+			// Make the box and save it for future use
 			let featureBbox=bbox(featuresJSON.features[i]);
 			let featureBboxPolygon=bboxPolygon(featureBbox);
 			let featureBboxPolygonBuffered = buffer(featureBboxPolygon, tolerance, {units: 'meters'});
 			let bufferedExtent=bbox(featureBboxPolygonBuffered);
-			//console.log(bufferedExtent);
 			featuresJSON.features[i].properties.collisionBox=bufferedExtent;
+			// Upgrade feature to multiPolygon to make life easier
+			if(featuresJSON.features[i].geometry.type==='Polygon') {
+				featuresJSON.features[i].geometry.type='MultiPolygon';
+				featuresJSON.features[i].geometry.coordinates=[featuresJSON.features[i].geometry.coordinates];
+			}
 		}
 		const realTolerance=tolerance/1000000;
 		/*
@@ -790,8 +795,9 @@ export default class Openlayers extends Queueable {
 		 */
 		for(let target in featuresJSON.features) {
 			for(let source in featuresJSON.features) {
-				// ignore self ;)
-				if(target!==source) {
+				// ignore self and previous reverses;)
+				if(target!==source&&collisionLog.indexOf(`${target}-${source}`)===-1) {
+					collisionLog.push(`${source}-${target}`);
 					const rect1Width = featuresJSON.features[target].properties.collisionBox[2] - featuresJSON.features[target].properties.collisionBox[0];
 					const rect2Width = featuresJSON.features[source].properties.collisionBox[2] - featuresJSON.features[source].properties.collisionBox[0];
 					const rect1Height = featuresJSON.features[target].properties.collisionBox[3] - featuresJSON.features[target].properties.collisionBox[1];
@@ -803,22 +809,35 @@ export default class Openlayers extends Queueable {
 						featuresJSON.features[target].properties.collisionBox[1] < featuresJSON.features[source].properties.collisionBox[1] + rect2Height &&
 						featuresJSON.features[target].properties.collisionBox[1] + rect1Height > featuresJSON.features[source].properties.collisionBox[1]) {
 						// collision detected!
-						console.log('Collision detected');
+						//console.log(`Collision detected ${target} - ${source}`);
 						// now we brute force
-						for(let targetPoints in featuresJSON.features[target].geometry.coordinates[0]) {
-							let targetCircle = {radius: realTolerance, x: featuresJSON.features[target].geometry.coordinates[0][targetPoints][0], y: featuresJSON.features[target].geometry.coordinates[0][targetPoints][1]};
-							for(let sourcePoints in featuresJSON.features[source].geometry.coordinates[0]) {
-								let sourceCircle = {radius: realTolerance, x: featuresJSON.features[source].geometry.coordinates[0][sourcePoints][0], y: featuresJSON.features[source].geometry.coordinates[0][sourcePoints][1]};
-								let dx = targetCircle.x - sourceCircle.x;
-								let dy = targetCircle.y - sourceCircle.y;
-								let distance = Math.sqrt(dx * dx + dy * dy);
+						for(let targetPolygon in featuresJSON.features[target].geometry.coordinates[0]) {
+							for (let targetPoints in featuresJSON.features[target].geometry.coordinates[0][targetPolygon]) {
+								let targetCircle = {
+									radius: realTolerance,
+									x: featuresJSON.features[target].geometry.coordinates[0][targetPolygon][targetPoints][0],
+									y: featuresJSON.features[target].geometry.coordinates[0][targetPolygon][targetPoints][1]
+								};
+								for(let sourcePolygon in featuresJSON.features[source].geometry.coordinates[0]) {
+									for (let sourcePoints in featuresJSON.features[source].geometry.coordinates[0][sourcePolygon]) {
+										let sourceCircle = {
+											radius: realTolerance,
+											x: featuresJSON.features[source].geometry.coordinates[0][sourcePolygon][sourcePoints][0],
+											y: featuresJSON.features[source].geometry.coordinates[0][sourcePolygon][sourcePoints][1]
+										};
+										// Circle Collision
+										let dx = targetCircle.x - sourceCircle.x;
+										let dy = targetCircle.y - sourceCircle.y;
+										let distance = Math.sqrt(dx * dx + dy * dy);
 
-								if (distance < targetCircle.radius + sourceCircle.radius) {
-									console.log('Point collision');
-									console.log(targetCircle);
-									console.log(sourceCircle);
-									featuresJSON.features[source].geometry.coordinates[0][sourcePoints]=featuresJSON.features[target].geometry.coordinates[0][targetPoints];
-									// collision detected!
+										if (distance < targetCircle.radius + sourceCircle.radius) {
+											//console.log('Point collision');
+											//console.log(targetCircle);
+											//console.log(sourceCircle);
+											featuresJSON.features[source].geometry.coordinates[0][sourcePolygon][sourcePoints] = featuresJSON.features[target].geometry.coordinates[0][targetPolygon][targetPoints];
+											// collision detected!
+										}
+									}
 								}
 							}
 						}
