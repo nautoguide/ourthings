@@ -773,6 +773,7 @@ export default class Openlayers extends Queueable {
 	}
 
 	_makeContiguous(featuresJSON,tolerance) {
+		console.log(featuresJSON);
 		let collisionLog=[];
 		/*
 		 * make a collision box for each feature
@@ -832,11 +833,8 @@ export default class Openlayers extends Queueable {
 										let distance = Math.sqrt(dx * dx + dy * dy);
 
 										if (distance < targetCircle.radius + sourceCircle.radius) {
-											//console.log('Point collision');
-											//console.log(targetCircle);
-											//console.log(sourceCircle);
+											// point collosion so move it
 											featuresJSON.features[source].geometry.coordinates[0][sourcePolygon][sourcePoints] = featuresJSON.features[target].geometry.coordinates[0][targetPolygon][targetPoints];
-											// collision detected!
 										}
 									}
 								}
@@ -1024,7 +1022,14 @@ export default class Openlayers extends Queueable {
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
-
+	/**
+	 * split featues using a line string
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @param {string} json.id - id of feature
+	 */
 	splitFeatures(pid, json) {
 		let self=this;
 		let options = Object.assign({
@@ -1042,8 +1047,6 @@ export default class Openlayers extends Queueable {
 			self.finished(pid, self.queue.DEFINE.FIN_ERROR, "lineString needs to be a geoJSON containing a linestring feature");
 			return false;
 		}
-
-
 
 
 		const features=source.getFeatures();
@@ -1070,9 +1073,18 @@ export default class Openlayers extends Queueable {
 							//console.log(line1);
 							//console.log(line2);
 							if(ringIntersect.features.length>0) {
-								console.log(`Got overlap at ${points}`);
-								console.log(ringIntersect);
+								//console.log(`Got overlap at ${points}`);
+								//console.log(ringIntersect);
 								polygons[p].geometry.coordinates[0].splice(points,0,intersectPoints.features[0].geometry.coordinates);
+								source.removeFeature(source.getFeatureById(sourceFeaturesJSON.features[i].properties.uuid));
+								let newFeaturesGeoJSON= {
+									type: "FeatureCollection",
+									features: [polygons[p]]
+								};
+
+								let openlayersFeatures=this._idFeatures(this._loadGeojson(options.map,newFeaturesGeoJSON));
+								source.addFeatures(openlayersFeatures);
+								break;
 
 							}
 						}
