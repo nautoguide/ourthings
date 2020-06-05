@@ -42,7 +42,7 @@ import * as consoleBadge from "console-badge";
 
 import {v4 as uuidv4} from 'uuid';
 
-import {point, polygon, multiPolygon,featureCollection} from '@turf/turf';
+import {point, polygon, multiPolygon,featureCollection,lineString} from '@turf/turf';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import booleanContains from '@turf/boolean-contains';
 import buffer from '@turf/buffer';
@@ -57,6 +57,7 @@ import lineOffset from '@turf/line-offset';
 import convex from '@turf/convex';
 import explode from '@turf/explode';
 import difference from '@turf/difference';
+import lineOverlap from '@turf/line-overlap';
 
 proj4.defs([
 	["EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs"]
@@ -1056,9 +1057,26 @@ export default class Openlayers extends Queueable {
 				// We only attempt to insersect anything that has 1 || 2 points, anything else is too complex
 				if(intersectPoints.features.length===1||intersectPoints.features.length===2) {
 					if(intersectPoints.features.length===1) {
-						//console.log('Edge piece');
-						//console.log(intersectPoints);
+						console.log('Edge piece');
+						//console.log(polygons[p]);
+						const line2=lineString(line.coordinates);
+						//console.log(line2);
+
 						// Here we need to stitch in verticies
+						for(let points=1; points<polygons[p].geometry.coordinates[0].length;points++) {
+							//make a lineString base on the points so we can see if it intersects
+							const line1=lineString([polygons[p].geometry.coordinates[0][points-1], polygons[p].geometry.coordinates[0][points]]);
+							let ringIntersect=lineIntersect(line1,line2);
+							//console.log(line1);
+							//console.log(line2);
+							if(ringIntersect.features.length>0) {
+								console.log(`Got overlap at ${points}`);
+								console.log(ringIntersect);
+								polygons[p].geometry.coordinates[0].splice(points,0,intersectPoints.features[0].geometry.coordinates);
+
+							}
+						}
+
 					} else {
 						// Full split
 						//console.log('Master piece');
@@ -1079,8 +1097,8 @@ export default class Openlayers extends Queueable {
 								type: "FeatureCollection",
 								features: [newPolygons[0],newPolygons[1]]
 							};
-							this._makeContiguous(newFeaturesGeoJSON,10);
-							console.log(newFeaturesGeoJSON);
+							this._makeContiguous(newFeaturesGeoJSON,100);
+							//console.log(newFeaturesGeoJSON);
 							let openlayersFeatures=this._idFeatures(this._loadGeojson(options.map,newFeaturesGeoJSON));
 							source.addFeatures(openlayersFeatures);
 
