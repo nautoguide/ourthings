@@ -205,6 +205,40 @@ export default class Elements extends Queueable {
 	}
 
 	/**
+	 * Get the values from checked input boxes
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target for check boxes
+	 * @param {string} json.mode - array|string
+	 * @param {string} json.separator - What seperator to use in string mode
+	 * @param {string} json.name - Name of the memory element to set
+	 *
+	 *
+	 * @example
+	 * elements.getCheckBoxValues({"mode":"string","targetId":".functionGetTypes"});
+
+	 */
+	getCheckBoxValues(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			"mode":"array",
+			"separator":",",
+			"name":"checkboxes"
+		},json);
+		let results=[];
+		let elements=self.queue.getElements(json.targetId+':checked');
+		for(let element in elements) {
+			results.push(elements[element].value);
+		}
+		if(options.mode!=='array') {
+			results=results.join(options.separator);
+		}
+		self.queue.setMemory(options.name, results, "Session");
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
 	 * Get the computed style for an element
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
