@@ -98,7 +98,8 @@ export default class Openlayers extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.map - name for the map (used to reference)
 	 * @param {string} json.target - id of element in the page to target
-	 * @param {int} json.zoom - statement to check
+	 * @param {int} json.zoom - initial zoom level
+	 * @param {int} json.maxZoom - Maximum zoom
 	 * @param {array} json.center - Center on
 	 * @param {string} json.renderer - Renderers to use
 	 * @example
@@ -109,6 +110,7 @@ export default class Openlayers extends Queueable {
 		let self = this;
 		let options = Object.assign({
 			"map": "default",
+			"maxZoom": 25,
 			"zoom": 0,
 			"renderer": ['webgl', 'canvas'],
 			"target": "map",
@@ -122,6 +124,7 @@ export default class Openlayers extends Queueable {
 			view: new View({
 				center: options.center,
 				zoom: options.zoom,
+				maxZoom: options.maxZoom,
 				renderer: options.renderer,
 				projection: projection,
 				resolutions: options.resolutions,
