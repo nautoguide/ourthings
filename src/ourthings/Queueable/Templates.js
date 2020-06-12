@@ -27,12 +27,26 @@ class Templates extends Queueable {
 	 */
 	render(pid,json) {
 		let self=this;
-		json.mode=json.mode||"insert";
+		let options = Object.assign({
+			"mode": "insert",
+			"scrollTarget":".scroll",
+			"scroll":true
+
+		}, json);
 		self.set(pid,json);
-		if(!self.queue.templateProcessor(json.template,json.targetId,json.mode)&&json.quiet!==true)
-			self.finished(pid,self.queue.DEFINE.FIN_ERROR,'Could not render template');
-		else
-			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		if(!self.queue.templateProcessor(options.template,options.targetId,options.mode)&&options.quiet!==true) {
+
+			self.finished(pid, self.queue.DEFINE.FIN_ERROR, 'Could not render template');
+		} else {
+			if(options.scroll===true) {
+				let scrollElement = self.queue.getElement(options.targetId).closest(options.scrollTarget);
+				if(scrollElement)
+					scrollElement.scrollTop = 0;
+				else
+					window.scrollTo(0,0);
+			}
+			self.finished(pid, self.queue.DEFINE.FIN_OK);
+		}
 	}
 }
 
