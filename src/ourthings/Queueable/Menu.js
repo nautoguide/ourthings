@@ -38,11 +38,7 @@ class Menu extends Queueable {
 		element.addEventListener("click", function (e) {
 			if(menuTop.getAttribute('aria-expanded')==='true') {
 				// Close
-				for (let i in options.classModifiers) {
-					const modElement = self.queue.getElement(options.classModifiers[i].targetId);
-					modElement.classList.remove(options.classModifiers[i].class);
-				}
-				menuTop.setAttribute('aria-expanded','false');
+				closeMenu();
 			} else {
 				// Open
 				for (let i in options.classModifiers) {
@@ -53,9 +49,24 @@ class Menu extends Queueable {
 			}
 		});
 
-		/*
-		 * add the menu children click events
-		 */
+		function closeMenu() {
+			for (let i in options.classModifiers) {
+				const modElement = self.queue.getElement(options.classModifiers[i].targetId);
+				modElement.classList.remove(options.classModifiers[i].class);
+			}
+			menuTop.setAttribute('aria-expanded','false');
+		}
+
+		element.addEventListener("blur", function (e) {
+			setTimeout( function() {
+				closeMenu();
+			},500);
+		});
+
+
+			/*
+			 * add the menu children click events
+			 */
 		for(let i=0;i<menuTop.children.length;i++) {
 			menuTop.children[i].addEventListener("click", function (e) {
 				for (let i in options.classModifiers) {
