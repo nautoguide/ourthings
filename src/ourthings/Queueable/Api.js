@@ -303,6 +303,8 @@ export default class Api extends Queueable {
 	 */
 	websocketSend(pid,json) {
 		let self=this;
+		if(json.debug===true)
+			console.log(json);
 		if(json.bulk) {
 			/*
 			 * Bulk mode, we are sending lots of requests and return triggers only work when we get it all back
