@@ -1287,7 +1287,9 @@ export default class Openlayers extends Queueable {
 	_loadGeojson(map, geojson) {
 		let self = this;
 		if (typeof geojson === 'object') {
-			return (new GeoJSON({})).readFeatures(geojson, {featureProjection: self.maps[map].object.getView().getProjection()});
+			if(geojson.features)
+				return (new GeoJSON({})).readFeatures(geojson, {featureProjection: self.maps[map].object.getView().getProjection()});
+			return [];
 		} else {
 			return (new GeoJSON({})).readFeatures(eval(geojson), {featureProjection: self.maps[map].object.getView().getProjection()});
 		}

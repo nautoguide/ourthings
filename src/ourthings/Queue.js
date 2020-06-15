@@ -589,7 +589,7 @@ class Queue {
 			/*
 			 *  In the case of an instant or sub run we don't need to leave anything in the DOM so nuke
 			 */
-			if(command.options.queueRun===self.DEFINE.COMMAND_INSTANT||command.options.queueRun===self.DEFINE.COMMAND_SUB) {
+			if(command.options.queueRun===self.DEFINE.COMMAND_INSTANT||command.options.queueRun===self.DEFINE.COMMAND_SUB||command.options.queuePrepare) {
 				template = template.replace(match[0], "");
 			} else {
 				template = template.replace(match[0], "data-queueable=\"CMD" + command.ucid + "\"");
