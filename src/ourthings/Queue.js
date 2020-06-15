@@ -1330,6 +1330,21 @@ class Queue {
 	}
 
 	/**
+	 * Map an object with sub objects using a map function
+	 * @param obj
+	 * @param mapFunction
+	 */
+	objectMap(obj,mapFunction) {
+		for(let i in obj) {
+			if(typeof obj[i]==='object') {
+				this.objectMap(obj[i],mapFunction);
+			} else {
+				obj[i]=mapFunction(obj[i]);
+			}
+		}
+	}
+
+	/**
 	 * Adds classes for browser type to body for use in CSS
 	 */
 	browserClasses() {

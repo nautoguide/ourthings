@@ -48,13 +48,14 @@ class Queueable {
 			 * Process pointers IE *memory.foo.value
 			 */
 			const pointerRegex=/^\*([a-zA-Z0-9\.\[\]]*)$/;
-			for(let i in json) {
+			this.queue.objectMap(json,function(item){
 				let match;
-				if(match = pointerRegex.exec(json[i])) {
-					//json[i]=self.queue.deepCopy(eval(match[1]));
-					json[i]=eval(match[1]);
+				if(match = pointerRegex.exec(item)) {
+					item=eval(match[1]);
 				}
-			}
+				return item;
+			})
+
 			/*
 			 * Execute
 			 */
