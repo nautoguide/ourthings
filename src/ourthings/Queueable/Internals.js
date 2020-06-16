@@ -95,7 +95,7 @@ export default class Internals extends Queueable {
      * Set a register
      * @param {int} pid - process ID
      * @param {object} json - queue arguments
-     * @param {string} json.name - name of memory item
+     * @param {string} json.name - name of register
      * @example
      * internals.setRegister({"name":"test"});
      */
@@ -104,6 +104,21 @@ export default class Internals extends Queueable {
         self.queue.setRegister(json.name);
         self.finished(pid,self.queue.DEFINE.FIN_OK);
     }
+
+
+	/**
+	 * delete a register
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.name - name of register
+	 * @example
+	 * internals.deleteRegister({"name":"test"});
+	 */
+	deleteRegister(pid,json) {
+		let self=this;
+		self.queue.deleteRegister(json.name);
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
 
 	/**
 	 * Delete a memory value
