@@ -502,4 +502,56 @@ export default class Elements extends Queueable {
 
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
+
+	dragOn(pid, json) {
+		let self=this;
+		let options = Object.assign({
+			"drag": "default",
+		}, json);
+
+		if(this.drags===undefined) {
+			this.drags={};
+		}
+
+		let element = this.queue.getElement(json.targetId);
+
+		this.drags[options.drag]={pos:{x:0,y:0,x1:0,y1:0},element:element};
+
+		element.addEventListener('mousedown',dragMouseDown);
+
+
+		function dragMouseDown(e) {
+			e = e || window.event;
+			e.preventDefault();
+			// get the mouse cursor position at startup:
+			self.drags[options.drag].pos.x1=e.clientX;
+			self.drags[options.drag].pos.y1=e.clientY;
+			document.onmouseup = closeDragElement;
+			document.onmousemove = elementDrag;
+		}
+
+		function elementDrag(e) {
+			e = e || window.event;
+			e.preventDefault();
+			// calculate the new cursor position:
+			self.drags[options.drag].pos.x=self.drags[options.drag].pos.x1 - e.clientX;
+			self.drags[options.drag].pos.y=self.drags[options.drag].pos.y1 - e.clientY;
+			self.drags[options.drag].pos.x1=e.clientX;
+			self.drags[options.drag].pos.y1=e.clientY;
+			// set the element's new position:
+			element.style.top = (element.offsetTop - self.drags[options.drag].pos.y) + "px";
+			element.style.left = (element.offsetLeft - self.drags[options.drag].pos.x) + "px";
+		}
+
+		function closeDragElement() {
+			/*
+			 * End of drag so get rid of events
+			 */
+			document.onmouseup = null;
+			document.onmousemove = null;
+		}
+
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+
+	}
 }

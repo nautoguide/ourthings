@@ -32,7 +32,7 @@ class Queue {
 		 *
 		 * @type {Array}
 		 */
-		self.queue = [];
+		self.queue = {};
 
 		/*
 		 * Our events (queues) which can be called by name
@@ -43,7 +43,7 @@ class Queue {
 		/*
 		 * Queueable items object
 		 */
-		self.queueables={};
+		self.queueables = {};
 		/*
 		 * Templates to be loaded
 		 * @type {Array}
@@ -72,7 +72,7 @@ class Queue {
 		 * @type {number}
 		 */
 		self.pid = 0;
-		self.runningPid=-1;
+		self.runningPid = -1;
 
 		/*
 		 * Our unique bind ids
@@ -82,7 +82,7 @@ class Queue {
 		/*
 		 * When processing out loops this keeps a track
 		 */
-		self.activeLoops=[];
+		self.activeLoops = [];
 
 		/*
 		 * Default time for process to be executed after
@@ -91,7 +91,7 @@ class Queue {
 		 */
 		self.defaultTimer = 10;
 
-		self.developerMode=false;
+		self.developerMode = false;
 
 
 		console.clear();
@@ -105,11 +105,11 @@ class Queue {
 		/*
 		 * Listener for our chrome-plugin
 		 */
-		document.addEventListener('ourthings_site', function(e) {
-			switch(e.detail.function) {
+		document.addEventListener('ourthings_site', function (e) {
+			switch (e.detail.function) {
 				case 'ping':
 					document.dispatchEvent(new CustomEvent('ourthings_extension', {
-						detail: {"function":"pong"}
+						detail: {"function": "pong"}
 					}));
 					break;
 				case 'menu':
@@ -127,36 +127,36 @@ class Queue {
 		 * starts any promise functions that will result in them becoming active
 		 */
 		for (let i in queueablesList) {
-			self.checkQueueable(i,queueablesList[i]);
+			self.checkQueueable(i, queueablesList[i]);
 		}
 
 		/*
 		 * Initialise the memory
 		 */
-		window.memory={};
+		window.memory = {};
 
 		/*
 		 * Load any perm cookies
 		 */
 		self._loadMemoryPerms();
-		if(window.memory.developer&&window.memory.developer.value===true)
-			self.developerMode=true;
+		if (window.memory.developer && window.memory.developer.value === true)
+			self.developerMode = true;
 		/*
 		 * Load any url params into memoery
 		 */
 
-		self.setMemory("urlParams",self.urlToJson(),"Session");
+		self.setMemory("urlParams", self.urlToJson(), "Session");
 
 		/*
 		 * Load the templates.json
 		 *
 		 * This can now be specified by data-templates on the script include
 		 */
-		let templateInclude="templates.json";
+		let templateInclude = "templates.json";
 
-		let attr=self.getElement("script[data-templates]",false);
-		if(attr&&attr.getAttribute( "data-templates" )) {
-			templateInclude=attr.getAttribute( "data-templates" );
+		let attr = self.getElement("script[data-templates]", false);
+		if (attr && attr.getAttribute("data-templates")) {
+			templateInclude = attr.getAttribute("data-templates");
 		}
 
 		fetch(templateInclude, {
@@ -165,7 +165,7 @@ class Queue {
 			}
 		})
 			.then(response => self.handleFetchErrors(response))
-			.then(response => response.json() )
+			.then(response => response.json())
 			.then(function (response) {
 				/**
 				 * Convert the response to json and start the loader
@@ -174,7 +174,7 @@ class Queue {
 				self.templateLoader();
 			})
 			.catch(function (error) {
-				self.reportError(error,'Warning this error is probably fatal as I have no templates to load');
+				self.reportError(error, 'Warning this error is probably fatal as I have no templates to load');
 			});
 	}
 
@@ -184,18 +184,18 @@ class Queue {
 	 * @returns {Object}
 	 */
 	handleFetchErrors(response) {
-		let self=this;
+		let self = this;
 		if (!response.ok) {
-			self.status=self.DEFINE.STATUS_ERROR;
+			self.status = self.DEFINE.STATUS_ERROR;
 			throw Error(response.statusText);
 		}
 		return response;
 	}
 
-	checkQueueable(name,obj) {
-		let self=this;
-		if(self.queueables[name]===undefined) {
-			self.queueables[name]=new obj();
+	checkQueueable(name, obj) {
+		let self = this;
+		if (self.queueables[name] === undefined) {
+			self.queueables[name] = new obj();
 			self.queueables[name].init(self);
 			consoleBadge.log({
 				mode: 'shields.io',
@@ -223,13 +223,13 @@ class Queue {
 	 * @returns {void}
 	 */
 	templateLoader() {
-		let self=this;
+		let self = this;
 
 		/*
 		 * Version check as we changed the format
 		 */
-		if(this.templates.version<1.0) {
-			self.reportError("Template file has no version, expecting >=1.0","Warning this error is probably fatal as I have no templates to load");
+		if (this.templates.version < 1.0) {
+			self.reportError("Template file has no version, expecting >=1.0", "Warning this error is probably fatal as I have no templates to load");
 			return;
 		}
 		/*
@@ -240,20 +240,22 @@ class Queue {
 		if (this.templates.templates.length === 0) {
 			document.head.appendChild(self.fragment);
 			// Clean up the fragment
-			self.fragment=document.createDocumentFragment();
+			self.fragment = document.createDocumentFragment();
 			/*
 			 * Set our status and then process the init template
 			 */
-			self.status=self.DEFINE.STATUS_LOADED;
+			self.status = self.DEFINE.STATUS_LOADED;
 			/*
 			 * Detach the init template loader from this stack chain
 			 *
 			 * We do this because a fail in a subsequent template will register as an error in the fetch catch method
 			 * which is misleading
 			 */
-			setTimeout(function(){ self.templateProcessor("#init",false);},100);
+			setTimeout(function () {
+				self.templateProcessor("#init", false);
+			}, 100);
 
-			self.status=self.DEFINE.STATUS_RUNNING;
+			self.status = self.DEFINE.STATUS_RUNNING;
 			consoleBadge.log({
 				mode: 'shields.io',
 				leftText: 'Online',
@@ -261,7 +263,7 @@ class Queue {
 				rightBgColor: '#ffc107',
 				rightTextColor: '#1a1a1a'
 			});
-			if(self.developerMode===true) {
+			if (self.developerMode === true) {
 				consoleBadge.log({
 					mode: 'shields.io',
 					leftText: 'DEVELOPER MODE',
@@ -277,16 +279,16 @@ class Queue {
 	    * Pop the template off the stack
 	    */
 		let template = this.templates.templates.pop();
-		if(typeof template === "string") {
-			template={"url":template,"type":"text/html"}
+		if (typeof template === "string") {
+			template = {"url": template, "type": "text/html"}
 		}
 
 		/*
 		 * Is there a cache?
 		 */
-		if(this.templates.cache&&self.developerMode!==true) {
-			template=this.templates.cache;
-			this.templates.templates=[];
+		if (this.templates.cache && self.developerMode !== true) {
+			template = this.templates.cache;
+			this.templates.templates = [];
 		}
 
 		fetch(template.url, {
@@ -311,15 +313,15 @@ class Queue {
 				/*
 				 * Remove any html comments as they will slow down processing later on
 				 */
-				text=text.replace(/<!--([\s\S]*?)-->/g,'');
+				text = text.replace(/<!--([\s\S]*?)-->/g, '');
 
 				let meta = document.createElement('meta');
 				meta.setAttribute("name", "generator");
 				meta.setAttribute("content", template.url);
-				if(template.type==='text/css')
-					meta.innerHTML=`<style>${text}</style>`;
+				if (template.type === 'text/css')
+					meta.innerHTML = `<style>${text}</style>`;
 				else
-					meta.innerHTML=text;
+					meta.innerHTML = text;
 				self.fragment.appendChild(meta);
 
 				/*
@@ -340,17 +342,17 @@ class Queue {
 	 * @param targetId {string|false} - Place in the dom the put the result. In the event of false we process without dom
 	 * @return {boolean|string} - success status
 	 */
-	templateProcessor(templateId, targetId,mode) {
-		let self=this;
-		let commands=[];
-		mode=mode||self.DEFINE.RENDER_INSERT;
+	templateProcessor(templateId, targetId, mode) {
+		let self = this;
+		let commands = [];
+		mode = mode || self.DEFINE.RENDER_INSERT;
 
 		let templateDom = self.getElement(templateId);
-		if(!templateDom) {
-			self.reportError('No valid template','I have no valid template, check the templateId ['+templateId+']');
+		if (!templateDom) {
+			self.reportError('No valid template', 'I have no valid template, check the templateId [' + templateId + ']');
 			return false;
 		}
-		let targetDom=undefined;
+		let targetDom = undefined;
 		let templateHTML = templateDom.innerHTML;
 		/*
 		 * Pass all out tags {{ }} First
@@ -358,23 +360,23 @@ class Queue {
 		 * TODO we need to split this so only loop etc is done first, then pass to templateParse then parse
 		 * out {{eval}} when the command queues are gone to prevent executing too early
 		 */
-		let parsedTemplate=self.templateVars(templateHTML);
+		let parsedTemplate = self.templateVars(templateHTML);
 		/*
 		 * now pass to the templateParse to build our commands
 		 */
-		parsedTemplate=self.templateParse(parsedTemplate,commands);
+		parsedTemplate = self.templateParse(parsedTemplate, commands);
 
-		if(targetId==="return")
+		if (targetId === "return")
 			return parsedTemplate;
 
 
-		if(targetId!==false) {
-			targetDom=self.getElement(targetId);
-			if(!targetDom) {
-				self.reportError('No valid target','I have no valid target to render the template ['+templateId+'] to, check the targetId ['+targetId+']');
+		if (targetId !== false) {
+			targetDom = self.getElement(targetId);
+			if (!targetDom) {
+				self.reportError('No valid target', 'I have no valid target to render the template [' + templateId + '] to, check the targetId [' + targetId + ']');
 				return false;
 			}
-			self.renderToDom(targetDom,parsedTemplate,mode);
+			self.renderToDom(targetDom, parsedTemplate, mode);
 		}
 
 		self.commandsBind(commands);
@@ -389,26 +391,26 @@ class Queue {
 	 */
 	templateVars(template) {
 		let match;
-		let self=this;
+		let self = this;
 		/*
 		 * Fix any multi level loop references
 		 */
 
-		for(let i in self.activeLoops) {
+		for (let i in self.activeLoops) {
 			let loopRegex = new RegExp("#loop" + i, "g");
 			let incrementRegex = new RegExp("#increment" + i, "g");
-			template = template.replace(loopRegex, memory['for'+i].value.index);
-			template = template.replace(incrementRegex, memory['for'+i].value.increment);
+			template = template.replace(loopRegex, memory['for' + i].value.index);
+			template = template.replace(incrementRegex, memory['for' + i].value.increment);
 		}
 
 
 		/*
 		 * Look for {{#for}} loops and execute them
 		 */
-		const forRegex=/{{#([0-9]{0,1})for (.*?)}}([\s\S]*?){{\/for}}/;
+		const forRegex = /{{#([0-9]{0,1})for (.*?)}}([\s\S]*?){{\/for}}/;
 		while (match = forRegex.exec(template)) {
-			let subTemplate='';
-			match[1]=match[1]||0;
+			let subTemplate = '';
+			match[1] = match[1] || 0;
 			self.activeLoops.push(match[1]);
 			/*
 			 * loop through making sub templates as we go
@@ -416,22 +418,22 @@ class Queue {
 			 * NOTE: you will notice that all index methods use 0 at the end. This is to allow
 			 * for the future when we implement for loops in for loops.
 			 */
-			let increment=0;
-			for(let i in eval(match[2])) {
+			let increment = 0;
+			for (let i in eval(match[2])) {
 				/*
 				 * Set a memory 'for0' containing the index. This is an object as in the future it
 				 * may be expanded to contain other info.
 				 */
-				this.setMemory("for"+match[1],{"index":i,"increment":increment},"session");
+				this.setMemory("for" + match[1], {"index": i, "increment": increment}, "session");
 				/*
 				 * This is the quick way to reference in the index using #loop[n]
 				 */
-				let loopRegex=new RegExp("#loop"+match[1],"g");
-				let incrementMatch=match[3].replace(loopRegex,i);
+				let loopRegex = new RegExp("#loop" + match[1], "g");
+				let incrementMatch = match[3].replace(loopRegex, i);
 				/*
 				 * Process the template
 				 */
-				subTemplate+=self.templateVars(incrementMatch,i);
+				subTemplate += self.templateVars(incrementMatch, i);
 				increment++;
 			}
 			template = template.replace(match[0], subTemplate);
@@ -440,22 +442,22 @@ class Queue {
 		/*
 	 	 * Process {{#if}}
 	 	*/
-		const ifRegex=/{{#if (.*?)}}([\s\S]*?){{\/if}}/;
+		const ifRegex = /{{#if (.*?)}}([\s\S]*?){{\/if}}/;
 		while (match = ifRegex.exec(template)) {
-			const elseRegex=/{{#if .*?}}([\s\S]*?){{else}}([\s\S]*?){{\/if}}/g;
-			let ifResult=match[2];
-			let elseResult='';
-			let elseMatch=elseRegex.exec(match[0]);
-			if(elseMatch) {
-				ifResult=elseMatch[1];
-				elseResult=elseMatch[2];
+			const elseRegex = /{{#if .*?}}([\s\S]*?){{else}}([\s\S]*?){{\/if}}/g;
+			let ifResult = match[2];
+			let elseResult = '';
+			let elseMatch = elseRegex.exec(match[0]);
+			if (elseMatch) {
+				ifResult = elseMatch[1];
+				elseResult = elseMatch[2];
 			}
 			try {
 				if (eval(match[1]))
 					template = template.replace(match[0], self.templateVars(ifResult));
 				else
 					template = template.replace(match[0], self.templateVars(elseResult));
-			} catch(e) {
+			} catch (e) {
 				consoleBadge.log({
 					mode: 'shields.io',
 					leftText: 'Failed to eval',
@@ -470,18 +472,18 @@ class Queue {
 		/*
 		 * Look for any includes to directly inject templates
 		 */
-		const includeRegex=/{{#include (.*?)}}/;
+		const includeRegex = /{{#include (.*?)}}/;
 		while (match = includeRegex.exec(template)) {
-				template = template.replace(match[0], self.templateVars(self.getElement(eval(match[1])).innerHTML));
+			template = template.replace(match[0], self.templateVars(self.getElement(eval(match[1])).innerHTML));
 		}
 
 		/*
 		 * Process any other {{}} tags but not if they have {{!}} as those are done on command exec time
 		 */
-		const commandRegex=/{{([^!|~](.|\n)*?)}}/;
+		const commandRegex = /{{([^!|~](.|\n)*?)}}/;
 		while (match = commandRegex.exec(template)) {
-			if(match[1][0]==='^')
-				template = template.replace('"'+match[0]+'"', self.varsParser(match[1].substring(1,match[1].length)));
+			if (match[1][0] === '^')
+				template = template.replace('"' + match[0] + '"', self.varsParser(match[1].substring(1, match[1].length)));
 			else
 				template = template.replace(match[0], self.varsParser(match[1]));
 		}
@@ -494,15 +496,15 @@ class Queue {
 	 * @return {any}
 	 */
 	jsonVars(json) {
-		let self=this;
-		json=JSON.stringify(json);
+		let self = this;
+		json = JSON.stringify(json);
 		let match;
 
 		/*
 		 * Specials #pid
 		 */
 
-		const pidRegex=/\#pid/;
+		const pidRegex = /\#pid/;
 		while (match = pidRegex.exec(json)) {
 			json = json.replace(match[0], self.runningPid);
 		}
@@ -511,7 +513,7 @@ class Queue {
 		 * Specials #stack
 		 */
 
-		const stackRegex=/\#stack/;
+		const stackRegex = /\#stack/;
 		while (match = stackRegex.exec(json)) {
 			json = json.replace(match[0], `queue.queue[${self.runningPid}].stack`);
 		}
@@ -520,22 +522,23 @@ class Queue {
 		 * {{!}} tags
 		 */
 
-		const commandRegex=/{{(![\^]{0,1})(.*?)}}/;
+		const commandRegex = /{{(![\^]{0,1})(.*?)}}/;
 		while (match = commandRegex.exec(json)) {
-			if(match[1]==='!^')
-				json = json.replace('"'+match[0]+'"', self.varsParser(match[2]));
+			if (match[1] === '!^')
+				json = json.replace('"' + match[0] + '"', self.varsParser(match[2]));
 			else
 				json = json.replace(match[0], self.varsParser(match[2]));
 		}
-		let jsonReturn={};
+		let jsonReturn = {};
 		try {
-			jsonReturn=JSON.parse(json);
-		} catch(e) {
-			self.reportError("Can not parse JSON ["+json+"]","This error is probably fatal, check your templates");
+			jsonReturn = JSON.parse(json);
+		} catch (e) {
+			self.reportError("Can not parse JSON [" + json + "]", "This error is probably fatal, check your templates");
 
 		}
 		return jsonReturn;
 	}
+
 	/**
 	 * parse a var string
 	 *
@@ -547,9 +550,9 @@ class Queue {
 	 * @return {any}
 	 */
 	varsParser(parseString) {
-		let ret=undefined;
+		let ret = undefined;
 		try {
-			ret=eval(parseString);
+			ret = eval(parseString);
 		} catch (e) {
 			consoleBadge.log({
 				mode: 'shields.io',
@@ -569,27 +572,27 @@ class Queue {
 	 * @param template {string}
 	 * @return {string}
 	 */
-	templateParse(template,commands) {
-		let commandRegex=/[@\-]([a-zA-Z0-9]*?\.[a-zA-Z0-9]*?\((.|\n)*?(\);))/;
-		let match=undefined;
+	templateParse(template, commands) {
+		let commandRegex = /[@\-]([a-zA-Z0-9]*?\.[a-zA-Z0-9]*?\((.|\n)*?(\);))/;
+		let match = undefined;
 		let parentCommand;
 		let isParent;
-		let self=this;
+		let self = this;
 		/*
 		 *  Locate all the commands in the template and generate an array of command objects that
 		 *  are linked by a reference into the template
 		 */
 		while (match = commandRegex.exec(template)) {
-			isParent=match[0][0]==='@';
+			isParent = match[0][0] === '@';
 			/*
 			 * Generate this command object from the extracted string
 			 */
-			let command=self.commandParse(match[1],isParent);
+			let command = self.commandParse(match[1], isParent);
 
 			/*
 			 *  In the case of an instant or sub run we don't need to leave anything in the DOM so nuke
 			 */
-			if(command.options.queueRun===self.DEFINE.COMMAND_INSTANT||command.options.queueRun===self.DEFINE.COMMAND_SUB||command.options.queuePrepare) {
+			if (command.options.queueRun === self.DEFINE.COMMAND_INSTANT || command.options.queueRun === self.DEFINE.COMMAND_SUB || command.options.queuePrepare) {
 				template = template.replace(match[0], "");
 			} else {
 				template = template.replace(match[0], "data-queueable=\"CMD" + command.ucid + "\"");
@@ -597,15 +600,15 @@ class Queue {
 			/*
 			 *  Is this a @parent or a -child?
 			 */
-			if(isParent) {
+			if (isParent) {
 				// Set the parent point to current position
-				parentCommand=commands.length;
+				parentCommand = commands.length;
 
 				commands.push(command);
 			} else {
 				// If the parent has just been created it won't have child structure
-				if(commands[parentCommand].commands===undefined) {
-					commands[parentCommand].commands=[];
+				if (commands[parentCommand].commands === undefined) {
+					commands[parentCommand].commands = [];
 				}
 				// Put the command in the parents
 				commands[parentCommand].commands.push(command);
@@ -621,21 +624,21 @@ class Queue {
 	 * @param commandObj
 	 */
 	commandsBind(commandObj) {
-		let self=this;
-		for(let command in commandObj) {
+		let self = this;
+		for (let command in commandObj) {
 			/*
 			 * Bind queue elements will not me marked to run instantly so we pick those
 			 */
-			if(commandObj[command].options.queueRun!==self.DEFINE.COMMAND_INSTANT) {
+			if (commandObj[command].options.queueRun !== self.DEFINE.COMMAND_INSTANT) {
 				/*
 				 * Find its dom entry using the selector we added
 				 */
 				let element;
-				if(commandObj[command].options.queueBindTarget)
-					element=self.getElement(commandObj[command].options.queueBindTarget);
+				if (commandObj[command].options.queueBindTarget)
+					element = self.getElement(commandObj[command].options.queueBindTarget);
 				else
-					element=self.getElement("[data-queueable=CMD"+commandObj[command].ucid+"]",false);
-				if(element!==false) {
+					element = self.getElement("[data-queueable=CMD" + commandObj[command].ucid + "]", false);
+				if (element !== false) {
 					/*
 					 * Add the event. We flip it over to an instant event now because we want
 					 * it triggered.
@@ -678,24 +681,25 @@ class Queue {
 	 * @param commandObj
 	 */
 	commandsQueue(commandObj) {
-		let self=this;
-		for(let command in commandObj) {
+		let self = this;
+		for (let command in commandObj) {
 			/*
 			 * Init the stack
 			 */
-			commandObj[command].stack={};
+			commandObj[command].stack = {};
 			/*
 			 * DEFINE.COMMAND_INSTANT, basically a queue item we need to get running
 			 */
-			if(commandObj[command].options.queueRun===self.DEFINE.COMMAND_INSTANT) {
-				self.queue.push(self.deepCopy(commandObj[command]));
+			if (commandObj[command].options.queueRun === self.DEFINE.COMMAND_INSTANT) {
+				self.queue[self.pid] = self.deepCopy(commandObj[command]);
+				self.pid++;
 			}
 			/*
 			 * Is the a prepare queue that will be triggered at some later stage
 			 */
-			if(commandObj[command].options.queuePrepare!== undefined) {
-				self.prepare[commandObj[command].options.queuePrepare]=self.deepCopy(commandObj[command]);
-				if(commandObj[command].options.queueRun==self.DEFINE.COMMAND_INSTANT) {
+			if (commandObj[command].options.queuePrepare !== undefined) {
+				self.prepare[commandObj[command].options.queuePrepare] = self.deepCopy(commandObj[command]);
+				if (commandObj[command].options.queueRun == self.DEFINE.COMMAND_INSTANT) {
 					consoleBadge.log({
 						mode: 'shields.io',
 						leftText: 'Running Prepared Queue',
@@ -728,22 +732,22 @@ class Queue {
 	 * @param json {object}
 	 * @param silentFail {boolean}
 	 */
-	execute(prepareName,json,silentFail) {
-		let self=this;
-		if(self.prepare[prepareName]!==undefined) {
+	execute(prepareName, json, silentFail) {
+		let self = this;
+		if (self.prepare[prepareName] !== undefined) {
 			/*
 			 * Take a copy of the prepared command as we need to alter it
 			 * and possibly pass new params then add it to the queue
 			 */
-			let dereferenceCommand=self.deepCopy(self.prepare[prepareName]);
-			dereferenceCommand.options.queueRun=self.DEFINE.COMMAND_INSTANT;
-			if(json!==undefined)
-				dereferenceCommand.json=Object.assign(dereferenceCommand.json,json);
-			self.commandsQueue.apply(self,[[dereferenceCommand]]);
+			let dereferenceCommand = self.deepCopy(self.prepare[prepareName]);
+			dereferenceCommand.options.queueRun = self.DEFINE.COMMAND_INSTANT;
+			if (json !== undefined)
+				dereferenceCommand.json = Object.assign(dereferenceCommand.json, json);
+			self.commandsQueue.apply(self, [[dereferenceCommand]]);
 			return true;
 		} else {
-			if(silentFail!==true)
-				self.reportError("Can not execute prepare ["+prepareName+"]","The prepared queue you requested does not exist");
+			if (silentFail !== true)
+				self.reportError("Can not execute prepare [" + prepareName + "]", "The prepared queue you requested does not exist");
 			return false;
 		}
 
@@ -757,27 +761,27 @@ class Queue {
 	 * @param sync {boolean} - Send true to force sync mode (Really only for test mode)
 	 */
 	queueProcess(sync) {
-		let self=this;
+		let self = this;
 		/*
 		 *  TODO Only implementing basic queue here for testing. Concepts of active componets etc need importing
 		 *  for moho
 		 */
-		for(let item in self.queue) {
+		for (let item in self.queue) {
 			/*
 			 *  Look for items that are QUEUE_ADDED as they need processing
 			 *
 			 */
-			if(self.queue[item].state===self.DEFINE.QUEUE_ADDED) {
+			if (self.queue[item].state === self.DEFINE.QUEUE_ADDED) {
 				/*
 				 * Does this queueable exist?
 				 */
-				if(self.queueables[self.queue[item].queueable]) {
+				if (self.queueables[self.queue[item].queueable]) {
 
 					/*
 					 * Check if we have any registers that need setting
 					 */
 
-					if(!self.queue[item].options.queueRegister||(self.queue[item].options.queueRegister&&self.registers.indexOf(self.queue[item].options.queueRegister)!==-1)) {
+					if (!self.queue[item].options.queueRegister || (self.queue[item].options.queueRegister && self.registers.indexOf(self.queue[item].options.queueRegister) !== -1)) {
 
 						/*
                          * Is it online? If not we fail silently as it may come online later
@@ -791,8 +795,7 @@ class Queue {
                              * Assign a pid
                              */
 							if (self.queue[item].pid === undefined) {
-								self.queue[item].pid = self.pid;
-								self.pid++;
+								self.queue[item].pid = item;
 							}
 							/*
                              * Check if any specific timing is needed
@@ -804,18 +807,18 @@ class Queue {
                              */
 
 							if (sync) {
-								self.runningPid=item;
+								self.runningPid = item;
 								self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
 							} else {
 								setTimeout(function () {
-									self.runningPid=item;
+									self.runningPid = item;
 									self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
 								}, self.queue[item].options.queueTimer);
 							}
 						}
 					}
 				} else {
-					self.reportError("Can not find queueable ["+self.queue[item].queueable+"]","Have you added it to the build?");
+					self.reportError("Can not find queueable [" + self.queue[item].queueable + "]", "Have you added it to the build?");
 				}
 			}
 		}
@@ -827,9 +830,9 @@ class Queue {
 	 * @return {*}
 	 */
 	findQueueByPid(pid) {
-		let self=this;
-		for(let item in self.queue) {
-			if(self.queue[item].pid===pid) {
+		let self = this;
+		for (let item in self.queue) {
+			if (self.queue[item].pid === pid) {
 				return self.queue[item];
 			}
 		}
@@ -842,19 +845,19 @@ class Queue {
 	 * @param value
 	 * @param pid
 	 */
-	memory(pid,value) {
-		let self=this;
-		let command=this.findQueueByPid(pid);
-		if(command) {
+	memory(pid, value) {
+		let self = this;
+		let command = this.findQueueByPid(pid);
+		if (command) {
 			let origin = command.options.memoryName || command.queueable + '.' + command.command;
 			let mode = self.DEFINE.MEMORY_GARBAGE;
 			if (command.options.memoryMode)
 				mode = command.options.memoryMode;
-			let memoryDetails=new Memory(pid,mode,origin,value);
+			let memoryDetails = new Memory(pid, mode, origin, value);
 			window.memory[origin] = memoryDetails;
 			return true;
 		} else {
-			this.reportError("Could not set memory","The memory set for pid ["+pid+"] could not be found");
+			this.reportError("Could not set memory", "The memory set for pid [" + pid + "] could not be found");
 			return false;
 		}
 	}
@@ -866,9 +869,9 @@ class Queue {
 	 * @param value
 	 * @return {boolean}
 	 */
-	setStack(pid,name,value) {
-		let command=this.findQueueByPid(pid);
-		command.stack[name]=value;
+	setStack(pid, name, value) {
+		let command = this.findQueueByPid(pid);
+		command.stack[name] = value;
 		return true;
 	}
 
@@ -879,13 +882,13 @@ class Queue {
 	 * @param mode
 	 * @return {boolean}
 	 */
-	setMemory(name,value,mode) {
-		let self=this;
-		mode=mode||self.DEFINE.MEMORY_GARBAGE;
-		let memoryDetails=new Memory(-1,mode,'User',value);
+	setMemory(name, value, mode) {
+		let self = this;
+		mode = mode || self.DEFINE.MEMORY_GARBAGE;
+		let memoryDetails = new Memory(-1, mode, 'User', value);
 		window.memory[name] = memoryDetails;
 		// Are we updating perms? If so we need to sync them
-		if(mode==self.DEFINE.MEMORY_PERMANENT)
+		if (mode == self.DEFINE.MEMORY_PERMANENT)
 			self._updateMemoryPerms();
 		return true;
 	}
@@ -896,7 +899,7 @@ class Queue {
 	 * @returns {boolean}
 	 */
 	setRegister(name) {
-		if(this.registers.indexOf(name)===-1) {
+		if (this.registers.indexOf(name) === -1) {
 			this.registers.push(name);
 			consoleBadge.log({
 				mode: 'shields.io',
@@ -924,7 +927,7 @@ class Queue {
 	 * @returns {boolean}
 	 */
 	deleteRegister(name) {
-		if(this.registers.indexOf(name)!==-1) {
+		if (this.registers.indexOf(name) !== -1) {
 			this.registers.splice(this.registers.indexOf(name), 1);
 			consoleBadge.log({
 				mode: 'shields.io',
@@ -962,18 +965,18 @@ class Queue {
 	 * @private
 	 */
 	_updateMemoryPerms() {
-		let self=this;
-		let perms=[];
+		let self = this;
+		let perms = [];
 		let date = new Date();
 		date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
 		let expires = "; expires=" + date.toUTCString();
-		for(let i in window.memory) {
-			if(window.memory[i].mode===self.DEFINE.MEMORY_PERMANENT) {
-				self.setCookie('OT_'+i,window.memory[i]._store());
+		for (let i in window.memory) {
+			if (window.memory[i].mode === self.DEFINE.MEMORY_PERMANENT) {
+				self.setCookie('OT_' + i, window.memory[i]._store());
 				perms.push(i);
 			}
 		}
-		self.setCookie('OT_INDEX',window.btoa(JSON.stringify(perms)));
+		self.setCookie('OT_INDEX', window.btoa(JSON.stringify(perms)));
 	}
 
 	/**
@@ -981,16 +984,16 @@ class Queue {
 	 * @private
 	 */
 	_loadMemoryPerms() {
-		let self=this;
-		let index=self.getCookie("OT_INDEX");
-		if(index!==null) {
+		let self = this;
+		let index = self.getCookie("OT_INDEX");
+		if (index !== null) {
 			try {
 				index = JSON.parse(window.atob(index));
 				for (let i in index) {
 					let perm = JSON.parse(window.atob(self.getCookie("OT_" + index[i])));
-					window.memory[index[i]] = new Memory(perm.pid,perm.mode,perm.origin,perm.value);
+					window.memory[index[i]] = new Memory(perm.pid, perm.mode, perm.origin, perm.value);
 				}
-			} catch(e) {
+			} catch (e) {
 				console.error('OT_INDEX seems corrupted');
 			}
 		}
@@ -1019,11 +1022,11 @@ class Queue {
 	 * @param value - Value of cookie
 	 * @returns {*}
 	 */
-	setCookie(name,value) {
+	setCookie(name, value) {
 		let date = new Date();
 		date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
-		const secure=window.location.href.match(/https\:\/\//i);
-		const cookieString=`${name}=${value};expires=${date.toUTCString()} path=/;${(secure!==null? 'Secure;':'')} SameSite=Strict`;
+		const secure = window.location.href.match(/https\:\/\//i);
+		const cookieString = `${name}=${value};expires=${date.toUTCString()} path=/;${(secure !== null ? 'Secure;' : '')} SameSite=Strict`;
 		document.cookie = cookieString;
 	}
 
@@ -1032,10 +1035,10 @@ class Queue {
 	 * @param pid
 	 */
 	cleanMemory(pid) {
-		let self=this;
-		for(let i in window.memory) {
-			if(window.memory[i].pid===pid&&window.memory[i].mode===self.DEFINE.MEMORY_GARBAGE) {
-				window.memory[i]={};
+		let self = this;
+		for (let i in window.memory) {
+			if (window.memory[i].pid === pid && window.memory[i].mode === self.DEFINE.MEMORY_GARBAGE) {
+				window.memory[i] = {};
 				delete window.memory[i];
 			}
 		}
@@ -1047,13 +1050,24 @@ class Queue {
 	 * Is there any work to do in the queue?
 	 */
 	isWork() {
-		let self=this;
-		let count=0;
-		for(let item in self.queue) {
-			if(self.queue[item].state!==self.DEFINE.QUEUE_FINISHED&&self.queue[item].state!==self.DEFINE.QUEUE_ERROR)
+		let self = this;
+		let count = 0;
+		for (let item in self.queue) {
+			if (self.queue[item].state !== self.DEFINE.QUEUE_FINISHED && self.queue[item].state !== self.DEFINE.QUEUE_ERROR)
 				count++;
 		}
 		return count;
+	}
+
+	/**
+	 *  Clean up any finished queues
+	 */
+	cleanQueue() {
+		for (let item in this.queue) {
+			if (this.queue[item].state === this.DEFINE.QUEUE_FINISHED) {
+				delete this.queue[item];
+			}
+		}
 	}
 
 	/**
@@ -1064,64 +1078,60 @@ class Queue {
 	 * @param pid
 	 * @param mode
 	 */
-	finished(pid,mode,error) {
-		let self=this;
-		for(let item in self.queue) {
+	finished(pid, mode, error) {
+		let self = this;
+
+		self.queue[pid].error = error;
+		if (self.queue[pid].state === self.DEFINE.QUEUE_RUNNING) {
 			/*
-			 *  Find the queue item we need to finish
+			 * Did the command return an error? If so we will stop this queue from further execution
 			 */
-			if(self.queue[item].pid===pid) {
-				self.queue[item].error=error;
-				if (self.queue[item].state === self.DEFINE.QUEUE_RUNNING) {
-					/*
-					 * Did the command return an error? If so we will stop this queue from further execution
-					 */
-					if(mode==self.DEFINE.FIN_ERROR) {
-						self.queue[item].state=self.DEFINE.QUEUE_ERROR;
-						self.reportError(error,'The queueable ['+pid+'] has errored, queue put on hold');
-						return;
-					}
-					/*
-					 * Was there a warning?. This isn't serious so we just mention it to the console
-					 */
-					if(mode==self.DEFINE.FIN_WARNING) {
-						console.log('Warning: '+error);
-					}
-						/*
-						 *
-						 * Check if this queue has commands left
-						 */
-					if(self.queue[item].commands!==undefined&&self.queue[item].commands.length>0) {
-						/*
-						 * Move the next item in the queue down
-						 */
-						self.queue[item].command=self.queue[item].commands[0].command;
-						self.queue[item].queueable=self.queue[item].commands[0].queueable;
-						self.queue[item].json=self.queue[item].commands[0].json;
-						self.queue[item].options=self.queue[item].commands[0].options;
-						self.queue[item].commands.shift();
-						/*
-						 *  Update the pid
-						 *  TODO remove this as queues need to maintain their Pid for memory
-						 */
-						//self.queue[item].pid=self.pid;
-						//self.pid++;
-						self.queue[item].state = self.DEFINE.QUEUE_ADDED;
-						/*
-						 * Start the queue processor as we just posted a new command
-						 */
-						self.queueProcess();
-					} else {
-						self.queue[item].state = self.DEFINE.QUEUE_FINISHED;
-						self.cleanMemory(self.queue[item].pid);
-					}
-					return;
-				} else {
-					self.reportError('Cant stop an already stopped process ['+pid+']','Queue is corrupted');
-					return;
-				}
+			if (mode == self.DEFINE.FIN_ERROR) {
+				self.queue[pid].state = self.DEFINE.QUEUE_ERROR;
+				self.reportError(error, 'The queueable [' + pid + '] has errored, queue put on hold');
+				return;
 			}
+			/*
+			 * Was there a warning?. This isn't serious so we just mention it to the console
+			 */
+			if (mode == self.DEFINE.FIN_WARNING) {
+				console.log('Warning: ' + error);
+			}
+			/*
+			 *
+			 * Check if this queue has commands left
+			 */
+			if (self.queue[pid].commands !== undefined && self.queue[pid].commands.length > 0) {
+				/*
+				 * Move the next item in the queue down
+				 */
+				self.queue[pid].command = self.queue[pid].commands[0].command;
+				self.queue[pid].queueable = self.queue[pid].commands[0].queueable;
+				self.queue[pid].json = self.queue[pid].commands[0].json;
+				self.queue[pid].options = self.queue[pid].commands[0].options;
+				self.queue[pid].commands.shift();
+				/*
+				 *  Update the pid
+				 *  TODO remove this as queues need to maintain their Pid for memory
+				 */
+				//self.queue[item].pid=self.pid;
+				//self.pid++;
+				self.queue[pid].state = self.DEFINE.QUEUE_ADDED;
+				/*
+				 * Start the queue processor as we just posted a new command
+				 */
+				self.queueProcess();
+			} else {
+				self.queue[pid].state = self.DEFINE.QUEUE_FINISHED;
+				self.cleanMemory(self.queue[pid].pid);
+				self.cleanQueue();
+			}
+			return;
+		} else {
+			self.reportError('Cant stop an already stopped process [' + pid + ']', 'Queue is corrupted');
+			return;
 		}
+
 	}
 
 	/**
@@ -1132,29 +1142,29 @@ class Queue {
 	 * @param command {string}
 	 * @return {object}
 	 */
-	commandParse(command,isParent) {
-		let self=this;
-		let commandObject={"ucid":++self.ucid};
+	commandParse(command, isParent) {
+		let self = this;
+		let commandObject = {"ucid": ++self.ucid};
 		// Find the actual command
-		let commandArray=command.match(/(.*?)\(/)[1].split('.');
-		commandObject.queueable=commandArray[0];
-		commandObject.command=commandArray[1];
+		let commandArray = command.match(/(.*?)\(/)[1].split('.');
+		commandObject.queueable = commandArray[0];
+		commandObject.command = commandArray[1];
 		// Strip as we go to make follow up regex easier
-		command=command.replace(/.*?\(/,'[');
+		command = command.replace(/.*?\(/, '[');
 		// Find first json arg
 
-		command=command.replace(/\);$/m,']');
-		let jsonArray=JSON.parse(command);
-		if(jsonArray[0]) {
+		command = command.replace(/\);$/m, ']');
+		let jsonArray = JSON.parse(command);
+		if (jsonArray[0]) {
 			commandObject.json = jsonArray[0];
 		} else {
-			commandObject.json={};
+			commandObject.json = {};
 		}
 
-		if(jsonArray[1]) {
+		if (jsonArray[1]) {
 			commandObject.options = jsonArray[1];
 		} else {
-			commandObject.options={};
+			commandObject.options = {};
 		}
 		/*
 		 * Set our default options if they haven't been set
@@ -1163,8 +1173,8 @@ class Queue {
 		 * which case it must be a parent or failing then its a sub
 		 *
  		 */
-		commandObject.options.queueRun=commandObject.options.queueRun||(isParent? self.DEFINE.COMMAND_EVENT:self.DEFINE.COMMAND_SUB);
-		commandObject.state=self.DEFINE.QUEUE_ADDED;
+		commandObject.options.queueRun = commandObject.options.queueRun || (isParent ? self.DEFINE.COMMAND_EVENT : self.DEFINE.COMMAND_SUB);
+		commandObject.state = self.DEFINE.QUEUE_ADDED;
 		return commandObject;
 	}
 
@@ -1175,18 +1185,18 @@ class Queue {
 	 * @param mode {number} - Mode to use while writing see define.js
 	 * @return {boolean}
 	 */
-	renderToDom(domObject,text,mode) {
-		let self=this;
-		mode=mode||self.DEFINE.RENDER_INSERT;
-		switch(mode) {
+	renderToDom(domObject, text, mode) {
+		let self = this;
+		mode = mode || self.DEFINE.RENDER_INSERT;
+		switch (mode) {
 			case self.DEFINE.RENDER_INSERT:
-				domObject.innerHTML=text;
+				domObject.innerHTML = text;
 				break;
 			case self.DEFINE.RENDER_APPEND:
-				domObject.insertAdjacentHTML('beforeend',text);
+				domObject.insertAdjacentHTML('beforeend', text);
 				break;
 			case self.DEFINE.RENDER_REPLACE:
-				const html = new DOMParser().parseFromString( text , 'text/html');
+				const html = new DOMParser().parseFromString(text, 'text/html');
 				domObject.parentNode.replaceChild(html.body.firstChild, domObject);
 				break;
 		}
@@ -1200,24 +1210,24 @@ class Queue {
 	 * @param errorTrap {boolean} Trap any errors?
 	 * @return {object|false}
 	 */
-	getIframeElements(iframeTarget,elementTarget,errorTrap=true) {
-		let self=this;
+	getIframeElements(iframeTarget, elementTarget, errorTrap = true) {
+		let self = this;
 		let iframe = document.getElementById(iframeTarget);
-		if(!iframe)
-			iframe=document;
+		if (!iframe)
+			iframe = document;
 		else
-			iframe=iframe.contentDocument || iframe.contentWindow.document;
-		let element=iframe.querySelectorAll(elementTarget);
+			iframe = iframe.contentDocument || iframe.contentWindow.document;
+		let element = iframe.querySelectorAll(elementTarget);
 		/*
 		 * IE11 BUG, check for non arrays and attempt to convert
 		 */
-		if(!Array.isArray(element)) {
+		if (!Array.isArray(element)) {
 			element = Array.from(element);
 		}
-		if(element!==null)
+		if (element !== null)
 			return element;
-		if(errorTrap)
-			self.reportError('Dom Element find failed for ['+elementTarget+'] iframe ['+iframeTarget+']','Follow up calls that rely on this will fail');
+		if (errorTrap)
+			self.reportError('Dom Element find failed for [' + elementTarget + '] iframe [' + iframeTarget + ']', 'Follow up calls that rely on this will fail');
 		return false;
 	}
 
@@ -1227,13 +1237,13 @@ class Queue {
 	 * @param errorTrap {boolean} Trap any errors?
 	 * @return {object|false}
 	 */
-	getElement(elementTarget,errorTrap=true) {
-		let self=this;
-		let element=document.querySelector(elementTarget);
-		if(element!==null)
+	getElement(elementTarget, errorTrap = true) {
+		let self = this;
+		let element = document.querySelector(elementTarget);
+		if (element !== null)
 			return element;
-		if(errorTrap)
-			self.reportError('Dom Element find failed for ['+elementTarget+']','Follow up calls that rely on this will fail');
+		if (errorTrap)
+			self.reportError('Dom Element find failed for [' + elementTarget + ']', 'Follow up calls that rely on this will fail');
 		return false;
 	}
 
@@ -1243,17 +1253,17 @@ class Queue {
 	 * @return {object|false}
 	 */
 	getElements(elementTarget) {
-		let self=this;
-		let element=document.querySelectorAll(elementTarget);
+		let self = this;
+		let element = document.querySelectorAll(elementTarget);
 		/*
 		 * IE11 BUG, check for non arrays and attempt to convert
 		 */
-		if(!Array.isArray(element)) {
-			 element = Array.from(element);
+		if (!Array.isArray(element)) {
+			element = Array.from(element);
 		}
-		if(element!==null)
+		if (element !== null)
 			return element;
-		self.reportError('Dom Element(s) find failed for ['+elementTarget+']','Follow up calls that rely on this will fail');
+		self.reportError('Dom Element(s) find failed for [' + elementTarget + ']', 'Follow up calls that rely on this will fail');
 		return false;
 	}
 
@@ -1262,13 +1272,13 @@ class Queue {
 	 *  Show current queue status in the console DEBUG function
 	 */
 	show() {
-		let self=this;
-		for(let i in self.queue) {
-			let indent=0;
-			self.prettyCommandObject(self.queue[i],indent);
-			for(let j in self.queue[i].commands) {
+		let self = this;
+		for (let i in self.queue) {
+			let indent = 0;
+			self.prettyCommandObject(self.queue[i], indent);
+			for (let j in self.queue[i].commands) {
 				indent++;
-				self.prettyCommandObject(self.queue[i].commands[j],indent);
+				self.prettyCommandObject(self.queue[i].commands[j], indent);
 
 			}
 		}
@@ -1283,26 +1293,26 @@ class Queue {
 	 * @param commandObject
 	 * @param indent
 	 */
-	prettyCommandObject(commandObject,indent) {
-		let self=this;
-		let string='';
-		for(var i=0;i<indent;i++) {
-			string+=' ';
+	prettyCommandObject(commandObject, indent) {
+		let self = this;
+		let string = '';
+		for (var i = 0; i < indent; i++) {
+			string += ' ';
 		}
-		let color=self.DEFINE.CONSOLE_COL_GREEN;
-		switch(commandObject.state) {
+		let color = self.DEFINE.CONSOLE_COL_GREEN;
+		switch (commandObject.state) {
 			case self.DEFINE.QUEUE_FINISHED:
-				color=self.DEFINE.CONSOLE_COL_AMBER;
+				color = self.DEFINE.CONSOLE_COL_AMBER;
 				break;
 			case self.DEFINE.QUEUE_ERROR:
-				color=self.DEFINE.CONSOLE_COL_RED;
+				color = self.DEFINE.CONSOLE_COL_RED;
 				break;
 
 		}
-		string+=commandObject.queueable+'.'+commandObject.command+'('+JSON.stringify(commandObject.json)+','+JSON.stringify(commandObject.options)+');'
-		console.log('%c '+string,color);
-		if(commandObject.error)
-			console.log('%c  Stopped: '+commandObject.error,self.DEFINE.CONSOLE_COL_AMBER);
+		string += commandObject.queueable + '.' + commandObject.command + '(' + JSON.stringify(commandObject.json) + ',' + JSON.stringify(commandObject.options) + ');'
+		console.log('%c ' + string, color);
+		if (commandObject.error)
+			console.log('%c  Stopped: ' + commandObject.error, self.DEFINE.CONSOLE_COL_AMBER);
 	}
 
 	/**
@@ -1310,7 +1320,7 @@ class Queue {
 	 * @param error
 	 * @param message
 	 */
-	reportError(error,message) {
+	reportError(error, message) {
 		consoleBadge.log({
 			mode: 'shields.io',
 			leftText: error,
@@ -1334,12 +1344,12 @@ class Queue {
 	 * @param obj
 	 * @param mapFunction
 	 */
-	objectMap(obj,mapFunction) {
-		for(let i in obj) {
-			if(typeof obj[i]==='object') {
-				this.objectMap(obj[i],mapFunction);
+	objectMap(obj, mapFunction) {
+		for (let i in obj) {
+			if (typeof obj[i] === 'object') {
+				this.objectMap(obj[i], mapFunction);
 			} else {
-				obj[i]=mapFunction(obj[i]);
+				obj[i] = mapFunction(obj[i]);
 			}
 		}
 	}
@@ -1371,7 +1381,7 @@ class Queue {
 		let url = location.search;
 		let query = url.substr(1);
 		let result = {};
-		query.split("&").forEach(function(part) {
+		query.split("&").forEach(function (part) {
 			let item = part.split("=");
 			result[item[0]] = decodeURIComponent(item[1]);
 		});
@@ -1382,8 +1392,8 @@ class Queue {
 	 *  Work in progress,
 	 */
 	menu() {
-		queue.setMemory('developer',!this.developerMode,"Permanent");
-		alert('DEVELOPER MODE: '+this.developerMode)
+		queue.setMemory('developer', !this.developerMode, "Permanent");
+		alert('DEVELOPER MODE: ' + this.developerMode)
 		//document.body.innerHTML+='<div id="ourthingsMenu"><button onclick="queue.toggleDebug()">DEBUG MODE</button></div>';
 	}
 
