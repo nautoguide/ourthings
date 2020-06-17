@@ -776,7 +776,6 @@ export default class Openlayers extends Queueable {
 	}
 
 	_makeContiguous(featuresJSON,tolerance) {
-		console.log(featuresJSON);
 		let collisionLog=[];
 		/*
 		 * make a collision box for each feature
@@ -937,12 +936,10 @@ export default class Openlayers extends Queueable {
 		if (options.mode === "on") {
 			self.maps[options.map].clickTag = map.on('click', clickfunction);
 		} else {
-			console.log('off');
 			unByKey(self.maps[options.map].clickTag);
 		}
 
 		function clickfunction(e) {
-			console.log(e);
 			self.queue.setMemory(options.prefix + 'simpleClick', e, "Session");
 			self.queue.execute(options.prefix + "simpleClick");
 		}
@@ -989,7 +986,6 @@ export default class Openlayers extends Queueable {
 		let layer = self.maps[options.map].layers[options.layer];
 		let view = map.getView();
 		let source = layer.getSource();
-		console.log(layer);
 
 		let projection = "EPSG:" + options.geometry.match(/SRID=(.*?);/)[1];
 		let wkt = options.geometry.replace(/SRID=(.*?);/, '');
@@ -1017,11 +1013,45 @@ export default class Openlayers extends Queueable {
 			"layer": "default",
 			"id": ""
 		}, json);
-		let map = self.maps[options.map].object;
 		let layer = self.maps[options.map].layers[options.layer];
 		let source = layer.getSource();
 		let feature = source.getFeatureById(options.id);
 		source.removeFeature(feature);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Clean and/or default feature properties
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get features from
+	 * @param {array} json.delete - Array of properties to delete
+	 * @param {array} json.default - Array of objects {name:...,value:...} to default
+	 */
+	propertiesClean(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"delete": [],
+			"default": []
+		}, json);
+		let layer = self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let features = source.getFeatures();
+		for(let f in features) {
+			for(let d in options.delete) {
+				if(features[f].get(d)) {
+					features[f].set(d,'');
+				}
+			}
+			for(let d in options.default) {
+				if(!features[f].get(options.default[d].name)) {
+					features[f].set(options.default[d].name,options.default[d].value);
+				}
+			}
+		}
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
@@ -1063,7 +1093,7 @@ export default class Openlayers extends Queueable {
 				// We only attempt to insersect anything that has 1 || 2 points, anything else is too complex
 				if(intersectPoints.features.length===1||intersectPoints.features.length===2) {
 					if(intersectPoints.features.length===1) {
-						console.log('Edge piece');
+						//console.log('Edge piece');
 						//console.log(polygons[p]);
 						const line2=lineString(line.coordinates);
 						//console.log(line2);

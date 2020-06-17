@@ -1,0 +1,453 @@
+[
+  {
+    "name": "Queue#templateProcessor",
+    "filePath": "ourthings/Queue.js",
+    "lines": [
+      {
+        "lineNumber": 337,
+        "line": "\t/**\r"
+      },
+      {
+        "lineNumber": 338,
+        "line": "\t * Template processor\r"
+      },
+      {
+        "lineNumber": 339,
+        "line": "\t * Takes a template, process it and places into the dom\r"
+      },
+      {
+        "lineNumber": 340,
+        "line": "\t * @param templateId {string} - ID of the template\r"
+      },
+      {
+        "lineNumber": 341,
+        "line": "\t * @param targetId {string|false} - Place in the dom the put the result. In the event of false we process without dom\r"
+      },
+      {
+        "lineNumber": 342,
+        "line": "\t * @return {boolean|string} - success status\r"
+      },
+      {
+        "lineNumber": 343,
+        "line": "\t */\r"
+      },
+      {
+        "lineNumber": 344,
+        "line": "\ttemplateProcessor(templateId, targetId, mode) {\r"
+      }
+    ],
+    "codeParams": [
+      "templateId",
+      "targetId",
+      "mode"
+    ],
+    "docParams": [
+      "templateId",
+      "targetId"
+    ]
+  },
+  {
+    "name": "Queue#templateParse",
+    "filePath": "ourthings/Queue.js",
+    "lines": [
+      {
+        "lineNumber": 567,
+        "line": "\t/**\r"
+      },
+      {
+        "lineNumber": 568,
+        "line": "\t * Takes a template and runs any template commands contained in it to create a HTML template\r"
+      },
+      {
+        "lineNumber": 569,
+        "line": "\t * ready to be put into the dom\r"
+      },
+      {
+        "lineNumber": 570,
+        "line": "\t *\r"
+      },
+      {
+        "lineNumber": 571,
+        "line": "\t * @param template {string}\r"
+      },
+      {
+        "lineNumber": 572,
+        "line": "\t * @return {string}\r"
+      },
+      {
+        "lineNumber": 573,
+        "line": "\t */\r"
+      },
+      {
+        "lineNumber": 574,
+        "line": "\ttemplateParse(template, commands) {\r"
+      }
+    ],
+    "codeParams": [
+      "template",
+      "commands"
+    ],
+    "docParams": [
+      "template"
+    ]
+  },
+  {
+    "name": "Queue#memory",
+    "filePath": "ourthings/Queue.js",
+    "lines": [
+      {
+        "lineNumber": 841,
+        "line": "\t/**\r"
+      },
+      {
+        "lineNumber": 842,
+        "line": "\t * Called by queueables to add something to our memory stack\r"
+      },
+      {
+        "lineNumber": 843,
+        "line": "\t * @param name\r"
+      },
+      {
+        "lineNumber": 844,
+        "line": "\t * @param value\r"
+      },
+      {
+        "lineNumber": 845,
+        "line": "\t * @param pid\r"
+      },
+      {
+        "lineNumber": 846,
+        "line": "\t */\r"
+      },
+      {
+        "lineNumber": 847,
+        "line": "\tmemory(pid, value) {\r"
+      }
+    ],
+    "codeParams": [
+      "pid",
+      "value"
+    ],
+    "docParams": [
+      "name",
+      "value",
+      "pid"
+    ]
+  },
+  {
+    "name": "Queue#finished",
+    "filePath": "ourthings/Queue.js",
+    "lines": [
+      {
+        "lineNumber": 1072,
+        "line": "\t/**\r"
+      },
+      {
+        "lineNumber": 1073,
+        "line": "\t *  Called to flag a queue item as finished\r"
+      },
+      {
+        "lineNumber": 1074,
+        "line": "\t *\r"
+      },
+      {
+        "lineNumber": 1075,
+        "line": "\t *  Normally hooked down from queueable this is a queue item saying I have finished in mode (see define.js)\r"
+      },
+      {
+        "lineNumber": 1076,
+        "line": "\t *\r"
+      },
+      {
+        "lineNumber": 1077,
+        "line": "\t * @param pid\r"
+      },
+      {
+        "lineNumber": 1078,
+        "line": "\t * @param mode\r"
+      },
+      {
+        "lineNumber": 1079,
+        "line": "\t */\r"
+      },
+      {
+        "lineNumber": 1080,
+        "line": "\tfinished(pid, mode, error) {\r"
+      }
+    ],
+    "codeParams": [
+      "pid",
+      "mode",
+      "error"
+    ],
+    "docParams": [
+      "pid",
+      "mode"
+    ]
+  },
+  {
+    "name": "Queue#commandParse",
+    "filePath": "ourthings/Queue.js",
+    "lines": [
+      {
+        "lineNumber": 1136,
+        "line": "\t/**\r"
+      },
+      {
+        "lineNumber": 1137,
+        "line": "\t * This will take a command string in the format object.command({},{}); and split it down\r"
+      },
+      {
+        "lineNumber": 1138,
+        "line": "\t * into it parts as an object\r"
+      },
+      {
+        "lineNumber": 1139,
+        "line": "\t *\r"
+      },
+      {
+        "lineNumber": 1140,
+        "line": "\t * TODO no concept of the context of the command IE was it from inside a div that need binding?\r"
+      },
+      {
+        "lineNumber": 1141,
+        "line": "\t * @param command {string}\r"
+      },
+      {
+        "lineNumber": 1142,
+        "line": "\t * @return {object}\r"
+      },
+      {
+        "lineNumber": 1143,
+        "line": "\t */\r"
+      },
+      {
+        "lineNumber": 1144,
+        "line": "\tcommandParse(command, isParent) {\r"
+      }
+    ],
+    "codeParams": [
+      "command",
+      "isParent"
+    ],
+    "docParams": [
+      "command"
+    ]
+  },
+  {
+    "name": "Mapbox#addLayer",
+    "filePath": "ourthings/Queueable/Mapbox.js",
+    "lines": [
+      {
+        "lineNumber": 116,
+        "line": "\t/**\r"
+      },
+      {
+        "lineNumber": 117,
+        "line": "\t * Add the layer to the map once a source has been created.\r"
+      },
+      {
+        "lineNumber": 118,
+        "line": "\t * @param {object} options\r"
+      },
+      {
+        "lineNumber": 119,
+        "line": "\t * @param {string} options.type - The type of feature that the layer is.\r"
+      },
+      {
+        "lineNumber": 120,
+        "line": "\t * @param {string} options.name - The name for the layer\r"
+      },
+      {
+        "lineNumber": 121,
+        "line": "\t * @param {object} options.paint - The paint styling for the layer\r"
+      },
+      {
+        "lineNumber": 122,
+        "line": "\t * @param {object} options.layout - The layout styling for the layer\r"
+      },
+      {
+        "lineNumber": 123,
+        "line": "\t * @private\r"
+      },
+      {
+        "lineNumber": 124,
+        "line": "\t */\r"
+      },
+      {
+        "lineNumber": 125,
+        "line": "\taddLayer(pid, json) {\r"
+      }
+    ],
+    "codeParams": [
+      "pid",
+      "json"
+    ],
+    "docParams": [
+      "options"
+    ]
+  },
+  {
+    "name": "Openlayers#_addLayer_wms",
+    "filePath": "ourthings/Queueable/Openlayers.js",
+    "lines": [
+      {
+        "lineNumber": 302,
+        "line": "\t/**\r"
+      },
+      {
+        "lineNumber": 303,
+        "line": "\t * Add a wms layer\r"
+      },
+      {
+        "lineNumber": 304,
+        "line": "\t * @param options\r"
+      },
+      {
+        "lineNumber": 305,
+        "line": "\t * @return {TileLayer}\r"
+      },
+      {
+        "lineNumber": 306,
+        "line": "\t * @private\r"
+      },
+      {
+        "lineNumber": 307,
+        "line": "\t */\r"
+      },
+      {
+        "lineNumber": 308,
+        "line": "\t_addLayer_wms(json) {\r"
+      }
+    ],
+    "codeParams": [
+      "json"
+    ],
+    "docParams": [
+      "options"
+    ]
+  },
+  {
+    "name": "Openlayers#_toggleControl",
+    "filePath": "ourthings/Queueable/Openlayers.js",
+    "lines": [
+      {
+        "lineNumber": 459,
+        "line": "\t/**\r"
+      },
+      {
+        "lineNumber": 460,
+        "line": "\t * Toggle a control between on/off\r"
+      },
+      {
+        "lineNumber": 461,
+        "line": "\t * @param map\r"
+      },
+      {
+        "lineNumber": 462,
+        "line": "\t * @param control\r"
+      },
+      {
+        "lineNumber": 463,
+        "line": "\t * @private\r"
+      },
+      {
+        "lineNumber": 464,
+        "line": "\t */\r"
+      },
+      {
+        "lineNumber": 465,
+        "line": "\t_toggleControl(map, control,mode) {\r"
+      }
+    ],
+    "codeParams": [
+      "map",
+      "control",
+      "mode"
+    ],
+    "docParams": [
+      "map",
+      "control"
+    ]
+  },
+  {
+    "name": "Openlayers#_loadGeojson",
+    "filePath": "ourthings/Queueable/Openlayers.js",
+    "lines": [
+      {
+        "lineNumber": 1311,
+        "line": "\t/**\r"
+      },
+      {
+        "lineNumber": 1312,
+        "line": "\t * Loads geojson from var or object\r"
+      },
+      {
+        "lineNumber": 1313,
+        "line": "\t * @param geojson\r"
+      },
+      {
+        "lineNumber": 1314,
+        "line": "\t * @private\r"
+      },
+      {
+        "lineNumber": 1315,
+        "line": "\t */\r"
+      },
+      {
+        "lineNumber": 1316,
+        "line": "\t_loadGeojson(map, geojson) {\r"
+      }
+    ],
+    "codeParams": [
+      "map",
+      "geojson"
+    ],
+    "docParams": [
+      "geojson"
+    ]
+  },
+  {
+    "name": "Queueable#finished",
+    "filePath": "ourthings/Queueable.js",
+    "lines": [
+      {
+        "lineNumber": 67,
+        "line": "\t/**\r"
+      },
+      {
+        "lineNumber": 68,
+        "line": "\t * Call this method after you command has finished. Failure to do so will result is\r"
+      },
+      {
+        "lineNumber": 69,
+        "line": "\t * a stalled queue\r"
+      },
+      {
+        "lineNumber": 70,
+        "line": "\t * @param pid\r"
+      },
+      {
+        "lineNumber": 71,
+        "line": "\t * @param mode\r"
+      },
+      {
+        "lineNumber": 72,
+        "line": "\t */\r"
+      },
+      {
+        "lineNumber": 73,
+        "line": "\tfinished(pid,mode,error='') {\r"
+      }
+    ],
+    "codeParams": [
+      "pid",
+      "mode",
+      "error"
+    ],
+    "docParams": [
+      "pid",
+      "mode"
+    ]
+  }
+]
