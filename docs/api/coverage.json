@@ -1,0 +1,203 @@
+{
+  "coverage": "63.86%",
+  "expectCount": 274,
+  "actualCount": 175,
+  "files": {
+    "ourthings/Define.js": {
+      "expectCount": 23,
+      "actualCount": 7,
+      "undocumentLines": [
+        16,
+        21,
+        22,
+        23,
+        29,
+        30,
+        38,
+        39,
+        45,
+        46,
+        47,
+        54,
+        55,
+        57,
+        58,
+        59
+      ]
+    },
+    "ourthings/Memory.js": {
+      "expectCount": 9,
+      "actualCount": 5,
+      "undocumentLines": [
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    "ourthings/Queue.js": {
+      "expectCount": 44,
+      "actualCount": 42,
+      "undocumentLines": [
+        195,
+        1287
+      ]
+    },
+    "ourthings/Queueable/Api.js": {
+      "expectCount": 10,
+      "actualCount": 6,
+      "undocumentLines": [
+        19,
+        285,
+        326,
+        352
+      ]
+    },
+    "ourthings/Queueable/Browser.js": {
+      "expectCount": 8,
+      "actualCount": 6,
+      "undocumentLines": [
+        114,
+        119
+      ]
+    },
+    "ourthings/Queueable/Elements.js": {
+      "expectCount": 20,
+      "actualCount": 18,
+      "undocumentLines": [
+        506,
+        513
+      ]
+    },
+    "ourthings/Queueable/Files.js": {
+      "expectCount": 4,
+      "actualCount": 4,
+      "undocumentLines": []
+    },
+    "ourthings/Queueable/Geojson.js": {
+      "expectCount": 8,
+      "actualCount": 4,
+      "undocumentLines": [
+        31,
+        85,
+        102,
+        159
+      ]
+    },
+    "ourthings/Queueable/Internals.js": {
+      "expectCount": 9,
+      "actualCount": 9,
+      "undocumentLines": []
+    },
+    "ourthings/Queueable/Mapbox.js": {
+      "expectCount": 37,
+      "actualCount": 22,
+      "undocumentLines": [
+        8,
+        10,
+        11,
+        12,
+        13,
+        14,
+        277,
+        303,
+        317,
+        375,
+        384,
+        648,
+        716,
+        726,
+        736
+      ]
+    },
+    "ourthings/Queueable/Markdown.js": {
+      "expectCount": 2,
+      "actualCount": 2,
+      "undocumentLines": []
+    },
+    "ourthings/Queueable/Menu.js": {
+      "expectCount": 2,
+      "actualCount": 2,
+      "undocumentLines": []
+    },
+    "ourthings/Queueable/Openlayers.js": {
+      "expectCount": 49,
+      "actualCount": 38,
+      "undocumentLines": [
+        84,
+        85,
+        87,
+        89,
+        91,
+        179,
+        675,
+        729,
+        778,
+        853,
+        1329
+      ]
+    },
+    "ourthings/Queueable/Templates.js": {
+      "expectCount": 2,
+      "actualCount": 2,
+      "undocumentLines": []
+    },
+    "ourthings/Queueable/W3Menu.js": {
+      "expectCount": 31,
+      "actualCount": 2,
+      "undocumentLines": [
+        73,
+        97,
+        128,
+        160,
+        170,
+        174,
+        180,
+        185,
+        214,
+        235,
+        253,
+        328,
+        347,
+        351,
+        356,
+        362,
+        399,
+        444,
+        487,
+        491,
+        498,
+        516,
+        520,
+        524,
+        536,
+        548,
+        572,
+        583,
+        600
+      ]
+    },
+    "ourthings/Queueable.js": {
+      "expectCount": 8,
+      "actualCount": 5,
+      "undocumentLines": [
+        21,
+        30,
+        83
+      ]
+    },
+    "ourthings/validator.js": {
+      "expectCount": 8,
+      "actualCount": 1,
+      "undocumentLines": [
+        16,
+        22,
+        23,
+        29,
+        30,
+        35,
+        36
+      ]
+    }
+  }
+}

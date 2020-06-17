@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">ourthings/Queueable/Geojson.js | @nautoguide/ourthings</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Queue based JavaScript framework"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="@nautoguide/ourthings"><meta property="twitter:description" content="Queue based JavaScript framework"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~Validate.html">Validate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateEmail.html">ValidateEmail</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidatePassword.html">ValidatePassword</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateText.html">ValidateText</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Menu.js~Menu.html">Menu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/W3Menu.js~W3Menu.html">W3Menu</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queueable/Geojson.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module ourthings/Queueable/Geojson */
+import Queueable from &quot;../Queueable&quot;;
+
+/**
+ * @classdesc
+ *
+ * geojson Functions
+ *
+ * @author Richard Reynolds richard@nautoguide.com
+ *
+ * @example
+ * //
+ *
+ */
+export default class Geojson extends Queueable {
+
+
+	/**
+	 * Init the geojson history
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.geojson - starting geojson
+	 */
+	historyInit(pid, json) {
+		let options = Object.assign({
+			&quot;index&quot;: &quot;feature_id&quot;,
+			&quot;mode&quot;: &quot;simple&quot;
+		}, json);
+
+		let history = {&quot;revertPtr&quot;: false, &quot;mode&quot;: options.mode, &quot;log&quot;: []};
+		this.index = options.index;
+
+		history.log.push({
+			&quot;name&quot;: &quot;Session start&quot;,
+			&quot;type&quot;: &quot;full&quot;,
+			&quot;geojson&quot;: this._compressGeojson(&quot;full&quot;, options.geojson),
+			&quot;index&quot;: this._makeHistoryIndex(options.geojson)
+		});
+		this.queue.setMemory(&quot;geojsonHistory&quot;, history, &quot;Session&quot;);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Add to the geojson history
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.geojson - starting geojson
+	 * @param {string} json.type - Type of entry
+	 */
+	historyAdd(pid, json) {
+		let options = Object.assign({
+			&quot;type&quot;: &quot;incremental&quot;
+		}, json);
+		if (memory.geojsonHistory.value.revertPtr!==false&amp;&amp;memory.geojsonHistory.value.mode === &quot;simple&quot;) {
+			memory.geojsonHistory.value.log=memory.geojsonHistory.value.log.splice(0,memory.geojsonHistory.value.revertPtr+1);
+			memory.geojsonHistory.value.revertPtr=false;
+		}
+
+		let entry={
+			&quot;name&quot;: options.name,
+			&quot;geojson&quot;: this._compressGeojson(options.type, options.geojson),
+			&quot;type&quot;: options.type,
+			&quot;index&quot;: this._makeHistoryIndex(options.geojson)
+		}
+		memory.geojsonHistory.value.log.push(entry);
+
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * We need to make a fast access index for history based on our &apos;index&apos; element for use later to speed up
+	 * access and prevent many searches
+	 *
+	 * @param json
+	 * @private
+	 */
+	_makeHistoryIndex(json) {
+		let index = {};
+		for (let i in json.features) {
+			index[json.features[i].properties[this.index]] = {&quot;position&quot;: i};
+		}
+		return index;
+	}
+
+	_compressGeojson(type, json) {
+		if (type === &apos;full&apos; || type === &apos;incremental&apos;)
+			return json;
+		if (type === &apos;geometry&apos;) {
+			/*
+			 * This edit was geometry only so we nuke properties (but not index as we need that)
+			 */
+			for (let i in json.features) {
+				for (let p in json.features[i].properties) {
+					if (p !== this.index)
+						delete json.features[i].properties[p];
+				}
+			}
+		}
+		return json;
+	}
+
+	historyRevert(pid, json) {
+		/**
+		 * Add to the geojson history
+		 * @param {number} pid - Process ID
+		 * @param {object} json - queue arguments
+		 * @param {string} json.id - history id
+		 * @param {string} json.name - memory name to use
+		 */
+		let currentPtr = parseInt(json.id);
+		let historyCut = [];
+		let geojsonBuild;
+		let fastIndex;
+		memory.geojsonHistory.value.revertPtr = currentPtr;
+		/*
+		 * Cut out history from our end id to the first full geojson
+		 */
+		for (let i = currentPtr; i &gt;= 0; i--) {
+			if (memory.geojsonHistory.value.log[i].type === &quot;full&quot;) {
+				geojsonBuild = this.queue.deepCopy(memory.geojsonHistory.value.log[i].geojson);
+				fastIndex = this.queue.deepCopy(memory.geojsonHistory.value.log[i].index);
+				break;
+			}
+			historyCut.unshift(memory.geojsonHistory.value.log[i]);
+		}
+		/*
+		 * geojsonBuild now contains the last full backup &amp; historyCut is the array of changes needed to be applies
+		 * in order to achieve the point in history. fastIndex is the index to access geojsonBuild and needs updating as
+		 * we move down the history *if* additions / subtactions are made
+		 */
+		let len = historyCut.length;
+		for (let i = 0; i &lt; len; i++) {
+			for (let f = 0; f &lt; historyCut[i].geojson.features.length; f++) {
+				switch (historyCut[i].type) {
+					case &apos;geometry&apos;:
+						geojsonBuild.features[fastIndex[historyCut[i].geojson.features[f].properties[this.index]].position].geometry = this.queue.deepCopy(historyCut[i].geojson.features[f].geometry);
+						break;
+					default:
+						geojsonBuild.features[fastIndex[historyCut[i].geojson.features[f].properties[this.index]].position] = this.queue.deepCopy(historyCut[i].geojson.features[f]);
+						break;
+				}
+			}
+		}
+		self.queue.setMemory(json.name, geojsonBuild, &quot;Session&quot;);
+		if (memory.geojsonHistory.value.mode !== &quot;simple&quot;) {
+			memory.geojsonHistory.value.log.push({
+				&quot;name&quot;: &quot;Revert point&quot;,
+				&quot;geojson&quot;: geojsonBuild,
+				&quot;type&quot;: &quot;full&quot;,
+				&quot;index&quot;: this._makeHistoryIndex(geojsonBuild)
+
+			})
+		}
+
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+
+	}
+
+	historyCompare(pid,json) {
+		let options = Object.assign({
+			&quot;index&quot;: &quot;feature_id&quot;
+		}, json);
+		const index1=this._makeHistoryIndex(options.geojson1);
+		const index2=this._makeHistoryIndex(options.geojson2);
+
+		let deletes=[];
+
+		//TODO iterate to find deletes
+
+		this.queue.setMemory(&quot;historyCompare&quot;, {&quot;updates&quot;:options.geojson2,&quot;deletes&quot;:deletes}, &quot;Session&quot;);
+
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
+
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

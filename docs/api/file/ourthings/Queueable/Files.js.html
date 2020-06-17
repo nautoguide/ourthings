@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">ourthings/Queueable/Files.js | @nautoguide/ourthings</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Queue based JavaScript framework"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="@nautoguide/ourthings"><meta property="twitter:description" content="Queue based JavaScript framework"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~Validate.html">Validate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateEmail.html">ValidateEmail</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidatePassword.html">ValidatePassword</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateText.html">ValidateText</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Menu.js~Menu.html">Menu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/W3Menu.js~W3Menu.html">W3Menu</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queueable/Files.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module ourthings/Queueable/Files */
+import Queueable from &quot;../Queueable&quot;;
+
+/**
+ * @classdesc
+ *
+ * File upload functions
+ *
+ * @author Richard Reynolds richard@nautoguide.com
+ *
+ * @example
+ * //
+ *
+ */
+export default class Files extends Queueable {
+
+
+	/**
+	 * Load a file into memory with option to preview
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom location that contains the files input
+	 * @param {string} json.previewId - Dom location to put preview
+	 * @param {string} json.background - Use background rather than src
+	 */
+	clientLoad(pid, json) {
+		let self = this;
+		let element = self.queue.getElement(json.targetId);
+		let files = element.files;
+		if (files &amp;&amp; files[0]) {
+			let reader = new FileReader();
+			reader.readAsDataURL(files[0]);
+			reader.onload = function (evt) {
+				if (json.previewId) {
+					let preview = self.queue.getElement(json.previewId);
+					if(json.background)
+						preview.style[&apos;background-image&apos;]=evt.target.result;
+					else
+						preview.src = evt.target.result;
+				} else {
+					self.set(pid, evt.target.result);
+				}
+				self.finished(pid, self.queue.DEFINE.FIN_OK);
+			};
+			reader.onerror = function (evt) {
+				// TODO Write me!
+				console.log(&apos;error&apos;);
+				debugger;
+				self.finished(pid, self.queue.DEFINE.FIN_ERROR);
+
+			};
+		}
+
+	}
+
+	/**
+	 * Image preview
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom location that contains the files input
+	 * @param {string} json.previewId - Dom location to put preview
+	 * @param {string} json.dragTargetId - Dom location to target for the drop zone
+	 * @param {string} json.background - Use background rather than src
+
+	 */
+	filePreview(pid, json) {
+		let self = this;
+		let options=Object.assign({
+			&quot;prefix&quot;:&quot;main&quot;
+		},json);
+		let element = self.queue.getElement(json.targetId);
+
+		/**
+		 *  Clear down any previous file memory entries
+		 */
+		self.queue.deleteMemory(&apos;file&apos;);
+
+		/**
+		 * Drag drop functions
+		 * @param e
+		 */
+		function onDragEnter(e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+
+		function onDragOver(e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+
+		function onDragLeave(e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+
+		function onDrop(e) {
+			e.stopPropagation();
+			e.preventDefault();
+			setFiles(e.dataTransfer.files);
+			return false;
+		}
+
+		function setFiles(files) {
+			let file = files[0];
+			self.queue.setMemory(&apos;file&apos;, file, &apos;Session&apos;);
+			doPreview(file);
+		}
+
+		/**
+		 *  Did we need a drag and drop on this element?
+		 */
+		if (json.dragTargetId) {
+			let dragElement = self.queue.getElement(json.dragTargetId);
+			dragElement.addEventListener(&apos;dragenter&apos;, onDragEnter, false);
+			dragElement.addEventListener(&apos;dragover&apos;, onDragOver, false);
+			dragElement.addEventListener(&apos;dragleave&apos;, onDragLeave, false);
+			dragElement.addEventListener(&apos;drop&apos;, onDrop, false);
+		}
+
+
+		/**
+		 *  Event for change (IE the input file box selected a file)
+		 */
+		element.addEventListener(&apos;change&apos;, function () {
+			let file = this.files[0];
+			self.queue.setMemory(&apos;file&apos;, file, &apos;Session&apos;);
+			doPreview(file);
+		});
+
+		/**
+		 * Actual preview function called from both change &amp; drag drop events
+		 * @param file
+		 */
+
+		function doPreview(file) {
+			let reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = function (evt) {
+				self.queue.setMemory(&quot;filePreview&quot;, evt.target.result,&quot;Session&quot;);
+				self.queue.execute(options.prefix+&quot;FilePreview&quot;);
+			};
+			reader.onerror = function (evt) {
+				// TODO Write me!
+				console.log(&apos;error&apos;);
+				debugger;
+
+			};
+		}
+
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Upload fiel to S3
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom location that contains the files input
+	 * @param {boolean} json.file - use the memory file object set
+	 * @param {string} json.contentType - Content type of file
+	 * @param {string} json.headers - Additional headers to send
+	 * @param {string} json.url - url to upload to
+	 */
+	putFileToS3(pid, json) {
+		let self = this;
+		json.contentType = json.contentType || &apos;image/png&apos;;
+		let headers = json.headers || {};
+		headers[&apos;Content-Type&apos;] = json.contentType;
+		let file;
+		/**
+		 *  The upload can come from an input or via memory
+		 *  In the case of memory we cleanup the memory
+		 */
+		if (json.file) {
+			file=memory.file.value;
+			self.queue.deleteMemory(&apos;file&apos;);
+		} else {
+			let element = self.queue.getElement(json.targetId);
+			file = element.files[0];
+		}
+
+		/**
+		 *  Make the call to S3 with the file data
+		 */
+		fetch(json.url, {
+			headers: headers,
+			method: &apos;PUT&apos;,
+			body: file
+		})
+			.then(response =&gt; self.queue.handleFetchErrors(response))
+			.then(function (response) {
+				switch (json.contentType) {
+					case &apos;application/json&apos;:
+						return response.json();
+					default:
+						return response.text();
+				}
+			})
+			.then(function (response) {
+				/*
+				 * Convert the response to json and start the loader
+				 */
+				self.set(pid, response);
+				self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+			})
+			.catch(function (error) {
+				console.info(self.queue.DEFINE.CONSOLE_LINE);
+				console.error(&apos;Error:&apos;, error);
+				console.info(&quot;Warning this error is probably fatal as I have no templates to load&quot;);
+				self.finished(pid, self.queue.DEFINE.FIN_ERROR, &apos;S3 upload error&apos;);
+
+			});
+
+	}
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

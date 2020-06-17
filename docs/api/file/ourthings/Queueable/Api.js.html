@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">ourthings/Queueable/Api.js | @nautoguide/ourthings</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Queue based JavaScript framework"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="@nautoguide/ourthings"><meta property="twitter:description" content="Queue based JavaScript framework"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~Validate.html">Validate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateEmail.html">ValidateEmail</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidatePassword.html">ValidatePassword</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateText.html">ValidateText</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Menu.js~Menu.html">Menu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/W3Menu.js~W3Menu.html">W3Menu</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queueable/Api.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module Api */
+import Queueable from &quot;../Queueable&quot;;
+import { v4 as uuidv4 } from &apos;uuid&apos;;
+
+/**
+ * @classdesc
+ *
+ * API connection methods
+ *
+ * @author Richard Reynolds richard@nautoguide.com
+ *
+ * @example
+ * //
+ *
+ */
+
+const MAX_BYTES = 50000;
+
+export default class Api extends Queueable {
+
+	/**
+	 * Make a GET request
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.url - URL to make GET request to
+	 * @param {string} json.contentType=application/json - Content type to request
+	 * @param {string} json.header - header object to send (note Content-Type is overwritten by above setting)
+	 * @param {string} json.name - name of error queue to use
+	 */
+	get(pid,json) {
+		let self=this;
+		json.contentType=json.contentType||&apos;application/json&apos;;
+		json.name=json.name||&apos;apiError&apos;;
+		let headers=json.headers||{};
+		headers[&apos;Content-Type&apos;]=json.contentType||&apos;application/json&apos;;
+		fetch(json.url, {
+			headers: headers,
+		})
+			.then(function(response) {
+				if (!response.ok) {
+					self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:response},self.queue.DEFINE.MEMORY_SESSION);
+					self.queue.execute(json.name);
+				}
+				self.queue.handleFetchErrors(response);
+				return response;
+			})
+			.then(function(response) {
+				switch(json.contentType) {
+					case &apos;application/json&apos;:
+						return response.json();
+					default:
+						return response.text();
+				}
+			})
+			.then(function (response) {
+				/*
+				 * Convert the response to json and start the loader
+				 */
+				self.set(pid,response);
+				self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+			})
+			.catch(function (error) {
+				self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:error},self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.execute(json.name);
+				console.info(self.queue.DEFINE.CONSOLE_LINE);
+				console.error(&apos;Error:&apos;, error);
+				console.info(&quot;api.get Warning this error is probably fatal&quot;);
+			});
+
+	}
+
+	/**
+	 * Make a POST request
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.url - URL to make GET request to
+	 * @param {string} json.contentType=application/json - Content type to request
+	 * @param {string} json.header - header object to send (note Content-Type is overwritten by above setting)
+	 * @param {string} json.body - object to send JSON.stringify is applies to this
+	 * @param {string} json.name - name of error queue to use
+	 */
+	post(pid,json) {
+		let self=this;
+		json.contentType=json.contentType||&apos;application/json&apos;;
+		json.name=json.name||&apos;apiError&apos;;
+		let headers=json.headers||{};
+		headers[&apos;Content-Type&apos;]=json.contentType||&apos;application/json&apos;;
+		fetch(json.url, {
+			headers: headers,
+			method: &apos;POST&apos;,
+			body: JSON.stringify(json.body)
+		})
+			.then(function(response) {
+				if (!response.ok) {
+					self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:response},self.queue.DEFINE.MEMORY_SESSION);
+					self.queue.execute(json.name);
+				}
+				self.queue.handleFetchErrors(response);
+				return response;
+			})
+			.then(function(response) {
+				switch(json.contentType) {
+					case &apos;application/json&apos;:
+						return response.json();
+					default:
+						return response.text();
+				}
+			})
+			.then(function (response) {
+				/*
+				 * Convert the response to json and start the loader
+				 */
+				self.set(pid,response);
+				self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+			})
+			.catch(function (error) {
+				self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:error},self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.execute(json.name);
+				console.info(self.queue.DEFINE.CONSOLE_LINE);
+				console.error(&apos;Error:&apos;, error);
+				console.info(&quot;api.post Warning this error is probably fatal&quot;);
+			});
+
+	}
+
+	/**
+	 * Make a PUT request
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.url - URL to make PUT request to
+	 * @param {string} json.contentType=application/json - Content type to request
+	 * @param {string} json.header - header object to send (note Content-Type is overwritten by above setting)
+	 * @param {string} json.body - object to send JSON.stringify is applies to this
+	 * @param {string} json.name - name of error queue to use
+	 */
+	put(pid,json) {
+		let self=this;
+		json.contentType=json.contentType||&apos;image/png&apos;;
+		json.name=json.name||&apos;apiError&apos;;
+		let headers=json.headers||{};
+		headers[&apos;Content-Type&apos;]=json.contentType;
+		fetch(json.url, {
+			headers: headers,
+			method: &apos;PUT&apos;,
+			body: window.atob(json.body)
+		})
+			.then(function(response) {
+				if (!response.ok) {
+					self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:response},self.queue.DEFINE.MEMORY_SESSION);
+					self.queue.execute(json.name);
+				}
+				self.queue.handleFetchErrors(response);
+				return response;
+			})
+			.then(function(response) {
+				switch(json.contentType) {
+					case &apos;application/json&apos;:
+						return response.json();
+					default:
+						return response.text();
+				}
+			})
+			.then(function (response) {
+				/*
+				 * Convert the response to json and start the loader
+				 */
+				self.set(pid,response);
+				self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+			})
+			.catch(function (error) {
+				self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:error},self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.execute(json.name);
+				console.info(self.queue.DEFINE.CONSOLE_LINE);
+				console.error(&apos;Error:&apos;, error);
+				console.info(&quot;api.put Warning this error is probably fatal&quot;);
+			});
+
+	}
+
+	/**
+	 * Create a new websocket
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.url - URL to connect websocket too
+	 * @param {string} json.action - What json param will contain the &apos;action&apos; router
+	 * @param {string} json.queues - Array of {action:&quot;action&quot;, queue:&quot;queue&quot; }
+
+	 */
+	websocketInit(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;url&quot;:&quot;ws://localhost&quot;,
+			&quot;queue&quot;:&quot;queue&quot;,
+			&quot;queues&quot;:{}
+		},json);
+		self.frames={};
+		self.bulk=[];
+		self.bulkQueue=&apos;bulkQueue&apos;;
+		self.socket = new WebSocket(options.url);
+		self.socket.onopen = function(event) {
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		};
+		self.socket.onmessage = function(event) {
+			let stack=[];
+			let jsonData=JSON.parse(event.data);
+
+			/*
+			 * Is this part of a multi packet?
+			 *
+			 * For AWS websockets size is limited so we split packets down into frames IE:
+			 *
+			 * { frame: 1, totalFrames: 10, data: &quot;BASE64&quot; }
+			 *
+			 * This decodes those frames, you will need to implement the split in your AWS websocket code
+			 */
+			if(jsonData[&apos;frame&apos;]) {
+				if(self.frames[jsonData[&apos;uuid&apos;]]===undefined) {
+					self.frames[jsonData[&apos;uuid&apos;]]={&quot;total&quot;:0,data:new Array(jsonData[&apos;frame&apos;][&apos;totalFrames&apos;])};
+				}
+				self.frames[jsonData[&apos;uuid&apos;]].data[jsonData[&apos;frame&apos;]]=atob(jsonData[&apos;data&apos;]);
+				self.frames[jsonData[&apos;uuid&apos;]].total++;
+				if(self.frames[jsonData[&apos;uuid&apos;]].total===jsonData[&apos;totalFrames&apos;]) {
+					jsonData=JSON.parse(self.frames[jsonData[&apos;uuid&apos;]].data.join(&apos;&apos;));
+					deployEvent();
+					delete self.frames[jsonData[&apos;uuid&apos;]];
+				}
+			} else {
+				deployEvent();
+			}
+
+			function deployEvent() {
+				/*
+				 * We push data to the stack for anyone using stack mode
+				 */
+				if (memory[`wsStack_${jsonData[options.queue]}`])
+					stack = memory[`wsStack_${jsonData[options.queue]}`].value;
+				stack.push(jsonData);
+				self.queue.setMemory(`wsStack_${jsonData[options.queue]}`, stack, self.queue.DEFINE.MEMORY_SESSION);
+				/*
+				 * Set our normal memory (not multiple thread safe)
+				 */
+				self.queue.setMemory(jsonData[options.queue], jsonData, self.queue.DEFINE.MEMORY_SESSION);
+
+
+				/*
+				 * Do we need to trigger event? If we have bulk calls coming in then only if its the last
+				 */
+				let wasBulk=false;
+				for(let i in self.bulk) {
+					if(self.bulk[i][options.queue]===jsonData[options.queue]) {
+						self.bulk.splice(i, 1);
+						wasBulk=true;
+					}
+				}
+
+				if(wasBulk===false)
+					self.queue.execute(jsonData[options.queue]);
+				else {
+					if(wasBulk===true&amp;&amp;self.bulk.length===0) {
+						self.queue.execute(self.bulkQueue);
+					}
+				}
+			}
+
+		};
+
+		self.socket.onclose = function(event) {
+			self.queue.setMemory(&apos;wsCloseDetails&apos;, event, self.queue.DEFINE.MEMORY_SESSION);
+			self.queue.execute(&quot;wsClose&quot;);
+		};
+
+		self.socket.onerror = function(event) {
+			self.queue.setMemory(&apos;wsErrorDetails&apos;, event, self.queue.DEFINE.MEMORY_SESSION);
+			self.queue.execute(&quot;wsError&quot;);
+		};
+	}
+
+	websocketPop(pid,json) {
+		let options=Object.assign({
+			&quot;prefix&quot;:&quot;ws://localhost&quot;,
+			&quot;queue&quot;:&quot;queue&quot;,
+			&quot;queues&quot;:{}
+		},json);
+		this.queue.setStack(pid,options.queue,memory[`wsStack_${json.queue}`].value.pop());
+		this.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Send a json message down the websocket
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.message - JSON message to send
+	 * @param {string} json.bulk - Bulk messages
+	 * @param {string} json.bulk - Bulk bulkQueue
+	 */
+	websocketSend(pid,json) {
+		let self=this;
+		if(json.debug===true)
+			console.log(json);
+		if(json.bulk) {
+			/*
+			 * Bulk mode, we are sending lots of requests and return triggers only work when we get it all back
+			 */
+			self.bulk=json.bulk;
+			self.bulkQueue=json.bulkQueue;
+			for(let i in self.bulk) {
+				self._websocketSendActual(self.bulk[i])
+				//self.socket.send(JSON.stringify(self.bulk[i]));
+			}
+		} else {
+			//self.socket.send(JSON.stringify(json.message));
+			self._websocketSendActual(json.message);
+		}
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+
+	_websocketSendActual(json) {
+		let self=this;
+		self.currentPacket = 0;
+		self.totalPackets = 0;
+		self.packetArray = [];
+		self.uuid=uuidv4();
+		const payload=JSON.stringify(json);
+		if (payload.length &gt; MAX_BYTES) {
+			self.totalPackets = Math.ceil(payload.length / MAX_BYTES);
+			for (let i = 0; i &lt; self.totalPackets; i++) {
+				let loc = i * MAX_BYTES;
+				let sub = payload.slice(loc, MAX_BYTES + loc);
+				self.packetArray.push(sub);
+			}
+			self._websocketSendPacket();
+		} else {
+			try {
+				self.socket.send(payload);
+			} catch(event) {
+				self.queue.setMemory(&apos;wsErrorDetails&apos;, event, self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.execute(&quot;wsError&quot;);
+
+			}
+		}
+	}
+
+	_websocketSendPacket() {
+		let self=this;
+		/*
+		 * more work?
+		 */
+		if (self.currentPacket &lt; self.totalPackets) {
+			let packet = btoa(self.packetArray.shift());
+			self.currentPacket++;
+			//console.log(`packet:${self.currentPacket}-${self.totalPackets} Size: ${packet.length}`);
+
+			try {
+				self.socket.send(JSON.stringify({
+					&quot;frame&quot;: self.currentPacket,
+					&quot;totalFrames&quot;: self.totalPackets,
+					&quot;uuid&quot;: self.uuid,
+					&quot;data&quot;: packet
+				}));
+			} catch(event) {
+				self.queue.setMemory(&apos;wsErrorDetails&apos;, event, self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.execute(&quot;wsError&quot;);
+			}
+			setTimeout(function() {self._websocketSendPacket();},100);
+		}
+	}
+
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

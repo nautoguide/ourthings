@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">ourthings/Queueable/Openlayers.js | @nautoguide/ourthings</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Queue based JavaScript framework"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="@nautoguide/ourthings"><meta property="twitter:description" content="Queue based JavaScript framework"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~Validate.html">Validate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateEmail.html">ValidateEmail</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidatePassword.html">ValidatePassword</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateText.html">ValidateText</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Menu.js~Menu.html">Menu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/W3Menu.js~W3Menu.html">W3Menu</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queueable/Openlayers.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module Openlayers */
+import Queueable from &quot;../Queueable&quot;;
+import {Map, View, Feature} from &apos;ol&apos;;
+import {getWidth, getTopLeft} from &apos;ol/extent.js&apos;;
+
+import TileLayer from &apos;ol/layer/Tile&apos;;
+import VectorLayer from &apos;ol/layer/Vector&apos;;
+import VectorSource from &apos;ol/source/Vector&apos;;
+import {Point} from &apos;ol/geom.js&apos;;
+
+import Disposable from &apos;ol/Disposable&apos;;
+import OSM from &apos;ol/source/OSM&apos;;
+import WMTS from &apos;ol/source/WMTS&apos;;
+import WMTSTileGrid from &apos;ol/tilegrid/WMTS&apos;;
+import XYZ from &apos;ol/source/XYZ.js&apos;;
+import TileWMS from &apos;ol/source/TileWMS&apos;;
+
+import WKT from &apos;ol/format/WKT&apos;;
+import Overlay from &apos;ol/Overlay&apos;;
+import {unByKey} from &apos;ol/Observable&apos;
+
+
+import GeoJSON from &apos;ol/format/GeoJSON&apos;;
+import {fromLonLat, units, epsg3857, epsg4326} from &apos;ol/proj&apos;;
+
+import Select from &apos;ol/interaction/Select&apos;;
+import Snap from &apos;ol/interaction/Snap&apos;;
+import Modify from &apos;ol/interaction/Modify&apos;;
+import Draw from &apos;ol/interaction/Draw&apos;;
+
+import proj4 from &quot;proj4&quot;;
+import {register} from &apos;ol/proj/proj4&apos;;
+import {get as getProjection} from &apos;ol/proj&apos;
+
+import {transform} from &apos;ol/proj&apos;;
+
+import {defaults as defaultInteractions, DragRotateAndZoom} from &apos;ol/interaction&apos;;
+
+import {click, pointerMove, altKeyOnly, shiftKeyOnly, singleClick} from &apos;ol/events/condition&apos;;
+
+import * as consoleBadge from &quot;console-badge&quot;;
+
+import {v4 as uuidv4} from &apos;uuid&apos;;
+
+import {point, polygon, multiPolygon,featureCollection,lineString} from &apos;@turf/turf&apos;;
+import booleanPointInPolygon from &apos;@turf/boolean-point-in-polygon&apos;;
+import booleanContains from &apos;@turf/boolean-contains&apos;;
+import buffer from &apos;@turf/buffer&apos;;
+import kinks from &apos;@turf/kinks&apos;;
+import bboxPolygon from &apos;@turf/bbox-polygon&apos;;
+import bbox from &apos;@turf/bbox&apos;;
+import union from &apos;@turf/union&apos;;
+import truncate from &apos;@turf/truncate&apos;;
+import clean from &apos;@turf/clean-coords&apos;;
+import lineIntersect from &apos;@turf/line-intersect&apos;;
+import lineOffset from &apos;@turf/line-offset&apos;;
+import convex from &apos;@turf/convex&apos;;
+import explode from &apos;@turf/explode&apos;;
+import difference from &apos;@turf/difference&apos;;
+import lineOverlap from &apos;@turf/line-overlap&apos;;
+
+proj4.defs([
+	[&quot;EPSG:27700&quot;, &quot;+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.999601 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.060,0.1502,0.2470,0.8421,-20.4894 +datum=OSGB36 +units=m +no_defs&quot;]
+]);
+
+register(proj4);
+
+
+/**
+ * @classdesc
+ *
+ * Openlayers Hook
+ *
+ * @author Richard Reynolds richard@nautoguide.com
+ *
+ * @example
+ * //
+ *
+ * @description You need to add &quot;ol&quot;: &quot;^5.3.0&quot; to your package.json to build with openlayers
+ *
+ */
+export default class Openlayers extends Queueable {
+
+	init(queue) {
+		this.queue = queue;
+
+		this.maps = {};
+
+		this.overlays = {};
+
+		this.ready = true;
+	}
+
+	/**
+	 *
+	 * Create a new map
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.map - name for the map (used to reference)
+	 * @param {string} json.target - id of element in the page to target
+	 * @param {int} json.zoom - initial zoom level
+	 * @param {int} json.maxZoom - Maximum zoom
+	 * @param {array} json.center - Center on
+	 * @param {string} json.renderer - Renderers to use
+	 * @example
+	 * openlayer.addMap();
+	 *
+	 */
+	addMap(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;maxZoom&quot;: 25,
+			&quot;zoom&quot;: 0,
+			&quot;renderer&quot;: [&apos;webgl&apos;, &apos;canvas&apos;],
+			&quot;target&quot;: &quot;map&quot;,
+			&quot;center&quot;: [0, 0],
+			&quot;projection&quot;: &quot;EPSG:3857&quot;,
+			&quot;debug&quot;: false
+		}, json);
+		let projection = getProjection(options.projection);
+		const map = new Map({
+			target: options.target,
+			view: new View({
+				center: options.center,
+				zoom: options.zoom,
+				maxZoom: options.maxZoom,
+				renderer: options.renderer,
+				projection: projection,
+				resolutions: options.resolutions,
+				extent: options.extent,
+			}),
+			interactions: defaultInteractions().extend([
+				new DragRotateAndZoom()
+			]),
+			keyboardEventTarget: document
+
+		});
+		if (options.debug === true) {
+			self.queue.consoleBadge({
+				mode: &apos;shields.io&apos;,
+				leftText: &apos;Map debugger online&apos;,
+				rightText: options.map,
+				rightBgColor: &apos;#7277ff&apos;,
+				rightTextColor: &apos;#1a1a1a&apos;
+			});
+			map.on(&apos;moveend&apos;, self._debug);
+		}
+		self.maps[options.map] = {&quot;object&quot;: map, &quot;layers&quot;: {}, zoom: map.getView().getZoom(), &quot;controls&quot;: {}};
+
+		map.getView().on(&apos;propertychange&apos;, function (e) {
+			switch (e.key) {
+				case &apos;resolution&apos;: {
+					/**
+					 *  Check for judder - We only want zoom events that are not a transition
+					 */
+
+					let level = Math.round(map.getView().getZoom());
+					let zoomLevel = self.maps[options.map].zoom;
+
+					if (zoomLevel !== level || map.getView().getZoom() % 1 === 0) {
+						self.queue.setMemory(options.map + &apos;ResolutionChange&apos;, {
+							&quot;zoom&quot;: map.getView().getZoom(),
+							&quot;resolution&quot;: map.getView().getResolution()
+						}, &quot;Session&quot;);
+						// Silent Fail this as its not critical
+						self.queue.execute(options.map + &quot;ResolutionChange&quot;,{},true);
+					}
+
+					self.maps[options.map].zoom = zoomLevel;
+					break;
+				}
+			}
+		});
+
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	_debug(event) {
+		let map = event.map;
+		let extent = map.getView().calculateExtent(map.getSize());
+		let center = map.getView().getCenter();
+		self.queue.consoleBadge({
+			mode: &apos;shields.io&apos;,
+			leftText: &apos;Map Extent&apos;,
+			rightText: extent,
+			rightBgColor: &apos;#7277ff&apos;,
+			rightTextColor: &apos;#1a1a1a&apos;
+		});
+		self.queue.consoleBadge({
+			mode: &apos;shields.io&apos;,
+			leftText: &apos;Map Center&apos;,
+			rightText: center,
+			rightBgColor: &apos;#7277ff&apos;,
+			rightTextColor: &apos;#1a1a1a&apos;
+		});
+	}
+
+	/**
+	 *
+	 * Add a layer to the map
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.map - name for the map (used to reference)
+	 * @param {string} json.name - name for the layer (used to reference)
+	 * @param {string} json.typr - Layer type osm,vector
+	 * @param {float} json.opacity - layer opacity
+	 * @param {boolean} json.transparent - is the layer transparent?
+	 * @param {string} json.style - Style object to use
+	 * @param {boolean} json.active - Is the layer active
+	 * @param {object|string} json.geojson - geojson to add to the layer (vector)
+	 * @example
+	 * openlayer.addLayer();
+	 *
+	 */
+
+	addLayer(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;name&quot;: &quot;default&quot;,
+			&quot;opacity&quot;: 1,
+			&quot;transparent&quot;: false,
+			&quot;active&quot;: true
+		}, json);
+		let map = self.maps[options.map].object;
+		let olLayer = null;
+
+		/*
+		 * If we had a style specified then we need to check if it needs expanding
+		 */
+		if (options.style !== undefined &amp;&amp; typeof options.style !== &apos;object&apos;)
+			options.style = eval(options.style);
+
+		/*
+		 * Find the requested layer type as a function
+		 */
+		let layerFunction = self[&quot;_addLayer_&quot; + options.type];
+		if (typeof layerFunction === &quot;function&quot;) {
+			olLayer = layerFunction.apply(self, [options]);
+		} else {
+			self.finished(pid, self.queue.DEFINE.FIN_ERROR, &quot;No add layer function for &quot; + options.type);
+			return false;
+		}
+		/*
+		 * Add the layer and update the the maps object with the new layers
+		 */
+		map.addLayer(olLayer);
+		self.maps[options.map].layers[options.name] = olLayer;
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Add an osm layer
+	 * @param options
+	 * @return {TileLayer}
+	 * @private
+	 */
+	_addLayer_osm(options) {
+		let olLayer = new TileLayer({
+			source: new OSM()
+		});
+		return olLayer;
+	}
+
+	/**
+	 * Add an wmts layer
+	 * @param options
+	 * @return {TileLayer}
+	 * @private
+	 */
+	_addLayer_wmts(options) {
+		let self = this;
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+		let source = new WMTS({
+			url: options.url,
+			layer: options.layer,
+			matrixSet: options.matrixSet,
+			format: &apos;image/png&apos;,
+			crossOrigin: &apos;anonymous&apos;,
+			projection: view.getProjection(),
+			tileGrid: new WMTSTileGrid({
+				resolutions: view.getResolutions(),
+				matrixIds: options.matrix,
+				origin: options.origin
+
+			})
+		});
+		let olLayer = new TileLayer({
+			extent: options.extent,
+			opacity: options.opacity,
+			visible: options.active,
+			name: options.name,
+			source: source
+		});
+
+		return olLayer;
+
+	}
+
+	/**
+	 * Add a wms layer
+	 * @param options
+	 * @return {TileLayer}
+	 * @private
+	 */
+	_addLayer_wms(json) {
+		let options = Object.assign({
+			serverType: &apos;&apos;,
+			params: {},
+			crossOrigin: null,
+			hidpi: true
+		}, json);
+		let source = new TileWMS({
+			url: options.url,
+			crossOrigin: options.crossOrigin,
+			params:options.params,
+			serverType: options.serverType,
+			hidpi: options.hidpi
+		});
+		let olLayer = new TileLayer({
+			extent: options.extent,
+			opacity: options.opacity,
+			visible: options.active,
+			name: options.name,
+			source: source
+		});
+		return olLayer;
+	}
+
+	/**
+	 * Add an xyz layer
+	 * @param options
+	 * @return {TileLayer}
+	 * @private
+	 */
+	_addLayer_xyz(options) {
+		let source = new XYZ({
+			url: options.url,
+			crossOrigin: &apos;Anonymous&apos;
+		});
+		let olLayer = new TileLayer({
+			extent: options.extent,
+			opacity: options.opacity,
+			visible: options.active,
+			name: options.name,
+			source: source
+		});
+		return olLayer;
+	}
+
+	/**
+	 * Add a vector layer
+	 * @param options
+	 * @return {VectorLayer}
+	 * @private
+	 */
+	_addLayer_vector(options) {
+		let self = this;
+		let source = {};
+		let vectorSource;
+		if (options.geojson !== undefined) {
+			source.features = this._loadGeojson(options.map, options.geojson);
+		}
+		vectorSource = new VectorSource(source);
+		let olLayer = new VectorLayer({
+			name: options.name,
+			visible: options.active,
+			source: vectorSource,
+			style: options.style,
+			opacity: options.opacity,
+			selectable: options.selectable,
+			hover: options.hover
+		});
+		return olLayer;
+	}
+
+	/**
+	 * Make a new control
+	 *
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {string} json.mode -  on|off
+	 * @param {array} json.name - What to call it (used later to reference)
+	 * @param {array} json.control - The control function to use
+	 *
+	 */
+	makeControl(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;mode&quot;: &quot;on&quot;,
+			&quot;control&quot;: &quot;simpleSelect&quot;,
+			&quot;name&quot;: &quot;ss&quot;
+		}, json);
+		let map = self.maps[options.map].object;
+		let control;
+		/*
+		 * Find the requested control type as a function
+		 */
+		let controlFunction = self[&quot;_control_&quot; + options.control];
+		if (typeof controlFunction === &quot;function&quot;) {
+			control = controlFunction.apply(self, [options]);
+		} else {
+			self.finished(pid, self.queue.DEFINE.FIN_ERROR, &quot;No control function for &quot; + options.control);
+			return false;
+		}
+
+		self.maps[options.map].controls[options.name] =
+			{
+				state: options.mode,
+				obj: control
+			};
+
+		if (options.mode === &quot;on&quot;)
+			map.addInteraction(control);
+
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Set a controls(s) to the requested mode and set others to opposit state
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {string} json.mode -  on|off
+	 * @param {array} json.name - control to set
+	 *
+	 */
+	controlSet(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;names&quot;: [&quot;ss&quot;]
+		}, json);
+		let map = self.maps[options.map].object;
+		let controls = self.maps[options.map].controls;
+
+		/*
+		 * Toggle out all controls. We do this rather than be selective
+		 * due to snap always needing to be the last added
+		 */
+		for (let i in controls) {
+			this._toggleControl(map, controls[i],&apos;off&apos;);
+
+		}
+
+		/*
+		 * Toggle in the ones we do need (in order this is important for the likes of snap
+		 */
+		for (let i in options.names) {
+					this._toggleControl(map, controls[options.names[i]],&apos;on&apos;);
+		}
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Toggle a control between on/off
+	 * @param map
+	 * @param control
+	 * @private
+	 */
+	_toggleControl(map, control,mode) {
+		if (control.state === &apos;on&apos;&amp;&amp;mode===&apos;off&apos;) {
+			map.removeInteraction(control.obj);
+			control.state = &apos;off&apos;;
+		}
+		if (control.state === &apos;off&apos;&amp;&amp;mode===&apos;on&apos;) {
+			map.addInteraction(control.obj);
+			control.state = &apos;on&apos;;
+		}
+	}
+
+	/**
+	 *
+	 *   CONTROLS
+	 *
+	 *
+	 */
+
+
+	/**
+	 * Use the standard openlayers select control
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {string} json.mode -  on|off
+	 * @param {string} json.perfix - prefix to use
+	 * @param {array} json.layers - layers to use
+	 *
+	 * @description This select control uses the default openlayers model. Useful for applications with no overlapping features. It does not support selecting hidden features
+	 */
+	_control_simpleSelect(json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;mode&quot;: &quot;on&quot;,
+			&quot;prefix&quot;: &quot;&quot;,
+			&quot;style&quot;:&quot;&quot;
+		}, json);
+		if (options.layers) {
+			for (let i in options.layers) {
+				options.layers[i] = self.maps[options.map].layers[options.layers[i]];
+			}
+		}
+		let map = self.maps[options.map].object;
+
+		let control = new Select({&quot;layers&quot;: options.layers,&quot;style&quot;:options.style});
+		control.on(&apos;select&apos;, selectFunction);
+
+		function selectFunction(e) {
+			self.queue.setMemory(options.prefix + &apos;simpleSelect&apos;, e, &quot;Session&quot;);
+			self.queue.setMemory(options.map + &apos;selectedFeatures&apos;, e.selected, &quot;Session&quot;);
+
+			if (e.deselected.length &gt; 0 &amp;&amp; e.selected.length === 0)
+				self.queue.execute(options.prefix + &quot;simpleDeselect&quot;);
+			if (e.selected.length &gt; 0)
+				self.queue.execute(options.prefix + &quot;simpleSelect&quot;);
+		}
+
+		return control;
+	}
+
+	/**
+	 * MultiEdit tool
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {array} json.layer - layer to use
+	 * @param {object} json.mode - on|off
+	 * @param {object} json.projection - properties to set
+	 * @param {object} json.inside - JSON with single feature to use
+	 * @param {object} json.buffer - buffer in meters around the inside
+	 *
+	 */
+	_control_multiEdit(json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;prefix&quot;: &quot;&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;projection&quot;: &quot;EPSG:4326&quot;,
+			&quot;inside&quot;: undefined,
+			&quot;buffer&quot;: 10
+		}, json);
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+
+
+		let featureCache = [];
+
+		/*
+		 * Modify interaction, does all the hard work
+		 */
+		let control = new Modify({
+			source: source,
+			pixelTolerance: 10,
+			deleteCondition: function (evt) {
+				return shiftKeyOnly(evt) &amp;&amp; singleClick(evt)
+			}
+		});
+		let maskFeature = buffer(options.inside.features[0], options.buffer, {units: &quot;meters&quot;});
+		let bufferedMask = polygon(maskFeature.geometry.coordinates);
+
+
+		/*
+		 * When the user starts moving something we take a copy of it for use
+		 * encase we need to revert
+		 */
+		control.on(&apos;modifystart&apos;, function (event) {
+			let features = event.features.getArray();
+			featureCache = [];
+			for (let i = 0; i &lt; features.length; i++) {
+				featureCache.push(features[i].clone());
+			}
+		});
+
+		/*
+		 * When the user has finished the move / action
+		 */
+		control.on(&apos;modifyend&apos;, function (event) {
+
+			/*
+			 * What point did we move?
+			 */
+			let movedPoint = transform(event.mapBrowserEvent.coordinate, view.getProjection().getCode(), &quot;EPSG:4326&quot;);
+			let turfPoint = point(movedPoint);
+			/*
+			 * Modified features
+			 */
+			let modifiedFeatures = [];
+			map.forEachFeatureAtPixel(event.mapBrowserEvent.pixel, function (feature, layer) {
+
+				if (layer &amp;&amp; layer.get(&apos;name&apos;) === options.layer) {
+					modifiedFeatures.push(feature);
+				}
+			});
+
+
+
+			let modifiedFeaturesJSON = new GeoJSON({
+				&quot;dataProjection&quot;: options.projection,
+				&quot;featureProjection&quot;: view.getProjection().getCode()
+			}).writeFeaturesObject(modifiedFeatures);
+
+			/*
+            * Flag any inside feature valid
+            */
+			for(let i in modifiedFeaturesJSON.features) {
+				let polygons=[modifiedFeaturesJSON.features[i]];
+				if(polygons[0].geometry.type===&quot;MultiPolygon&quot;)
+					polygons=self._multiFeatureToPolygon(modifiedFeaturesJSON.features[i]);
+
+				for(let p in polygons) {
+					if (booleanContains(bufferedMask, polygons[p])) {
+						modifiedFeatures[i].set(&apos;invalid&apos;, false);
+					}
+				}
+			}
+			/*
+			 * All features
+			 */
+			let features = new GeoJSON({
+				&quot;dataProjection&quot;: options.projection,
+				&quot;featureProjection&quot;: view.getProjection().getCode()
+			}).writeFeaturesObject(event.features.getArray());
+			/*
+			 * Check inside
+			 */
+
+			let isInside = true;
+			let isKink = false;
+			if (options.inside) {
+				isInside = booleanPointInPolygon(turfPoint, bufferedMask);
+			}
+
+			/*
+			 * Check for any kinks in the modified features
+			 */
+			for (let i in modifiedFeaturesJSON.features) {
+				let kinkres = kinks(modifiedFeaturesJSON.features[i]);
+				if (kinkres.features.length &gt; 0) {
+					isKink = true;
+					break;
+				}
+			}
+
+			/*
+			 * Set memory and execute
+			 */
+			if (isInside === true &amp;&amp; isKink === false) {
+				self.queue.setMemory(options.prefix + &apos;multiEditFeatures&apos;, features, &quot;Session&quot;);
+				self.queue.setMemory(options.prefix + &apos;multiEditModifiedFeatures&apos;, modifiedFeaturesJSON, &quot;Session&quot;);
+				self.queue.execute(options.prefix + &quot;multiEdit&quot;);
+			} else {
+				for (let i = 0; i &lt; featureCache.length; i++) {
+					for (let j = 0; j &lt; modifiedFeatures.length; j++) {
+						if (featureCache[i].get(&apos;uuid&apos;) === modifiedFeatures[j].get(&apos;uuid&apos;)) {
+							modifiedFeatures[j].setGeometry(featureCache[i].getGeometry());
+							break;
+						}
+					}
+				}
+				self.queue.execute(options.prefix + &quot;multiEditOutside&quot;);
+			}
+		});
+
+		return control;
+
+	}
+
+	_control_drawFeature( json) {
+		let self=this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;prefix&quot;: &quot;&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;projection&quot;: &quot;EPSG:4326&quot;,
+			&quot;type&quot;: &quot;Polygon&quot;,
+			&quot;buffer&quot;:10
+		}, json);
+		let map = self.maps[options.map].object;
+
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let view = map.getView();
+
+		let bufferedMask;
+		if (options.inside) {
+			let maskFeature = buffer(options.inside.features[0], options.buffer, {units: &quot;meters&quot;});
+			bufferedMask = polygon(maskFeature.geometry.coordinates);
+		}
+		let control= new Draw({
+				source: source,
+				type: options.type
+			});
+
+		control.on(&apos;drawend&apos;, function (event) {
+			/*
+			 * Add a uuid
+			 */
+			self._idFeatures([event.feature]);
+
+			let features = new GeoJSON({
+				&quot;dataProjection&quot;: options.projection,
+				&quot;featureProjection&quot;: view.getProjection().getCode()
+			}).writeFeaturesObject([event.feature]);
+			let isInside = true;
+			let isKink = false;
+			if (options.inside) {
+				isInside = booleanContains(bufferedMask,features.features[0]);
+			}
+
+
+
+			if(!isInside)
+				event.feature.set(&apos;invalid&apos;,true);
+
+			self.queue.setMemory(options.prefix + &apos;drawFeatures&apos;, features, &quot;Session&quot;);
+			self.queue.execute(options.prefix + &quot;drawFeature&quot;);
+		});
+		return control;
+
+	}
+
+	_control_snap( json) {
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;pixelTolerance&quot;: 5
+		}, json);
+
+
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+
+		let control= new Snap({
+			source: source,
+			pixelTolerance: options.pixelTolerance
+		});
+		return control;
+	}
+
+	/**
+	 *
+	 *  END CONTROLS
+	 *
+	 */
+
+	/**
+	 * Convert a feature of multiPolygon to a featue(s) of Polygons. No properies are copied
+	 * @param feature
+	 * @returns {[]}
+	 * @private
+	 */
+	_multiFeatureToPolygon(feature) {
+		let features=[];
+		// Ignore non MultiPolygons
+		if(feature.geometry.type===&quot;MultiPolygon&quot;) {
+			for (let i in feature.geometry.coordinates) {
+				features.push({
+					type: &quot;Feature&quot;,
+					geometry: {
+						coordinates: feature.geometry.coordinates[i],
+						type: &quot;Polygon&quot;
+					}
+				})
+			}
+		} else {
+			features.push(feature);
+		}
+		return features;
+	}
+
+	_makeContiguous(featuresJSON,tolerance) {
+		let collisionLog=[];
+		/*
+		 * make a collision box for each feature
+		 */
+		for(let i in featuresJSON.features) {
+			// Make the box and save it for future use
+			let featureBbox=bbox(featuresJSON.features[i]);
+			let featureBboxPolygon=bboxPolygon(featureBbox);
+			let featureBboxPolygonBuffered = buffer(featureBboxPolygon, tolerance, {units: &apos;meters&apos;});
+			let bufferedExtent=bbox(featureBboxPolygonBuffered);
+			featuresJSON.features[i].properties.collisionBox=bufferedExtent;
+			// Upgrade feature to multiPolygon to make life easier
+			if(featuresJSON.features[i].geometry.type===&apos;Polygon&apos;) {
+				featuresJSON.features[i].geometry.type=&apos;MultiPolygon&apos;;
+				featuresJSON.features[i].geometry.coordinates=[featuresJSON.features[i].geometry.coordinates];
+			}
+		}
+		const realTolerance=tolerance/1000000;
+		/*
+		 * Loop our features looking for collisions
+		 */
+		for(let target in featuresJSON.features) {
+			for(let source in featuresJSON.features) {
+				// ignore self and previous reverses;)
+				if(target!==source&amp;&amp;collisionLog.indexOf(`${target}-${source}`)===-1) {
+					collisionLog.push(`${source}-${target}`);
+					const rect1Width = featuresJSON.features[target].properties.collisionBox[2] - featuresJSON.features[target].properties.collisionBox[0];
+					const rect2Width = featuresJSON.features[source].properties.collisionBox[2] - featuresJSON.features[source].properties.collisionBox[0];
+					const rect1Height = featuresJSON.features[target].properties.collisionBox[3] - featuresJSON.features[target].properties.collisionBox[1];
+					const rect2Height = featuresJSON.features[source].properties.collisionBox[3] - featuresJSON.features[source].properties.collisionBox[1];
+
+					// Box collision
+					if (featuresJSON.features[target].properties.collisionBox[0] &lt; featuresJSON.features[source].properties.collisionBox[0] + rect2Width &amp;&amp;
+						featuresJSON.features[target].properties.collisionBox[0] + rect1Width &gt; featuresJSON.features[source].properties.collisionBox[0] &amp;&amp;
+						featuresJSON.features[target].properties.collisionBox[1] &lt; featuresJSON.features[source].properties.collisionBox[1] + rect2Height &amp;&amp;
+						featuresJSON.features[target].properties.collisionBox[1] + rect1Height &gt; featuresJSON.features[source].properties.collisionBox[1]) {
+						// collision detected!
+						//console.log(`Collision detected ${target} - ${source}`);
+						// now we brute force
+						for(let targetPolygon in featuresJSON.features[target].geometry.coordinates[0]) {
+							for (let targetPoints in featuresJSON.features[target].geometry.coordinates[0][targetPolygon]) {
+								let targetCircle = {
+									radius: realTolerance,
+									x: featuresJSON.features[target].geometry.coordinates[0][targetPolygon][targetPoints][0],
+									y: featuresJSON.features[target].geometry.coordinates[0][targetPolygon][targetPoints][1]
+								};
+								for(let sourcePolygon in featuresJSON.features[source].geometry.coordinates[0]) {
+									for (let sourcePoints in featuresJSON.features[source].geometry.coordinates[0][sourcePolygon]) {
+										let sourceCircle = {
+											radius: realTolerance,
+											x: featuresJSON.features[source].geometry.coordinates[0][sourcePolygon][sourcePoints][0],
+											y: featuresJSON.features[source].geometry.coordinates[0][sourcePolygon][sourcePoints][1]
+										};
+										// Circle Collision
+										let dx = targetCircle.x - sourceCircle.x;
+										let dy = targetCircle.y - sourceCircle.y;
+										let distance = Math.sqrt(dx * dx + dy * dy);
+
+										if (distance &lt; targetCircle.radius + sourceCircle.radius) {
+											// point collosion so move it
+											featuresJSON.features[source].geometry.coordinates[0][sourcePolygon][sourcePoints] = featuresJSON.features[target].geometry.coordinates[0][targetPolygon][targetPoints];
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+			}
+		}
+
+	}
+
+	makeContiguous(pid, json) {
+		this._makeContiguous(json.geojson, json.tolerance);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+	/**
+	 * Use a filter object to locate features on a single layer
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {array} json.layer - layer to use
+	 * @param {object} json.filter - Filter eg {&quot;feature_id&quot;:1}
+	 *
+	 */
+	findFeatures(pid, json) {
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;filter&quot;: {}
+		}, json);
+		let foundFeatures = [];
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let features = source.getFeatures();
+		for (let i in features) {
+			for (let f in options.filter) {
+				let check = features[i].get(f);
+				/*
+				 * Note there can be differing types here, hence ==
+				 */
+				if (check == options.filter[f]) {
+					foundFeatures.push(features[i]);
+				}
+			}
+		}
+		this.queue.setMemory(&apos;findFeatures&apos;, foundFeatures, &quot;Session&quot;);
+		this.queue.setMemory(options.map + &apos;selectedFeatures&apos;, foundFeatures, &quot;Session&quot;);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+		return foundFeatures;
+	}
+
+	/**
+	 * Set a features properties by id
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {array} json.layer - layer to use
+	 * @param {object} json.id - Feature id
+	 * @param {object} json.properties - properties to set
+	 *
+	 */
+	setFeaturePropertyById(pid, json) {
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;id&quot;: &quot;&quot;,
+			&quot;properties&quot;: {}
+		}, json);
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let feature = source.getFeatureById(options.id);
+		feature.setProperties(options.properties);
+		this.queue.setMemory(&apos;updatedFeature&apos;, new GeoJSON({
+			&quot;dataProjection&quot;: &quot;EPSG:4326&quot;,
+			&quot;featureProjection&quot;: &quot;EPSG:3857&quot;
+		}).writeFeaturesObject([feature]), &quot;Session&quot;);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Use the standard click event
+	 * @param pid
+	 * @param json
+	 *
+	 * @description This select control uses the default openlayers model. Useful for applications with no overlapping features. It does not support selecting hidden features
+	 */
+	simpleClick(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;mode&quot;: &quot;on&quot;,
+			&quot;prefix&quot;: &quot;&quot;
+		}, json);
+		let map = self.maps[options.map].object;
+		if (options.mode === &quot;on&quot;) {
+			self.maps[options.map].clickTag = map.on(&apos;click&apos;, clickfunction);
+		} else {
+			unByKey(self.maps[options.map].clickTag);
+		}
+
+		function clickfunction(e) {
+			self.queue.setMemory(options.prefix + &apos;simpleClick&apos;, e, &quot;Session&quot;);
+			self.queue.execute(options.prefix + &quot;simpleClick&quot;);
+		}
+
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+
+	/**
+	 * Convert a coordinate to WKT
+	 * @param pid
+	 * @param json
+	 *
+	 * @description Convert a coordinate to WKT
+	 */
+	coordinatesToWKT(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+		}, json);
+		let olGeom = new Point(options.coordinate);
+		let format = new WKT();
+		let wktRepresenation = format.writeGeometry(olGeom);
+		self.set(pid, {&quot;wkt&quot;: wktRepresenation});
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Add a feature to the Map
+	 * TODO: This is old code for getting something working. Needs functionising, not for production
+	 * @param pid
+	 * @param json
+	 */
+	addFeature(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;values&quot;: {}
+		}, json);
+
+		let map = self.maps[options.map].object;
+		let layer = self.maps[options.map].layers[options.layer];
+		let view = map.getView();
+		let source = layer.getSource();
+
+		let projection = &quot;EPSG:&quot; + options.geometry.match(/SRID=(.*?);/)[1];
+		let wkt = options.geometry.replace(/SRID=(.*?);/, &apos;&apos;);
+
+		let format = new WKT();
+		let feature = format.readFeature(wkt);
+		options.values.geometry = feature.getGeometry().transform(projection, view.getProjection().getCode());
+		source.addFeature(new Feature(options.values));
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Delete features from layer by id
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @param {string} json.id - id of feature
+	 */
+	deleteFeatureById(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;id&quot;: &quot;&quot;
+		}, json);
+		let layer = self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let feature = source.getFeatureById(options.id);
+		source.removeFeature(feature);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Clean and/or default feature properties
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get features from
+	 * @param {array} json.delete - Array of properties to delete
+	 * @param {array} json.default - Array of objects {name:...,value:...} to default
+	 */
+	propertiesClean(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;delete&quot;: [],
+			&quot;default&quot;: []
+		}, json);
+		let layer = self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let features = source.getFeatures();
+		for(let f in features) {
+			for(let d in options.delete) {
+				if(features[f].get(d)) {
+					features[f].set(d,&apos;&apos;);
+				}
+			}
+			for(let d in options.default) {
+				if(!features[f].get(options.default[d].name)) {
+					features[f].set(options.default[d].name,options.default[d].value);
+				}
+			}
+		}
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * split featues using a line string
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @param {string} json.id - id of feature
+	 */
+	splitFeatures(pid, json) {
+		let self=this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;lineString&quot;:&quot;&quot;,
+			&quot;prefix&quot;:&quot;&quot;
+		}, json);
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+		let layer = self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		const line=options.lineString.features[0].geometry;
+		if(line.type!==&apos;LineString&apos;) {
+			self.finished(pid, self.queue.DEFINE.FIN_ERROR, &quot;lineString needs to be a geoJSON containing a linestring feature&quot;);
+			return false;
+		}
+
+
+		const features=source.getFeatures();
+		let sourceFeaturesJSON=this._featuresToGeojson(&apos;EPSG:4326&apos;,view.getProjection().getCode(),features);
+
+		for(let i in sourceFeaturesJSON.features) {
+			let polygons=this._multiFeatureToPolygon(sourceFeaturesJSON.features[i]);
+			for(let p in polygons) {
+				let intersectPoints = lineIntersect(polygons[p], line);
+
+				// We only attempt to insersect anything that has 1 || 2 points, anything else is too complex
+				if(intersectPoints.features.length===1||intersectPoints.features.length===2) {
+					if(intersectPoints.features.length===1) {
+						//console.log(&apos;Edge piece&apos;);
+						//console.log(polygons[p]);
+						const line2=lineString(line.coordinates);
+						//console.log(line2);
+
+						// Here we need to stitch in verticies
+						for(let points=1; points&lt;polygons[p].geometry.coordinates[0].length;points++) {
+							//make a lineString base on the points so we can see if it intersects
+							const line1=lineString([polygons[p].geometry.coordinates[0][points-1], polygons[p].geometry.coordinates[0][points]]);
+							let ringIntersect=lineIntersect(line1,line2);
+							//console.log(line1);
+							//console.log(line2);
+							if(ringIntersect.features.length&gt;0) {
+								//console.log(`Got overlap at ${points}`);
+								//console.log(ringIntersect);
+								polygons[p].geometry.coordinates[0].splice(points,0,intersectPoints.features[0].geometry.coordinates);
+								source.removeFeature(source.getFeatureById(sourceFeaturesJSON.features[i].properties.uuid));
+								let newFeaturesGeoJSON= {
+									type: &quot;FeatureCollection&quot;,
+									features: [polygons[p]]
+								};
+
+								let openlayersFeatures=this._idFeatures(this._loadGeojson(options.map,newFeaturesGeoJSON));
+								source.addFeatures(openlayersFeatures);
+								break;
+
+							}
+						}
+
+					} else {
+						// Full split
+						//console.log(&apos;Master piece&apos;);
+						//console.log(intersectPoints);
+						let offsetLine = lineOffset(line, (0.01 ), {units: &apos;meters&apos;});
+						let thickLineCorners = featureCollection([line, offsetLine]);
+						let thickLinePolygon = convex(explode(thickLineCorners));
+						let clipped = difference(polygons[p], thickLinePolygon);
+
+						if(clipped.geometry.coordinates.length&gt;1) {
+							let newPolygons = this._multiFeatureToPolygon(clipped);
+							newPolygons[0].properties={};
+							newPolygons[1].properties={};
+							source.removeFeature(source.getFeatureById(sourceFeaturesJSON.features[i].properties.uuid));
+							//let newFeature = this._loadGeojson(options.map, {type: &quot;FeatureCollection&quot;,features:[clipped]});
+
+							let newFeaturesGeoJSON= {
+								type: &quot;FeatureCollection&quot;,
+								features: [newPolygons[0],newPolygons[1]]
+							};
+							this._makeContiguous(newFeaturesGeoJSON,100);
+							//console.log(newFeaturesGeoJSON);
+							let openlayersFeatures=this._idFeatures(this._loadGeojson(options.map,newFeaturesGeoJSON));
+							source.addFeatures(openlayersFeatures);
+
+						} else {
+							self.queue.setMemory(options.prefix + &apos;splitFeatures&apos;, `Split geometry failed`, &quot;Session&quot;);
+							self.queue.execute(options.prefix + &quot;splitFeatures&quot;);
+						}
+					}
+				} else {
+					if(intersectPoints.features.length!==0) {
+						self.queue.setMemory(options.prefix + &apos;splitFeatures&apos;, `Can not intersect complex [${intersectPoints.features.length}] points`, &quot;Session&quot;);
+						self.queue.execute(options.prefix + &quot;splitFeatures&quot;);
+					}
+				}
+			}
+
+		}
+
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * merge features from layer by id
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @param {string} json.ids - ids of features to merge
+	 */
+	mergeFeaturesById(pid,json) {
+		let self=this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;ids&quot;: []
+		}, json);
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+		let layer = self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let sourceFeatures=[];
+
+		/*
+		 * Build up the features into an array and purge them from the layer
+		 */
+		for(let i=0;i&lt;options.ids.length;i++) {
+			const feature=source.getFeatureById(options.ids[i]);
+			sourceFeatures.push(feature);
+			source.removeFeature(feature);
+		}
+
+		/*
+		 * Convert to JSON for turf
+		 */
+		let sourceFeaturesJSON=this._featuresToGeojson(&apos;EPSG:4326&apos;,view.getProjection().getCode(),sourceFeatures);
+
+		/*
+		 * Our first feature is the one we will merge all the others to, keep it properties.
+		 */
+		let targetFeaturePolygon=multiPolygon(sourceFeaturesJSON.features[0].geometry.coordinates);
+		let targetFeatureProperties=sourceFeaturesJSON.features[0].properties;
+		/*
+		 * Merge them
+		 */
+		for(let i=1;i&lt;sourceFeatures.length;i++) {
+			targetFeaturePolygon = union(targetFeaturePolygon, multiPolygon(sourceFeaturesJSON.features[i].geometry.coordinates));
+		}
+
+		/*
+		 * Cleanup any duplicate points
+		 */
+		//targetFeaturePolygon=truncate(targetFeaturePolygon,{precision: 3, coordinates: 2});
+		targetFeaturePolygon=clean(targetFeaturePolygon);
+		/*
+		 * Convert to a multi-polygon if polygon because if its a polygon and we replay a merge its not supported
+		 */
+		if(targetFeaturePolygon.geometry.type===&apos;Polygon&apos;)
+			targetFeaturePolygon=multiPolygon([targetFeaturePolygon.geometry.coordinates]);
+		/*
+		 * Rebuild properties then add the feature back to the map
+		 */
+		targetFeaturePolygon.properties=targetFeatureProperties;
+		let features = this._loadGeojson(options.map, {type: &quot;FeatureCollection&quot;,features:[targetFeaturePolygon]});
+		source.addFeatures(this._idFeatures(features));
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Add geojson features to a layer
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @param {string} json.gejson - geojson
+	 */
+	addGeojson(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;geojson&quot;: {}
+		}, json);
+		let layer = self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+
+		let features = this._loadGeojson(options.map, options.geojson);
+		source.addFeatures(this._idFeatures(features));
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Openlayers doesn&apos;t ID features by default. This will apply a unique id to all features passed to it
+	 * @param features
+	 * @private
+	 */
+	_idFeatures(features) {
+		for (let i in features) {
+			if (features[i].get(&apos;uuid&apos;) === undefined) {
+				let uuid = uuidv4();
+				features[i].setId(uuid);
+				features[i].set(&apos;uuid&apos;, uuid);
+			} else {
+				features[i].setId(features[i].get(&apos;uuid&apos;));
+			}
+		}
+		return features;
+	}
+
+	/**
+	 * gets geojson features to a layer
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @param {string} json.prefix - Prefix for memory
+	 * @param {string} json.projection - Projection to use
+	 */
+	getGeojson(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;projection&quot;: &quot;EPSG:4326&quot;,
+			&quot;prefix&quot;: &quot;&quot;
+		}, json);
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+
+		let layer = self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let features = source.getFeatures();
+		let returnJson = new GeoJSON({
+			&quot;dataProjection&quot;: options.projection,
+			&quot;featureProjection&quot;: view.getProjection().getCode()
+		}).writeFeaturesObject(features);
+
+		self.queue.setMemory(options.prefix + &apos;getGeojson&apos;, returnJson, &quot;Session&quot;);
+
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Loads geojson from var or object
+	 * @param geojson
+	 * @private
+	 */
+	_loadGeojson(map, geojson) {
+		let self = this;
+		if (typeof geojson === &apos;object&apos;) {
+			if(geojson.features)
+				return (new GeoJSON({})).readFeatures(geojson, {featureProjection: self.maps[map].object.getView().getProjection()});
+			return [];
+		} else {
+			return (new GeoJSON({})).readFeatures(eval(geojson), {featureProjection: self.maps[map].object.getView().getProjection()});
+		}
+
+	}
+
+	_featuresToGeojson(toProjection,fromProjection,features) {
+		let returnJson = new GeoJSON({
+			&quot;dataProjection&quot;: toProjection,
+			&quot;featureProjection&quot;: fromProjection
+		}).writeFeaturesObject(features);
+		return returnJson;
+	}
+
+	/**
+	 * Remove the data from a layer on the map.
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to clear
+	 */
+	clearLayer(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;
+		}, json);
+		let layer = self.maps[options.map].layers[options.layer];
+		if (layer) {
+			let source = layer.getSource();
+			source.clear();
+		} else {
+			console.warn(`No such layer [${options.layer}]`);
+		}
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Flag a layer as changed (cause redraw).
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to flag
+	 */
+	changed(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;
+		}, json);
+		let layer = self.maps[options.map].layers[options.layer];
+		layer.changed();
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Toggle layer on and off
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to clear
+	 */
+	toggleLayer(pid, json) {
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;
+		}, json);
+		let layer = this.maps[options.map].layers[options.layer];
+		layer.setVisible(!layer.getVisible());
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 *  Move the map so the cords are at the center
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.coordinate - Coordinate to use
+	 * @example
+	 * openlayers.centerOnCoordinate({&quot;coordinate&quot;:&quot;{{!^JSON.stringify(memory.simpleSelect.value.selected[0].getGeometry().getCoordinates())}}&quot;});
+	 *
+	 */
+	centerOnCoordinate(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+		}, json);
+		/*
+		 * Pull all our resources
+		 */
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+		let size = map.getSize();
+		view.centerOn(this._decodeCoords(json.coordinate, view.getProjection().getCode()), size, [size[0] / 2, size[1] / 2]);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Clean up coordinates in any format and reproject
+	 * @param cords
+	 * @param projection
+	 * @returns {number[]}
+	 * @private
+	 */
+	_decodeCoords(cords,projection) {
+		let returnCords=[];
+		const srid=/^SRID=(.*?);POINT\((.*?)\)/;
+		if(typeof cords === &apos;string&apos;) {
+			const match=cords.match(srid);
+			if(match) {
+				returnCords=match[2].split(&apos; &apos;);
+				returnCords=returnCords.map(function (str) {
+					return parseFloat(str);
+				})
+				returnCords = transform(returnCords, &quot;EPSG:&quot;+match[1],projection);
+			}
+
+		} else {
+			returnCords=cords;
+		}
+		// Clean up any strings
+		returnCords=returnCords.map(function (str) {
+			return parseFloat(str);
+		})
+		return returnCords;
+	}
+
+	/**
+	 * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.inc - Increment of he zoom EG 1|-1|2|-2|etc
+	 * @param {string} json.delay - Delay period of the zoom in ms
+	 * @example
+	 * openlayers.animateZoom({&quot;inc&quot;:&quot;2});
+	 */
+	animateZoom(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;inc&quot;: +1,
+			&quot;delay&quot;: 100
+		}, json);
+		/*
+		 * Pull all our resources
+		 */
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+		/*
+		 * Animate a zoom
+		 */
+		view.animate({zoom: view.getZoom() + options.inc, duration: options.delay});
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.duration - Delay period of the zoom in ms
+	 * @param {string} json.coordinate - location to fly to
+	 * @param {boolean} json.wait - Wait till end of animation to finish queue item
+	 * @example
+	 * openlayers.flyTo({&quot;location&quot;:&quot;2});
+	 */
+	flyTo(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;duration&quot;: 2000,
+			&quot;coordinate&quot;: &quot;&quot;,
+			&quot;wait&quot;: false
+		}, json);
+		/*
+		 * Pull all our resources
+		 */
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+
+		let zoom = view.getZoom();
+		let parts = 2;
+		let called = false;
+
+		function callback(complete) {
+			--parts;
+			if (called) {
+				return;
+			}
+			if (parts === 0 || !complete) {
+				called = true;
+				if (options.wait === true)
+					self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+			}
+		}
+
+		view.animate({
+			center: this._decodeCoords(options.coordinate, view.getProjection().getCode()),
+			duration: options.duration
+		}, callback);
+		view.animate({
+			zoom: zoom - 1,
+			duration: options.duration / 2
+		}, {
+			zoom: zoom,
+			duration: options.duration / 2
+		}, callback);
+		if (options.wait === false)
+			self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to get extent from
+	 * @example
+	 * openlayers.zoomToLayerExtent({&quot;map&quot;:&quot;map_1&quot;,&quot;layer&quot;:&quot;data&quot;});
+	 */
+	zoomToLayerExtent(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;buffer&quot;: 100,
+			&quot;unit&quot; :&quot;meters&quot;,
+		}, json);
+		/*
+		 * Pull all our resources
+		 */
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+		let layer = self.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		/*
+		 * Get the extent of the features and fit them
+		 */
+
+		let featuresGeojson = new GeoJSON({
+			&quot;dataProjection&quot;: &quot;EPSG:4326&quot;,
+			&quot;featureProjection&quot;: view.getProjection().getCode()
+		}).writeFeaturesObject(source.getFeatures());
+
+		let featuresBbox=bbox(featuresGeojson);
+		let extentPolygon=bboxPolygon(featuresBbox);
+		let bufferedFeature = buffer(extentPolygon, options.buffer, {units: options.unit});
+		let bufferedExtent=bbox(bufferedFeature);
+		let transformedExtentP1=transform([bufferedExtent[0],bufferedExtent[1]], &quot;EPSG:4326&quot;,view.getProjection().getCode());
+		let transformedExtentP2=transform([bufferedExtent[2],bufferedExtent[3]], &quot;EPSG:4326&quot;,view.getProjection().getCode());
+		let transformedExtent=[transformedExtentP1[0],transformedExtentP1[1],transformedExtentP2[0],transformedExtentP2[1]]
+		try {
+			view.fit(transformedExtent, map.getSize());
+		} catch (e) {
+			/*
+			 * Fitting when the layer is empty fill cause OL to error
+			 */
+		}
+
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Update size of map (in the event of resize or rotation this will fix it)
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference can be * and all maps will be targeted
+	 * @example
+	 * openlayers.updateSize({&quot;map&quot;:&quot;map_1&quot;});
+	 */
+	updateSize(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+		}, json);
+		/*
+		 * Pull all our resources
+		 */
+		if (json.map === &quot;*&quot;) {
+			for (let i in self.maps) {
+				let map = self.maps[i].object;
+				map.updateSize();
+			}
+		} else {
+			let map = self.maps[options.map].object;
+			map.updateSize();
+		}
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Add an overlay to the map
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.overlay - Overlay reference to use
+	 * @param {string} json.targetId - Dom element to use
+	 * @param {string} json.coordinate - coordinate to place it (Event.coordinate) for clicks
+	 * @example
+	 * openlayers.addOverlay({&quot;targetId&quot;:&quot;#functionOverlay&quot;,&quot;coordinate&quot;:&quot;{{!^JSON.stringify(memory.simpleSelect.value.mapBrowserEvent.coordinate)}}&quot;});
+	 */
+	addOverlay(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;overlay&quot;: &quot;default&quot;,
+		}, json);
+
+		/*
+		 * Pull all our resources
+		 */
+		let map = self.maps[options.map].object;
+
+		if (self.overlays[options.overlay]) {
+			map.removeOverlay(self.overlays[options.overlay].object);
+			delete self.overlays[options.overlay];
+		}
+		/*
+		 * Get the html element from the dom
+		 */
+		let element = self.queue.getElement(options.targetId);
+		/*
+		 * Make an overlay and add to the map
+		 */
+		let overlay = new Overlay({
+			element: element,
+			position: options.coordinate
+		});
+		map.addOverlay(overlay);
+		/*
+		 * Store the object for later (destroy)
+		 */
+		self.overlays[options.overlay] = {&quot;object&quot;: overlay};
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Remove an overlay from the map
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.overlay - Overlay reference to use
+	 * @example
+	 * openlayers.removeOverlay();
+	 */
+	removeOverlay(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;overlay&quot;: &quot;default&quot;,
+		}, json);
+
+		/*
+		 * Pull all our resources
+		 */
+		let map = self.maps[options.map].object;
+
+		if (self.overlays[options.overlay]) {
+			map.removeOverlay(self.overlays[options.overlay].object);
+			delete self.overlays[options.overlay];
+		}
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">ourthings/Queueable/Elements.js | @nautoguide/ourthings</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Queue based JavaScript framework"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="@nautoguide/ourthings"><meta property="twitter:description" content="Queue based JavaScript framework"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~Validate.html">Validate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateEmail.html">ValidateEmail</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidatePassword.html">ValidatePassword</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/validator.js~ValidateText.html">ValidateText</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#queueable">Queueable</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Api.js~Api.html">Api</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Browser.js~Browser.html">Browser</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Elements.js~Elements.html">Elements</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Menu.js~Menu.html">Menu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Openlayers.js~Openlayers.html">Openlayers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Templates.js~Templates.html">Templates</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/W3Menu.js~W3Menu.html">W3Menu</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queueable/Elements.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module ourthings/Queueable/Elements */
+import Queueable from &quot;../Queueable&quot;;
+import {Validate, ValidateEmail, ValidatePassword, ValidateText} from &quot;../Validator&quot;;
+
+/**
+ * @classdesc
+ *
+ * Dom Elements manipulations
+ *
+ * @author Richard Reynolds richard@nautoguide.com
+ *
+ * @example
+ * elements.removeClass({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;class&quot;:&quot;hidden&quot;});
+ *
+ */
+export default class Elements extends Queueable {
+
+	/**
+	 * Add a class to a dom element
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.iframeId - iframe target
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.class - Name of class to add
+	 *
+	 * @example
+	 * elements.addClass({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;class&quot;:&quot;hidden&quot;});
+	 */
+	addClass(pid,json) {
+		let self=this;
+		let elements=self.queue.getIframeElements(json.iframeId,json.targetId);
+		self.set(pid,json);
+
+		if(elements!==false) {
+			elements.forEach(function(element) {
+				element.classList.add(json.class);
+			});
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,&apos;Could not add class [&apos;+json.class+&apos;] to [&apos;+json.targetId+&apos;]&apos;);
+		}
+	}
+
+	/**
+	 * Set style of a dom element
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.iframeId - iframe target
+	 * @param {string} json.targetId - Dom target
+	 * @param {array} json.style - style array of elements in format [{&quot;name&quot;:&quot;background&quot;,&quot;value&quot;:&quot;red&quot;}]
+	 *
+	 * @example
+	 * elements.setStyle({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;style&quot;:[{&quot;name&quot;:&quot;background&quot;,&quot;value&quot;:&quot;red&quot;}]});
+	 */
+	setStyle(pid,json) {
+		let self=this;
+		let elements=self.queue.getIframeElements(json.iframeId,json.targetId);
+		self.set(pid,json);
+
+		if(elements!==false) {
+			elements.forEach(function(element) {
+				for(let i in json.style)
+				element.style[json.style[i].name]=json.style[i].value;
+			});
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,&apos;Could not set style on [&apos;+json.targetId+&apos;]&apos;);
+		}
+	}
+
+	/**
+	 * Set attribute of a dom element
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.iframeId - iframe target
+	 * @param {string} json.targetId - Dom target
+	 * @param {array} json.attribute - Attribute to set
+	 * @param {array} json.value - Value to set
+	 *
+	 * @example
+	 * elements.setAttribute({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;attribute&quot;:&quot;src&quot;,&quot;value&quot;:&quot;http://foo/bar.png&quot;});
+	 */
+	setAttribute(pid,json) {
+		let self=this;
+		let elements=self.queue.getIframeElements(json.iframeId,json.targetId);
+		self.set(pid,json);
+
+		if(elements!==false) {
+			elements.forEach(function(element) {
+					element.setAttribute(json.attribute,json.value);
+			});
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,&apos;Could not set attribute [&apos;+json.attribute+&apos;] on [&apos;+json.targetId+&apos;]&apos;);
+		}
+	}
+
+	/**
+	 * Remove a class to a dom element
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.iframeId - iframe target
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.class - Name of class to remove
+	 *
+	 * @example
+	 * elements.removeClass({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;class&quot;:&quot;hidden&quot;});
+	 */
+	removeClass(pid,json) {
+		let self=this;
+		let elements=self.queue.getIframeElements(json.iframeId,json.targetId);
+		self.set(pid,json);
+		if(elements!==false) {
+			elements.forEach(function(element) {
+				element.classList.remove(json.class);
+			});
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,&apos;Could not remove class [&apos;+json.class+&apos;] to [&apos;+json.targetId+&apos;]&apos;);
+		}
+	}
+
+	/**
+	 * toggle a class on a dom element
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.class - Name of class to toggle
+	 *
+	 * @example
+	 * elements.toggleClass({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;class&quot;:&quot;hidden&quot;});
+	 */
+	toggleClass(pid,json) {
+		let self=this;
+		let elements=self.queue.getIframeElements(json.iframeId,json.targetId);
+		self.set(pid,json);
+		if(elements!==false) {
+			elements.forEach(function(element) {
+				if (element.classList.contains(json.class))
+					element.classList.remove(json.class);
+				else
+					element.classList.add(json.class);
+			});
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,&apos;Could not remove class [&apos;+json.class+&apos;] to [&apos;+json.targetId+&apos;]&apos;);
+		}
+	}
+
+	/**
+	 * Cut a dom element out and paste it somewhere
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.sourceId - Source dom element
+	 *
+	 * @example
+	 * elements.domCutPaste({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;sourceId&quot;:&quot;.thing&quot;});
+	 */
+	domCutPaste(pid, json) {
+		let source=self.queue.getElement(json.sourceId);
+		let target=self.queue.getElement(json.targetId);
+		target.appendChild(source);
+		this.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+    /**
+     * Set the HTML of an element
+     * @param {number} pid - Process ID
+     * @param {object} json - queue arguments
+     * @param {string} json.targetId - Dom target
+     * @param {string} json.html - HTML to add
+     * @param {string} json.append - Append mode
+     *
+     * @example
+     * elements.innerHTML({&quot;targetId&quot;:&quot;.leftPanel&quot;,&quot;html&quot;:&quot;Hello World&quot;});
+
+     */
+	innerHTML(pid,json) {
+		let self=this;
+		let element=self.queue.getElement(json.targetId);
+		if(json.append)
+			element.insertAdjacentHTML(&apos;beforeend&apos;,json.html);
+		else
+			element.innerHTML=json.html;
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Set the value of an input field
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.value - value to set
+	 *
+	 * @example
+	 * elements.setInputValue({&quot;targetId&quot;:&quot;#username&quot;,&quot;value&quot;:&quot;Hello World&quot;});
+
+	 */
+	setInputValue(pid,json) {
+		let self=this;
+		let element=self.queue.getElement(json.targetId);
+		element.value=json.value;
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Get the values from checked input boxes
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target for check boxes
+	 * @param {string} json.mode - array|string
+	 * @param {string} json.separator - What seperator to use in string mode
+	 * @param {string} json.name - Name of the memory element to set
+	 *
+	 *
+	 * @example
+	 * elements.getCheckBoxValues({&quot;mode&quot;:&quot;string&quot;,&quot;targetId&quot;:&quot;.functionGetTypes&quot;});
+
+	 */
+	getCheckBoxValues(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;mode&quot;:&quot;array&quot;,
+			&quot;separator&quot;:&quot;,&quot;,
+			&quot;name&quot;:&quot;checkboxes&quot;
+		},json);
+		let results=[];
+		let elements=self.queue.getElements(json.targetId+&apos;:checked&apos;);
+		for(let element in elements) {
+			results.push(elements[element].value);
+		}
+		if(options.mode!==&apos;array&apos;) {
+			results=results.join(options.separator);
+		}
+		self.queue.setMemory(options.name, results, &quot;Session&quot;);
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
+	 * Get the computed style for an element
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 * @param {string} json.styles - value to get
+	 * @param {string} json.name - memory name to use
+	 *
+	 * @example
+	 * elements.getComputedStyle({&quot;targetId&quot;:&quot;#username&quot;,&quot;styles&quot;:&quot;background&quot;});
+
+	 */
+	getComputedStyle(pid,json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;name&quot;:&quot;computedStyle&quot;
+		},json);
+		let element=self.queue.getElement(options.targetId);
+		let style=window.getComputedStyle(element).getPropertyValue(options.css);
+		self.queue.setMemory(options.name, style, &quot;Session&quot;);
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Scroll to a dom target
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 *
+	 * @example
+	 * elements.scrollIntoView({&quot;targetId&quot;:&quot;#ps_1&quot;});
+
+	 */
+	scrollIntoView(pid,json) {
+		let self=this;
+		let element=self.queue.getElement(json.targetId);
+		element.scrollIntoView();
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Scroll to bottom of a dom target
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target
+	 *
+	 * @example
+	 * elements.scrollToBottom({&quot;targetId&quot;:&quot;#ps_1&quot;});
+
+	 */
+	scrollToBottom(pid,json) {
+		let objDiv = this.queue.getElement(json.targetId);
+		objDiv.scrollTop = objDiv.scrollHeight;
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Accessible toggle visible on a target
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target to scroll to*
+	 * @param {string} json.mode - toggle|add|remove
+	 * @example
+	 * elements.focus({&quot;targetId&quot;:&quot;#ps_1&quot;});
+	 */
+	ariaHiddenToggle(pid, json) {
+		let self=this;
+		let options=Object.assign({
+			&quot;class&quot;:&quot;hidden&quot;,
+			&quot;mode&quot;:&quot;toggle&quot;
+		},json);
+		let elements=self.queue.getIframeElements(options.iframeId,options.targetId);
+		if(elements!==false) {
+			elements.forEach(function(element) {
+				if(options.mode===&quot;toggle&quot;) {
+					if (element.classList.contains(options.class)) {
+						element.classList.remove(options.class);
+						element.setAttribute(&apos;aria-hidden&apos;, &apos;false&apos;);
+					} else {
+						element.classList.add(options.class);
+						element.setAttribute(&apos;aria-hidden&apos;, &apos;true&apos;);
+					}
+				} else {
+					if(options.mode===&quot;add&quot;) {
+						element.setAttribute(&apos;aria-hidden&apos;, &apos;true&apos;);
+						element.classList.add(options.class);
+					}
+					if(options.mode===&quot;remove&quot;) {
+						element.setAttribute(&apos;aria-hidden&apos;, &apos;false&apos;);
+						element.classList.remove(options.class);
+					}
+				}
+			});
+			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		} else {
+			self.finished(pid,self.queue.DEFINE.FIN_WARNING,&apos;Could not remove class [&apos;+options.class+&apos;] to [&apos;+options.targetId+&apos;]&apos;);
+		}
+	}
+
+
+	/**
+	 * Focus on a target
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target to scroll to*
+	 * @example
+	 * elements.focus({&quot;targetId&quot;:&quot;#ps_1&quot;});
+	 */
+	focus(pid, json) {
+		let objDiv = this.queue.getElement(json.targetId);
+		objDiv.focus();
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Scroll a dom container target to a dom target
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target to scroll to
+	 * @param {string} json.containerId - Dom target container to scroll
+	 *
+	 * @example
+	 * elements.scrollIntoView({&quot;containerId&quot;:&quot;.map-elements-list&quot;,&quot;targetId&quot;:&quot;#ps_1&quot;});
+	 */
+	scrollContainerToElement(pid,json) {
+		let self=this;
+		let container = self.queue.getElement(json.containerId);
+		let	element = self.queue.getElement(json.targetId);
+		container.scrollTop = element.offsetTop;
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Monitor element(s) in a form and add classes on change
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - elements(s) to monitor for change and add modifiedClass to
+	 * @param {string} json.buttonId - Element to add modifiedClass to
+	 * @param {string} json.modifiedClass - Class to add to modified elements
+	 * @param {string} json.modifiedQueue - Prepared queue to run when element modified
+	 *
+	 * @example
+	 * elements.formActivityMonitor({&quot;targetId&quot;:&quot;.functionMonitor&quot;,&quot;buttonId&quot;:&quot;.form-save&quot;,&quot;modifiedClass&quot;:&quot;modified&quot;});
+
+	 */
+	formActivityMonitor(pid,json) {
+		let self=this;
+		let elements=this.queue.getElements(json.targetId);
+		let button;
+		if(json.buttonId)
+			button=this.queue.getElement(json.buttonId);
+		elements.forEach(function(element) {
+			element.addEventListener(&quot;change&quot;, function () {
+				if(json.modifiedQueue)
+					self.queue.execute(json.modifiedQueue,{});
+				if(json.modifiedClass) {
+					this.classList.add(json.modifiedClass);
+					if(button)
+						button.classList.add(json.modifiedClass);
+				}
+			});
+
+			element.addEventListener(&quot;keypress&quot;, function () {
+				if(json.modifiedQueue)
+					self.queue.execute(json.modifiedQueue,{});
+				if(json.modifiedClass) {
+					this.classList.add(json.modifiedClass);
+					if(button)
+						button.classList.add(json.modifiedClass);
+				}
+			});
+
+		});
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Monitor element(s) in a form and validate
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - elements(s) to monitor for change and add modifiedClass to
+	 * @param {string} json.buttonId - Element to add modifiedClass to
+	 * @param {string} json.focusClass - Class to add to focuses elements
+	 * @param {string} json.validClass - Prepared queue to run when element modified
+	 * @param {string} json.errorClass - Prepared queue to run when element modified
+	 * @param {string} json.timeout - Length of time after user has finished typing to update
+	 *
+	 * @example
+	 * elements.formValidityMonitor({&quot;targetId&quot;:&quot;.functionMonitor&quot;,&quot;buttonId&quot;:&quot;.submit-form&quot;,&quot;validClass&quot;:&quot;valid&quot;,&quot;focusClass&quot;:&quot;focus&quot;,&quot;errorClass&quot;:&quot;error&quot;},{&quot;queueRun&quot;:&quot;Instant&quot;});
+
+	 */
+	formValidityMonitor(pid,json) {
+		let self=this;
+		let elements=this.queue.getElements(json.targetId);
+		let button;
+		if(json.buttonId)
+			button=this.queue.getElement(json.buttonId);
+		let modules={};
+		let timerEvent;
+		let timerTimeout=json.timeout||2000;
+		modules[&apos;email&apos;]=new ValidateEmail();
+		modules[&apos;text&apos;]=new ValidateText();
+		modules[&apos;password&apos;]=new ValidatePassword();
+		elements.forEach(function(element) {
+			/*
+			 * Focus is new, clear down focused classes and reclass
+			 */
+			element.addEventListener(&quot;focus&quot;, function () {
+				elements.forEach(function(element) {
+					element.classList.remove(json.focusClass);
+				});
+				this.classList.add(json.focusClass);
+			});
+
+			/*
+			 * There is a change to the field (normally they exit the field
+			 */
+			element.addEventListener(&quot;change&quot;, function () {
+				if (timerEvent)
+					clearTimeout(timerEvent);
+				changeUpdate(element,this);
+			});
+
+			/*
+			 * Key up so after the user has finishing typing
+			 */
+			element.addEventListener(&quot;keyup&quot;, function (e) {
+				if(e.which!==9) {
+					if (timerEvent)
+						clearTimeout(timerEvent);
+					let ptr = this;
+					timerEvent = setTimeout(function () {
+						changeUpdate(element, ptr);
+					}, timerTimeout);
+				}
+			});
+
+		});
+
+		/*
+		 * Function to actually update the fields
+		 */
+		function changeUpdate(element,ptr) {
+			if(element.getAttribute(&apos;data-validation&apos;)) {
+				let moduleName = element.getAttribute(&apos;data-validation&apos;).toLowerCase();
+				if (modules[moduleName].valid(element.value, {})) {
+					ptr.classList.remove(json.errorClass);
+					ptr.classList.add(json.validClass);
+				} else {
+					ptr.classList.add(json.errorClass);
+					ptr.classList.remove(json.validClass);
+				}
+				let needValidations=self.queue.getElements(json.targetId+&apos;[data-validation]&apos;);
+				let isValidated=self.queue.getElements(json.targetId+&apos;[data-validation].&apos;+json.validClass);
+				if(needValidations.length===isValidated.length) {
+					button.classList.add(json.validClass);
+				} else {
+					button.classList.remove(json.validClass);
+				}
+			}
+		}
+
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
+	dragOn(pid, json) {
+		let self=this;
+		let options = Object.assign({
+			&quot;drag&quot;: &quot;default&quot;,
+		}, json);
+
+		if(this.drags===undefined) {
+			this.drags={};
+		}
+
+		let element = this.queue.getElement(json.targetId);
+
+		this.drags[options.drag]={pos:{x:0,y:0,x1:0,y1:0},element:element};
+
+		element.addEventListener(&apos;mousedown&apos;,dragMouseDown);
+
+
+		function dragMouseDown(e) {
+			e = e || window.event;
+			e.preventDefault();
+			// get the mouse cursor position at startup:
+			self.drags[options.drag].pos.x1=e.clientX;
+			self.drags[options.drag].pos.y1=e.clientY;
+			document.onmouseup = closeDragElement;
+			document.onmousemove = elementDrag;
+		}
+
+		function elementDrag(e) {
+			e = e || window.event;
+			e.preventDefault();
+			// calculate the new cursor position:
+			self.drags[options.drag].pos.x=self.drags[options.drag].pos.x1 - e.clientX;
+			self.drags[options.drag].pos.y=self.drags[options.drag].pos.y1 - e.clientY;
+			self.drags[options.drag].pos.x1=e.clientX;
+			self.drags[options.drag].pos.y1=e.clientY;
+			// set the element&apos;s new position:
+			element.style.top = (element.offsetTop - self.drags[options.drag].pos.y) + &quot;px&quot;;
+			element.style.left = (element.offsetLeft - self.drags[options.drag].pos.x) + &quot;px&quot;;
+		}
+
+		function closeDragElement() {
+			/*
+			 * End of drag so get rid of events
+			 */
+			document.onmouseup = null;
+			document.onmousemove = null;
+		}
+
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+
+	}
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
