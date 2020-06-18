@@ -61,6 +61,7 @@ import {getWidth, getTopLeft} from &apos;ol/extent.js&apos;;
 
 import TileLayer from &apos;ol/layer/Tile&apos;;
 import VectorLayer from &apos;ol/layer/Vector&apos;;
+import Heatmap from &apos;ol/layer/Heatmap&apos;;
 import VectorSource from &apos;ol/source/Vector&apos;;
 import {Point} from &apos;ol/geom.js&apos;;
 
@@ -403,6 +404,28 @@ export default class Openlayers extends Queueable {
 			visible: options.active,
 			name: options.name,
 			source: source
+		});
+		return olLayer;
+	}
+
+	/**
+	 * Add a heatmap layer
+	 * @param options
+	 * @return {VectorLayer}
+	 * @private
+	 */
+	_addLayer_heatmap(options) {
+		let source = {};
+		let vectorSource;
+		if (options.geojson !== undefined) {
+			source.features = this._loadGeojson(options.map, options.geojson);
+		}
+		vectorSource = new VectorSource(source);
+		let olLayer = new Heatmap({
+			name: options.name,
+			visible: options.active,
+			source: vectorSource,
+			opacity: options.opacity,
 		});
 		return olLayer;
 	}

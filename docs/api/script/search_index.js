@@ -1506,6 +1506,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#_addlayer_heatmap",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_heatmap",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_heatmap",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#_addlayer_osm",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_addLayer_osm",
     "ourthings/Queueable/Openlayers.js~Openlayers#_addLayer_osm",
