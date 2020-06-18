@@ -1329,14 +1329,18 @@ class Queue {
 	 */
 	show() {
 		let self = this;
-		for (let i in self.queue) {
-			let indent = 0;
-			self.prettyCommandObject(self.queue[i], indent);
-			for (let j in self.queue[i].commands) {
-				indent++;
-				self.prettyCommandObject(self.queue[i].commands[j], indent);
+		if(self.queue.length&gt;0) {
+			for (let i in self.queue) {
+				let indent = 0;
+				self.prettyCommandObject(self.queue[i], indent);
+				for (let j in self.queue[i].commands) {
+					indent++;
+					self.prettyCommandObject(self.queue[i].commands[j], indent);
 
+				}
 			}
+		} else {
+			console.log(`Queue is empty, pid is ${self.pid}`);
 		}
 	}
 
