@@ -942,6 +942,39 @@ export default class Openlayers extends Queueable {
 	}
 
 	/**
+	 * Set  features properties by id
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {array} json.layer - layer to use
+	 * @param {array} json.id - Feature id array
+	 * @param {object} json.properties - properties to set
+	 *
+	 */
+	setFeaturesPropertiesById(pid, json) {
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"ids": "",
+			"properties": {}
+		}, json);
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let features=[];
+		for(let f in options.ids) {
+			let feature = source.getFeatureById(options.ids[f]);
+			feature.setProperties(options.properties);
+			features.push(feature);
+		}
+		this.queue.setMemory('updatedFeatures', new GeoJSON({
+			"dataProjection": "EPSG:4326",
+			"featureProjection": "EPSG:3857"
+		}).writeFeaturesObject(features), "Session");
+
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
 	 * Use the standard click event
 	 * @param pid
 	 * @param json
