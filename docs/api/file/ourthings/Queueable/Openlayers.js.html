@@ -491,6 +491,7 @@ export default class Openlayers extends Queueable {
 		self.maps[options.map].controls[options.name] =
 			{
 				state: options.mode,
+				parent: &quot;_control_&quot; + options.control,
 				obj: control
 			};
 
@@ -498,6 +499,31 @@ export default class Openlayers extends Queueable {
 			map.addInteraction(control);
 
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * trigger a controls(s) sub functions (init is default) See example in simple select for how to code for this
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {string} json.function -  function to call
+	 * @param {array} json.name - control to call
+	 *
+	 */
+
+	controlTrigger(pid,json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;name&quot;: &quot;ss&quot;,
+			&quot;function&quot;:&quot;test&quot;
+		}, json);
+		let control = self.maps[options.map].controls[options.name];
+		let controlFunction = self[control.parent];
+		options.obj=control.obj;
+		controlFunction.apply(self, [options]);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
 	}
 
 	/**
@@ -576,18 +602,35 @@ export default class Openlayers extends Queueable {
 		let options = Object.assign({
 			&quot;map&quot;: &quot;default&quot;,
 			&quot;mode&quot;: &quot;on&quot;,
+			&quot;function&quot;: &quot;init&quot;,
 			&quot;prefix&quot;: &quot;&quot;,
 			&quot;style&quot;:&quot;&quot;
 		}, json);
-		if (options.layers) {
-			for (let i in options.layers) {
-				options.layers[i] = self.maps[options.map].layers[options.layers[i]];
-			}
-		}
-		let map = self.maps[options.map].object;
 
-		let control = new Select({&quot;layers&quot;: options.layers,&quot;style&quot;:options.style});
-		control.on(&apos;select&apos;, selectFunction);
+
+		switch (options.function) {
+			case &apos;deselect&apos;: return deselect();
+			default: return init();
+
+		}
+
+		function init() {
+			if (options.layers) {
+				for (let i in options.layers) {
+					options.layers[i] = self.maps[options.map].layers[options.layers[i]];
+				}
+			}
+
+			let control = new Select({&quot;layers&quot;: options.layers, &quot;style&quot;: options.style});
+			control.on(&apos;select&apos;, selectFunction);
+			return control;
+		}
+
+		function deselect() {
+			let features = options.obj.getFeatures();
+			features.clear();
+			return true;
+		}
 
 		function selectFunction(e) {
 			self.queue.setMemory(options.prefix + &apos;simpleSelect&apos;, e, &quot;Session&quot;);
@@ -599,7 +642,7 @@ export default class Openlayers extends Queueable {
 				self.queue.execute(options.prefix + &quot;simpleSelect&quot;);
 		}
 
-		return control;
+
 	}
 
 	/**
@@ -994,6 +1037,39 @@ export default class Openlayers extends Queueable {
 			&quot;dataProjection&quot;: &quot;EPSG:4326&quot;,
 			&quot;featureProjection&quot;: &quot;EPSG:3857&quot;
 		}).writeFeaturesObject([feature]), &quot;Session&quot;);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Set  features properties by id
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {array} json.layer - layer to use
+	 * @param {array} json.id - Feature id array
+	 * @param {object} json.properties - properties to set
+	 *
+	 */
+	setFeaturesPropertiesById(pid, json) {
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;,
+			&quot;layer&quot;: &quot;default&quot;,
+			&quot;ids&quot;: &quot;&quot;,
+			&quot;properties&quot;: {}
+		}, json);
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let features=[];
+		for(let f in options.ids) {
+			let feature = source.getFeatureById(options.ids[f]);
+			feature.setProperties(options.properties);
+			features.push(feature);
+		}
+		this.queue.setMemory(&apos;updatedFeatures&apos;, new GeoJSON({
+			&quot;dataProjection&quot;: &quot;EPSG:4326&quot;,
+			&quot;featureProjection&quot;: &quot;EPSG:3857&quot;
+		}).writeFeaturesObject(features), &quot;Session&quot;);
+
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 
