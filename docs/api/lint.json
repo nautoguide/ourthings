@@ -332,31 +332,31 @@
     "filePath": "ourthings/Queueable/Openlayers.js",
     "lines": [
       {
-        "lineNumber": 482,
+        "lineNumber": 508,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 483,
+        "lineNumber": 509,
         "line": "\t * Toggle a control between on/off\r"
       },
       {
-        "lineNumber": 484,
+        "lineNumber": 510,
         "line": "\t * @param map\r"
       },
       {
-        "lineNumber": 485,
+        "lineNumber": 511,
         "line": "\t * @param control\r"
       },
       {
-        "lineNumber": 486,
+        "lineNumber": 512,
         "line": "\t * @private\r"
       },
       {
-        "lineNumber": 487,
+        "lineNumber": 513,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 488,
+        "lineNumber": 514,
         "line": "\t_toggleControl(map, control,mode) {\r"
       }
     ],
@@ -375,27 +375,27 @@
     "filePath": "ourthings/Queueable/Openlayers.js",
     "lines": [
       {
-        "lineNumber": 1334,
+        "lineNumber": 1410,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 1335,
+        "lineNumber": 1411,
         "line": "\t * Loads geojson from var or object\r"
       },
       {
-        "lineNumber": 1336,
+        "lineNumber": 1412,
         "line": "\t * @param geojson\r"
       },
       {
-        "lineNumber": 1337,
+        "lineNumber": 1413,
         "line": "\t * @private\r"
       },
       {
-        "lineNumber": 1338,
+        "lineNumber": 1414,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 1339,
+        "lineNumber": 1415,
         "line": "\t_loadGeojson(map, geojson) {\r"
       }
     ],

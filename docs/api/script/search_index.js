@@ -1674,6 +1674,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#controltrigger",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-controlTrigger",
+    "ourthings/Queueable/Openlayers.js~Openlayers#controlTrigger",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#coordinatestowkt",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-coordinatesToWKT",
     "ourthings/Queueable/Openlayers.js~Openlayers#coordinatesToWKT",
@@ -1767,6 +1773,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/openlayers.js~openlayers#setfeaturepropertybyid",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-setFeaturePropertyById",
     "ourthings/Queueable/Openlayers.js~Openlayers#setFeaturePropertyById",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#setfeaturespropertiesbyid",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-setFeaturesPropertiesById",
+    "ourthings/Queueable/Openlayers.js~Openlayers#setFeaturesPropertiesById",
     "method"
   ],
   [

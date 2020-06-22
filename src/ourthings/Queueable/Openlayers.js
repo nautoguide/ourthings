@@ -435,6 +435,7 @@ export default class Openlayers extends Queueable {
 		self.maps[options.map].controls[options.name] =
 			{
 				state: options.mode,
+				parent: "_control_" + options.control,
 				obj: control
 			};
 
@@ -442,6 +443,31 @@ export default class Openlayers extends Queueable {
 			map.addInteraction(control);
 
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * trigger a controls(s) sub functions (init is default) See example in simple select for how to code for this
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {string} json.function -  function to call
+	 * @param {array} json.name - control to call
+	 *
+	 */
+
+	controlTrigger(pid,json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"name": "ss",
+			"function":"test"
+		}, json);
+		let control = self.maps[options.map].controls[options.name];
+		let controlFunction = self[control.parent];
+		options.obj=control.obj;
+		controlFunction.apply(self, [options]);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
 	}
 
 	/**
@@ -520,18 +546,35 @@ export default class Openlayers extends Queueable {
 		let options = Object.assign({
 			"map": "default",
 			"mode": "on",
+			"function": "init",
 			"prefix": "",
 			"style":""
 		}, json);
-		if (options.layers) {
-			for (let i in options.layers) {
-				options.layers[i] = self.maps[options.map].layers[options.layers[i]];
-			}
-		}
-		let map = self.maps[options.map].object;
 
-		let control = new Select({"layers": options.layers,"style":options.style});
-		control.on('select', selectFunction);
+
+		switch (options.function) {
+			case 'deselect': return deselect();
+			default: return init();
+
+		}
+
+		function init() {
+			if (options.layers) {
+				for (let i in options.layers) {
+					options.layers[i] = self.maps[options.map].layers[options.layers[i]];
+				}
+			}
+
+			let control = new Select({"layers": options.layers, "style": options.style});
+			control.on('select', selectFunction);
+			return control;
+		}
+
+		function deselect() {
+			let features = options.obj.getFeatures();
+			features.clear();
+			return true;
+		}
 
 		function selectFunction(e) {
 			self.queue.setMemory(options.prefix + 'simpleSelect', e, "Session");
@@ -543,7 +586,7 @@ export default class Openlayers extends Queueable {
 				self.queue.execute(options.prefix + "simpleSelect");
 		}
 
-		return control;
+
 	}
 
 	/**
