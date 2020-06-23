@@ -90,6 +90,8 @@ export default class Openlayers extends Queueable {
 		this.overlays = {};
 
 		this.ready = true;
+
+		this.allMapsLoadedCheck=false;
 	}
 
 	/**
@@ -147,7 +149,11 @@ export default class Openlayers extends Queueable {
 			});
 			map.on('moveend', self._debug);
 		}
-		self.maps[options.map] = {"object": map, "layers": {}, zoom: map.getView().getZoom(), "controls": {}};
+
+		// We keep an object and all the maps with our additions
+		self.maps[options.map] = {"object": map, "layers": {}, zoom: map.getView().getZoom(), "controls": {}, "layerLoadState":false,"loadStateEnabled":false};
+
+
 
 		map.getView().on('propertychange', function (e) {
 			switch (e.key) {
@@ -174,6 +180,36 @@ export default class Openlayers extends Queueable {
 			}
 		});
 
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+
+
+	/**
+	 *
+	 * Add an event that sets a register when render is complete
+	 *
+	 * Be warned this only works *if* you start it after all layers are added and those layer include their data
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.map - name for the map (used to reference)
+	 * @example
+	 * openlayer.addRenderComplete();
+	 *
+	 */
+
+	addRenderComplete(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default"
+		}, json);
+		let map = self.maps[options.map].object;
+		/*
+		 * When map has finished rendering event
+		 */
+		map.on('rendercomplete', function(event) {
+			self.queue.setRegister(`${options.map}-rendercomplete`);
+		});
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
@@ -209,6 +245,7 @@ export default class Openlayers extends Queueable {
 	 * @param {boolean} json.transparent - is the layer transparent?
 	 * @param {string} json.style - Style object to use
 	 * @param {boolean} json.active - Is the layer active
+	 * @param {boolean} json.loadIgnore - Ignore this layer for loadchecking
 	 * @param {object|string} json.geojson - geojson to add to the layer (vector)
 	 * @example
 	 * openlayer.addLayer();
@@ -222,7 +259,8 @@ export default class Openlayers extends Queueable {
 			"name": "default",
 			"opacity": 1,
 			"transparent": false,
-			"active": true
+			"active": true,
+			"loadIgnore": false
 		}, json);
 		let map = self.maps[options.map].object;
 		let olLayer = null;
@@ -244,12 +282,74 @@ export default class Openlayers extends Queueable {
 			return false;
 		}
 		/*
-		 * Add the layer and update the the maps object with the new layers
-		 */
+        * Add the layer and update the the maps object with the new layers
+        */
 		map.addLayer(olLayer);
+
+		/*
+		 * Add our own values to the layer so we can track loading states
+		 */
+		olLayer.loadState=options.active? (options.loadIgnore? true:false):true;
+		olLayer.on('postrender', function(event) {
+			olLayer.loadState=true;
+			if(!self.maps[options.map].layerLoadState) {
+				self._checkLayerLoadState(self.maps[options.map], `${options.map}-allLoaded`);
+
+			}
+		});
 		self.maps[options.map].layers[options.name] = olLayer;
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
+	}
+
+	enableAllMapsLoadedCheck(pid,json) {
+		let self=this;
+		this.allMapsLoadedCheck=true;
+		this._checkMapLoadState();
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	_checkMapLoadState() {
+		let allLoaded=true;
+		for(let m in this.maps) {
+			//console.log(`${m} - ${this.maps[m].layerLoadState} - report? ${this.allMapsLoadedCheck}`);
+			if(!this.maps[m].layerLoadState)
+				allLoaded=false;
+		}
+		if(this.allMapsLoadedCheck) {
+			if (allLoaded)
+				this.queue.setRegister('allMapsLoaded');
+		}
+		return true;
+	}
+
+
+	enableLoadCheck(pid,json) {
+		let self=this;
+		let options = Object.assign({
+			"map": "default"
+		}, json);
+		let map = self.maps[options.map];
+		map.loadStateEnabled=true;
+		this._checkLayerLoadState(map,`${options.map}-allLoaded`);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	_checkLayerLoadState(map,register) {
+		let allLoaded=true;
+		for(let l in map.layers) {
+			//console.log(`${l} - ${map.layers[l].loadState}`)
+			if(!map.layers[l].loadState) {
+				allLoaded=false;
+			}
+		}
+		if(map.loadStateEnabled) {
+			map.layerLoadState = allLoaded;
+			if (allLoaded)
+				this.queue.setRegister(register);
+		}
+		this._checkMapLoadState();
+		return true;
 	}
 
 	/**
