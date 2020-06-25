@@ -156,6 +156,7 @@ export default class Openlayers extends Queueable {
 
 
 		map.getView().on('propertychange', function (e) {
+
 			switch (e.key) {
 				case 'resolution': {
 					/**
@@ -168,7 +169,8 @@ export default class Openlayers extends Queueable {
 					if (zoomLevel !== level || map.getView().getZoom() % 1 === 0) {
 						self.queue.setMemory(options.map + 'ResolutionChange', {
 							"zoom": map.getView().getZoom(),
-							"resolution": map.getView().getResolution()
+							"resolution": map.getView().getResolution(),
+							"center": map.getView().getCenter()
 						}, "Session");
 						// Silent Fail this as its not critical
 						self.queue.execute(options.map + "ResolutionChange",{},true);
@@ -177,7 +179,15 @@ export default class Openlayers extends Queueable {
 					self.maps[options.map].zoom = zoomLevel;
 					break;
 				}
+				case 'center': {
+					self.queue.setMemory(options.map + 'CenterChange', {
+						"center": map.getView().getCenter(),
+						"zoom":  map.getView().getZoom()
+					}, "Session");
+					self.queue.execute(options.map + "CenterChange",{},true);
+				}
 			}
+
 		});
 
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
@@ -1615,6 +1625,8 @@ export default class Openlayers extends Queueable {
 		let view = map.getView();
 		let size = map.getSize();
 		view.centerOn(this._decodeCoords(json.coordinate, view.getProjection().getCode()), size, [size[0] / 2, size[1] / 2]);
+		if(options.zoom)
+			view.setZoom(options.zoom);
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
