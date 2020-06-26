@@ -292,31 +292,31 @@
     "filePath": "ourthings/Queueable/Openlayers.js",
     "lines": [
       {
-        "lineNumber": 303,
+        "lineNumber": 413,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 304,
+        "lineNumber": 414,
         "line": "\t * Add a wms layer\r"
       },
       {
-        "lineNumber": 305,
+        "lineNumber": 415,
         "line": "\t * @param options\r"
       },
       {
-        "lineNumber": 306,
+        "lineNumber": 416,
         "line": "\t * @return {TileLayer}\r"
       },
       {
-        "lineNumber": 307,
+        "lineNumber": 417,
         "line": "\t * @private\r"
       },
       {
-        "lineNumber": 308,
+        "lineNumber": 418,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 309,
+        "lineNumber": 419,
         "line": "\t_addLayer_wms(json) {\r"
       }
     ],
@@ -332,31 +332,31 @@
     "filePath": "ourthings/Queueable/Openlayers.js",
     "lines": [
       {
-        "lineNumber": 508,
+        "lineNumber": 618,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 509,
+        "lineNumber": 619,
         "line": "\t * Toggle a control between on/off\r"
       },
       {
-        "lineNumber": 510,
+        "lineNumber": 620,
         "line": "\t * @param map\r"
       },
       {
-        "lineNumber": 511,
+        "lineNumber": 621,
         "line": "\t * @param control\r"
       },
       {
-        "lineNumber": 512,
+        "lineNumber": 622,
         "line": "\t * @private\r"
       },
       {
-        "lineNumber": 513,
+        "lineNumber": 623,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 514,
+        "lineNumber": 624,
         "line": "\t_toggleControl(map, control,mode) {\r"
       }
     ],
@@ -375,27 +375,27 @@
     "filePath": "ourthings/Queueable/Openlayers.js",
     "lines": [
       {
-        "lineNumber": 1410,
+        "lineNumber": 1520,
         "line": "\t/**\r"
       },
       {
-        "lineNumber": 1411,
+        "lineNumber": 1521,
         "line": "\t * Loads geojson from var or object\r"
       },
       {
-        "lineNumber": 1412,
+        "lineNumber": 1522,
         "line": "\t * @param geojson\r"
       },
       {
-        "lineNumber": 1413,
+        "lineNumber": 1523,
         "line": "\t * @private\r"
       },
       {
-        "lineNumber": 1414,
+        "lineNumber": 1524,
         "line": "\t */\r"
       },
       {
-        "lineNumber": 1415,
+        "lineNumber": 1525,
         "line": "\t_loadGeojson(map, geojson) {\r"
       }
     ],

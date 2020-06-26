@@ -146,6 +146,8 @@ export default class Openlayers extends Queueable {
 		this.overlays = {};
 
 		this.ready = true;
+
+		this.allMapsLoadedCheck=false;
 	}
 
 	/**
@@ -203,9 +205,14 @@ export default class Openlayers extends Queueable {
 			});
 			map.on(&apos;moveend&apos;, self._debug);
 		}
-		self.maps[options.map] = {&quot;object&quot;: map, &quot;layers&quot;: {}, zoom: map.getView().getZoom(), &quot;controls&quot;: {}};
+
+		// We keep an object and all the maps with our additions
+		self.maps[options.map] = {&quot;object&quot;: map, &quot;layers&quot;: {}, zoom: map.getView().getZoom(), &quot;controls&quot;: {}, &quot;layerLoadState&quot;:false,&quot;loadStateEnabled&quot;:false};
+
+
 
 		map.getView().on(&apos;propertychange&apos;, function (e) {
+
 			switch (e.key) {
 				case &apos;resolution&apos;: {
 					/**
@@ -218,7 +225,8 @@ export default class Openlayers extends Queueable {
 					if (zoomLevel !== level || map.getView().getZoom() % 1 === 0) {
 						self.queue.setMemory(options.map + &apos;ResolutionChange&apos;, {
 							&quot;zoom&quot;: map.getView().getZoom(),
-							&quot;resolution&quot;: map.getView().getResolution()
+							&quot;resolution&quot;: map.getView().getResolution(),
+							&quot;center&quot;: map.getView().getCenter()
 						}, &quot;Session&quot;);
 						// Silent Fail this as its not critical
 						self.queue.execute(options.map + &quot;ResolutionChange&quot;,{},true);
@@ -227,9 +235,47 @@ export default class Openlayers extends Queueable {
 					self.maps[options.map].zoom = zoomLevel;
 					break;
 				}
+				case &apos;center&apos;: {
+					self.queue.setMemory(options.map + &apos;CenterChange&apos;, {
+						&quot;center&quot;: map.getView().getCenter(),
+						&quot;zoom&quot;:  map.getView().getZoom()
+					}, &quot;Session&quot;);
+					self.queue.execute(options.map + &quot;CenterChange&quot;,{},true);
+				}
 			}
+
 		});
 
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+
+
+	/**
+	 *
+	 * Add an event that sets a register when render is complete
+	 *
+	 * Be warned this only works *if* you start it after all layers are added and those layer include their data
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.map - name for the map (used to reference)
+	 * @example
+	 * openlayer.addRenderComplete();
+	 *
+	 */
+
+	addRenderComplete(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;
+		}, json);
+		let map = self.maps[options.map].object;
+		/*
+		 * When map has finished rendering event
+		 */
+		map.on(&apos;rendercomplete&apos;, function(event) {
+			self.queue.setRegister(`${options.map}-rendercomplete`);
+		});
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
@@ -265,6 +311,7 @@ export default class Openlayers extends Queueable {
 	 * @param {boolean} json.transparent - is the layer transparent?
 	 * @param {string} json.style - Style object to use
 	 * @param {boolean} json.active - Is the layer active
+	 * @param {boolean} json.loadIgnore - Ignore this layer for loadchecking
 	 * @param {object|string} json.geojson - geojson to add to the layer (vector)
 	 * @example
 	 * openlayer.addLayer();
@@ -278,7 +325,8 @@ export default class Openlayers extends Queueable {
 			&quot;name&quot;: &quot;default&quot;,
 			&quot;opacity&quot;: 1,
 			&quot;transparent&quot;: false,
-			&quot;active&quot;: true
+			&quot;active&quot;: true,
+			&quot;loadIgnore&quot;: false
 		}, json);
 		let map = self.maps[options.map].object;
 		let olLayer = null;
@@ -300,12 +348,74 @@ export default class Openlayers extends Queueable {
 			return false;
 		}
 		/*
-		 * Add the layer and update the the maps object with the new layers
-		 */
+        * Add the layer and update the the maps object with the new layers
+        */
 		map.addLayer(olLayer);
+
+		/*
+		 * Add our own values to the layer so we can track loading states
+		 */
+		olLayer.loadState=options.active? (options.loadIgnore? true:false):true;
+		olLayer.on(&apos;postrender&apos;, function(event) {
+			olLayer.loadState=true;
+			if(!self.maps[options.map].layerLoadState) {
+				self._checkLayerLoadState(self.maps[options.map], `${options.map}-allLoaded`);
+
+			}
+		});
 		self.maps[options.map].layers[options.name] = olLayer;
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
+	}
+
+	enableAllMapsLoadedCheck(pid,json) {
+		let self=this;
+		this.allMapsLoadedCheck=true;
+		this._checkMapLoadState();
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	_checkMapLoadState() {
+		let allLoaded=true;
+		for(let m in this.maps) {
+			//console.log(`${m} - ${this.maps[m].layerLoadState} - report? ${this.allMapsLoadedCheck}`);
+			if(!this.maps[m].layerLoadState)
+				allLoaded=false;
+		}
+		if(this.allMapsLoadedCheck) {
+			if (allLoaded)
+				this.queue.setRegister(&apos;allMapsLoaded&apos;);
+		}
+		return true;
+	}
+
+
+	enableLoadCheck(pid,json) {
+		let self=this;
+		let options = Object.assign({
+			&quot;map&quot;: &quot;default&quot;
+		}, json);
+		let map = self.maps[options.map];
+		map.loadStateEnabled=true;
+		this._checkLayerLoadState(map,`${options.map}-allLoaded`);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	_checkLayerLoadState(map,register) {
+		let allLoaded=true;
+		for(let l in map.layers) {
+			//console.log(`${l} - ${map.layers[l].loadState}`)
+			if(!map.layers[l].loadState) {
+				allLoaded=false;
+			}
+		}
+		if(map.loadStateEnabled) {
+			map.layerLoadState = allLoaded;
+			if (allLoaded)
+				this.queue.setRegister(register);
+		}
+		this._checkMapLoadState();
+		return true;
 	}
 
 	/**
@@ -1481,6 +1591,13 @@ export default class Openlayers extends Queueable {
 
 	}
 
+	/**
+	 * turn a features array into gejson
+	 * @param toProjection
+	 * @param fromProjection
+	 * @param features
+	 * @private
+	 */
 	_featuresToGeojson(toProjection,fromProjection,features) {
 		let returnJson = new GeoJSON({
 			&quot;dataProjection&quot;: toProjection,
@@ -1571,6 +1688,8 @@ export default class Openlayers extends Queueable {
 		let view = map.getView();
 		let size = map.getSize();
 		view.centerOn(this._decodeCoords(json.coordinate, view.getProjection().getCode()), size, [size[0] / 2, size[1] / 2]);
+		if(options.zoom)
+			view.setZoom(options.zoom);
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
