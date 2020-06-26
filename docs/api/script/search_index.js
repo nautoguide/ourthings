@@ -1542,6 +1542,18 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#_checklayerloadstate",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_checkLayerLoadState",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_checkLayerLoadState",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#_checkmaploadstate",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_checkMapLoadState",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_checkMapLoadState",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#_control_drawfeature",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_control_drawFeature",
     "ourthings/Queueable/Openlayers.js~Openlayers#_control_drawFeature",
@@ -1644,6 +1656,18 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#addrendercomplete",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-addRenderComplete",
+    "ourthings/Queueable/Openlayers.js~Openlayers#addRenderComplete",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#allmapsloadedcheck",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-member-allMapsLoadedCheck",
+    "ourthings/Queueable/Openlayers.js~Openlayers#allMapsLoadedCheck",
+    "member"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#animatezoom",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-animateZoom",
     "ourthings/Queueable/Openlayers.js~Openlayers#animateZoom",
@@ -1689,6 +1713,18 @@ window.esdocSearchIndex = [
     "ourthings/queueable/openlayers.js~openlayers#deletefeaturebyid",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-deleteFeatureById",
     "ourthings/Queueable/Openlayers.js~Openlayers#deleteFeatureById",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#enableallmapsloadedcheck",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-enableAllMapsLoadedCheck",
+    "ourthings/Queueable/Openlayers.js~Openlayers#enableAllMapsLoadedCheck",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#enableloadcheck",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-enableLoadCheck",
+    "ourthings/Queueable/Openlayers.js~Openlayers#enableLoadCheck",
     "method"
   ],
   [

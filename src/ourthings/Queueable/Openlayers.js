@@ -1535,6 +1535,13 @@ export default class Openlayers extends Queueable {
 
 	}
 
+	/**
+	 * turn a features array into gejson
+	 * @param toProjection
+	 * @param fromProjection
+	 * @param features
+	 * @private
+	 */
 	_featuresToGeojson(toProjection,fromProjection,features) {
 		let returnJson = new GeoJSON({
 			"dataProjection": toProjection,
