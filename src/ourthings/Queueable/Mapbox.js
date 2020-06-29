@@ -2,8 +2,8 @@ import Queueable from "../Queueable";
 import MapboxGL from 'mapbox-gl';
 import centroid from '@turf/centroid';
 import bbox from '@turf/bbox';
-import MapboxDraw from '@mapbox/mapbox-gl-draw';
-import MapboxEdit from 'mapbox-gl-edit';
+//import MapboxDraw from '@mapbox/mapbox-gl-draw';
+//import MapboxEdit from 'mapbox-gl-edit';
 
 export default class Mapbox extends Queueable {
 
@@ -277,13 +277,13 @@ export default class Mapbox extends Queueable {
 	manualSelect(pid, json) {
 		const options = Object.assign({
 			map: 'default',
-			layer: 'default',
+			source: 'default',
 			queue: "select",
 			filter: []
 		}, json);
 		let selectDetails = {};
 		//const features = this.maps[options.map].map.querySourceFeatures(options.layer);
-		const features = this.maps[options.map].sources[options.layer];
+		const features = this.maps[options.map].sources[options.source];
 		features.forEach(function (feature) {
 			let res = eval(feature.properties[options.filter[1]] + ' ' + options.filter[0] + ' ' + options.filter[2]);
 			if (res) {
@@ -391,21 +391,21 @@ export default class Mapbox extends Queueable {
 	}
 
 	/**
-	 * Set the data for a layer
+	 * Set the data for a source
 	 * @param {int} pid
 	 * @param {object} json
 	 * @param {string} json.map - The name of the map that the layer is on
 	 * @param {string} json.name - The name of the layer to clear
 	 */
-	clearLayer(pid, json) {
+	clearSource(pid, json) {
 
 		const options = Object.assign({
 			map: 'default',
-			layer: 'default'
+			source: 'default'
 		}, json);
 		this.queue.deleteRegister(options.map + 'Idle');
 
-		this.maps[options.map].map.getSource(options.layer).setData({
+		this.maps[options.map].map.getSource(options.source).setData({
 			type: 'FeatureCollection',
 			features: []
 		});
@@ -490,12 +490,12 @@ export default class Mapbox extends Queueable {
 	zoomToFeature(pid, json) {
 		const options = Object.assign({
 			map: 'default',
-			layer: 'default',
+			source: 'default',
 			property: '',
 			value: ''
 		}, json);
 
-		let features = this.maps[options.map].map.getSource(options.layer)._data.features;
+		let features = this.maps[options.map].map.getSource(options.source)._data.features;
 		let pointGeom = null;
 
 		for (const feature of features) {
@@ -713,7 +713,7 @@ export default class Mapbox extends Queueable {
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
-	addDrawTools(pid,json) {
+/*	addDrawTools(pid,json) {
 		const options = Object.assign({
 			map: 'default'
 		}, json);
@@ -721,8 +721,9 @@ export default class Mapbox extends Queueable {
 		this.maps[options.map].map.addControl(Draw, 'top-left');
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 
-	}
+	}*/
 
+/*
 	addEditTools(pid,json) {
 		const options = Object.assign({
 			map: 'default',
@@ -732,6 +733,7 @@ export default class Mapbox extends Queueable {
 		this.maps[options.map].map.addControl(this.maps[options.map].controls['Edit']);
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
+*/
 
 	removeEditTools(pid,json) {
 		const options = Object.assign({
