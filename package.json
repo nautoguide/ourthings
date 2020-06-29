@@ -40,9 +40,7 @@
     "babel-loader": "^8.0.5",
     "whatwg-fetch": "^3.0.0",
     "http-server": "^0.11.1",
-    "@mapbox/mapbox-gl-draw": "^1.1.2",
-    "console-badge": "^1.1.0",
-    "showdown": "^1.9.0"
+    "console-badge": "^1.1.0"
   },
   "dependencies": {
     "console-badge": "^1.1.0",
@@ -50,7 +48,10 @@
     "proj4": "^2.5.0",
     "uuid": "^7.0.3",
     "mapbox-gl": "^1.6.0",
-    "@turf/turf": "^5.1.6"
+    "@mapbox/mapbox-gl-draw": "^1.1.2",
+    "mapbox-gl-edit": "",
+    "@turf/turf": "^5.1.6",
+    "showdown": "^1.9.0"
   },
   "publishConfig": {
     "access": "public"
