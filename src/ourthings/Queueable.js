@@ -51,7 +51,11 @@ class Queueable {
 			this.queue.objectMap(json,function(item){
 				let match;
 				if(match = pointerRegex.exec(item)) {
-					item=eval(match[1]);
+					try {
+						item = eval(match[1]);
+					} catch(e) {
+						return item;
+					}
 				}
 				return item;
 			})
