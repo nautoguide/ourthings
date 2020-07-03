@@ -163,4 +163,16 @@ export default class Browser extends Queueable {
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 
 	}
+
+	/**
+	 * Set page title
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.title - new page title
+	 */
+	setTitle(pid,json) {
+		document.title = json.title;
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
 }
