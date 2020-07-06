@@ -1,6 +1,6 @@
 {
   "name": "@nautoguide/ourthings",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "Queue based JavaScript framework",
   "scripts": {
     "build": "webpack --config webpack.config.basic.js",
@@ -48,7 +48,6 @@
     "proj4": "^2.5.0",
     "uuid": "^7.0.3",
     "mapbox-gl": "^1.6.0",
-    "@mapbox/mapbox-gl-draw": "^1.1.2",
     "@turf/turf": "^5.1.6",
     "showdown": "^1.9.0"
   },

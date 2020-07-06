@@ -502,7 +502,16 @@ export default class Elements extends Queueable {
 
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
+	/**
+	 * dragReset - Reset the drag item
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.drag - the drag item to reset
+	 *
+	 * @example
+	 * -elements.dragReset({"drag":"mydraf"});
 
+	 */
 	dragReset(pid, json) {
 		let self = this;
 		let options = Object.assign({
@@ -526,6 +535,19 @@ export default class Elements extends Queueable {
 
 	}
 
+	/**
+	 * dragOn - Make an element dragable
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.drag - the drag item to use
+	 * @param {string} json.targetId - element to be dragable
+	 * @param {string} json.dragTargetId - element to be the area you can actually drag
+	 * @param {string} json.bounds - element to be the area you cant drag out of
+	 * @param {int} json.buffer - the amount of buffer in pixels to apply to the boundary
+	 *
+	 * @example
+	 * -elements.dragOn({"targetId":"#functionDragAnalyticsTop","dragTargetId":"#functionDragAnalyticsTop .dragbar","drag":"analytics","bounds":".edit-scenario-map"});
+	 */
 	dragOn(pid, json) {
 		let self = this;
 		let options = Object.assign({
@@ -565,20 +587,23 @@ export default class Elements extends Queueable {
 
 		this.drags[options.drag].dimensions=element.getBoundingClientRect();
 		dragElement.addEventListener('mousedown', dragMouseDown);
+		window.addEventListener('resize', resize);
 
+		function resize(e) {
+			let bbox=boundsElement.getBoundingClientRect();
+			self.drags[options.drag].boundary.x1=bbox.width;
+			self.drags[options.drag].boundary.y1=bbox.height;
+		}
 
 		function dragMouseDown(e) {
 			if (self.drags[options.drag].mode) {
 				e = e || window.event;
 				e.preventDefault();
 				self.drags[options.drag].dimensions=element.getBoundingClientRect();
-				//console.log(self.drags[options.drag].dimensions);
-				// get the mouse cursor position at startup:
+
 				self.drags[options.drag].pos.ox = e.clientX - self.drags[options.drag].pos.x ;
 				self.drags[options.drag].pos.oy = e.clientY - self.drags[options.drag].pos.y;
-				//console.log(`drag start`);
-				//console.log(self.drags[options.drag].pos);
-				//console.log(`mouse: ${e.clientX}:${e.clientY}`);
+
 				document.onmouseup = closeDragElement;
 				document.onmousemove = elementDrag;
 			}
@@ -604,11 +629,6 @@ export default class Elements extends Queueable {
 
 				element.style.top = self.drags[options.drag].pos.y + "px";
 				element.style.left = self.drags[options.drag].pos.x + "px";
-
-				//console.log(`in bounds ${bboxX}:${bboxY}`);
-			} else {
-				//console.log(`out of bounds ${bboxX}:${bboxY}`);
-				//console.log(self.drags[options.drag].boundary);
 			}
 
 		}
