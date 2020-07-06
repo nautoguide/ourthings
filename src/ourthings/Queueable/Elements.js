@@ -516,21 +516,28 @@ export default class Elements extends Queueable {
 		let self = this;
 		let options = Object.assign({
 			"drag": "default",
+			"original":false
 		}, json);
 		let element = this.drags[options.drag].element;
-		if (this.drags[options.drag].mode) {
-			this.drags[options.drag].stored = {
-				x: element.offsetLeft,
-				y: element.offsetTop
-			}
+		if(options.original) {
 			element.style.removeProperty('top');
 			element.style.removeProperty('left');
-			element.style.removeProperty('position');
+			self.drags[options.drag].pos= {x: element.offsetLeft, y: element.offsetTop,ox:0,oy:0};
 		} else {
-			element.style.top = self.drags[options.drag].stored.y + "px";
-			element.style.left = self.drags[options.drag].stored.x + "px";
+			if (this.drags[options.drag].mode) {
+				this.drags[options.drag].stored = {
+					x: element.offsetLeft,
+					y: element.offsetTop
+				}
+				element.style.removeProperty('top');
+				element.style.removeProperty('left');
+				element.style.removeProperty('position');
+			} else {
+				element.style.top = self.drags[options.drag].stored.y + "px";
+				element.style.left = self.drags[options.drag].stored.x + "px";
+			}
+			this.drags[options.drag].mode = !this.drags[options.drag].mode;
 		}
-		this.drags[options.drag].mode = !this.drags[options.drag].mode;
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 
 	}
