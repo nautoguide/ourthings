@@ -1290,6 +1290,9 @@ export default class Openlayers extends Queueable {
 			return false;
 		}
 
+		let didwork=false;
+		let workCount=0;
+
 
 		const features=source.getFeatures();
 		let sourceFeaturesJSON=this._featuresToGeojson('EPSG:4326',view.getProjection().getCode(),features);
@@ -1326,6 +1329,8 @@ export default class Openlayers extends Queueable {
 
 								let openlayersFeatures=this._idFeatures(this._loadGeojson(options.map,newFeaturesGeoJSON));
 								source.addFeatures(openlayersFeatures);
+								didwork=true;
+								workCount++;
 								break;
 
 							}
@@ -1355,22 +1360,32 @@ export default class Openlayers extends Queueable {
 							//console.log(newFeaturesGeoJSON);
 							let openlayersFeatures=this._idFeatures(this._loadGeojson(options.map,newFeaturesGeoJSON));
 							source.addFeatures(openlayersFeatures);
-
+							didwork=true;
+							workCount++;
 						} else {
-							self.queue.setMemory(options.prefix + 'splitFeatures', `Split geometry failed`, "Session");
-							self.queue.execute(options.prefix + "splitFeatures");
+							self.queue.setMemory(options.prefix + 'splitFeaturesFailed', `Split geometry failed`, "Session");
+							self.queue.execute(options.prefix + "splitFeaturesFailed");
+							didwork=false;
 						}
 					}
 				} else {
 					if(intersectPoints.features.length!==0) {
-						self.queue.setMemory(options.prefix + 'splitFeatures', `Can not intersect complex [${intersectPoints.features.length}] points`, "Session");
-						self.queue.execute(options.prefix + "splitFeatures");
+						self.queue.setMemory(options.prefix + 'splitFeaturesFailed', `Can not intersect complex [${intersectPoints.features.length}] points`, "Session");
+						self.queue.execute(options.prefix + "splitFeaturesFailed");
+						didwork=false;
 					}
 				}
 			}
 
 		}
 
+		if(didwork) {
+			self.queue.setMemory(options.prefix + 'splitFeaturesSuccess', `Split [${workCount}] vertices`, "Session");
+			self.queue.execute(options.prefix + "splitFeaturesSuccess");
+		} else {
+			source.clear();
+			source.addFeatures(features);
+		}
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
