@@ -60,7 +60,8 @@ export default class Geojson extends Queueable {
 			"name": options.name,
 			"geojson": this._compressGeojson(options.type, options.geojson),
 			"type": options.type,
-			"index": this._makeHistoryIndex(options.geojson)
+			"index": this._makeHistoryIndex(options.geojson),
+			"details":options.details
 		}
 		memory.geojsonHistory.value.log.push(entry);
 
