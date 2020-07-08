@@ -543,6 +543,32 @@ export default class Elements extends Queueable {
 	}
 
 	/**
+	 * dragBoundsUpdate - Reset the boundary area manually
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.drag - the drag item to reset
+	 *
+	 * @example
+	 * -elements.dragBoundsUpdate({"drag":"mydraf"});
+
+	 */
+	dragBoundsUpdate(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"drag": "default"
+		}, json);
+		let bbox=this.drags[options.drag].boundsElement.getBoundingClientRect();
+		this.drags[options.drag].boundary={
+			x:0,
+				y:0,
+				x1:bbox.width,
+				y1:bbox.height
+		};
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
 	 * dragOn - Make an element dragable
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
@@ -582,6 +608,7 @@ export default class Elements extends Queueable {
 			pos: {x: element.offsetLeft, y: element.offsetTop,ox:0,oy:0},
 			element: element,
 			dragElement: dragElement,
+			boundsElement: boundsElement,
 			mode: true,
 			boundary: {
 				x:0,
