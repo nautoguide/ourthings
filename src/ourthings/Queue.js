@@ -2,6 +2,7 @@
 import Define from './Define.js';
 import * as consoleBadge from 'console-badge';
 import Memory from "./Memory";
+import Language from "./Language";
 
 /**
  * @classdesc
@@ -84,6 +85,13 @@ class Queue {
 		 */
 		self.activeLoops = [];
 
+
+		/*
+		 * Language support
+		 */
+
+		self.language=false;
+
 		/*
 		 * Default time for process to be executed after
 		 * TODO Platform test / tune
@@ -91,8 +99,11 @@ class Queue {
 		 */
 		self.defaultTimer = 10;
 
-		self.developerMode = false;
+		/*
+		 * Dev mode?
+		 */
 
+		self.developerMode = false;
 
 		console.clear();
 		consoleBadge.log({
@@ -148,34 +159,72 @@ class Queue {
 		self.setMemory("urlParams", self.urlToJson(), "Session");
 
 		/*
-		 * Load the templates.json
-		 *
-		 * This can now be specified by data-templates on the script include
+		 * Enable language support?
 		 */
-		let templateInclude = "templates.json";
 
-		let attr = self.getElement("script[data-templates]", false);
-		if (attr && attr.getAttribute("data-templates")) {
-			templateInclude = attr.getAttribute("data-templates");
+		let attr= self.getElement("script[data-lang]", false);
+		if(attr) {
+			let langFile=attr.getAttribute("data-lang");
+			consoleBadge.log({
+				mode: 'shields.io',
+				leftText: 'Booting',
+				rightText: "Language support",
+				rightBgColor: '#ffc107',
+				rightTextColor: '#1a1a1a'
+			});
+			fetch(langFile, {
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			})
+				.then(response => self.handleFetchErrors(response))
+				.then(response => response.json())
+				.then(function (response) {
+					/**
+					 * Convert the response to json and start the loader
+					 */
+					self.language= new Language(response);
+					bootTemplates();
+				})
+				.catch(function (error) {
+					self.reportError(error, 'Warning this error is fatal, I could not load your language file');
+				});
+		} else {
+			bootTemplates();
 		}
 
-		fetch(templateInclude, {
-			headers: {
-				'Content-Type': 'application/json'
+
+		function bootTemplates() {
+			/*
+			 * Load the templates.json
+			 *
+			 * This can now be specified by data-templates on the script include
+			 */
+			let templateInclude = "templates.json";
+
+			let attr = self.getElement("script[data-templates]", false);
+			if (attr && attr.getAttribute("data-templates")) {
+				templateInclude = attr.getAttribute("data-templates");
 			}
-		})
-			.then(response => self.handleFetchErrors(response))
-			.then(response => response.json())
-			.then(function (response) {
-				/**
-				 * Convert the response to json and start the loader
-				 */
-				self.templates = response;
-				self.templateLoader();
+
+			fetch(templateInclude, {
+				headers: {
+					'Content-Type': 'application/json'
+				}
 			})
-			.catch(function (error) {
-				self.reportError(error, 'Warning this error is probably fatal as I have no templates to load');
-			});
+				.then(response => self.handleFetchErrors(response))
+				.then(response => response.json())
+				.then(function (response) {
+					/**
+					 * Convert the response to json and start the loader
+					 */
+					self.templates = response;
+					self.templateLoader();
+				})
+				.catch(function (error) {
+					self.reportError(error, 'Warning this error is probably fatal as I have no templates to load');
+				});
+		}
 	}
 
 	/**
