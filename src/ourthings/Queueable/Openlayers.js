@@ -863,7 +863,8 @@ export default class Openlayers extends Queueable {
 			"layer": "default",
 			"projection": "EPSG:4326",
 			"type": "Polygon",
-			"buffer":10
+			"buffer":10,
+			"maxPoints":200
 		}, json);
 		let map = self.maps[options.map].object;
 
@@ -878,7 +879,8 @@ export default class Openlayers extends Queueable {
 		}
 		let control= new Draw({
 				source: source,
-				type: options.type
+				type: options.type,
+				maxPoints: options.maxPoints
 			});
 
 		control.on('drawend', function (event) {
