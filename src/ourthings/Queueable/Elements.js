@@ -543,6 +543,45 @@ export default class Elements extends Queueable {
 	}
 
 	/**
+	 * dragMoveIntoBounds - Force a drag back into bounds
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.drag - the drag item to reset
+	 *
+	 * @example
+	 * -elements.dragBoundsUpdate({"drag":"mydraf"});
+
+	 */
+	dragMoveIntoBounds(pid,json) {
+		let self = this;
+		let options = Object.assign({
+			"drag": "default",
+			"original":false
+		}, json);
+		/*
+		 * Check our X
+		 */
+
+		let element = this.drags[options.drag].element;
+		self.drags[options.drag].dimensions=element.getBoundingClientRect();
+		let bbox=this.drags[options.drag].boundsElement.getBoundingClientRect();
+		this.drags[options.drag].boundary={
+			x:0,
+			y:0,
+			x1:bbox.width,
+			y1:bbox.height
+		};
+		if((self.drags[options.drag].pos.x+self.drags[options.drag].buffer+self.drags[options.drag].dimensions.width)>self.drags[options.drag].boundary.x1)
+		{
+			self.drags[options.drag].pos.x=self.drags[options.drag].boundary.x1-(self.drags[options.drag].buffer+self.drags[options.drag].dimensions.width);
+			element.style.left = self.drags[options.drag].pos.x + "px";
+
+		}
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
 	 * dragBoundsUpdate - Reset the boundary area manually
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
