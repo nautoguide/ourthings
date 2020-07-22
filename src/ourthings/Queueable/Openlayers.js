@@ -675,7 +675,14 @@ export default class Openlayers extends Queueable {
 				}
 			}
 
-			let control = new Select({"layers": options.layers, "style": options.style});
+			let control = new Select({
+				"multi": false,
+				"layers": options.layers,
+				"style": options.style,
+				"toggleCondition": function () {
+					return false;
+				}
+			});
 			control.on('select', selectFunction);
 			return control;
 		}
