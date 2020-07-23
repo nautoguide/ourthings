@@ -1655,7 +1655,7 @@ export default class Openlayers extends Queueable {
 		let map = self.maps[options.map].object;
 		let view = map.getView();
 		let size = map.getSize();
-		view.centerOn(this._decodeCoords(json.coordinate, view.getProjection().getCode()), size, [size[0] / 2, size[1] / 2]);
+		view.centerOn(this._decodeCoords(json.coordinate, view.getProjection().getCode(),view.getProjection().getCode()), size, [size[0] / 2, size[1] / 2]);
 		if(options.zoom)
 			view.setZoom(options.zoom);
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
@@ -1669,8 +1669,10 @@ export default class Openlayers extends Queueable {
 	 * @returns {number[]}
 	 * @private
 	 */
-	_decodeCoords(cords,projection) {
+	_decodeCoords(cords,projectionFrom,projectionTo) {
+		projectionTo=projectionTo||"EPSG:4326";
 		let returnCords=[];
+
 		const srid=/^SRID=(.*?);POINT\((.*?)\)/;
 		if(typeof cords === 'string') {
 			const match=cords.match(srid);
@@ -1679,19 +1681,24 @@ export default class Openlayers extends Queueable {
 				returnCords=returnCords.map(function (str) {
 					return parseFloat(str);
 				})
-				returnCords = transform(returnCords, "EPSG:"+match[1],projection);
+				returnCords = transform(returnCords, "EPSG:"+match[1],projectionFrom);
+				returnCords=this._cleanCoords(returnCords);
 			}
 
 		} else {
-			returnCords=cords;
+			returnCords=transform(cords, projectionFrom,projectionTo);
+			returnCords=this._cleanCoords(returnCords);
 		}
-		// Clean up any strings
-		returnCords=returnCords.map(function (str) {
+
+		return returnCords;
+	}
+
+	_cleanCoords(coords) {
+		let returnCords=coords.map(function (str) {
 			return parseFloat(str);
 		})
 		return returnCords;
 	}
-
 	/**
 	 * Zoom a layer to the extent of its features (needs appropriate zoom levels to work well
 	 * @param pid
@@ -1763,9 +1770,8 @@ export default class Openlayers extends Queueable {
 
 			}
 		}
-
 		view.animate({
-			center: this._decodeCoords(options.coordinate, view.getProjection().getCode()),
+			center: this._decodeCoords(options.coordinate, options.projection||view.getProjection().getCode(),view.getProjection().getCode()),
 			duration: options.duration
 		}, callback);
 		view.animate({
