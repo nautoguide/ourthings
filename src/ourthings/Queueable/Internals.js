@@ -75,6 +75,7 @@ export default class Internals extends Queueable {
 	 * @param {int} pid - process ID
 	 * @param {object} json - queue arguments
 	 * @param {string} json.name - name of memory item
+	 * @param {boolean} json.toggle - toggle unique items
 	 * @param {*} json.value - value to set (can be any type)
 	 * @param {string} [json.mode] - [Garbage|Session|Permanent] Memory mode
 	 * @example
@@ -86,7 +87,15 @@ export default class Internals extends Queueable {
 		let modArray=[];
 		if(memory[json.name])
 			modArray=memory[json.name].value;
-		modArray.push(json.value)
+
+		if(json.toggle===true) {
+			let index=modArray.indexOf(json.value);
+			if(index!==-1) {
+				modArray.splice(index,1);
+			} else
+				modArray.push(json.value);
+		} else
+			modArray.push(json.value);
 		self.queue.setMemory(json.name,modArray,json.mode);
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
