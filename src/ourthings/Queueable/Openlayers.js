@@ -662,8 +662,10 @@ export default class Openlayers extends Queueable {
 		}, json);
 
 
+
 		switch (options.function) {
 			case 'deselect': return deselect();
+			case 'manualSelect': return manualSelect();
 			default: return init();
 
 		}
@@ -691,6 +693,17 @@ export default class Openlayers extends Queueable {
 			let features = options.obj.getFeatures();
 			features.clear();
 			return true;
+		}
+
+		function manualSelect() {
+			let control=self.maps[options.map].controls[options.name].obj;
+			let layer = self.maps[options.map].layers[options.layer];
+			let source = layer.getSource();
+			let feature = source.getFeatureById(options.id);
+
+			control.getFeatures().clear();
+			control.getFeatures().push(feature);
+
 		}
 
 		function selectFunction(e) {
