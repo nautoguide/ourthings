@@ -1648,6 +1648,26 @@ export default class Openlayers extends Queueable {
 	}
 
 	/**
+	 * set layer on or off
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.layer - Layer to clear
+	 * @param {string} json.active - active state to set
+	 */
+	setLayerActive(pid, json) {
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"active":true
+		}, json);
+		let layer = this.maps[options.map].layers[options.layer];
+		layer.setVisible(options.active);
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	/**
 	 *  Move the map so the cords are at the center
 	 * @param pid
 	 * @param json
