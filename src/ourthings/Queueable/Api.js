@@ -198,7 +198,8 @@ export default class Api extends Queueable {
 		let options=Object.assign({
 			"url":"ws://localhost",
 			"queue":"queue",
-			"queues":{}
+			"queues":{},
+			"recvQeue": false
 		},json);
 		self.frames={};
 		self.bulk=[];
@@ -247,6 +248,7 @@ export default class Api extends Queueable {
 				 * Set our normal memory (not multiple thread safe)
 				 */
 				self.queue.setMemory(jsonData[options.queue], jsonData, self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.setMemory('wsLastRecv', jsonData, self.queue.DEFINE.MEMORY_SESSION);
 
 
 				/*
@@ -260,11 +262,15 @@ export default class Api extends Queueable {
 					}
 				}
 
-				if(wasBulk===false)
+				if(wasBulk===false) {
 					self.queue.execute(jsonData[options.queue]);
-				else {
+					if(options.recvQeue)
+						self.queue.execute(options.recvQeue);
+				} else {
 					if(wasBulk===true&&self.bulk.length===0) {
 						self.queue.execute(self.bulkQueue);
+						if(options.recvQeue)
+							self.queue.execute(options.recvQeue);
 					}
 				}
 			}
@@ -300,12 +306,21 @@ export default class Api extends Queueable {
 	 * @param {string} json.message - JSON message to send
 	 * @param {string} json.bulk - Bulk messages
 	 * @param {string} json.bulk - Bulk bulkQueue
+	 * @param {string} json.debug - Debug to console
+	 * @param {string} json.sendQueue - Queue to always call on send
+	 *
 	 */
 	websocketSend(pid,json) {
 		let self=this;
-		if(json.debug===true)
+		let options=Object.assign({
+			"debug": false,
+			"sendQueue": false
+		},json);
+		if(options.debug===true)
 			console.log(json);
 		self.queue.setMemory('wsLastSent', json, self.queue.DEFINE.MEMORY_SESSION);
+		if(options.sendQueue)
+			self.queue.execute(options.sendQueue);
 		if(json.bulk) {
 			/*
 			 * Bulk mode, we are sending lots of requests and return triggers only work when we get it all back
