@@ -41,7 +41,13 @@ export default class Internals extends Queueable {
 	 */
 	ifqueue(pid,json) {
 		let self=this;
-		if(eval(json.statement)) {
+		let evalRes;
+		try {
+			evalRes=eval(json.statement);
+		} catch(e) {
+			evalRes=false;
+		}
+		if(evalRes) {
 			self.queue.execute(json.name,json.json);
 		} else {
 			if(json.else)
