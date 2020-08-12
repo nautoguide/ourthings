@@ -699,7 +699,7 @@ export default class Openlayers extends Queueable {
 			let control=self.maps[options.map].controls[options.name].obj;
 			let layer = self.maps[options.map].layers[options.layer];
 			let source = layer.getSource();
-			let feature = source.getFeatureById(options.id);
+			let feature = self._featureSearch(source,options.id);
 
 			control.getFeatures().clear();
 			control.getFeatures().push(feature);
@@ -1086,6 +1086,29 @@ export default class Openlayers extends Queueable {
 		this.queue.setMemory(options.map + 'selectedFeatures', foundFeatures, "Session");
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 		return foundFeatures;
+	}
+
+	/*
+	 * Find a feature using search string eg: feature_id:12345
+	 */
+	_featureSearch(source,searchString) {
+		let features = source.getFeatures();
+
+		let feature;
+		if(searchString.match(/\:/)) {
+			let pattern=searchString.split(":");
+			for (let i in features) {
+				if(features[i].get(pattern[0])==pattern[1]) {
+					feature=features[i];
+					break;
+				}
+
+			}
+		} else {
+			feature=source.getFeatureById(searchString);
+		}
+		return feature;
+
 	}
 
 	/**
