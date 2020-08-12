@@ -703,6 +703,8 @@ export default class Openlayers extends Queueable {
 
 			control.getFeatures().clear();
 			control.getFeatures().push(feature);
+			self.queue.setMemory(options.prefix + 'simpleSelect', {"selected":[feature]}, "Session");
+			self.queue.setMemory(options.map + 'selectedFeatures', [feature], "Session");
 
 		}
 
