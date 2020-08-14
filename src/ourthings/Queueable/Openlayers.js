@@ -703,6 +703,8 @@ export default class Openlayers extends Queueable {
 
 			control.getFeatures().clear();
 			control.getFeatures().push(feature);
+			self.queue.setMemory(options.prefix + 'simpleSelect', {"selected":[feature]}, "Session");
+			self.queue.setMemory(options.map + 'selectedFeatures', [feature], "Session");
 
 		}
 
@@ -758,8 +760,8 @@ export default class Openlayers extends Queueable {
 				return shiftKeyOnly(evt) && singleClick(evt)
 			}
 		});
-		let maskFeature = buffer(options.inside.features[0], options.buffer, {units: "meters"});
-		let bufferedMask = polygon(maskFeature.geometry.coordinates);
+		let maskFeature = buffer(options.inside, options.buffer, {units: "meters"});
+		let bufferedMask = maskFeature;
 
 
 		/*
@@ -805,17 +807,23 @@ export default class Openlayers extends Queueable {
 			/*
             * Flag any inside feature valid
             */
-			for(let i in modifiedFeaturesJSON.features) {
+			let allBufferPoly=self._multiFeatureToPolygon(bufferedMask.features[0]);
+		/*	for(let i in modifiedFeaturesJSON.features) {
 				let polygons=[modifiedFeaturesJSON.features[i]];
 				if(polygons[0].geometry.type==="MultiPolygon")
 					polygons=self._multiFeatureToPolygon(modifiedFeaturesJSON.features[i]);
 
 				for(let p in polygons) {
-					if (booleanContains(bufferedMask, polygons[p])) {
-						modifiedFeatures[i].set('invalid', false);
+
+
+					for(let b in allBufferPoly) {
+						if (booleanContains(allBufferPoly[b], polygons[p])) {
+							modifiedFeatures[i].set('invalid', false);
+							break;
+						}
 					}
 				}
-			}
+			}*/
 			/*
 			 * All features
 			 */
@@ -827,10 +835,15 @@ export default class Openlayers extends Queueable {
 			 * Check inside
 			 */
 
-			let isInside = true;
+			let isInside = false;
 			let isKink = false;
 			if (options.inside) {
-				isInside = booleanPointInPolygon(turfPoint, bufferedMask);
+				for(let b in allBufferPoly) {
+					if(booleanPointInPolygon(turfPoint, allBufferPoly[b])) {
+						isInside = true;
+						break;
+					}
+				}
 			}
 
 			/*
@@ -887,8 +900,8 @@ export default class Openlayers extends Queueable {
 
 		let bufferedMask;
 		if (options.inside) {
-			let maskFeature = buffer(options.inside.features[0], options.buffer, {units: "meters"});
-			bufferedMask = polygon(maskFeature.geometry.coordinates);
+			let maskFeature = buffer(options.inside, options.buffer, {units: "meters"});
+			bufferedMask = maskFeature;
 		}
 		let control= new Draw({
 				source: source,
@@ -909,7 +922,7 @@ export default class Openlayers extends Queueable {
 			let isInside = true;
 			let isKink = false;
 			if (options.inside) {
-				isInside = booleanContains(bufferedMask,features.features[0]);
+				isInside = booleanContains(bufferedMask.features[0],features.features[0]);
 			}
 
 
