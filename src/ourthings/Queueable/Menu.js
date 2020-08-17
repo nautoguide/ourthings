@@ -35,8 +35,9 @@ class Menu extends Queueable {
 
 		const menuTop=self.queue.getElement(options.menuTop);
 
-		element.addEventListener("click", function (e) {
-			if(menuTop.getAttribute('aria-expanded')==='true') {
+
+		function menuToggle() {
+			if (menuTop.getAttribute('aria-expanded') === 'true') {
 				// Close
 				closeMenu();
 			} else {
@@ -45,8 +46,19 @@ class Menu extends Queueable {
 					const modElement = self.queue.getElement(options.classModifiers[i].targetId);
 					modElement.classList.add(options.classModifiers[i].class);
 				}
-				menuTop.setAttribute('aria-expanded','true');
+				menuTop.setAttribute('aria-expanded', 'true');
+				menuTop.setAttribute('aria-hidden', 'false');
+				menuTop.children[0].focus();
 			}
+		}
+		element.addEventListener("keydown", function (e) {
+			if(e.keyCode===13) {
+				menuToggle();
+			}
+		});
+
+		element.addEventListener("click", function (e) {
+			menuToggle();
 		});
 
 		function closeMenu() {
@@ -55,26 +67,36 @@ class Menu extends Queueable {
 				modElement.classList.remove(options.classModifiers[i].class);
 			}
 			menuTop.setAttribute('aria-expanded','false');
+			menuTop.setAttribute('aria-hidden','true');
 		}
-
-		element.addEventListener("blur", function (e) {
-			setTimeout( function() {
-				closeMenu();
-			},500);
-		});
-
 
 			/*
 			 * add the menu children click events
 			 */
 		for(let i=0;i<menuTop.children.length;i++) {
+
 			menuTop.children[i].addEventListener("click", function (e) {
-				for (let i in options.classModifiers) {
-					const modElement = self.queue.getElement(options.classModifiers[i].targetId);
-					modElement.classList.remove(options.classModifiers[i].class);
-				}
-				menuTop.setAttribute('aria-expanded','false');
+				clickItem();
 			});
+			menuTop.children[i].addEventListener("keydown", function (e) {
+				if(e.keyCode===32) {
+					clickItem(true,menuTop.children[i]);
+				}
+			});
+		}
+
+		function clickItem(keymode,element) {
+			for (let i in options.classModifiers) {
+				const modElement = self.queue.getElement(options.classModifiers[i].targetId);
+				modElement.classList.remove(options.classModifiers[i].class);
+			}
+			menuTop.setAttribute('aria-expanded','false');
+			/*
+			 * Was this a keyboard hit? If so 'click' the element
+			 */
+			if(keymode) {
+				element.click();
+			}
 		}
 
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
