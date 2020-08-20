@@ -1824,6 +1824,7 @@ export default class Openlayers extends Queueable {
 		let view = map.getView();
 
 		let zoom = view.getZoom();
+		let newZoom=options.zoom||zoom;
 		let parts = 2;
 		let called = false;
 
@@ -1847,7 +1848,7 @@ export default class Openlayers extends Queueable {
 			zoom: zoom - 1,
 			duration: options.duration / 2
 		}, {
-			zoom: zoom,
+			zoom: newZoom,
 			duration: options.duration / 2
 		}, callback);
 		if (options.wait === false)
