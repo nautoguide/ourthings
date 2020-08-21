@@ -170,7 +170,8 @@ export default class Openlayers extends Queueable {
 						self.queue.setMemory(options.map + 'ResolutionChange', {
 							"zoom": map.getView().getZoom(),
 							"resolution": map.getView().getResolution(),
-							"center": map.getView().getCenter()
+							"center": map.getView().getCenter(),
+							"extent": map.getView().calculateExtent(map.getSize())
 						}, "Session");
 						// Silent Fail this as its not critical
 						self.queue.execute(options.map + "ResolutionChange",{},true);
@@ -182,7 +183,8 @@ export default class Openlayers extends Queueable {
 				case 'center': {
 					self.queue.setMemory(options.map + 'CenterChange', {
 						"center": map.getView().getCenter(),
-						"zoom":  map.getView().getZoom()
+						"zoom":  map.getView().getZoom(),
+						"extent": map.getView().calculateExtent(map.getSize())
 					}, "Session");
 					self.queue.execute(options.map + "CenterChange",{},true);
 				}
@@ -2010,6 +2012,8 @@ export default class Openlayers extends Queueable {
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
+
+
 
 
 }
