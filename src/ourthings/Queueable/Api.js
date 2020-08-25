@@ -233,7 +233,40 @@ export default class Api extends Queueable {
 					delete self.frames[jsonData['uuid']];
 				}
 			} else {
-				deployEvent();
+				/*
+				 * Is this a super large packet using S3?
+				 */
+				if(jsonData['s3']) {
+					fetch(jsonData['s3'], {})
+						.then(function(response) {
+							if (!response.ok) {
+								self.queue.setMemory('wsErrorDetails', response, self.queue.DEFINE.MEMORY_SESSION);
+								self.queue.execute("wsError");
+							}
+							self.queue.handleFetchErrors(response);
+							return response;
+						})
+						.then(function(response) {
+									return response.blob();
+						})
+						.then(function (response) {
+							const reader = new FileReader();
+							reader.addEventListener('loadend', () => {
+								jsonData=JSON.parse(reader.result);
+								deployEvent();
+							});
+							reader.readAsText(response);
+
+
+						})
+						.catch(function (error) {
+							self.queue.setMemory('wsErrorDetails', error, self.queue.DEFINE.MEMORY_SESSION);
+							self.queue.execute("wsError");
+
+						});
+				} else {
+					deployEvent();
+				}
 			}
 
 			function deployEvent() {
