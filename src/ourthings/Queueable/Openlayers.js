@@ -1602,6 +1602,7 @@ export default class Openlayers extends Queueable {
 	 * @param {string} json.layer - Layer to get extent from
 	 * @param {string} json.prefix - Prefix for memory
 	 * @param {string} json.projection - Projection to use
+	 * @param {string} json.search - feature search to use (rather than all)
 	 */
 	getGeojson(pid, json) {
 		let self = this;
@@ -1609,7 +1610,8 @@ export default class Openlayers extends Queueable {
 			"map": "default",
 			"layer": "default",
 			"projection": "EPSG:4326",
-			"prefix": ""
+			"prefix": "",
+			"search":""
 		}, json);
 		let map = self.maps[options.map].object;
 		let view = map.getView();
@@ -1617,6 +1619,9 @@ export default class Openlayers extends Queueable {
 		let layer = self.maps[options.map].layers[options.layer];
 		let source = layer.getSource();
 		let features = source.getFeatures();
+		if(options.search) {
+			features=[self._featureSearch(source, options.search)];
+		}
 		let returnJson = new GeoJSON({
 			"dataProjection": options.projection,
 			"featureProjection": view.getProjection().getCode()
