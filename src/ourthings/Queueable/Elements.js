@@ -247,6 +247,19 @@ export default class Elements extends Queueable {
 
 	}
 
+	getMultiselectValues(pid,json) {
+		let self = this;
+		let options = Object.assign({
+			"mode": "array",
+			"name": "selectboxes"
+		}, json);
+		const results = Array.prototype.slice.call(document.querySelectorAll(`${options.targetId} option:checked`),0).map(function(v,i,a) {
+			return v.value;
+		});
+		self.queue.setMemory(options.name, results, "Session");
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
 	/**
 	 * Get the computed style for an element
 	 * @param {number} pid - Process ID
