@@ -223,14 +223,16 @@ export default class Api extends Queueable {
 			 */
 			if(jsonData['frame']) {
 				if(self.frames[jsonData['uuid']]===undefined) {
-					self.frames[jsonData['uuid']]={"total":0,data:new Array(jsonData['frame']['totalFrames'])};
+					self.frames[jsonData['uuid']]={"total":0,data:new Array(parseInt(jsonData['totalFrames'])-1)};
 				}
-				self.frames[jsonData['uuid']].data[jsonData['frame']]=atob(jsonData['data']);
+				self.frames[jsonData['uuid']].data[parseInt(jsonData['frame'])-1]=atob(jsonData['data']);
 				self.frames[jsonData['uuid']].total++;
 				if(self.frames[jsonData['uuid']].total===jsonData['totalFrames']) {
-					jsonData=JSON.parse(self.frames[jsonData['uuid']].data.join(''));
-					deployEvent();
+					const realJsonData=JSON.parse(self.frames[jsonData['uuid']].data.join(''));
+					self.frames[jsonData['uuid']]=null;
 					delete self.frames[jsonData['uuid']];
+					jsonData=realJsonData;
+					deployEvent();
 				}
 			} else {
 				/*

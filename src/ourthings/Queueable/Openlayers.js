@@ -1451,7 +1451,7 @@ export default class Openlayers extends Queueable {
 								type: "FeatureCollection",
 								features: [newPolygons[0], newPolygons[1]]
 							};
-							this._makeContiguous(newFeaturesGeoJSON, 100);
+							this._makeContiguous(newFeaturesGeoJSON, 0.1);
 							//console.log(newFeaturesGeoJSON);
 							let openlayersFeatures = this._idFeatures(this._loadGeojson(options.map, newFeaturesGeoJSON));
 							source.addFeatures(openlayersFeatures);
@@ -1480,6 +1480,8 @@ export default class Openlayers extends Queueable {
 		} else {
 			source.clear();
 			source.addFeatures(features);
+			self.queue.setMemory(options.prefix + 'splitFeaturesSuccess', `Split [${workCount}] vertices`, "Session");
+			self.queue.execute(options.prefix + "splitFeaturesSuccess");
 		}
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
