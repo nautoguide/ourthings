@@ -41,11 +41,19 @@ export default class Browser extends Queueable {
 
 		function urlChange(e) {
 			let baseURL = location.href;
+
 			/*
 			 * Do a check to see we are not trying to go to the same url
 			 * In some browsers we will get two events (onpopstate & onhashchange)
 			 */
+
 			if(self.lastURL===false||baseURL!==self.lastURL) {
+				if(memory.historyClose&&memory.historyClose.value==='on') {
+					self.queue.setMemory('historyBlockedUrl', baseURL, "Session");
+					location.href = self.lastURL;
+					self.queue.execute('historyBlocked');
+					return;
+				}
 				self.lastURL=baseURL;
 				let match = baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
 				if (match && match[1]) {
@@ -144,7 +152,7 @@ export default class Browser extends Queueable {
 	 * @param {string} json.mode - on|off
 	 */
 	closeEvent(pid,json) {
-
+		this.queue.setMemory('historyClose', json.mode? json.mode:'on', "Session");
 		if(json.mode==='off') {
 			window.onbeforeunload = function(e) {};
 		} else {
