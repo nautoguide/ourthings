@@ -63,7 +63,13 @@ class Queueable {
 			/*
 			 * Execute
 			 */
-			self[command](pid, json);
+			try {
+				self[command](pid, json);
+			} catch(e) {
+				self.queue.setMemory('generalErrorMessage',e,"Session");
+				self.queue.execute('generalError');
+				self.queue.finished(pid,self.queue.DEFINE.FIN_ERROR,`Queue [${command}] errored: ${e}`);
+			}
 		} else {
 			self.queue.finished(pid,self.queue.DEFINE.FIN_ERROR,'No such command ['+command+']');
 		}
