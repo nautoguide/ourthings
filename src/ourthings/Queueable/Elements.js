@@ -395,6 +395,21 @@ export default class Elements extends Queueable {
 	}
 
 	/**
+	 * Scroll a dom container to the top
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target to scroll to
+	 *
+	 * @example
+	 * elements.scrollTop({"targetId":".map-elements-list"});
+	 */
+	scrollTop(pid, json) {
+		let container = self.queue.getElement(json.targetId);
+		container.scrollTop = 0;
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
 	 * Monitor element(s) in a form and add classes on change
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
