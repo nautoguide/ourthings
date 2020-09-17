@@ -54,7 +54,7 @@ class Queueable {
 					try {
 						item = eval(match[1]);
 					} catch(e) {
-						return item;
+						return undefined;
 					}
 				}
 				return item;

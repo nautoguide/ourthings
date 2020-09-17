@@ -179,10 +179,12 @@ export default class Elements extends Queueable {
 	innerHTML(pid, json) {
 		let self = this;
 		let element = self.queue.getElement(json.targetId);
-		if (json.append)
-			element.insertAdjacentHTML('beforeend', json.html);
-		else
-			element.innerHTML = json.html;
+		if(element) {
+			if (json.append)
+				element.insertAdjacentHTML('beforeend', json.html);
+			else
+				element.innerHTML = json.html;
+		}
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
