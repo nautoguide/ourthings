@@ -1394,6 +1394,7 @@ export default class Openlayers extends Queueable {
 
 		for (let i in sourceFeaturesJSON.features) {
 			let polygons = this._multiFeatureToPolygon(sourceFeaturesJSON.features[i]);
+			let savedProperties=sourceFeaturesJSON.features[i].properties;
 			for (let p in polygons) {
 				let intersectPoints = lineIntersect(polygons[p], line);
 
@@ -1416,6 +1417,7 @@ export default class Openlayers extends Queueable {
 								//console.log(`Got overlap at ${points}`);
 								//console.log(ringIntersect);
 								polygons[p].geometry.coordinates[0].splice(points, 0, intersectPoints.features[0].geometry.coordinates);
+								polygons[p].properties=savedProperties;
 								source.removeFeature(source.getFeatureById(sourceFeaturesJSON.features[i].properties.uuid));
 								let newFeaturesGeoJSON = {
 									type: "FeatureCollection",
@@ -1525,13 +1527,13 @@ export default class Openlayers extends Queueable {
 		/*
 		 * Our first feature is the one we will merge all the others to, keep it properties.
 		 */
-		let targetFeaturePolygon = multiPolygon(sourceFeaturesJSON.features[0].geometry.coordinates);
+		let targetFeaturePolygon = this._featureToTurfPolygon(sourceFeaturesJSON.features[0]);
 		let targetFeatureProperties = sourceFeaturesJSON.features[0].properties;
 		/*
 		 * Merge them
 		 */
 		for (let i = 1; i < sourceFeatures.length; i++) {
-			targetFeaturePolygon = union(targetFeaturePolygon, multiPolygon(sourceFeaturesJSON.features[i].geometry.coordinates));
+			targetFeaturePolygon = union(targetFeaturePolygon, this._featureToTurfPolygon(sourceFeaturesJSON.features[i]));
 		}
 
 		/*
@@ -1553,6 +1555,21 @@ export default class Openlayers extends Queueable {
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 	}
+
+	/**
+	 * Convert a feature of polygons to a turf polygon of correct type
+	 * @param feature
+	 * @returns {[]}
+	 * @private
+	 */
+	_featureToTurfPolygon(feature) {
+		if (feature.geometry.type === "MultiPolygon") {
+			return multiPolygon(feature.geometry.coordinates);
+		} else {
+			return polygon(feature.geometry.coordinates);
+		}
+	}
+
 
 	/**
 	 * Add geojson features to a layer
