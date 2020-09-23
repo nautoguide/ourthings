@@ -34,6 +34,7 @@ import {register} from 'ol/proj/proj4';
 import {get as getProjection} from 'ol/proj'
 
 import {transform} from 'ol/proj';
+import {METERS_PER_UNIT} from 'ol/proj';
 
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
 
@@ -158,7 +159,8 @@ export default class Openlayers extends Queueable {
 			"controls": {},
 			"layerLoadState": false,
 			"loadStateEnabled": false,
-			"timeout1":undefined
+			"timeout1":undefined,
+			"timeout2":undefined
 		};
 
 
@@ -176,7 +178,6 @@ export default class Openlayers extends Queueable {
 					/**
 					 *  Check for judder - We only want zoom events that are not a transition
 					 */
-
 					let level = Math.round(map.getView().getZoom());
 					let zoomLevel = self.maps[options.map].zoom;
 
@@ -195,8 +196,8 @@ export default class Openlayers extends Queueable {
 				}
 				case 'center': {
 					self._updateResolution(map,options.map+ 'ResolutionChange');
-					clearTimeout(self.maps[options.map].timeout1);
-					self.maps[options.map].timeout1=setTimeout(function () {
+					clearTimeout(self.maps[options.map].timeout2);
+					self.maps[options.map].timeout2=setTimeout(function () {
 						self.queue.execute(options.map + "CenterChange", {}, true);
 					},500)
 				}
@@ -209,11 +210,14 @@ export default class Openlayers extends Queueable {
 
 	_updateResolution(map,name) {
 		let level = Math.round(map.getView().getZoom());
+		let unit = map.getView().getProjection().getUnits();
 		self.queue.setMemory(name, {
 			"zoom": level,
 			"resolution": map.getView().getResolution(),
 			"center": map.getView().getCenter(),
-			"extent": map.getView().calculateExtent(map.getSize())
+			"extent": map.getView().calculateExtent(map.getSize()),
+			"unit": unit,
+			"scale": Math.round(map.getView().getResolution() * METERS_PER_UNIT[unit] * 39.37 * 72)
 		}, "Session");
 
 	}
