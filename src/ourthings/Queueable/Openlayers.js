@@ -217,7 +217,7 @@ export default class Openlayers extends Queueable {
 			"center": map.getView().getCenter(),
 			"extent": map.getView().calculateExtent(map.getSize()),
 			"unit": unit,
-			"scale": Math.round(map.getView().getResolution() * METERS_PER_UNIT[unit] * 39.37 * 72)
+			"scale": map.getView().getResolution() * METERS_PER_UNIT[unit] * 39.37 * 72
 		}, "Session");
 
 	}
