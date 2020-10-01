@@ -175,7 +175,8 @@ export default class Elements extends Queueable {
 	 */
 	domRemoveElement(pid, json) {
 		let target = self.queue.getElement(json.targetId);
-		target.remove();
+		if(target)
+			target.remove();
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
