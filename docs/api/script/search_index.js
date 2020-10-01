@@ -42,6 +42,18 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "@nautoguide/ourthings/ourthings/language.js~language",
+    "class/ourthings/Language.js~Language.html",
+    "<span>Language</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Language.js</span>",
+    "class"
+  ],
+  [
+    "@nautoguide/ourthings/ourthings/queueable/language.js~language",
+    "class/ourthings/Queueable/Language.js~Language.html",
+    "<span>Language</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/Language.js</span>",
+    "class"
+  ],
+  [
     "@nautoguide/ourthings/ourthings/queueable/mapbox.js~mapbox",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html",
     "<span>Mapbox</span> <span class=\"search-result-import-path\">@nautoguide/ourthings/ourthings/Queueable/Mapbox.js</span>",
@@ -540,6 +552,42 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/language.js",
+    "file/ourthings/Language.js.html",
+    "ourthings/Language.js",
+    "file"
+  ],
+  [
+    "ourthings/language.js~language#constructor",
+    "class/ourthings/Language.js~Language.html#instance-constructor-constructor",
+    "ourthings/Language.js~Language#constructor",
+    "method"
+  ],
+  [
+    "ourthings/language.js~language#defs",
+    "class/ourthings/Language.js~Language.html#instance-member-defs",
+    "ourthings/Language.js~Language#defs",
+    "member"
+  ],
+  [
+    "ourthings/language.js~language#get",
+    "class/ourthings/Language.js~Language.html#instance-method-get",
+    "ourthings/Language.js~Language#get",
+    "method"
+  ],
+  [
+    "ourthings/language.js~language#langid",
+    "class/ourthings/Language.js~Language.html#instance-member-langId",
+    "ourthings/Language.js~Language#langId",
+    "member"
+  ],
+  [
+    "ourthings/language.js~language#setlanguage",
+    "class/ourthings/Language.js~Language.html#instance-method-setLanguage",
+    "ourthings/Language.js~Language#setLanguage",
+    "method"
+  ],
+  [
     "ourthings/memory.js",
     "file/ourthings/Memory.js.html",
     "ourthings/Memory.js",
@@ -1008,6 +1056,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/browser.js~browser#settitle",
+    "class/ourthings/Queueable/Browser.js~Browser.html#instance-method-setTitle",
+    "ourthings/Queueable/Browser.js~Browser#setTitle",
+    "method"
+  ],
+  [
     "ourthings/queueable/elements.js",
     "file/ourthings/Queueable/Elements.js.html",
     "ourthings/Queueable/Elements.js",
@@ -1032,9 +1086,33 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/elements.js~elements#domremoveelement",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-domRemoveElement",
+    "ourthings/Queueable/Elements.js~Elements#domRemoveElement",
+    "method"
+  ],
+  [
+    "ourthings/queueable/elements.js~elements#dragboundsupdate",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-dragBoundsUpdate",
+    "ourthings/Queueable/Elements.js~Elements#dragBoundsUpdate",
+    "method"
+  ],
+  [
+    "ourthings/queueable/elements.js~elements#dragmoveintobounds",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-dragMoveIntoBounds",
+    "ourthings/Queueable/Elements.js~Elements#dragMoveIntoBounds",
+    "method"
+  ],
+  [
     "ourthings/queueable/elements.js~elements#dragon",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-dragOn",
     "ourthings/Queueable/Elements.js~Elements#dragOn",
+    "method"
+  ],
+  [
+    "ourthings/queueable/elements.js~elements#dragreset",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-dragReset",
+    "ourthings/Queueable/Elements.js~Elements#dragReset",
     "method"
   ],
   [
@@ -1074,6 +1152,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/elements.js~elements#getmultiselectvalues",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-getMultiselectValues",
+    "ourthings/Queueable/Elements.js~Elements#getMultiselectValues",
+    "method"
+  ],
+  [
     "ourthings/queueable/elements.js~elements#innerhtml",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-innerHTML",
     "ourthings/Queueable/Elements.js~Elements#innerHTML",
@@ -1101,6 +1185,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/elements.js~elements#scrolltobottom",
     "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-scrollToBottom",
     "ourthings/Queueable/Elements.js~Elements#scrollToBottom",
+    "method"
+  ],
+  [
+    "ourthings/queueable/elements.js~elements#scrolltop",
+    "class/ourthings/Queueable/Elements.js~Elements.html#instance-method-scrollTop",
+    "ourthings/Queueable/Elements.js~Elements#scrollTop",
     "method"
   ],
   [
@@ -1254,6 +1344,18 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/language.js",
+    "file/ourthings/Queueable/Language.js.html",
+    "ourthings/Queueable/Language.js",
+    "file"
+  ],
+  [
+    "ourthings/queueable/language.js~language#setlanguage",
+    "class/ourthings/Queueable/Language.js~Language.html#instance-method-setLanguage",
+    "ourthings/Queueable/Language.js~Language#setLanguage",
+    "method"
+  ],
+  [
     "ourthings/queueable/mapbox.js",
     "file/ourthings/Queueable/Mapbox.js.html",
     "ourthings/Queueable/Mapbox.js",
@@ -1263,18 +1365,6 @@ window.esdocSearchIndex = [
     "ourthings/queueable/mapbox.js~mapbox#addclick",
     "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addClick",
     "ourthings/Queueable/Mapbox.js~Mapbox#addClick",
-    "method"
-  ],
-  [
-    "ourthings/queueable/mapbox.js~mapbox#adddrawtools",
-    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addDrawTools",
-    "ourthings/Queueable/Mapbox.js~Mapbox#addDrawTools",
-    "method"
-  ],
-  [
-    "ourthings/queueable/mapbox.js~mapbox#addedittools",
-    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-addEditTools",
-    "ourthings/Queueable/Mapbox.js~Mapbox#addEditTools",
     "method"
   ],
   [
@@ -1320,9 +1410,9 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "ourthings/queueable/mapbox.js~mapbox#clearlayer",
-    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-clearLayer",
-    "ourthings/Queueable/Mapbox.js~Mapbox#clearLayer",
+    "ourthings/queueable/mapbox.js~mapbox#clearsource",
+    "class/ourthings/Queueable/Mapbox.js~Mapbox.html#instance-method-clearSource",
+    "ourthings/Queueable/Mapbox.js~Mapbox#clearSource",
     "method"
   ],
   [
@@ -1554,6 +1644,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#_cleancoords",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_cleanCoords",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_cleanCoords",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#_control_drawfeature",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_control_drawFeature",
     "ourthings/Queueable/Openlayers.js~Openlayers#_control_drawFeature",
@@ -1590,6 +1686,18 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#_featuresearch",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_featureSearch",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_featureSearch",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#_featuretoturfpolygon",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_featureToTurfPolygon",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_featureToTurfPolygon",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#_featurestogeojson",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_featuresToGeojson",
     "ourthings/Queueable/Openlayers.js~Openlayers#_featuresToGeojson",
@@ -1623,6 +1731,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/openlayers.js~openlayers#_togglecontrol",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_toggleControl",
     "ourthings/Queueable/Openlayers.js~Openlayers#_toggleControl",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#_updateresolution",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-_updateResolution",
+    "ourthings/Queueable/Openlayers.js~Openlayers#_updateResolution",
     "method"
   ],
   [
@@ -1818,6 +1932,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "ourthings/queueable/openlayers.js~openlayers#setlayeractive",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-setLayerActive",
+    "ourthings/Queueable/Openlayers.js~Openlayers#setLayerActive",
+    "method"
+  ],
+  [
     "ourthings/queueable/openlayers.js~openlayers#simpleclick",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-simpleClick",
     "ourthings/Queueable/Openlayers.js~Openlayers#simpleClick",
@@ -1833,6 +1953,12 @@ window.esdocSearchIndex = [
     "ourthings/queueable/openlayers.js~openlayers#togglelayer",
     "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-toggleLayer",
     "ourthings/Queueable/Openlayers.js~Openlayers#toggleLayer",
+    "method"
+  ],
+  [
+    "ourthings/queueable/openlayers.js~openlayers#updateresolution",
+    "class/ourthings/Queueable/Openlayers.js~Openlayers.html#instance-method-updateResolution",
+    "ourthings/Queueable/Openlayers.js~Openlayers#updateResolution",
     "method"
   ],
   [

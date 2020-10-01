@@ -30,6 +30,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
@@ -43,6 +44,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Menu.js~Menu.html">Menu</a></span></span></li>
@@ -56,7 +58,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">ourthings/Queueable/Api.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @module Api */
 import Queueable from &quot;../Queueable&quot;;
-import { v4 as uuidv4 } from &apos;uuid&apos;;
+import {v4 as uuidv4} from &apos;uuid&apos;;
 
 /**
  * @classdesc
@@ -84,25 +86,28 @@ export default class Api extends Queueable {
 	 * @param {string} json.header - header object to send (note Content-Type is overwritten by above setting)
 	 * @param {string} json.name - name of error queue to use
 	 */
-	get(pid,json) {
-		let self=this;
-		json.contentType=json.contentType||&apos;application/json&apos;;
-		json.name=json.name||&apos;apiError&apos;;
-		let headers=json.headers||{};
-		headers[&apos;Content-Type&apos;]=json.contentType||&apos;application/json&apos;;
+	get(pid, json) {
+		let self = this;
+		json.contentType = json.contentType || &apos;application/json&apos;;
+		json.name = json.name || &apos;apiError&apos;;
+		let headers = json.headers || {};
+		headers[&apos;Content-Type&apos;] = json.contentType || &apos;application/json&apos;;
 		fetch(json.url, {
 			headers: headers,
 		})
-			.then(function(response) {
+			.then(function (response) {
 				if (!response.ok) {
-					self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:response},self.queue.DEFINE.MEMORY_SESSION);
+					self.queue.setMemory(&apos;apiErrorDetail&apos;, {
+						&quot;json&quot;: json,
+						&quot;error&quot;: response
+					}, self.queue.DEFINE.MEMORY_SESSION);
 					self.queue.execute(json.name);
 				}
 				self.queue.handleFetchErrors(response);
 				return response;
 			})
-			.then(function(response) {
-				switch(json.contentType) {
+			.then(function (response) {
+				switch (json.contentType) {
 					case &apos;application/json&apos;:
 						return response.json();
 					default:
@@ -113,12 +118,15 @@ export default class Api extends Queueable {
 				/*
 				 * Convert the response to json and start the loader
 				 */
-				self.set(pid,response);
-				self.finished(pid,self.queue.DEFINE.FIN_OK);
+				self.set(pid, response);
+				self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 			})
 			.catch(function (error) {
-				self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:error},self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.setMemory(&apos;apiErrorDetail&apos;, {
+					&quot;json&quot;: json,
+					&quot;error&quot;: error
+				}, self.queue.DEFINE.MEMORY_SESSION);
 				self.queue.execute(json.name);
 				console.info(self.queue.DEFINE.CONSOLE_LINE);
 				console.error(&apos;Error:&apos;, error);
@@ -138,27 +146,30 @@ export default class Api extends Queueable {
 	 * @param {string} json.body - object to send JSON.stringify is applies to this
 	 * @param {string} json.name - name of error queue to use
 	 */
-	post(pid,json) {
-		let self=this;
-		json.contentType=json.contentType||&apos;application/json&apos;;
-		json.name=json.name||&apos;apiError&apos;;
-		let headers=json.headers||{};
-		headers[&apos;Content-Type&apos;]=json.contentType||&apos;application/json&apos;;
+	post(pid, json) {
+		let self = this;
+		json.contentType = json.contentType || &apos;application/json&apos;;
+		json.name = json.name || &apos;apiError&apos;;
+		let headers = json.headers || {};
+		headers[&apos;Content-Type&apos;] = json.contentType || &apos;application/json&apos;;
 		fetch(json.url, {
 			headers: headers,
 			method: &apos;POST&apos;,
 			body: JSON.stringify(json.body)
 		})
-			.then(function(response) {
+			.then(function (response) {
 				if (!response.ok) {
-					self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:response},self.queue.DEFINE.MEMORY_SESSION);
+					self.queue.setMemory(&apos;apiErrorDetail&apos;, {
+						&quot;json&quot;: json,
+						&quot;error&quot;: response
+					}, self.queue.DEFINE.MEMORY_SESSION);
 					self.queue.execute(json.name);
 				}
 				self.queue.handleFetchErrors(response);
 				return response;
 			})
-			.then(function(response) {
-				switch(json.contentType) {
+			.then(function (response) {
+				switch (json.contentType) {
 					case &apos;application/json&apos;:
 						return response.json();
 					default:
@@ -169,12 +180,15 @@ export default class Api extends Queueable {
 				/*
 				 * Convert the response to json and start the loader
 				 */
-				self.set(pid,response);
-				self.finished(pid,self.queue.DEFINE.FIN_OK);
+				self.set(pid, response);
+				self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 			})
 			.catch(function (error) {
-				self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:error},self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.setMemory(&apos;apiErrorDetail&apos;, {
+					&quot;json&quot;: json,
+					&quot;error&quot;: error
+				}, self.queue.DEFINE.MEMORY_SESSION);
 				self.queue.execute(json.name);
 				console.info(self.queue.DEFINE.CONSOLE_LINE);
 				console.error(&apos;Error:&apos;, error);
@@ -194,27 +208,30 @@ export default class Api extends Queueable {
 	 * @param {string} json.body - object to send JSON.stringify is applies to this
 	 * @param {string} json.name - name of error queue to use
 	 */
-	put(pid,json) {
-		let self=this;
-		json.contentType=json.contentType||&apos;image/png&apos;;
-		json.name=json.name||&apos;apiError&apos;;
-		let headers=json.headers||{};
-		headers[&apos;Content-Type&apos;]=json.contentType;
+	put(pid, json) {
+		let self = this;
+		json.contentType = json.contentType || &apos;image/png&apos;;
+		json.name = json.name || &apos;apiError&apos;;
+		let headers = json.headers || {};
+		headers[&apos;Content-Type&apos;] = json.contentType;
 		fetch(json.url, {
 			headers: headers,
 			method: &apos;PUT&apos;,
 			body: window.atob(json.body)
 		})
-			.then(function(response) {
+			.then(function (response) {
 				if (!response.ok) {
-					self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:response},self.queue.DEFINE.MEMORY_SESSION);
+					self.queue.setMemory(&apos;apiErrorDetail&apos;, {
+						&quot;json&quot;: json,
+						&quot;error&quot;: response
+					}, self.queue.DEFINE.MEMORY_SESSION);
 					self.queue.execute(json.name);
 				}
 				self.queue.handleFetchErrors(response);
 				return response;
 			})
-			.then(function(response) {
-				switch(json.contentType) {
+			.then(function (response) {
+				switch (json.contentType) {
 					case &apos;application/json&apos;:
 						return response.json();
 					default:
@@ -225,12 +242,15 @@ export default class Api extends Queueable {
 				/*
 				 * Convert the response to json and start the loader
 				 */
-				self.set(pid,response);
-				self.finished(pid,self.queue.DEFINE.FIN_OK);
+				self.set(pid, response);
+				self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 			})
 			.catch(function (error) {
-				self.queue.setMemory(&apos;apiErrorDetail&apos;,{&quot;json&quot;:json,&quot;error&quot;:error},self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.setMemory(&apos;apiErrorDetail&apos;, {
+					&quot;json&quot;: json,
+					&quot;error&quot;: error
+				}, self.queue.DEFINE.MEMORY_SESSION);
 				self.queue.execute(json.name);
 				console.info(self.queue.DEFINE.CONSOLE_LINE);
 				console.error(&apos;Error:&apos;, error);
@@ -249,23 +269,24 @@ export default class Api extends Queueable {
 	 * @param {string} json.queues - Array of {action:&quot;action&quot;, queue:&quot;queue&quot; }
 
 	 */
-	websocketInit(pid,json) {
-		let self=this;
-		let options=Object.assign({
-			&quot;url&quot;:&quot;ws://localhost&quot;,
-			&quot;queue&quot;:&quot;queue&quot;,
-			&quot;queues&quot;:{}
-		},json);
-		self.frames={};
-		self.bulk=[];
-		self.bulkQueue=&apos;bulkQueue&apos;;
+	websocketInit(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;url&quot;: &quot;ws://localhost&quot;,
+			&quot;queue&quot;: &quot;queue&quot;,
+			&quot;queues&quot;: {},
+			&quot;recvQeue&quot;: false
+		}, json);
+		self.frames = self.frames || {};
+		self.bulk = self.bulk || [];
+		self.bulkQueue = &apos;bulkQueue&apos;;
 		self.socket = new WebSocket(options.url);
-		self.socket.onopen = function(event) {
-			self.finished(pid,self.queue.DEFINE.FIN_OK);
+		self.socket.onopen = function (event) {
+			self.finished(pid, self.queue.DEFINE.FIN_OK);
 		};
-		self.socket.onmessage = function(event) {
-			let stack=[];
-			let jsonData=JSON.parse(event.data);
+		self.socket.onmessage = function (event) {
+			let stack = [];
+			let jsonData = JSON.parse(event.data);
 
 			/*
 			 * Is this part of a multi packet?
@@ -276,19 +297,63 @@ export default class Api extends Queueable {
 			 *
 			 * This decodes those frames, you will need to implement the split in your AWS websocket code
 			 */
-			if(jsonData[&apos;frame&apos;]) {
-				if(self.frames[jsonData[&apos;uuid&apos;]]===undefined) {
-					self.frames[jsonData[&apos;uuid&apos;]]={&quot;total&quot;:0,data:new Array(jsonData[&apos;frame&apos;][&apos;totalFrames&apos;])};
+			if (jsonData[&apos;frame&apos;]!==undefined) {
+				//console.log(`${jsonData[&apos;uuid&apos;]} - ${jsonData[&apos;frame&apos;]} of ${jsonData[&apos;totalFrames&apos;]}`);
+				if (self.frames[jsonData[&apos;uuid&apos;]] === undefined) {
+					self.frames[jsonData[&apos;uuid&apos;]] = {&quot;total&quot;: 0, data: new Array(parseInt(jsonData[&apos;totalFrames&apos;]))};
 				}
-				self.frames[jsonData[&apos;uuid&apos;]].data[jsonData[&apos;frame&apos;]]=atob(jsonData[&apos;data&apos;]);
-				self.frames[jsonData[&apos;uuid&apos;]].total++;
-				if(self.frames[jsonData[&apos;uuid&apos;]].total===jsonData[&apos;totalFrames&apos;]) {
-					jsonData=JSON.parse(self.frames[jsonData[&apos;uuid&apos;]].data.join(&apos;&apos;));
-					deployEvent();
+				if(!self.frames[jsonData[&apos;uuid&apos;]].data[parseInt(jsonData[&apos;frame&apos;]) - 1]) {
+					self.frames[jsonData[&apos;uuid&apos;]].data[parseInt(jsonData[&apos;frame&apos;]) - 1] = atob(jsonData[&apos;data&apos;]);
+					self.frames[jsonData[&apos;uuid&apos;]].total++;
+				} else {
+					console.log(`Duplicate network packet!!! ${jsonData[&apos;uuid&apos;]} - ${jsonData[&apos;frame&apos;]}`);
+				}
+				if (self.frames[jsonData[&apos;uuid&apos;]].total === jsonData[&apos;totalFrames&apos;]) {
+					const realJsonData = JSON.parse(self.frames[jsonData[&apos;uuid&apos;]].data.join(&apos;&apos;));
+					self.frames[jsonData[&apos;uuid&apos;]] = null;
 					delete self.frames[jsonData[&apos;uuid&apos;]];
+					jsonData = realJsonData;
+					deployEvent();
+				} else if (self.frames[jsonData[&apos;uuid&apos;]].total &gt; jsonData[&apos;totalFrames&apos;]) {
+					console.log(&apos;WARNING NETWORK CRAZY&apos;);
 				}
+
+
 			} else {
-				deployEvent();
+				/*
+				 * Is this a super large packet using S3?
+				 */
+				if (jsonData[&apos;s3&apos;]) {
+					fetch(jsonData[&apos;s3&apos;], {})
+						.then(function (response) {
+							if (!response.ok) {
+								self.queue.setMemory(&apos;wsErrorDetails&apos;, response, self.queue.DEFINE.MEMORY_SESSION);
+								self.queue.execute(&quot;wsError&quot;);
+							}
+							self.queue.handleFetchErrors(response);
+							return response;
+						})
+						.then(function (response) {
+							return response.blob();
+						})
+						.then(function (response) {
+							const reader = new FileReader();
+							reader.addEventListener(&apos;loadend&apos;, () =&gt; {
+								jsonData = JSON.parse(reader.result);
+								deployEvent();
+							});
+							reader.readAsText(response);
+
+
+						})
+						.catch(function (error) {
+							self.queue.setMemory(&apos;wsErrorDetails&apos;, error, self.queue.DEFINE.MEMORY_SESSION);
+							self.queue.execute(&quot;wsError&quot;);
+
+						});
+				} else {
+					deployEvent();
+				}
 			}
 
 			function deployEvent() {
@@ -303,49 +368,54 @@ export default class Api extends Queueable {
 				 * Set our normal memory (not multiple thread safe)
 				 */
 				self.queue.setMemory(jsonData[options.queue], jsonData, self.queue.DEFINE.MEMORY_SESSION);
+				self.queue.setMemory(&apos;wsLastRecv&apos;, jsonData, self.queue.DEFINE.MEMORY_SESSION);
 
 
 				/*
 				 * Do we need to trigger event? If we have bulk calls coming in then only if its the last
 				 */
-				let wasBulk=false;
-				for(let i in self.bulk) {
-					if(self.bulk[i][options.queue]===jsonData[options.queue]) {
+				let wasBulk = false;
+				for (let i in self.bulk) {
+					if (self.bulk[i][options.queue] === jsonData[options.queue]) {
 						self.bulk.splice(i, 1);
-						wasBulk=true;
+						wasBulk = true;
 					}
 				}
 
-				if(wasBulk===false)
+				if (wasBulk === false) {
 					self.queue.execute(jsonData[options.queue]);
-				else {
-					if(wasBulk===true&amp;&amp;self.bulk.length===0) {
+					if (options.recvQeue)
+						self.queue.execute(options.recvQeue);
+				} else {
+					if (wasBulk === true &amp;&amp; self.bulk.length === 0) {
 						self.queue.execute(self.bulkQueue);
+						if (options.recvQeue)
+							self.queue.execute(options.recvQeue);
 					}
 				}
 			}
 
 		};
 
-		self.socket.onclose = function(event) {
+		self.socket.onclose = function (event) {
 			self.queue.setMemory(&apos;wsCloseDetails&apos;, event, self.queue.DEFINE.MEMORY_SESSION);
 			self.queue.execute(&quot;wsClose&quot;);
 		};
 
-		self.socket.onerror = function(event) {
+		self.socket.onerror = function (event) {
 			self.queue.setMemory(&apos;wsErrorDetails&apos;, event, self.queue.DEFINE.MEMORY_SESSION);
 			self.queue.execute(&quot;wsError&quot;);
 		};
 	}
 
-	websocketPop(pid,json) {
-		let options=Object.assign({
-			&quot;prefix&quot;:&quot;ws://localhost&quot;,
-			&quot;queue&quot;:&quot;queue&quot;,
-			&quot;queues&quot;:{}
-		},json);
-		this.queue.setStack(pid,options.queue,memory[`wsStack_${json.queue}`].value.pop());
-		this.finished(pid,self.queue.DEFINE.FIN_OK);
+	websocketPop(pid, json) {
+		let options = Object.assign({
+			&quot;prefix&quot;: &quot;ws://localhost&quot;,
+			&quot;queue&quot;: &quot;queue&quot;,
+			&quot;queues&quot;: {}
+		}, json);
+		this.queue.setStack(pid, options.queue, memory[`wsStack_${json.queue}`].value.pop());
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
 	/**
@@ -356,18 +426,28 @@ export default class Api extends Queueable {
 	 * @param {string} json.message - JSON message to send
 	 * @param {string} json.bulk - Bulk messages
 	 * @param {string} json.bulk - Bulk bulkQueue
+	 * @param {string} json.debug - Debug to console
+	 * @param {string} json.sendQueue - Queue to always call on send
+	 *
 	 */
-	websocketSend(pid,json) {
-		let self=this;
-		if(json.debug===true)
+	websocketSend(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			&quot;debug&quot;: false,
+			&quot;sendQueue&quot;: false
+		}, json);
+		if (options.debug === true)
 			console.log(json);
-		if(json.bulk) {
+		self.queue.setMemory(&apos;wsLastSent&apos;, json, self.queue.DEFINE.MEMORY_SESSION);
+		if (options.sendQueue)
+			self.queue.execute(options.sendQueue);
+		if (json.bulk) {
 			/*
 			 * Bulk mode, we are sending lots of requests and return triggers only work when we get it all back
 			 */
-			self.bulk=json.bulk;
-			self.bulkQueue=json.bulkQueue;
-			for(let i in self.bulk) {
+			self.bulk = json.bulk;
+			self.bulkQueue = json.bulkQueue;
+			for (let i in self.bulk) {
 				self._websocketSendActual(self.bulk[i])
 				//self.socket.send(JSON.stringify(self.bulk[i]));
 			}
@@ -375,17 +455,17 @@ export default class Api extends Queueable {
 			//self.socket.send(JSON.stringify(json.message));
 			self._websocketSendActual(json.message);
 		}
-		self.finished(pid,self.queue.DEFINE.FIN_OK);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
 
 	_websocketSendActual(json) {
-		let self=this;
+		let self = this;
 		self.currentPacket = 0;
 		self.totalPackets = 0;
 		self.packetArray = [];
-		self.uuid=uuidv4();
-		const payload=JSON.stringify(json);
+		self.uuid = uuidv4();
+		const payload = JSON.stringify(json);
 		if (payload.length &gt; MAX_BYTES) {
 			self.totalPackets = Math.ceil(payload.length / MAX_BYTES);
 			for (let i = 0; i &lt; self.totalPackets; i++) {
@@ -397,7 +477,7 @@ export default class Api extends Queueable {
 		} else {
 			try {
 				self.socket.send(payload);
-			} catch(event) {
+			} catch (event) {
 				self.queue.setMemory(&apos;wsErrorDetails&apos;, event, self.queue.DEFINE.MEMORY_SESSION);
 				self.queue.execute(&quot;wsError&quot;);
 
@@ -406,7 +486,7 @@ export default class Api extends Queueable {
 	}
 
 	_websocketSendPacket() {
-		let self=this;
+		let self = this;
 		/*
 		 * more work?
 		 */
@@ -422,11 +502,13 @@ export default class Api extends Queueable {
 					&quot;uuid&quot;: self.uuid,
 					&quot;data&quot;: packet
 				}));
-			} catch(event) {
+			} catch (event) {
 				self.queue.setMemory(&apos;wsErrorDetails&apos;, event, self.queue.DEFINE.MEMORY_SESSION);
 				self.queue.execute(&quot;wsError&quot;);
 			}
-			setTimeout(function() {self._websocketSendPacket();},100);
+			setTimeout(function () {
+				self._websocketSendPacket();
+			}, 100);
 		}
 	}
 

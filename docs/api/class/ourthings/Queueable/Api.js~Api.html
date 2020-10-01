@@ -30,6 +30,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
@@ -43,6 +44,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Menu.js~Menu.html">Menu</a></span></span></li>
@@ -633,7 +635,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber85">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber91">source</a></span></span>
     </span>
   </h3>
 
@@ -736,7 +738,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber141">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber153">source</a></span></span>
     </span>
   </h3>
 
@@ -839,7 +841,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber196">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber214">source</a></span></span>
     </span>
   </h3>
 
@@ -928,7 +930,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber285">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber353">source</a></span></span>
     </span>
   </h3>
 
@@ -993,7 +995,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber304">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber375">source</a></span></span>
     </span>
   </h3>
 
@@ -1048,6 +1050,20 @@ the self.ready=true after the promise</p>
       <td data-ice="description"><p>Bulk bulkQueue</p>
 </td>
     </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.debug</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Debug to console</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.sendQueue</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Queue to always call on send</p>
+</td>
+    </tr>
 </tbody>
   </table>
 </div>
@@ -1084,7 +1100,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber326">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber404">source</a></span></span>
     </span>
   </h3>
 
@@ -1143,7 +1159,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber352">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Api.js.html#lineNumber430">source</a></span></span>
     </span>
   </h3>
 

@@ -165,6 +165,23 @@ export default class Elements extends Queueable {
 	}
 
 	/**
+	 * Delete element from dom
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom target to removce
+	 *
+	 * @example
+	 * elements.domRemoveElement({"targetId":".leftPanel"});
+	 */
+	domRemoveElement(pid, json) {
+		let target = self.queue.getElement(json.targetId);
+		target.remove();
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+
+
+	/**
 	 * Set the HTML of an element
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments

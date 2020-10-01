@@ -30,6 +30,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
@@ -43,6 +44,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Menu.js~Menu.html">Menu</a></span></span></li>
@@ -58,8 +60,8 @@
 import MapboxGL from &apos;mapbox-gl&apos;;
 import centroid from &apos;@turf/centroid&apos;;
 import bbox from &apos;@turf/bbox&apos;;
-import MapboxDraw from &apos;@mapbox/mapbox-gl-draw&apos;;
-import MapboxEdit from &apos;mapbox-gl-edit&apos;;
+//import MapboxDraw from &apos;@mapbox/mapbox-gl-draw&apos;;
+//import MapboxEdit from &apos;mapbox-gl-edit&apos;;
 
 export default class Mapbox extends Queueable {
 
@@ -333,13 +335,13 @@ export default class Mapbox extends Queueable {
 	manualSelect(pid, json) {
 		const options = Object.assign({
 			map: &apos;default&apos;,
-			layer: &apos;default&apos;,
+			source: &apos;default&apos;,
 			queue: &quot;select&quot;,
 			filter: []
 		}, json);
 		let selectDetails = {};
 		//const features = this.maps[options.map].map.querySourceFeatures(options.layer);
-		const features = this.maps[options.map].sources[options.layer];
+		const features = this.maps[options.map].sources[options.source];
 		features.forEach(function (feature) {
 			let res = eval(feature.properties[options.filter[1]] + &apos; &apos; + options.filter[0] + &apos; &apos; + options.filter[2]);
 			if (res) {
@@ -447,21 +449,21 @@ export default class Mapbox extends Queueable {
 	}
 
 	/**
-	 * Set the data for a layer
+	 * Set the data for a source
 	 * @param {int} pid
 	 * @param {object} json
 	 * @param {string} json.map - The name of the map that the layer is on
 	 * @param {string} json.name - The name of the layer to clear
 	 */
-	clearLayer(pid, json) {
+	clearSource(pid, json) {
 
 		const options = Object.assign({
 			map: &apos;default&apos;,
-			layer: &apos;default&apos;
+			source: &apos;default&apos;
 		}, json);
 		this.queue.deleteRegister(options.map + &apos;Idle&apos;);
 
-		this.maps[options.map].map.getSource(options.layer).setData({
+		this.maps[options.map].map.getSource(options.source).setData({
 			type: &apos;FeatureCollection&apos;,
 			features: []
 		});
@@ -546,12 +548,12 @@ export default class Mapbox extends Queueable {
 	zoomToFeature(pid, json) {
 		const options = Object.assign({
 			map: &apos;default&apos;,
-			layer: &apos;default&apos;,
+			source: &apos;default&apos;,
 			property: &apos;&apos;,
 			value: &apos;&apos;
 		}, json);
 
-		let features = this.maps[options.map].map.getSource(options.layer)._data.features;
+		let features = this.maps[options.map].map.getSource(options.source)._data.features;
 		let pointGeom = null;
 
 		for (const feature of features) {
@@ -769,7 +771,7 @@ export default class Mapbox extends Queueable {
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
-	addDrawTools(pid,json) {
+/*	addDrawTools(pid,json) {
 		const options = Object.assign({
 			map: &apos;default&apos;
 		}, json);
@@ -777,8 +779,9 @@ export default class Mapbox extends Queueable {
 		this.maps[options.map].map.addControl(Draw, &apos;top-left&apos;);
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 
-	}
+	}*/
 
+/*
 	addEditTools(pid,json) {
 		const options = Object.assign({
 			map: &apos;default&apos;,
@@ -788,6 +791,7 @@ export default class Mapbox extends Queueable {
 		this.maps[options.map].map.addControl(this.maps[options.map].controls[&apos;Edit&apos;]);
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
+*/
 
 	removeEditTools(pid,json) {
 		const options = Object.assign({
