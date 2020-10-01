@@ -30,6 +30,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
@@ -43,6 +44,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Menu.js~Menu.html">Menu</a></span></span></li>
@@ -534,7 +536,7 @@ the self.ready=true after the promise</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber135">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber150">source</a></span></span>
     </span>
   </h3>
 
@@ -631,7 +633,7 @@ internals.setMemory({&quot;name&quot;:&quot;test&quot;,&quot;mode&quot;:&quot;Se
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber117">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber132">source</a></span></span>
     </span>
   </h3>
 
@@ -912,7 +914,7 @@ internals.setMemory({&quot;name&quot;:&quot;test&quot;,&quot;mode&quot;:&quot;Se
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber148">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber163">source</a></span></span>
     </span>
   </h3>
 
@@ -987,7 +989,7 @@ internals.setMemory({&quot;name&quot;:&quot;test&quot;,&quot;mode&quot;:&quot;Se
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber84">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber91">source</a></span></span>
     </span>
   </h3>
 
@@ -1026,6 +1028,13 @@ internals.setMemory({&quot;name&quot;:&quot;test&quot;,&quot;mode&quot;:&quot;Se
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"><p>name of memory item</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">json.toggle</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>toggle unique items</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -1084,7 +1093,7 @@ internals.pushMemory({&quot;name&quot;:&quot;test&quot;,&quot;mode&quot;:&quot;S
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber66">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber72">source</a></span></span>
     </span>
   </h3>
 
@@ -1181,7 +1190,7 @@ internals.setMemory({&quot;name&quot;:&quot;test&quot;,&quot;mode&quot;:&quot;Se
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber102">source</a></span></span>
+      <span data-ice="source"><span><a href="file/ourthings/Queueable/Internals.js.html#lineNumber117">source</a></span></span>
     </span>
   </h3>
 

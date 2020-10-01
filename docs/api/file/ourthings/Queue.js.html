@@ -30,6 +30,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
@@ -43,6 +44,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Menu.js~Menu.html">Menu</a></span></span></li>
@@ -58,6 +60,7 @@
 import Define from &apos;./Define.js&apos;;
 import * as consoleBadge from &apos;console-badge&apos;;
 import Memory from &quot;./Memory&quot;;
+import Language from &quot;./Language&quot;;
 
 /**
  * @classdesc
@@ -140,6 +143,13 @@ class Queue {
 		 */
 		self.activeLoops = [];
 
+
+		/*
+		 * Language support
+		 */
+
+		self.language=false;
+
 		/*
 		 * Default time for process to be executed after
 		 * TODO Platform test / tune
@@ -147,8 +157,11 @@ class Queue {
 		 */
 		self.defaultTimer = 10;
 
-		self.developerMode = false;
+		/*
+		 * Dev mode?
+		 */
 
+		self.developerMode = false;
 
 		console.clear();
 		consoleBadge.log({
@@ -204,34 +217,72 @@ class Queue {
 		self.setMemory(&quot;urlParams&quot;, self.urlToJson(), &quot;Session&quot;);
 
 		/*
-		 * Load the templates.json
-		 *
-		 * This can now be specified by data-templates on the script include
+		 * Enable language support?
 		 */
-		let templateInclude = &quot;templates.json&quot;;
 
-		let attr = self.getElement(&quot;script[data-templates]&quot;, false);
-		if (attr &amp;&amp; attr.getAttribute(&quot;data-templates&quot;)) {
-			templateInclude = attr.getAttribute(&quot;data-templates&quot;);
+		let attr= self.getElement(&quot;script[data-lang]&quot;, false);
+		if(attr) {
+			let langFile=attr.getAttribute(&quot;data-lang&quot;);
+			consoleBadge.log({
+				mode: &apos;shields.io&apos;,
+				leftText: &apos;Booting&apos;,
+				rightText: &quot;Language support&quot;,
+				rightBgColor: &apos;#ffc107&apos;,
+				rightTextColor: &apos;#1a1a1a&apos;
+			});
+			fetch(langFile, {
+				headers: {
+					&apos;Content-Type&apos;: &apos;application/json&apos;
+				}
+			})
+				.then(response =&gt; self.handleFetchErrors(response))
+				.then(response =&gt; response.json())
+				.then(function (response) {
+					/**
+					 * Convert the response to json and start the loader
+					 */
+					self.language= new Language(response);
+					bootTemplates();
+				})
+				.catch(function (error) {
+					self.reportError(error, &apos;Warning this error is fatal, I could not load your language file&apos;);
+				});
+		} else {
+			bootTemplates();
 		}
 
-		fetch(templateInclude, {
-			headers: {
-				&apos;Content-Type&apos;: &apos;application/json&apos;
+
+		function bootTemplates() {
+			/*
+			 * Load the templates.json
+			 *
+			 * This can now be specified by data-templates on the script include
+			 */
+			let templateInclude = &quot;templates.json&quot;;
+
+			let attr = self.getElement(&quot;script[data-templates]&quot;, false);
+			if (attr &amp;&amp; attr.getAttribute(&quot;data-templates&quot;)) {
+				templateInclude = attr.getAttribute(&quot;data-templates&quot;);
 			}
-		})
-			.then(response =&gt; self.handleFetchErrors(response))
-			.then(response =&gt; response.json())
-			.then(function (response) {
-				/**
-				 * Convert the response to json and start the loader
-				 */
-				self.templates = response;
-				self.templateLoader();
+
+			fetch(templateInclude, {
+				headers: {
+					&apos;Content-Type&apos;: &apos;application/json&apos;
+				}
 			})
-			.catch(function (error) {
-				self.reportError(error, &apos;Warning this error is probably fatal as I have no templates to load&apos;);
-			});
+				.then(response =&gt; self.handleFetchErrors(response))
+				.then(response =&gt; response.json())
+				.then(function (response) {
+					/**
+					 * Convert the response to json and start the loader
+					 */
+					self.templates = response;
+					self.templateLoader();
+				})
+				.catch(function (error) {
+					self.reportError(error, &apos;Warning this error is probably fatal as I have no templates to load&apos;);
+				});
+		}
 	}
 
 	/**
@@ -648,7 +699,7 @@ class Queue {
 			/*
 			 *  In the case of an instant or sub run we don&apos;t need to leave anything in the DOM so nuke
 			 */
-			if (command.options.queueRun === self.DEFINE.COMMAND_INSTANT || command.options.queueRun === self.DEFINE.COMMAND_SUB || command.options.queuePrepare) {
+			if (command.options.queueRun === self.DEFINE.COMMAND_INSTANT || command.options.queueRun === self.DEFINE.COMMAND_SUB || command.options.queuePrepare || command.options.queueBindTarget) {
 				template = template.replace(match[0], &quot;&quot;);
 			} else {
 				template = template.replace(match[0], &quot;data-queueable=\&quot;CMD&quot; + command.ucid + &quot;\&quot;&quot;);

@@ -30,6 +30,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
@@ -43,6 +44,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Menu.js~Menu.html">Menu</a></span></span></li>
@@ -91,8 +93,9 @@ class Menu extends Queueable {
 
 		const menuTop=self.queue.getElement(options.menuTop);
 
-		element.addEventListener(&quot;click&quot;, function (e) {
-			if(menuTop.getAttribute(&apos;aria-expanded&apos;)===&apos;true&apos;) {
+
+		function menuToggle() {
+			if (menuTop.getAttribute(&apos;aria-expanded&apos;) === &apos;true&apos;) {
 				// Close
 				closeMenu();
 			} else {
@@ -101,8 +104,19 @@ class Menu extends Queueable {
 					const modElement = self.queue.getElement(options.classModifiers[i].targetId);
 					modElement.classList.add(options.classModifiers[i].class);
 				}
-				menuTop.setAttribute(&apos;aria-expanded&apos;,&apos;true&apos;);
+				menuTop.setAttribute(&apos;aria-expanded&apos;, &apos;true&apos;);
+				menuTop.setAttribute(&apos;aria-hidden&apos;, &apos;false&apos;);
+				menuTop.children[0].focus();
 			}
+		}
+		element.addEventListener(&quot;keydown&quot;, function (e) {
+			if(e.keyCode===13) {
+				menuToggle();
+			}
+		});
+
+		element.addEventListener(&quot;click&quot;, function (e) {
+			menuToggle();
 		});
 
 		function closeMenu() {
@@ -111,26 +125,36 @@ class Menu extends Queueable {
 				modElement.classList.remove(options.classModifiers[i].class);
 			}
 			menuTop.setAttribute(&apos;aria-expanded&apos;,&apos;false&apos;);
+			menuTop.setAttribute(&apos;aria-hidden&apos;,&apos;true&apos;);
 		}
-
-		element.addEventListener(&quot;blur&quot;, function (e) {
-			setTimeout( function() {
-				closeMenu();
-			},500);
-		});
-
 
 			/*
 			 * add the menu children click events
 			 */
 		for(let i=0;i&lt;menuTop.children.length;i++) {
+
 			menuTop.children[i].addEventListener(&quot;click&quot;, function (e) {
-				for (let i in options.classModifiers) {
-					const modElement = self.queue.getElement(options.classModifiers[i].targetId);
-					modElement.classList.remove(options.classModifiers[i].class);
-				}
-				menuTop.setAttribute(&apos;aria-expanded&apos;,&apos;false&apos;);
+				clickItem();
 			});
+			menuTop.children[i].addEventListener(&quot;keydown&quot;, function (e) {
+				if(e.keyCode===32) {
+					clickItem(true,menuTop.children[i]);
+				}
+			});
+		}
+
+		function clickItem(keymode,element) {
+			for (let i in options.classModifiers) {
+				const modElement = self.queue.getElement(options.classModifiers[i].targetId);
+				modElement.classList.remove(options.classModifiers[i].class);
+			}
+			menuTop.setAttribute(&apos;aria-expanded&apos;,&apos;false&apos;);
+			/*
+			 * Was this a keyboard hit? If so &apos;click&apos; the element
+			 */
+			if(keymode) {
+				element.click();
+			}
 		}
 
 		self.finished(pid,self.queue.DEFINE.FIN_OK);

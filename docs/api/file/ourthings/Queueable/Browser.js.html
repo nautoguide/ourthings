@@ -30,6 +30,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Define.js~Define.html">Define</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Memory.js~Memory.html">Memory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queue.js~Queue.html">Queue</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable.js~Queueable.html">Queueable</a></span></span></li>
@@ -43,6 +44,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Files.js~Files.html">Files</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Geojson.js~Geojson.html">Geojson</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Internals.js~Internals.html">Internals</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Language.js~Language.html">Language</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Mapbox.js~Mapbox.html">Mapbox</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Markdown.js~Markdown.html">Markdown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/ourthings/Queueable/Menu.js~Menu.html">Menu</a></span></span></li>
@@ -97,11 +99,19 @@ export default class Browser extends Queueable {
 
 		function urlChange(e) {
 			let baseURL = location.href;
+
 			/*
 			 * Do a check to see we are not trying to go to the same url
 			 * In some browsers we will get two events (onpopstate &amp; onhashchange)
 			 */
+
 			if(self.lastURL===false||baseURL!==self.lastURL) {
+				if(memory.historyClose&amp;&amp;memory.historyClose.value===&apos;on&apos;) {
+					self.queue.setMemory(&apos;historyBlockedUrl&apos;, baseURL, &quot;Session&quot;);
+					location.href = self.lastURL;
+					self.queue.execute(&apos;historyBlocked&apos;);
+					return;
+				}
 				self.lastURL=baseURL;
 				let match = baseURL.match(/\#([a-zA-Z]+)\/{0,1}(.*)$/);
 				if (match &amp;&amp; match[1]) {
@@ -200,7 +210,7 @@ export default class Browser extends Queueable {
 	 * @param {string} json.mode - on|off
 	 */
 	closeEvent(pid,json) {
-
+		this.queue.setMemory(&apos;historyClose&apos;, json.mode? json.mode:&apos;on&apos;, &quot;Session&quot;);
 		if(json.mode===&apos;off&apos;) {
 			window.onbeforeunload = function(e) {};
 		} else {
@@ -218,6 +228,18 @@ export default class Browser extends Queueable {
 		}
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 
+	}
+
+	/**
+	 * Set page title
+	 *
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.title - new page title
+	 */
+	setTitle(pid,json) {
+		document.title = json.title;
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 }
 </code></pre>
