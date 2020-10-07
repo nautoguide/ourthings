@@ -34,7 +34,8 @@ export default class Geojson extends Queueable {
 			"name": "Session start",
 			"type": "full",
 			"geojson": this._compressGeojson("full", options.geojson),
-			"index": this._makeHistoryIndex(options.geojson)
+			"index": this._makeHistoryIndex(options.geojson),
+			"savePtr": true
 		});
 		this.queue.setMemory("geojsonHistory", history, "Session");
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
@@ -46,22 +47,26 @@ export default class Geojson extends Queueable {
 	 * @param {object} json - queue arguments
 	 * @param {string} json.geojson - starting geojson
 	 * @param {string} json.type - Type of entry
+	 * @param {array} json.features - features that are updated [{id:xx,action:"update|delete|new"}]
 	 */
 	historyAdd(pid, json) {
 		let options = Object.assign({
-			"type": "incremental"
+			"type": "incremental",
+			"features": []
 		}, json);
-		if (memory.geojsonHistory.value.revertPtr!==false&&memory.geojsonHistory.value.mode === "simple") {
-			memory.geojsonHistory.value.log=memory.geojsonHistory.value.log.splice(0,memory.geojsonHistory.value.revertPtr+1);
-			memory.geojsonHistory.value.revertPtr=false;
+		if (memory.geojsonHistory.value.revertPtr !== false && memory.geojsonHistory.value.mode === "simple") {
+			memory.geojsonHistory.value.log = memory.geojsonHistory.value.log.splice(0, memory.geojsonHistory.value.revertPtr + 1);
+			memory.geojsonHistory.value.revertPtr = false;
 		}
 
-		let entry={
+		let entry = {
 			"name": options.name,
 			"geojson": this._compressGeojson(options.type, options.geojson),
 			"type": options.type,
 			"index": this._makeHistoryIndex(options.geojson),
-			"details":options.details
+			"details": options.details,
+			"features": options.features,
+			"savePtr": false
 		}
 		memory.geojsonHistory.value.log.push(entry);
 
@@ -157,19 +162,97 @@ export default class Geojson extends Queueable {
 
 	}
 
-	historyCompare(pid,json) {
+	historyCompare(pid, json) {
 		let options = Object.assign({
 			"index": "feature_id"
 		}, json);
-		const index1=this._makeHistoryIndex(options.geojson1);
-		const index2=this._makeHistoryIndex(options.geojson2);
+		const index1 = this._makeHistoryIndex(options.geojson1);
+		const index2 = this._makeHistoryIndex(options.geojson2);
 
-		let deletes=[];
+		let deletes = [];
 
 		//TODO iterate to find deletes
 
-		this.queue.setMemory("historyCompare", {"updates":options.geojson2,"deletes":deletes}, "Session");
+		this.queue.setMemory("historyCompare", {"updates": options.geojson2, "deletes": deletes}, "Session");
 
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
+	historySave(pid, json) {
+
+		/*
+		 * Find save prt
+		 */
+		let savePtr = 0;
+		let oldSave;
+		for (let i = memory.geojsonHistory.value.log.length - 1; i >= 0; i--) {
+			if (memory.geojsonHistory.value.log[i].savePtr) {
+				memory.geojsonHistory.value.log[i].savePtr = false;
+				savePtr = i;
+				oldSave = memory.geojsonHistory.value.log[i];
+
+			}
+		}
+		memory.geojsonHistory.value.log[memory.geojsonHistory.value.log.length - 1].savePtr = true;
+		/*
+		 * Run
+		 */
+
+		let updateUpdates = [];
+		let updateDeletes = [];
+		let updateAdds = [];
+		// Pre lookup deletes
+		for (let f = savePtr; f < memory.geojsonHistory.value.log.length; f++) {
+			for (let a in memory.geojsonHistory.value.log[f].features) {
+				if (memory.geojsonHistory.value.log[f].features[a].action == 'delete') {
+					// can we actually find it in the old save (add/delete)
+					if(oldSave.index[memory.geojsonHistory.value.log[f].features[a].id]) {
+						updateDeletes.push(oldSave.geojson.features[oldSave.index[memory.geojsonHistory.value.log[f].features[a].id].position].properties['feature_id']);
+					}
+				}
+			}
+		}
+
+		// Now updates and add
+		for (let i in json.geojson.features) {
+			let mode = "none";
+			let found = false;
+			for (let f = savePtr; f < memory.geojsonHistory.value.log.length; f++) {
+				if (mode === 'add')
+					break;
+				for (let a in memory.geojsonHistory.value.log[f].features) {
+					console.log(`${memory.geojsonHistory.value.log[f].features[a].id} - ${json.geojson.features[i].properties.uuid} : ${memory.geojsonHistory.value.log[f].features[a].action}`)
+					if (memory.geojsonHistory.value.log[f].features[a].id === json.geojson.features[i].properties.uuid) {
+
+						found=true;
+						switch (memory.geojsonHistory.value.log[f].features[a].action) {
+							case "update":
+								mode = "update";
+								break;
+							case "add":
+								mode = "add";
+								break;
+						}
+					}
+				}
+			}
+			switch (mode) {
+				case "none":
+					// Do nothing this feature hasn't changed
+					break;
+				case "update":
+					updateUpdates.push(json.geojson.features[i]);
+					break;
+				case "add":
+					updateAdds.push(json.geojson.features[i]);
+					break;
+			}
+		}
+		this.queue.setMemory("historySavePacket", {
+			"updates": {type: "FeatureCollection", features: updateUpdates},
+			"deletes": updateDeletes,
+			"inserts": {type: "FeatureCollection", features: updateAdds}
+		}, "Session");
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 
