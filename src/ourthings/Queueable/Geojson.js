@@ -188,7 +188,7 @@ export default class Geojson extends Queueable {
 		for (let i = memory.geojsonHistory.value.log.length - 1; i >= 0; i--) {
 			if (memory.geojsonHistory.value.log[i].savePtr) {
 				memory.geojsonHistory.value.log[i].savePtr = false;
-				savePtr = i;
+				savePtr = i+1;
 				oldSave = memory.geojsonHistory.value.log[i];
 
 			}

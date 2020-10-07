@@ -1441,7 +1441,6 @@ export default class Openlayers extends Queueable {
 						// Full split
 						//console.log('Master piece');
 						//console.log(intersectPoints);
-						debugger;
 						let offsetLine = lineOffset(line, (0.01), {units: 'meters'});
 						let thickLineCorners = featureCollection([line, offsetLine]);
 						let thickLineCornersExplode=explode(thickLineCorners);
