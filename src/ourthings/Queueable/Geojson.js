@@ -221,7 +221,6 @@ export default class Geojson extends Queueable {
 				if (mode === 'add')
 					break;
 				for (let a in memory.geojsonHistory.value.log[f].features) {
-					console.log(`${memory.geojsonHistory.value.log[f].features[a].id} - ${json.geojson.features[i].properties.uuid} : ${memory.geojsonHistory.value.log[f].features[a].action}`)
 					if (memory.geojsonHistory.value.log[f].features[a].id === json.geojson.features[i].properties.uuid) {
 
 						found=true;

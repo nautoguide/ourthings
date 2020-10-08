@@ -1391,6 +1391,8 @@ export default class Openlayers extends Queueable {
 
 		let didwork = false;
 		let workCount = 0;
+		let featuresRemoved=[];
+		let featuresAdded=[];
 
 
 		const features = source.getFeatures();
@@ -1452,6 +1454,8 @@ export default class Openlayers extends Queueable {
 							newPolygons[0].properties = {};
 							newPolygons[1].properties = {};
 							source.removeFeature(source.getFeatureById(sourceFeaturesJSON.features[i].properties.uuid));
+							featuresRemoved.push(sourceFeaturesJSON.features[i].properties.uuid);
+
 							//let newFeature = this._loadGeojson(options.map, {type: "FeatureCollection",features:[clipped]});
 
 							let newFeaturesGeoJSON = {
@@ -1462,6 +1466,9 @@ export default class Openlayers extends Queueable {
 							//console.log(newFeaturesGeoJSON);
 							let openlayersFeatures = this._idFeatures(this._loadGeojson(options.map, newFeaturesGeoJSON));
 							source.addFeatures(openlayersFeatures);
+							for(let x in openlayersFeatures) {
+								featuresAdded.push(openlayersFeatures[x].getId());
+							}
 							didwork = true;
 							workCount++;
 						} else {
@@ -1483,6 +1490,7 @@ export default class Openlayers extends Queueable {
 
 		if (didwork) {
 			self.queue.setMemory(options.prefix + 'splitFeaturesSuccess', `Split [${workCount}] vertices`, "Session");
+			self.queue.setMemory(options.prefix + 'splitFeaturesChanged', {"added":featuresAdded,"removed":featuresRemoved}, "Session");
 			self.queue.execute(options.prefix + "splitFeaturesSuccess");
 		} else {
 			source.clear();
