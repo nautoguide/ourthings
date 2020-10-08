@@ -450,7 +450,7 @@ export default class Api extends Queueable {
 			}
 			setTimeout(function () {
 				self._websocketSendPacket();
-			}, 100);
+			}, 200);
 		}
 	}
 
