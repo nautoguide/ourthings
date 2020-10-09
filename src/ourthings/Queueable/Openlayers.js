@@ -1960,24 +1960,27 @@ export default class Openlayers extends Queueable {
 		 * Get the extent of the features and fit them
 		 */
 
-		let featuresGeojson = new GeoJSON({
-			"dataProjection": "EPSG:4326",
-			"featureProjection": view.getProjection().getCode()
-		}).writeFeaturesObject(source.getFeatures());
+		let features=source.getFeatures();
+		if(features.length>0) {
+			let featuresGeojson = new GeoJSON({
+				"dataProjection": "EPSG:4326",
+				"featureProjection": view.getProjection().getCode()
+			}).writeFeaturesObject(features);
 
-		let featuresBbox = bbox(featuresGeojson);
-		let extentPolygon = bboxPolygon(featuresBbox);
-		let bufferedFeature = buffer(extentPolygon, options.buffer, {units: options.unit});
-		let bufferedExtent = bbox(bufferedFeature);
-		let transformedExtentP1 = transform([bufferedExtent[0], bufferedExtent[1]], "EPSG:4326", view.getProjection().getCode());
-		let transformedExtentP2 = transform([bufferedExtent[2], bufferedExtent[3]], "EPSG:4326", view.getProjection().getCode());
-		let transformedExtent = [transformedExtentP1[0], transformedExtentP1[1], transformedExtentP2[0], transformedExtentP2[1]]
-		try {
-			view.fit(transformedExtent, map.getSize());
-		} catch (e) {
-			/*
-			 * Fitting when the layer is empty fill cause OL to error
-			 */
+			let featuresBbox = bbox(featuresGeojson);
+			let extentPolygon = bboxPolygon(featuresBbox);
+			let bufferedFeature = buffer(extentPolygon, options.buffer, {units: options.unit});
+			let bufferedExtent = bbox(bufferedFeature);
+			let transformedExtentP1 = transform([bufferedExtent[0], bufferedExtent[1]], "EPSG:4326", view.getProjection().getCode());
+			let transformedExtentP2 = transform([bufferedExtent[2], bufferedExtent[3]], "EPSG:4326", view.getProjection().getCode());
+			let transformedExtent = [transformedExtentP1[0], transformedExtentP1[1], transformedExtentP2[0], transformedExtentP2[1]]
+			try {
+				view.fit(transformedExtent, map.getSize());
+			} catch (e) {
+				/*
+				 * Fitting when the layer is empty fill cause OL to error
+				 */
+			}
 		}
 
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
