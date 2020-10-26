@@ -29,6 +29,23 @@ export default class Internals extends Queueable {
 	}
 
 	/**
+	 * Eval a js statement
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.name - memory name to set
+	 * @param {string} json.statement - statement to run
+	 * @example
+	 * internals.eval({"statement":"1+1"});
+	 */
+	eval(pid,json) {
+		let self=this;
+		json.name=json.name||'evalResult';
+		const result=eval(json.statement);
+		self.queue.setMemory(json.name,result,"Session");
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
 	 * Check a statement and run prepared queue if its true
 	 * @param {int} pid - process ID
 	 * @param {object} json - queue arguments
@@ -72,6 +89,15 @@ export default class Internals extends Queueable {
 	setMemory(pid,json) {
 		let self=this;
 		self.queue.setMemory(json.name,json.value,json.mode);
+		self.finished(pid,self.queue.DEFINE.FIN_OK);
+	}
+
+	// TODO, this is rubbish needs proper merge
+	mergeMemory(pid,json) {
+		let self=this;
+		for(let i in json.values) {
+			memory[json.name].value[i]=json.values[i];
+		}
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
