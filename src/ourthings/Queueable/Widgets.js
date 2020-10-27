@@ -45,17 +45,32 @@ class Widgets extends Queueable {
 		this.pageTotal = options.totalPages;
 		this.disabledPages = options.disabledPages;
 		this.queuePrefix = options.queuePrefix;
+/*
 
 		if (parseInt(options.startPage) <= 1)
 			queue.getElement(this.pagePrevTarget).classList.add(this.pageMaxClass);
 
 		if (parseInt(options.startPage) >= this.pageTotal)
 			queue.getElement(this.pageNextTarget).classList.add(this.pageMaxClass);
-
+*/
+		this._resetPageStates();
 		if(this.queuePrefix)
 			queue.execute(`${this.queuePrefix}Page${memory.currentPage.value}`);
 
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
+	_resetPageStates() {
+		const prev=this.queue.getElement(this.pagePrevTarget);
+		const next=this.queue.getElement(this.pageNextTarget);
+
+		next.classList.remove(this.pageMaxClass);
+		prev.classList.remove(this.pageMaxClass);
+		if (memory.currentPage.value <= 1)
+			prev.classList.add(this.pageMaxClass);
+
+		if (memory.currentPage.value >= this.pageTotal)
+			next.classList.add(this.pageMaxClass);
 	}
 
 	/**
@@ -69,6 +84,21 @@ class Widgets extends Queueable {
 	disablePages(pid,json) {
 		this.disabledPages = json.disabledPages;
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * set pages
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {int} [json.totalPages] - Total pages
+	 * @example
+	 * widgets.setPages({"totalPages":5});
+	 */
+	setPages(pid,json) {
+		this.pageTotal = parseInt(json.totalPages);
+		this._resetPageStates();
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+
 	}
 
 	/**
