@@ -59,6 +59,9 @@ import lineOffset from '@turf/line-offset';
 import convex from '@turf/convex';
 import explode from '@turf/explode';
 import difference from '@turf/difference';
+import centroid from '@turf/centroid';
+import centerofmass from '@turf/center-of-mass';
+import area from '@turf/area';
 import lineOverlap from '@turf/line-overlap';
 
 proj4.defs([
@@ -962,9 +965,10 @@ export default class Openlayers extends Queueable {
 			}).writeFeaturesObject([event.feature]);
 			let isInside = true;
 			let isKink = false;
-			if (options.inside) {
+			// Needs to split multipolygon
+			/*if (options.inside) {
 				isInside = booleanContains(bufferedMask.features[0], features.features[0]);
-			}
+			}*/
 
 
 			if (!isInside)
@@ -1597,11 +1601,13 @@ export default class Openlayers extends Queueable {
 		let options = Object.assign({
 			"map": "default",
 			"layer": "default",
-			"geojson": {}
+			"geojson": {},
+			"clear": false
 		}, json);
 		let layer = self.maps[options.map].layers[options.layer];
 		let source = layer.getSource();
-
+		if(options.clear===true)
+			source.clear();
 		let features = this._loadGeojson(options.map, options.geojson);
 		source.addFeatures(this._idFeatures(features));
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
@@ -1797,8 +1803,11 @@ export default class Openlayers extends Queueable {
 		 */
 		let map = self.maps[options.map].object;
 		let view = map.getView();
+
+		if(!options.projectionFrom)
+			options.projectionFrom=view.getProjection().getCode();
 		let size = map.getSize();
-		view.centerOn(this._decodeCoords(json.coordinate, view.getProjection().getCode(), view.getProjection().getCode()), size, [size[0] / 2, size[1] / 2]);
+		view.centerOn(this._decodeCoords(options.coordinate, options.projectionFrom, view.getProjection().getCode()), size, [size[0] / 2, size[1] / 2]);
 		if (options.zoom)
 			view.setZoom(options.zoom);
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
@@ -2088,6 +2097,93 @@ export default class Openlayers extends Queueable {
 		}
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 
+	}
+
+	/**
+	 * Make a dynamic legend from a geojson
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map reference
+	 * @param {string} json.prefix - prefix for the memory
+	 * @param {string} json.labelIndex - Property to use for the label
+	 * @example
+	 * openlayers.makedynamicLegend({...geojson...});
+	 */
+	makedynamicLegend(pid,json) {
+		let self = this;
+		let options = Object.assign({
+			"prefix":"",
+			"labelIndex":"name"
+		}, json);
+
+		let legendGeojson={
+			"type": "FeatureCollection",
+			features:[]
+		};
+		for(let f in options.geojson.features) {
+			let pointJSON=centroid(options.geojson.features[f]);
+			let massJSON=centerofmass(options.geojson.features[f])
+			pointJSON.properties= {
+				id:f+1,
+				label:options.geojson.features[f].properties[options.labelIndex],
+				feature_id:options.geojson.features[f].properties.feature_id,
+				internal:true
+			};
+			pointJSON=this._addPoint(pointJSON,massJSON.geometry.coordinates);
+
+			const farea=area(options.geojson.features[f]);
+			if(farea<15000000)
+				pointJSON.properties.internal=false;
+				pointJSON.properties.hidden=false;
+			legendGeojson.features.push(pointJSON);
+		}
+		self.queue.setMemory(options.prefix + 'legendGeojson', legendGeojson, "Session");
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	updateLegend(pid,json) {
+		let self = this;
+		let options = Object.assign({
+			"prefix":"",
+			"id":"",
+			"internal": false,
+			"hidden": false,
+			"projectionFrom":"EPSG:3857",
+			"projectionTo":"EPSG:4326",
+		}, json);
+		let memName=options.prefix + 'legendGeojson';
+		for(let f in memory[memName].value.features) {
+			if(memory[memName].value.features[f].properties.id===options.id) {
+				if(options.internal===true)
+					memory[memName].value.features[f].properties.internal=!memory[memName].value.features[f].properties.internal;
+				if(options.hidden===true)
+					memory[memName].value.features[f].properties.hidden=!memory[memName].value.features[f].properties.hidden;
+				if(options.locationLabel) {
+					memory[memName].value.features[f].geometry.coordinates[1]=this._decodeCoords(options.locationLabel, options.projectionFrom, options.projectionTo);
+				}
+				if(options.locationPoint) {
+					memory[memName].value.features[f].geometry.coordinates[0]=this._decodeCoords(options.locationPoint, options.projectionFrom, options.projectionTo);
+				}
+				if(options.legend) {
+					memory[memName].value.features[f].properties.label=options.legend;
+				}
+			}
+		}
+		//self.queue.setMemory(memName, legendGeojson, "Session");
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Take a point feature and add a point making a multipoint
+	 * @param jsonFeature
+	 * @param point
+	 * @returns {*}
+	 * @private
+	 */
+	_addPoint(jsonFeature,point) {
+		jsonFeature.geometry.type='MultiPoint';
+		jsonFeature.geometry.coordinates=[jsonFeature.geometry.coordinates,point];
+		return jsonFeature;
 	}
 
 
