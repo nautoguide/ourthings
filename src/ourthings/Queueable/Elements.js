@@ -175,11 +175,10 @@ export default class Elements extends Queueable {
 	 */
 	domRemoveElement(pid, json) {
 		let target = self.queue.getElement(json.targetId);
-		if(target)
+		if (target)
 			target.remove();
 		this.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
-
 
 
 	/**
@@ -197,7 +196,7 @@ export default class Elements extends Queueable {
 	innerHTML(pid, json) {
 		let self = this;
 		let element = self.queue.getElement(json.targetId);
-		if(element) {
+		if (element) {
 			if (json.append)
 				element.insertAdjacentHTML('beforeend', json.html);
 			else
@@ -220,12 +219,12 @@ export default class Elements extends Queueable {
 	setInputValue(pid, json) {
 		let self = this;
 		let element = self.queue.getElement(json.targetId);
-		if(json.pre)
-			json.value=json.pre+json.value;
-		if(json.post)
-			json.value=json.value+json.post;
+		if (json.pre)
+			json.value = json.pre + json.value;
+		if (json.post)
+			json.value = json.value + json.post;
 
-		if(json.append===true)
+		if (json.append === true)
 			element.value += json.value;
 		else
 			element.value = json.value;
@@ -267,13 +266,13 @@ export default class Elements extends Queueable {
 
 	}
 
-	getMultiselectValues(pid,json) {
+	getMultiselectValues(pid, json) {
 		let self = this;
 		let options = Object.assign({
 			"mode": "array",
 			"name": "selectboxes"
 		}, json);
-		const results = Array.prototype.slice.call(document.querySelectorAll(`${options.targetId} option:checked`),0).map(function(v,i,a) {
+		const results = Array.prototype.slice.call(document.querySelectorAll(`${options.targetId} option:checked`), 0).map(function (v, i, a) {
 			return v.value;
 		});
 		self.queue.setMemory(options.name, results, "Session");
@@ -559,6 +558,7 @@ export default class Elements extends Queueable {
 
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
+
 	/**
 	 * dragReset - Reset the drag item
 	 * @param {number} pid - Process ID
@@ -573,13 +573,13 @@ export default class Elements extends Queueable {
 		let self = this;
 		let options = Object.assign({
 			"drag": "default",
-			"original":false
+			"original": false
 		}, json);
 		let element = this.drags[options.drag].element;
-		if(options.original) {
+		if (options.original) {
 			element.style.removeProperty('top');
 			element.style.removeProperty('left');
-			self.drags[options.drag].pos= {x: element.offsetLeft, y: element.offsetTop,ox:0,oy:0};
+			self.drags[options.drag].pos = {x: element.offsetLeft, y: element.offsetTop, ox: 0, oy: 0};
 		} else {
 			if (this.drags[options.drag].mode) {
 				this.drags[options.drag].stored = {
@@ -609,28 +609,27 @@ export default class Elements extends Queueable {
 	 * -elements.dragBoundsUpdate({"drag":"mydraf"});
 
 	 */
-	dragMoveIntoBounds(pid,json) {
+	dragMoveIntoBounds(pid, json) {
 		let self = this;
 		let options = Object.assign({
 			"drag": "default",
-			"original":false
+			"original": false
 		}, json);
 		/*
 		 * Check our X
 		 */
 
 		let element = this.drags[options.drag].element;
-		self.drags[options.drag].dimensions=element.getBoundingClientRect();
-		let bbox=this.drags[options.drag].boundsElement.getBoundingClientRect();
-		this.drags[options.drag].boundary={
-			x:0,
-			y:0,
-			x1:bbox.width,
-			y1:bbox.height
+		self.drags[options.drag].dimensions = element.getBoundingClientRect();
+		let bbox = this.drags[options.drag].boundsElement.getBoundingClientRect();
+		this.drags[options.drag].boundary = {
+			x: 0,
+			y: 0,
+			x1: bbox.width,
+			y1: bbox.height
 		};
-		if((self.drags[options.drag].pos.x+self.drags[options.drag].buffer+self.drags[options.drag].dimensions.width)>self.drags[options.drag].boundary.x1)
-		{
-			self.drags[options.drag].pos.x=self.drags[options.drag].boundary.x1-(self.drags[options.drag].buffer+self.drags[options.drag].dimensions.width);
+		if ((self.drags[options.drag].pos.x + self.drags[options.drag].buffer + self.drags[options.drag].dimensions.width) > self.drags[options.drag].boundary.x1) {
+			self.drags[options.drag].pos.x = self.drags[options.drag].boundary.x1 - (self.drags[options.drag].buffer + self.drags[options.drag].dimensions.width);
 			element.style.left = self.drags[options.drag].pos.x + "px";
 
 		}
@@ -653,12 +652,12 @@ export default class Elements extends Queueable {
 		let options = Object.assign({
 			"drag": "default"
 		}, json);
-		let bbox=this.drags[options.drag].boundsElement.getBoundingClientRect();
-		this.drags[options.drag].boundary={
-			x:0,
-				y:0,
-				x1:bbox.width,
-				y1:bbox.height
+		let bbox = this.drags[options.drag].boundsElement.getBoundingClientRect();
+		this.drags[options.drag].boundary = {
+			x: 0,
+			y: 0,
+			x1: bbox.width,
+			y1: bbox.height
 		};
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 
@@ -692,46 +691,48 @@ export default class Elements extends Queueable {
 		let element = this.queue.getElement(json.targetId);
 
 		//make it position abs
-		element.style.position='absolute';
+		element.style.position = 'absolute';
 		// The thing we target
 		let dragElement = this.queue.getElement(json.dragTargetId);
 		// Our bounds
 		let boundsElement = this.queue.getElement(json.bounds);
 
-		let bbox=boundsElement.getBoundingClientRect();
+		let bbox = boundsElement.getBoundingClientRect();
 		//console.log(element.offsetLeft, element.offsetTop);
 		this.drags[options.drag] = {
-			pos: {x: element.offsetLeft, y: element.offsetTop,ox:0,oy:0},
+			pos: {x: element.offsetLeft, y: element.offsetTop, ox: 0, oy: 0},
 			element: element,
 			dragElement: dragElement,
 			boundsElement: boundsElement,
 			mode: true,
 			boundary: {
-				x:0,
-				y:0,
-				x1:bbox.width,
-				y1:bbox.height
+				x: 0,
+				y: 0,
+				x1: bbox.width,
+				y1: bbox.height
 			},
-			buffer:options.buffer
+			buffer: options.buffer
 		};
 
-		this.drags[options.drag].dimensions=element.getBoundingClientRect();
+		this.drags[options.drag].dimensions = element.getBoundingClientRect();
 		dragElement.addEventListener('mousedown', dragMouseDown);
 		window.addEventListener('resize', resize);
 
 		function resize(e) {
-			let bbox=boundsElement.getBoundingClientRect();
-			self.drags[options.drag].boundary.x1=bbox.width;
-			self.drags[options.drag].boundary.y1=bbox.height;
+			let bbox = boundsElement.getBoundingClientRect();
+			self.drags[options.drag].boundary.x1 = bbox.width;
+			self.drags[options.drag].boundary.y1 = bbox.height;
 		}
 
 		function dragMouseDown(e) {
 			if (self.drags[options.drag].mode) {
 				e = e || window.event;
 				e.preventDefault();
-				self.drags[options.drag].dimensions=element.getBoundingClientRect();
+				//e.stopPropagation();
 
-				self.drags[options.drag].pos.ox = e.clientX - self.drags[options.drag].pos.x ;
+				self.drags[options.drag].dimensions = element.getBoundingClientRect();
+
+				self.drags[options.drag].pos.ox = e.clientX - self.drags[options.drag].pos.x;
 				self.drags[options.drag].pos.oy = e.clientY - self.drags[options.drag].pos.y;
 
 				document.onmouseup = closeDragElement;
@@ -744,15 +745,14 @@ export default class Elements extends Queueable {
 			e.preventDefault();
 			//console.log(`mouse: ${e.clientX}:${e.clientY}`);
 
-			let bboxX= e.clientX - self.drags[options.drag].pos.ox;
-			let bboxY= e.clientY - self.drags[options.drag].pos.oy;
+			let bboxX = e.clientX - self.drags[options.drag].pos.ox;
+			let bboxY = e.clientY - self.drags[options.drag].pos.oy;
 			// calculate the new cursor position:
-			if(
-				bboxX-options.buffer>=self.drags[options.drag].boundary.x
-				&&(bboxX+options.buffer+self.drags[options.drag].dimensions.width)<=self.drags[options.drag].boundary.x1
-				&&bboxY-options.buffer>=self.drags[options.drag].boundary.y
-				&&(bboxY+options.buffer+self.drags[options.drag].dimensions.height)<=self.drags[options.drag].boundary.y1)
-			{
+			if (
+				bboxX - options.buffer >= self.drags[options.drag].boundary.x
+				&& (bboxX + options.buffer + self.drags[options.drag].dimensions.width) <= self.drags[options.drag].boundary.x1
+				&& bboxY - options.buffer >= self.drags[options.drag].boundary.y
+				&& (bboxY + options.buffer + self.drags[options.drag].dimensions.height) <= self.drags[options.drag].boundary.y1) {
 
 				self.drags[options.drag].pos.x = bboxX;
 				self.drags[options.drag].pos.y = bboxY;
@@ -772,6 +772,83 @@ export default class Elements extends Queueable {
 		}
 
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
+
+	}
+
+	resizeOn(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"resize": "default",
+			"buffer": 10
+		}, json);
+
+		if (this.resizes === undefined) {
+			this.resizes = {};
+		}
+
+		// The thing me move
+		let element = this.queue.getElement(json.targetId);
+		let dragElement = this.queue.getElement(json.resizeTargetId);
+
+		element.style.position = 'absolute';
+
+
+		this.resizes[options.resize] = {
+			pos: {x: element.clientWidth, y: element.clientHeight, ox: 0, oy: 0},
+			mode: true,
+			scrollHeight:element.scrollHeight
+		}
+
+		dragElement.addEventListener('mousedown', resizeMouseDown);
+
+		function resizeMouseDown(e) {
+			if (self.resizes[options.resize].mode) {
+				e = e || window.event;
+				e.preventDefault();
+				e.stopPropagation();
+
+				self.resizes[options.resize].pos.ox = e.clientX - self.resizes[options.resize].pos.x;
+				self.resizes[options.resize].pos.oy = e.clientY - self.resizes[options.resize].pos.y;
+
+				document.onmouseup = closeResizeElement;
+				document.onmousemove = elementDrag;
+			}
+		}
+
+		function elementDrag(e) {
+			e = e || window.event;
+			e.preventDefault();
+			//console.log(`mouse: ${e.clientX}:${e.clientY}`);
+			let bboxX = e.clientX - self.resizes[options.resize].pos.ox;
+			let bboxY = e.clientY - self.resizes[options.resize].pos.oy;
+
+
+			self.resizes[options.resize].pos.x = bboxX;
+			self.resizes[options.resize].pos.y = bboxY;
+
+			element.style.height = self.resizes[options.resize].pos.y + "px";
+			element.style.width = self.resizes[options.resize].pos.x + "px";
+			const newScrollHeight=element.scrollHeight-element.offsetHeight;
+			console.log(newScrollHeight);
+			if(newScrollHeight!==self.resizes[options.resize].pos.scrollHeight) {
+				self.resizes[options.resize].pos.scrollHeight = newScrollHeight;
+				self.queue.setMemory('scrollChange', {"resize":options.resize,data:self.resizes[options.resize].pos}, "Session");
+				self.queue.execute("scrollChange", {});
+			}
+
+		}
+
+
+		function closeResizeElement() {
+			/*
+			 * End of drag so get rid of events
+			 */
+			document.onmouseup = null;
+			document.onmousemove = null;
+		}
+
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+
 
 	}
 }

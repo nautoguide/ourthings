@@ -2113,29 +2113,38 @@ export default class Openlayers extends Queueable {
 		let self = this;
 		let options = Object.assign({
 			"prefix":"",
-			"labelIndex":"name"
+			"labelIndex":"name",
+			"labelMaxLength":15,
+			"excludeIndex":"legend"
 		}, json);
 
 		let legendGeojson={
 			"type": "FeatureCollection",
 			features:[]
 		};
+		let i=1;
 		for(let f in options.geojson.features) {
-			let pointJSON=centroid(options.geojson.features[f]);
-			let massJSON=centerofmass(options.geojson.features[f])
-			pointJSON.properties= {
-				id:f+1,
-				label:options.geojson.features[f].properties[options.labelIndex],
-				feature_id:options.geojson.features[f].properties.feature_id,
-				internal:true
-			};
-			pointJSON=this._addPoint(pointJSON,massJSON.geometry.coordinates);
+			if((!options.geojson.features[f].properties[options.excludeIndex]||options.geojson.features[f].properties[options.excludeIndex]===true)&&options.geojson.features[f].properties[options.labelIndex]) {
+				let pointJSON = centroid(options.geojson.features[f]);
+				let massJSON = centerofmass(options.geojson.features[f])
+				pointJSON.properties = {
+					id: i,
+					label: options.geojson.features[f].properties[options.labelIndex],
+					feature_id: options.geojson.features[f].properties.feature_id,
+					internal: true
+				};
+				pointJSON = this._addPoint(pointJSON, massJSON.geometry.coordinates);
 
-			const farea=area(options.geojson.features[f]);
-			if(farea<15000000)
-				pointJSON.properties.internal=false;
-				pointJSON.properties.hidden=false;
-			legendGeojson.features.push(pointJSON);
+				const farea = area(options.geojson.features[f]);
+				if (farea < 15000000)
+					pointJSON.properties.internal = false;
+
+				pointJSON.properties.hidden = false;
+				if (options.geojson.features[f].properties[options.labelIndex].length > options.labelMaxLength)
+					pointJSON.properties.hidden = true;
+				legendGeojson.features.push(pointJSON);
+				i++;
+			}
 		}
 		self.queue.setMemory(options.prefix + 'legendGeojson', legendGeojson, "Session");
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
