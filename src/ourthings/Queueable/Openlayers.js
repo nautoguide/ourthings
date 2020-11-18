@@ -28,6 +28,7 @@ import Select from 'ol/interaction/Select';
 import Snap from 'ol/interaction/Snap';
 import Modify from 'ol/interaction/Modify';
 import Draw from 'ol/interaction/Draw';
+import ScaleLine from 'ol/control/ScaleLine';
 
 import proj4 from "proj4";
 import {register} from 'ol/proj/proj4';
@@ -592,8 +593,12 @@ export default class Openlayers extends Queueable {
 				obj: control
 			};
 
-		if (options.mode === "on")
-			map.addInteraction(control);
+		if (options.mode === "on") {
+			if(control.getActive)
+				map.addInteraction(control);
+			else
+				map.addControl(control);
+		}
 
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
@@ -667,11 +672,17 @@ export default class Openlayers extends Queueable {
 	 */
 	_toggleControl(map, control, mode) {
 		if (control.state === 'on' && mode === 'off') {
-			map.removeInteraction(control.obj);
+			if(control.getActive)
+				map.removeInteraction(control.obj);
+			else
+				map.removeControl(control.obj);
 			control.state = 'off';
 		}
 		if (control.state === 'off' && mode === 'on') {
-			map.addInteraction(control.obj);
+			if(control.getActive)
+				map.addInteraction(control.obj);
+			else
+				map.addControl(control.obj);
 			control.state = 'on';
 		}
 	}
@@ -995,6 +1006,30 @@ export default class Openlayers extends Queueable {
 		let control = new Snap({
 			source: source,
 			pixelTolerance: options.pixelTolerance
+		});
+		return control;
+	}
+
+
+	_control_scale(json) {
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"pixelTolerance": 5,
+			"units":"metric",
+			"bar":true,
+			"steps":4,
+			"text":"Example text",
+			"minWidth":100
+		}, json);
+
+
+		const control = new ScaleLine({
+			units: options.units,
+			bar: options.bar,
+			steps: options.steps,
+			text: options.text,
+			minWidth: options.minWidth
 		});
 		return control;
 	}
@@ -2122,7 +2157,12 @@ export default class Openlayers extends Queueable {
 			"type": "FeatureCollection",
 			features:[]
 		};
-		let i=1;
+		let legendNumbers={
+			"type": "FeatureCollection",
+			features:[]
+		};
+		let i=0;
+		let numberLabel=1;
 		for(let f in options.geojson.features) {
 			if((!options.geojson.features[f].properties[options.excludeIndex]||options.geojson.features[f].properties[options.excludeIndex]===true)&&options.geojson.features[f].properties[options.labelIndex]) {
 				let pointJSON = centroid(options.geojson.features[f]);
@@ -2131,7 +2171,8 @@ export default class Openlayers extends Queueable {
 					id: i,
 					label: options.geojson.features[f].properties[options.labelIndex],
 					feature_id: options.geojson.features[f].properties.feature_id,
-					internal: true
+					internal: true,
+					numberLabel: -1
 				};
 				pointJSON = this._addPoint(pointJSON, massJSON.geometry.coordinates);
 
@@ -2140,13 +2181,21 @@ export default class Openlayers extends Queueable {
 					pointJSON.properties.internal = false;
 
 				pointJSON.properties.hidden = false;
-				if (options.geojson.features[f].properties[options.labelIndex].length > options.labelMaxLength)
+/*
+				if (options.geojson.features[f].properties[options.labelIndex].length > options.labelMaxLength) {
+*/
+				if (true) {
 					pointJSON.properties.hidden = true;
+					pointJSON.properties.numberLabel=numberLabel;
+					legendNumbers.features.push(pointJSON);
+					numberLabel++;
+				}
 				legendGeojson.features.push(pointJSON);
 				i++;
 			}
 		}
 		self.queue.setMemory(options.prefix + 'legendGeojson', legendGeojson, "Session");
+		self.queue.setMemory(options.prefix + 'legendNumbers', legendNumbers, "Session");
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
@@ -2178,7 +2227,23 @@ export default class Openlayers extends Queueable {
 				}
 			}
 		}
-		//self.queue.setMemory(memName, legendGeojson, "Session");
+		// Rebuilds the numbers
+		let numberLabel=1;
+		let legendNumbers={
+			"type": "FeatureCollection",
+			features:[]
+		};
+		for(let f in memory[memName].value.features) {
+				if(memory[memName].value.features[f].properties.hidden===true) {
+					memory[memName].value.features[f].properties.numberLabel=numberLabel;
+					legendNumbers.features.push(memory[memName].value.features[f]);
+					numberLabel++;
+				} else {
+					memory[memName].value.features[f].properties.numberLabel=-1;
+				}
+		}
+		self.queue.setMemory(options.prefix + 'legendNumbers', legendNumbers, "Session");
+
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 

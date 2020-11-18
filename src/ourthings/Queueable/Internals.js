@@ -189,4 +189,18 @@ export default class Internals extends Queueable {
 	nop(pid,json) {
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
+
+	/**
+	 * Debug - start debugger
+	 *
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @example
+	 * internals.debug();
+	 */
+	debug(pid,json) {
+		debugger;
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
 }
