@@ -749,16 +749,18 @@ export default class Elements extends Queueable {
 			let bboxY = e.clientY - self.drags[options.drag].pos.oy;
 			// calculate the new cursor position:
 			if (
-				bboxX - options.buffer >= self.drags[options.drag].boundary.x
-				&& (bboxX + options.buffer + self.drags[options.drag].dimensions.width) <= self.drags[options.drag].boundary.x1
-				&& bboxY - options.buffer >= self.drags[options.drag].boundary.y
-				&& (bboxY + options.buffer + self.drags[options.drag].dimensions.height) <= self.drags[options.drag].boundary.y1) {
+				bboxX - options.buffer >= self.drags[options.drag].boundary.x  && (bboxX + options.buffer + self.drags[options.drag].dimensions.width) <= self.drags[options.drag].boundary.x1) {
 
 				self.drags[options.drag].pos.x = bboxX;
+
+				element.style.left = self.drags[options.drag].pos.x + "px";
+			}
+
+			if (bboxY - options.buffer >= self.drags[options.drag].boundary.y && (bboxY + options.buffer + self.drags[options.drag].dimensions.height) <= self.drags[options.drag].boundary.y1) {
+
 				self.drags[options.drag].pos.y = bboxY;
 
 				element.style.top = self.drags[options.drag].pos.y + "px";
-				element.style.left = self.drags[options.drag].pos.x + "px";
 			}
 
 		}
@@ -779,7 +781,9 @@ export default class Elements extends Queueable {
 		let self = this;
 		let options = Object.assign({
 			"resize": "default",
-			"buffer": 10
+			"prefix":"",
+			"buffer": 10,
+			"id":0
 		}, json);
 
 		if (this.resizes === undefined) {
@@ -828,13 +832,17 @@ export default class Elements extends Queueable {
 
 			element.style.height = self.resizes[options.resize].pos.y + "px";
 			element.style.width = self.resizes[options.resize].pos.x + "px";
-			const newScrollHeight=element.scrollHeight-element.offsetHeight;
-			console.log(newScrollHeight);
+			const newScrollHeight=(element.scrollHeight)-(element.offsetHeight);
+			/*console.log(element.scrollHeight);
+			console.log(element.offsetHeight);
+			console.log(newScrollHeight);*/
+/*
 			if(newScrollHeight!==self.resizes[options.resize].pos.scrollHeight) {
+*/
 				self.resizes[options.resize].pos.scrollHeight = newScrollHeight;
-				self.queue.setMemory('scrollChange', {"resize":options.resize,data:self.resizes[options.resize].pos}, "Session");
-				self.queue.execute("scrollChange", {});
-			}
+				self.queue.setMemory(options.prefix+'scrollChange', {"resize":options.resize,data:self.resizes[options.resize].pos,id:options.id}, "Session");
+				self.queue.execute(options.prefix+"scrollChange", {});
+			//}
 
 		}
 

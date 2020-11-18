@@ -703,7 +703,7 @@ class Queue {
 								let codes = [self.DEFINE.KEY_RETURN];
 								if (commandObj[command].options.queueEventCodes)
 									codes = commandObj[command].options.queueEventCodes;
-								if (codes.indexOf(e.keyCode) !== -1) {
+								if (codes.indexOf(e.keyCode) !== -1||codes==="*") {
 									commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
 									self.commandsQueue.apply(self, [[commandObj[command]]]);
 								}
