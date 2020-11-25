@@ -680,7 +680,8 @@ export default class Elements extends Queueable {
 		let self = this;
 		let options = Object.assign({
 			"drag": "default",
-			"buffer": 10
+			"buffer": 10,
+			"prefix":""
 		}, json);
 
 		if (this.drags === undefined) {
@@ -771,6 +772,8 @@ export default class Elements extends Queueable {
 			 */
 			document.onmouseup = null;
 			document.onmousemove = null;
+			self.queue.setMemory(options.prefix+'endDrag', {"x":self.drags[options.drag].pos.x,"y":self.drags[options.drag].pos.y}, "Session");
+			self.queue.execute(options.prefix+"endDrag", {});
 		}
 
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
@@ -853,6 +856,9 @@ export default class Elements extends Queueable {
 			 */
 			document.onmouseup = null;
 			document.onmousemove = null;
+			self.queue.setMemory(options.prefix+'endResize', {"width":self.resizes[options.resize].pos.x,"height":self.resizes[options.resize].pos.y}, "Session");
+			self.queue.execute(options.prefix+"endResize", {});
+
 		}
 
 		this.finished(pid, this.queue.DEFINE.FIN_OK);

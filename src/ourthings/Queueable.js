@@ -47,7 +47,7 @@ class Queueable {
 			/*
 			 * Process pointers IE *memory.foo.value
 			 */
-			const pointerRegex=/^\*(.*)$/;
+			const pointerRegex=/^\*(.+)$/;
 			this.queue.objectMap(json,function(item){
 				let match;
 				if(match = pointerRegex.exec(item)) {
