@@ -665,20 +665,47 @@ export default class Openlayers extends Queueable {
 	}
 
 	/**
+	 * Set a controls(s) to the requested mode and set others to opposit state
+	 * @param pid
+	 * @param json
+	 * @param {string} json.map - Map name
+	 * @param {string} json.mode -  on|off
+	 * @param {array} json.name - control to set
+	 *
+	 */
+	controlToggle(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default",
+			"names": ["ss"]
+		}, json);
+		let map = self.maps[options.map].object;
+		let controls = self.maps[options.map].controls;
+		/*
+		 * Toggle in the ones we do need (in order this is important for the likes of snap
+		 */
+		for (let i in options.names) {
+			this._toggleControl(map, controls[options.names[i]], 'toggle');
+		}
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	/**
 	 * Toggle a control between on/off
 	 * @param map
 	 * @param control
 	 * @private
 	 */
 	_toggleControl(map, control, mode) {
-		if (control.state === 'on' && mode === 'off') {
+		if (control.state === 'on' && ( mode === 'off' || mode ==='toggle') ) {
 			if(control.getActive)
 				map.removeInteraction(control.obj);
-			else
-				map.removeControl(control.obj);
+			else {
+				console.log(map.removeControl(control.obj));
+			}
 			control.state = 'off';
 		}
-		if (control.state === 'off' && mode === 'on') {
+		if (control.state === 'off' && ( mode === 'on' || mode ==='toggle')) {
 			if(control.getActive)
 				map.addInteraction(control.obj);
 			else
@@ -1024,7 +1051,7 @@ export default class Openlayers extends Queueable {
 		}, json);
 
 
-		const control = new ScaleLine({
+		let control = new ScaleLine({
 			units: options.units,
 			bar: options.bar,
 			steps: options.steps,
@@ -2046,7 +2073,7 @@ export default class Openlayers extends Queueable {
 		/*
 		 * Pull all our resources
 		 */
-		if (json.map === "*") {
+		if (options.map === "*") {
 			for (let i in self.maps) {
 				let map = self.maps[i].object;
 				map.updateSize();

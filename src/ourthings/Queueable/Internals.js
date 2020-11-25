@@ -92,6 +92,20 @@ export default class Internals extends Queueable {
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}
 
+	/**
+	 * toggle a bool memory value
+	 *
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.name - name of memory item
+	 * @example
+	 * internals.toggleMemory({"name":"test"});
+	 */
+	toggleMemory(pid,json) {
+		memory[json.name].value=!memory[json.name].value;
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
 	// TODO, this is rubbish needs proper merge
 	mergeMemory(pid,json) {
 		let self=this;

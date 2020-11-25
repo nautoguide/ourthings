@@ -906,7 +906,8 @@ class Queue {
 			window.memory[origin] = memoryDetails;
 			return true;
 		} else {
-			this.reportError("Could not set memory", "The memory set for pid [" + pid + "] could not be found");
+			if(pid!==-1)
+				this.reportError("Could not set memory", "The memory set for pid [" + pid + "] could not be found");
 			return false;
 		}
 	}
