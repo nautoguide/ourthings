@@ -124,7 +124,8 @@ export default class Openlayers extends Queueable {
 			"target": "map",
 			"center": [0, 0],
 			"projection": "EPSG:3857",
-			"debug": false
+			"debug": false,
+			"enableEvents": true
 		}, json);
 		let projection = getProjection(options.projection);
 		const map = new Map({
@@ -164,7 +165,8 @@ export default class Openlayers extends Queueable {
 			"layerLoadState": false,
 			"loadStateEnabled": false,
 			"timeout1":undefined,
-			"timeout2":undefined
+			"timeout2":undefined,
+			"eventsEnabled":options.enableEvents
 		};
 
 
@@ -176,40 +178,52 @@ export default class Openlayers extends Queueable {
 		}, "Session");
 
 		map.getView().on('propertychange', function (e) {
+			if(self.maps[options.map].eventsEnabled) {
+				switch (e.key) {
+					case 'resolution': {
+						/**
+						 *  Check for judder - We only want zoom events that are not a transition
+						 */
+						let level = Math.round(map.getView().getZoom());
+						let zoomLevel = self.maps[options.map].zoom;
 
-			switch (e.key) {
-				case 'resolution': {
-					/**
-					 *  Check for judder - We only want zoom events that are not a transition
-					 */
-					let level = Math.round(map.getView().getZoom());
-					let zoomLevel = self.maps[options.map].zoom;
+						if (zoomLevel !== level || map.getView().getZoom() % 1 === 0) {
+							// Silent Fail this as its not critical
+							clearTimeout(self.maps[options.map].timeout1);
+							self.maps[options.map].timeout1 = setTimeout(function () {
+								self.queue.execute(options.map + "ResolutionChange", {}, true);
+							}, 500)
+						}
+						self._updateResolution(map, options.map + 'ResolutionChange');
 
-					if (zoomLevel !== level || map.getView().getZoom() % 1 === 0) {
-						// Silent Fail this as its not critical
-						clearTimeout(self.maps[options.map].timeout1);
-						self.maps[options.map].timeout1=setTimeout(function () {
-							self.queue.execute(options.map + "ResolutionChange", {}, true);
-						},500)
+
+						self.maps[options.map].zoom = level;
+						break;
 					}
-					self._updateResolution(map,options.map+ 'ResolutionChange');
-
-
-					self.maps[options.map].zoom = level;
-					break;
-				}
-				case 'center': {
-					self._updateResolution(map,options.map+ 'ResolutionChange');
-					clearTimeout(self.maps[options.map].timeout2);
-					self.maps[options.map].timeout2=setTimeout(function () {
-						self.queue.execute(options.map + "CenterChange", {}, true);
-					},500)
+					case 'center': {
+						self._updateResolution(map, options.map + 'ResolutionChange');
+						clearTimeout(self.maps[options.map].timeout2);
+						self.maps[options.map].timeout2 = setTimeout(function () {
+							self.queue.execute(options.map + "CenterChange", {}, true);
+						}, 500)
+					}
 				}
 			}
 
 		});
 
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
+	setEnableEvents(pid,json) {
+		let self=this;
+		let options = Object.assign({
+			"map": "default",
+			"enabled":true
+		}, json);
+		self.maps[options.map].eventsEnabled=options.enabled;
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
 	}
 
 	_updateResolution(map,name) {
@@ -1869,7 +1883,10 @@ export default class Openlayers extends Queueable {
 		if(!options.projectionFrom)
 			options.projectionFrom=view.getProjection().getCode();
 		let size = map.getSize();
-		view.centerOn(this._decodeCoords(options.coordinate, options.projectionFrom, view.getProjection().getCode()), size, [size[0] / 2, size[1] / 2]);
+		let cords=this._decodeCoords(options.coordinate, options.projectionFrom, view.getProjection().getCode());
+		if(cords) {
+			view.centerOn(cords, size, [size[0] / 2, size[1] / 2]);
+		}
 		if (options.zoom)
 			view.setZoom(options.zoom);
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
@@ -1891,17 +1908,25 @@ export default class Openlayers extends Queueable {
 		if (typeof cords === 'string') {
 			const match = cords.match(srid);
 			if (match) {
-				returnCords = match[2].split(' ');
-				returnCords = returnCords.map(function (str) {
-					return parseFloat(str);
-				})
-				returnCords = transform(returnCords, "EPSG:" + match[1], projectionFrom);
-				returnCords = this._cleanCoords(returnCords);
+				try {
+					returnCords = match[2].split(' ');
+					returnCords = returnCords.map(function (str) {
+						return parseFloat(str);
+					})
+					returnCords = transform(returnCords, "EPSG:" + match[1], projectionFrom);
+					returnCords = this._cleanCoords(returnCords);
+				} catch(e) {
+					return false;
+				}
 			}
 
 		} else {
-			returnCords = transform(cords, projectionFrom, projectionTo);
-			returnCords = this._cleanCoords(returnCords);
+			try {
+				returnCords = transform(cords, projectionFrom, projectionTo);
+				returnCords = this._cleanCoords(returnCords);
+			} catch(e) {
+				return false;
+			}
 		}
 
 		return returnCords;
