@@ -40,7 +40,13 @@ export default class Internals extends Queueable {
 	eval(pid,json) {
 		let self=this;
 		json.name=json.name||'evalResult';
-		const result=eval(json.statement);
+		let result;
+		try {
+			result=eval(json.statement);
+		} catch (e) {
+			console.log('Eval failed');
+			console.log(e);
+		}
 		self.queue.setMemory(json.name,result,"Session");
 		self.finished(pid,self.queue.DEFINE.FIN_OK);
 	}

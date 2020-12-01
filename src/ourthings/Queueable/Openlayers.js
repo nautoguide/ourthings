@@ -178,7 +178,6 @@ export default class Openlayers extends Queueable {
 		}, "Session");
 
 		map.getView().on('propertychange', function (e) {
-			if(self.maps[options.map].eventsEnabled) {
 				switch (e.key) {
 					case 'resolution': {
 						/**
@@ -189,10 +188,12 @@ export default class Openlayers extends Queueable {
 
 						if (zoomLevel !== level || map.getView().getZoom() % 1 === 0) {
 							// Silent Fail this as its not critical
-							clearTimeout(self.maps[options.map].timeout1);
-							self.maps[options.map].timeout1 = setTimeout(function () {
-								self.queue.execute(options.map + "ResolutionChange", {}, true);
-							}, 500)
+							if(self.maps[options.map].eventsEnabled) {
+								clearTimeout(self.maps[options.map].timeout1);
+								self.maps[options.map].timeout1 = setTimeout(function () {
+									self.queue.execute(options.map + "ResolutionChange", {}, true);
+								}, 500)
+							}
 						}
 						self._updateResolution(map, options.map + 'ResolutionChange');
 
@@ -202,13 +203,15 @@ export default class Openlayers extends Queueable {
 					}
 					case 'center': {
 						self._updateResolution(map, options.map + 'ResolutionChange');
-						clearTimeout(self.maps[options.map].timeout2);
-						self.maps[options.map].timeout2 = setTimeout(function () {
-							self.queue.execute(options.map + "CenterChange", {}, true);
-						}, 500)
+						if(self.maps[options.map].eventsEnabled) {
+							clearTimeout(self.maps[options.map].timeout2);
+							self.maps[options.map].timeout2 = setTimeout(function () {
+								self.queue.execute(options.map + "CenterChange", {}, true);
+							}, 500)
+						}
 					}
 				}
-			}
+
 
 		});
 
@@ -2260,6 +2263,7 @@ export default class Openlayers extends Queueable {
 			"hidden": false,
 			"projectionFrom":"EPSG:3857",
 			"projectionTo":"EPSG:4326",
+			"rebuild":true
 		}, json);
 		let memName=options.prefix + 'legendGeojson';
 		for(let f in memory[memName].value.features) {
@@ -2280,21 +2284,24 @@ export default class Openlayers extends Queueable {
 			}
 		}
 		// Rebuilds the numbers
-		let numberLabel=1;
-		let legendNumbers={
-			"type": "FeatureCollection",
-			features:[]
-		};
-		for(let f in memory[memName].value.features) {
-				if(memory[memName].value.features[f].properties.hidden===true) {
-					memory[memName].value.features[f].properties.numberLabel=numberLabel;
+		if(options.rebuild===true) {
+			let numberLabel = 1;
+			let legendNumbers = {
+				"type": "FeatureCollection",
+				features: []
+			};
+			for (let f in memory[memName].value.features) {
+				if (memory[memName].value.features[f].properties.hidden === true) {
+					memory[memName].value.features[f].properties.numberLabel = numberLabel;
 					legendNumbers.features.push(memory[memName].value.features[f]);
 					numberLabel++;
 				} else {
-					memory[memName].value.features[f].properties.numberLabel=-1;
+					memory[memName].value.features[f].properties.numberLabel = -1;
 				}
+			}
+			self.queue.setMemory(options.prefix + 'legendNumbers', legendNumbers, "Session");
+
 		}
-		self.queue.setMemory(options.prefix + 'legendNumbers', legendNumbers, "Session");
 
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
