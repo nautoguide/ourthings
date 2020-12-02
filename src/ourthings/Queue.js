@@ -156,7 +156,13 @@ class Queue {
 		 * Load any url params into memoery
 		 */
 
-		self.setMemory("urlParams", self.urlToJson(), "Session");
+		const urlParams=self.urlToJson();
+		// Legacy method
+		self.setMemory("urlParams", urlParams, "Session");
+		// Pass them into memory
+		for(let i in urlParams) {
+			self.setMemory(i, urlParams[i], "Session");
+		}
 
 		/*
 		 * Enable language support?
