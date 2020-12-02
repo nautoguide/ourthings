@@ -174,7 +174,8 @@ export default class Openlayers extends Queueable {
 			"zoom": Math.round(map.getView().getZoom()),
 			"resolution": map.getView().getResolution(),
 			"center": map.getView().getCenter(),
-			"extent": map.getView().calculateExtent(map.getSize())
+			"extent": map.getView().calculateExtent(map.getSize()),
+			"size":map.getSize()
 		}, "Session");
 
 		map.getView().on('propertychange', function (e) {
@@ -238,7 +239,8 @@ export default class Openlayers extends Queueable {
 			"center": map.getView().getCenter(),
 			"extent": map.getView().calculateExtent(map.getSize()),
 			"unit": unit,
-			"scale": map.getView().getResolution() * METERS_PER_UNIT[unit] * 39.37 * 72
+			"scale": map.getView().getResolution() * METERS_PER_UNIT[unit] * 39.37 * 72,
+			"size":map.getSize()
 		}, "Session");
 
 	}
@@ -2029,6 +2031,20 @@ export default class Openlayers extends Queueable {
 		if (options.wait === false)
 			self.finished(pid, self.queue.DEFINE.FIN_OK);
 
+	}
+
+	setResolution(pid, json) {
+		let self = this;
+		let options = Object.assign({
+			"map": "default"
+		}, json);
+		/*
+		 * Pull all our resources
+		 */
+		let map = self.maps[options.map].object;
+		let view = map.getView();
+		view.setResolution(options.resolution);
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
 	/**
