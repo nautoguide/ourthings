@@ -1236,6 +1236,8 @@ export default class Openlayers extends Queueable {
 		let feature;
 		if (searchString.match(/\:/)) {
 			let pattern = searchString.split(":");
+			if(pattern[1]==='true')
+				pattern[1]=true;
 			for (let i in features) {
 				if (features[i].get(pattern[0]) == pattern[1]) {
 					feature = features[i];
@@ -1307,6 +1309,26 @@ export default class Openlayers extends Queueable {
 			"dataProjection": "EPSG:4326",
 			"featureProjection": "EPSG:3857"
 		}).writeFeaturesObject(features), "Session");
+
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
+	moveFeatureLayer(pid,json) {
+		let options = Object.assign({
+			"map": "default",
+			"layer": "default",
+			"targetLayer":"default",
+			"search": "",
+		}, json);
+		let layer = this.maps[options.map].layers[options.layer];
+		let source = layer.getSource();
+		let feature =this._featureSearch(source, options.search);
+
+		source.removeFeature(feature);
+
+		let targetLayer = this.maps[options.map].layers[options.targetLayer];
+		let targetSource = targetLayer.getSource();
+		targetSource.addFeature(feature);
 
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
