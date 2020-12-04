@@ -125,8 +125,11 @@ export default class Openlayers extends Queueable {
 			"center": [0, 0],
 			"projection": "EPSG:3857",
 			"debug": false,
-			"enableEvents": true
+			"enableEvents": true,
+			"keyboardEventTarget":"body"
 		}, json);
+
+		let kt=this.queue.getElement(options.keyboardEventTarget);
 		let projection = getProjection(options.projection);
 		const map = new Map({
 			target: options.target,
@@ -142,7 +145,7 @@ export default class Openlayers extends Queueable {
 			interactions: defaultInteractions().extend([
 				new DragRotateAndZoom()
 			]),
-			keyboardEventTarget: document
+			keyboardEventTarget: kt
 
 		});
 		if (options.debug === true) {
@@ -1324,12 +1327,14 @@ export default class Openlayers extends Queueable {
 		let layer = this.maps[options.map].layers[options.layer];
 		let source = layer.getSource();
 		let feature =this._featureSearch(source, options.search);
+		if(feature) {
 
-		source.removeFeature(feature);
+			source.removeFeature(feature);
 
-		let targetLayer = this.maps[options.map].layers[options.targetLayer];
-		let targetSource = targetLayer.getSource();
-		targetSource.addFeature(feature);
+			let targetLayer = this.maps[options.map].layers[options.targetLayer];
+			let targetSource = targetLayer.getSource();
+			targetSource.addFeature(feature);
+		}
 
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
@@ -2242,14 +2247,16 @@ export default class Openlayers extends Queueable {
 		let self = this;
 		let options = Object.assign({
 			"prefix":"",
-			"labelIndex":"name",
+			"labelFormat":"%name%",
 			"labelMaxLength":15,
 			"excludeIndex":"legend"
 		}, json);
 
 		let legendGeojson={
 			"type": "FeatureCollection",
-			features:[]
+			features:[],
+			"labelFormat":options.labelFormat
+
 		};
 		let legendNumbers={
 			"type": "FeatureCollection",
@@ -2258,15 +2265,18 @@ export default class Openlayers extends Queueable {
 		let i=0;
 		let numberLabel=1;
 		for(let f in options.geojson.features) {
-			if((!options.geojson.features[f].properties[options.excludeIndex]||options.geojson.features[f].properties[options.excludeIndex]===true)&&options.geojson.features[f].properties[options.labelIndex]) {
+			if((options.geojson.features[f].properties[options.excludeIndex]!==false||options.geojson.features[f].properties[options.excludeIndex]===true)) {
 				let pointJSON = centroid(options.geojson.features[f]);
-				let massJSON = centerofmass(options.geojson.features[f])
+				let massJSON = centerofmass(options.geojson.features[f]);
+
+
 				pointJSON.properties = {
 					id: i,
-					label: options.geojson.features[f].properties[options.labelIndex],
+					label: self._makeLabel(options.labelFormat,options.geojson.features[f].properties),
 					feature_id: options.geojson.features[f].properties.feature_id,
 					internal: true,
-					numberLabel: -1
+					numberLabel: -1,
+					old: options.geojson.features[f].properties
 				};
 				pointJSON = this._addPoint(pointJSON, massJSON.geometry.coordinates);
 
@@ -2293,6 +2303,16 @@ export default class Openlayers extends Queueable {
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
+	_makeLabel(format,properties) {
+		let label=format;
+		let matches=format.match(/%(.*?)%/g);
+		for(let m in matches) {
+			let property=matches[m].replace(/\%/g,'');
+			label=label.replace(matches[m],properties[property]);
+		}
+		return label;
+	}
+
 	updateLegend(pid,json) {
 		let self = this;
 		let options = Object.assign({
@@ -2305,8 +2325,11 @@ export default class Openlayers extends Queueable {
 			"rebuild":true
 		}, json);
 		let memName=options.prefix + 'legendGeojson';
+		if(options.labelFormat) {
+			memory[memName].value.labelFormat=options.labelFormat;
+		}
 		for(let f in memory[memName].value.features) {
-			if(memory[memName].value.features[f].properties.id===options.id) {
+			if(memory[memName].value.features[f].properties.id===options.id||options.id==="*") {
 				if(options.internal===true)
 					memory[memName].value.features[f].properties.internal=!memory[memName].value.features[f].properties.internal;
 				if(options.hidden===true)
@@ -2319,6 +2342,9 @@ export default class Openlayers extends Queueable {
 				}
 				if(options.legend) {
 					memory[memName].value.features[f].properties.label=options.legend;
+				}
+				if(options.labelFormat) {
+					memory[memName].value.features[f].properties.label=self._makeLabel(options.labelFormat,memory[memName].value.features[f].properties.old);
 				}
 			}
 		}
