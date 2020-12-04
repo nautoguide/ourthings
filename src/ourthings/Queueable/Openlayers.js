@@ -696,7 +696,8 @@ export default class Openlayers extends Queueable {
 		let self = this;
 		let options = Object.assign({
 			"map": "default",
-			"names": ["ss"]
+			"names": ["ss"],
+			"mode":"toggle"
 		}, json);
 		let map = self.maps[options.map].object;
 		let controls = self.maps[options.map].controls;
@@ -704,7 +705,7 @@ export default class Openlayers extends Queueable {
 		 * Toggle in the ones we do need (in order this is important for the likes of snap
 		 */
 		for (let i in options.names) {
-			this._toggleControl(map, controls[options.names[i]], 'toggle');
+			this._toggleControl(map, controls[options.names[i]], options.mode);
 		}
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
