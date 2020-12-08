@@ -2255,7 +2255,9 @@ export default class Openlayers extends Queueable {
 		let legendGeojson={
 			"type": "FeatureCollection",
 			features:[],
-			"labelFormat":options.labelFormat
+			"labelFormat":options.labelFormat,
+			allProperties:[]
+
 
 		};
 		let legendNumbers={
@@ -2268,7 +2270,11 @@ export default class Openlayers extends Queueable {
 			if((options.geojson.features[f].properties[options.excludeIndex]!==false||options.geojson.features[f].properties[options.excludeIndex]===true)) {
 				let pointJSON = centroid(options.geojson.features[f]);
 				let massJSON = centerofmass(options.geojson.features[f]);
-
+				for(let p in options.geojson.features[f].properties) {
+					if(legendGeojson.allProperties.indexOf(p)===-1) {
+						legendGeojson.allProperties.push(p);
+					}
+				}
 
 				pointJSON.properties = {
 					id: i,
@@ -2280,10 +2286,9 @@ export default class Openlayers extends Queueable {
 				};
 				pointJSON = this._addPoint(pointJSON, massJSON.geometry.coordinates);
 
-				const farea = area(options.geojson.features[f]);
-				if (farea < 15000000)
-					pointJSON.properties.internal = false;
-
+//				const farea = area(options.geojson.features[f]);
+//				if (farea < 15000000)
+//					pointJSON.properties.internal = false;
 				pointJSON.properties.hidden = false;
 /*
 				if (options.geojson.features[f].properties[options.labelIndex].length > options.labelMaxLength) {
