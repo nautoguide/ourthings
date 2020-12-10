@@ -1070,7 +1070,8 @@ export default class Openlayers extends Queueable {
 			"bar":true,
 			"steps":4,
 			"text":"Example text",
-			"minWidth":100
+			"minWidth":100,
+			"dpi":300
 		}, json);
 
 
@@ -1079,7 +1080,8 @@ export default class Openlayers extends Queueable {
 			bar: options.bar,
 			steps: options.steps,
 			text: options.text,
-			minWidth: options.minWidth
+			minWidth: options.minWidth,
+			dpi: options.dpi
 		});
 		return control;
 	}

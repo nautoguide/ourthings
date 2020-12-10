@@ -16,6 +16,34 @@ import {Validate, ValidateEmail, ValidatePassword, ValidateText} from "../Valida
 export default class Elements extends Queueable {
 
 	/**
+	 * Add a class to the body to indicate UI is ready
+	 * @param {number} pid - Process ID
+
+	 *
+	 * @example
+	 * elements.setUIReady();
+	 */
+	setUIReady(pid, json) {
+		let element=this.queue.getElement('body');
+		element.classList.add('UIReady');
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
+	 * Remove a class to the body to indicate UI is *NOT* ready
+	 * @param {number} pid - Process ID
+
+	 *
+	 * @example
+	 * elements.setUINotReady();
+	 */
+	setUINotReady(pid, json) {
+		let element=this.queue.getElement('body');
+		element.classList.remove('UIReady');
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+
+	/**
 	 * Add a class to a dom element
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
