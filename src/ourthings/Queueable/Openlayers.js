@@ -126,9 +126,9 @@ export default class Openlayers extends Queueable {
 			"projection": "EPSG:3857",
 			"debug": false,
 			"enableEvents": true,
-			"keyboardEventTarget":"body"
+			"keyboardEventTarget":"body",
+			"pixelRatio":1
 		}, json);
-
 		let kt=this.queue.getElement(options.keyboardEventTarget);
 		let projection = getProjection(options.projection);
 		const map = new Map({
@@ -141,6 +141,7 @@ export default class Openlayers extends Queueable {
 				projection: projection,
 				resolutions: options.resolutions,
 				extent: options.extent,
+				pixelRatio: options.pixelRatio
 			}),
 			interactions: defaultInteractions().extend([
 				new DragRotateAndZoom()
@@ -336,7 +337,8 @@ export default class Openlayers extends Queueable {
 			"opacity": 1,
 			"transparent": false,
 			"active": true,
-			"loadIgnore": false
+			"loadIgnore": false,
+			"debug":false
 		}, json);
 		let map = self.maps[options.map].object;
 		let olLayer = null;
@@ -523,8 +525,21 @@ export default class Openlayers extends Queueable {
 			opacity: options.opacity,
 			visible: options.active,
 			name: options.name,
-			source: source
+			source: source,
 		});
+		if(options.debug===true) {
+			source.on('tileloadstart', function (e) {
+				//console.log(e);
+				console.log(`LOADING: ${e.tile.src_}`);
+			});
+
+			source.on('tileloadend', function (e) {
+				console.log(`GOT: ${e.tile.src_}`);
+			});
+			source.on('tileloaderror', function (e) {
+				console.log(`ERROR: ${e.tile.src_}`);
+			});
+		}
 		return olLayer;
 	}
 

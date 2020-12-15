@@ -1,6 +1,7 @@
 /** @module Api */
 import Queueable from "../Queueable";
 import {v4 as uuidv4} from 'uuid';
+import {Base64} from 'js-base64';
 
 /**
  * @classdesc
@@ -245,7 +246,7 @@ export default class Api extends Queueable {
 					self.frames[jsonData['uuid']] = {"total": 0, data: new Array(parseInt(jsonData['totalFrames']))};
 				}
 				if(!self.frames[jsonData['uuid']].data[parseInt(jsonData['frame']) - 1]) {
-					self.frames[jsonData['uuid']].data[parseInt(jsonData['frame']) - 1] = atob(jsonData['data']);
+					self.frames[jsonData['uuid']].data[parseInt(jsonData['frame']) - 1] = Base64.decode(jsonData['data']);
 					self.frames[jsonData['uuid']].total++;
 				} else {
 					console.log(`Duplicate network packet!!! ${jsonData['uuid']} - ${jsonData['frame']}`);
@@ -433,7 +434,7 @@ export default class Api extends Queueable {
 		 * more work?
 		 */
 		if (self.currentPacket < self.totalPackets) {
-			let packet = btoa(self.packetArray.shift());
+			let packet = Base64.encode(self.packetArray.shift());
 			self.currentPacket++;
 			//console.log(`packet:${self.currentPacket}-${self.totalPackets} Size: ${packet.length}`);
 

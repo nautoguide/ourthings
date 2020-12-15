@@ -223,4 +223,18 @@ export default class Internals extends Queueable {
 		this.finished(pid,this.queue.DEFINE.FIN_OK);
 	}
 
+
+	/**
+	 * console - console.log
+	 *
+	 * @param {int} pid - process ID
+	 * @param {object} json - queue arguments
+	 * @example
+	 * internals.console({"log":"foo"Opebn});
+	 */
+	console(pid,json) {
+		console.log(json.log);
+		this.finished(pid,this.queue.DEFINE.FIN_OK);
+	}
+
 }
