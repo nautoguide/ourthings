@@ -2301,6 +2301,7 @@ export default class Openlayers extends Queueable {
 					label: self._makeLabel(options.labelFormat,options.geojson.features[f].properties),
 					feature_id: options.geojson.features[f].properties.feature_id,
 					internal: true,
+					rm:false,
 					numberLabel: -1,
 					old: options.geojson.features[f].properties
 				};
@@ -2359,6 +2360,9 @@ export default class Openlayers extends Queueable {
 					memory[memName].value.features[f].properties.internal=!memory[memName].value.features[f].properties.internal;
 				if(options.hidden===true)
 					memory[memName].value.features[f].properties.hidden=!memory[memName].value.features[f].properties.hidden;
+				if(options.rm===true) {
+					memory[memName].value.features[f].properties.rm = !memory[memName].value.features[f].properties.rm;
+				}
 				if(options.locationLabel) {
 					memory[memName].value.features[f].geometry.coordinates[1]=this._decodeCoords(options.locationLabel, options.projectionFrom, options.projectionTo);
 				}
@@ -2381,7 +2385,7 @@ export default class Openlayers extends Queueable {
 				features: []
 			};
 			for (let f in memory[memName].value.features) {
-				if (memory[memName].value.features[f].properties.hidden === true) {
+				if (memory[memName].value.features[f].properties.hidden === true&&memory[memName].value.features[f].properties.rm===false) {
 					memory[memName].value.features[f].properties.numberLabel = numberLabel;
 					legendNumbers.features.push(memory[memName].value.features[f]);
 					numberLabel++;
