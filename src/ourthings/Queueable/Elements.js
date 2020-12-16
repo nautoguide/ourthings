@@ -709,7 +709,8 @@ export default class Elements extends Queueable {
 		let options = Object.assign({
 			"drag": "default",
 			"buffer": 10,
-			"prefix":""
+			"prefix":"",
+			useBounds:true
 		}, json);
 
 		if (this.drags === undefined) {
@@ -778,14 +779,24 @@ export default class Elements extends Queueable {
 			let bboxY = e.clientY - self.drags[options.drag].pos.oy;
 			// calculate the new cursor position:
 			if (
-				bboxX - options.buffer >= self.drags[options.drag].boundary.x  && (bboxX + options.buffer + self.drags[options.drag].dimensions.width) <= self.drags[options.drag].boundary.x1) {
+				(
+					bboxX - options.buffer >= self.drags[options.drag].boundary.x  &&
+					(bboxX + options.buffer + self.drags[options.drag].dimensions.width) <= self.drags[options.drag].boundary.x1
+				)
+				|| options.useBounds==false)
+			{
 
 				self.drags[options.drag].pos.x = bboxX;
 
 				element.style.left = self.drags[options.drag].pos.x + "px";
 			}
 
-			if (bboxY - options.buffer >= self.drags[options.drag].boundary.y && (bboxY + options.buffer + self.drags[options.drag].dimensions.height) <= self.drags[options.drag].boundary.y1) {
+			if (
+				(
+					bboxY - options.buffer >= self.drags[options.drag].boundary.y &&
+					(bboxY + options.buffer + self.drags[options.drag].dimensions.height) <= self.drags[options.drag].boundary.y1
+				)
+				|| options.useBounds==false) {
 
 				self.drags[options.drag].pos.y = bboxY;
 
