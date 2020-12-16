@@ -736,18 +736,21 @@ export default class Openlayers extends Queueable {
 	 */
 	_toggleControl(map, control, mode) {
 		if (control.state === 'on' && ( mode === 'off' || mode ==='toggle') ) {
-			if(control.getActive)
+			try {
 				map.removeInteraction(control.obj);
-			else {
-				console.log(map.removeControl(control.obj));
+				map.removeControl(control.obj);
+			} catch(e) {
+
 			}
 			control.state = 'off';
 		}
 		if (control.state === 'off' && ( mode === 'on' || mode ==='toggle')) {
-			if(control.getActive)
+			try {
 				map.addInteraction(control.obj);
-			else
 				map.addControl(control.obj);
+			} catch(e) {
+
+			}
 			control.state = 'on';
 		}
 	}
