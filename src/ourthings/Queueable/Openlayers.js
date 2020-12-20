@@ -722,6 +722,8 @@ export default class Openlayers extends Queueable {
 		/*
 		 * Toggle in the ones we do need (in order this is important for the likes of snap
 		 */
+		if(options.names==='*')
+			options.names=Object.keys(self.maps[options.map].controls);
 		for (let i in options.names) {
 			this._toggleControl(map, controls[options.names[i]], options.mode);
 		}
@@ -1869,8 +1871,17 @@ export default class Openlayers extends Queueable {
 			"map": "default",
 			"layer": "default"
 		}, json);
-		let layer = self.maps[options.map].layers[options.layer];
-		layer.changed();
+		for (let m in self.maps) {
+			if(m===options.map || options.map==='*') {
+				for (let l in self.maps[m].layers) {
+					if (l === options.layer || options.layer === '*') {
+						let layer = self.maps[m].layers[options.layer];
+						layer.changed();
+					}
+				}
+			}
+		}
+
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
@@ -2269,21 +2280,28 @@ export default class Openlayers extends Queueable {
 			"prefix":"",
 			"labelFormat":"%name%",
 			"labelMaxLength":15,
-			"excludeIndex":"legend"
+			"excludeIndex":"legend",
+			"id":"default"
 		}, json);
 
-		let legendGeojson={
-			"type": "FeatureCollection",
-			features:[],
-			"labelFormat":options.labelFormat,
-			allProperties:[]
-
+		let dynamicLegends={
+			legends:{
+			},
+			oldFeatureProperties:{},
+			legendNumbers:{
+				"type": "FeatureCollection",
+				features:[]
+			},
+			allProperties:[],
+			"labelFormat":options.labelFormat
 
 		};
-		let legendNumbers={
+
+		dynamicLegends.legends[options.id]={
 			"type": "FeatureCollection",
 			features:[]
 		};
+
 		let i=0;
 		let numberLabel=1;
 		for(let f in options.geojson.features) {
@@ -2291,8 +2309,8 @@ export default class Openlayers extends Queueable {
 				let pointJSON = centroid(options.geojson.features[f]);
 				let massJSON = centerofmass(options.geojson.features[f]);
 				for(let p in options.geojson.features[f].properties) {
-					if(legendGeojson.allProperties.indexOf(p)===-1) {
-						legendGeojson.allProperties.push(p);
+					if(dynamicLegends.allProperties.indexOf(p)===-1) {
+						dynamicLegends.allProperties.push(p);
 					}
 				}
 
@@ -2317,15 +2335,14 @@ export default class Openlayers extends Queueable {
 				if (true) {
 					pointJSON.properties.hidden = true;
 					pointJSON.properties.numberLabel=numberLabel;
-					legendNumbers.features.push(pointJSON);
+					dynamicLegends.legendNumbers.features.push(pointJSON);
 					numberLabel++;
 				}
-				legendGeojson.features.push(pointJSON);
+				dynamicLegends.legends[options.id].features.push(pointJSON);
 				i++;
 			}
 		}
-		self.queue.setMemory(options.prefix + 'legendGeojson', legendGeojson, "Session");
-		self.queue.setMemory(options.prefix + 'legendNumbers', legendNumbers, "Session");
+		self.queue.setMemory('dynamicLegends', dynamicLegends, "Session");
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
@@ -2339,63 +2356,113 @@ export default class Openlayers extends Queueable {
 		return label;
 	}
 
+	deleteLegend(pid,json) {
+		let self = this;
+		let options = Object.assign({
+			"id":"",
+		}, json);
+		delete memory.dynamicLegends.value.legends[options.id]
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+	}
+
+	addLegend(pid,json) {
+		let self = this;
+		let options = Object.assign({
+			"id":"",
+			"copyId":"default"
+		}, json);
+		memory.dynamicLegends.value.legends[options.id]={
+			"type": "FeatureCollection",
+			features:[]
+		};
+		if(options.legend) {
+			memory.dynamicLegends.value.legends[options.id]=options.legend;
+		} else {
+			memory.dynamicLegends.value.legends[options.id]=self.queue.deepCopy(memory.dynamicLegends.value.legends[options.copyId]);
+		}
+		self.finished(pid, self.queue.DEFINE.FIN_OK);
+	}
+
 	updateLegend(pid,json) {
 		let self = this;
 		let options = Object.assign({
-			"prefix":"",
-			"id":"",
+			"id":"default",
+			"fid":"default",
 			"internal": false,
 			"hidden": false,
 			"projectionFrom":"EPSG:3857",
 			"projectionTo":"EPSG:4326",
 			"rebuild":true
 		}, json);
-		let memName=options.prefix + 'legendGeojson';
 		if(options.labelFormat) {
-			memory[memName].value.labelFormat=options.labelFormat;
+			memory.dynamicLegends.value.labelFormat=options.labelFormat;
 		}
-		for(let f in memory[memName].value.features) {
-			if(memory[memName].value.features[f].properties.id===options.id||options.id==="*") {
-				if(options.internal===true)
-					memory[memName].value.features[f].properties.internal=!memory[memName].value.features[f].properties.internal;
-				if(options.hidden===true)
-					memory[memName].value.features[f].properties.hidden=!memory[memName].value.features[f].properties.hidden;
-				if(options.rm===true) {
-					memory[memName].value.features[f].properties.rm = !memory[memName].value.features[f].properties.rm;
-				}
-				if(options.locationLabel) {
-					memory[memName].value.features[f].geometry.coordinates[1]=this._decodeCoords(options.locationLabel, options.projectionFrom, options.projectionTo);
-				}
-				if(options.locationPoint) {
-					memory[memName].value.features[f].geometry.coordinates[0]=this._decodeCoords(options.locationPoint, options.projectionFrom, options.projectionTo);
-				}
-				if(options.legend) {
-					memory[memName].value.features[f].properties.label=options.legend;
-				}
-				if(options.labelFormat) {
-					memory[memName].value.features[f].properties.label=self._makeLabel(options.labelFormat,memory[memName].value.features[f].properties.old);
+		let legends;
+		if(options.id==="*") {
+			legends=Object.keys(memory.dynamicLegends.value.legends);
+		} else {
+			legends=[options.id];
+		}
+		for(let l in legends) {
+			for (let f in memory.dynamicLegends.value.legends[legends[l]].features) {
+				if (memory.dynamicLegends.value.legends[legends[l]].features[f].properties.id === options.fid || options.fid === "*") {
+					if (options.internal === true)
+						memory.dynamicLegends.value.legends[legends[l]].features[f].properties.internal = !memory.dynamicLegends.value.legends[legends[l]].features[f].properties.internal;
+					if (options.hidden === true)
+						memory.dynamicLegends.value.legends[legends[l]].features[f].properties.hidden = !memory.dynamicLegends.value.legends[legends[l]].features[f].properties.hidden;
+					if (options.rm === true) {
+						memory.dynamicLegends.value.legends[legends[l]].features[f].properties.rm = !memory.dynamicLegends.value.legends[legends[l]].features[f].properties.rm;
+					}
+					if (options.locationLabel) {
+						memory.dynamicLegends.value.legends[legends[l]].features[f].geometry.coordinates[1] = this._decodeCoords(options.locationLabel, options.projectionFrom, options.projectionTo);
+					}
+					if (options.locationPoint) {
+						memory.dynamicLegends.value.legends[legends[l]].features[f].geometry.coordinates[0] = this._decodeCoords(options.locationPoint, options.projectionFrom, options.projectionTo);
+					}
+					if (options.legend) {
+						memory.dynamicLegends.value.legends[legends[l]].features[f].properties.label = options.legend;
+					}
+					if (options.labelFormat) {
+						memory.dynamicLegends.value.legends[legends[l]].features[f].properties.label = self._makeLabel(options.labelFormat, memory.dynamicLegends.value.legends[legends[l]].features[f].properties.old);
+					}
 				}
 			}
 		}
 		// Rebuilds the numbers
 		if(options.rebuild===true) {
 			let numberLabel = 1;
-			let legendNumbers = {
+			memory.dynamicLegends.value.legendNumbers = {
 				"type": "FeatureCollection",
 				features: []
 			};
-			for (let f in memory[memName].value.features) {
-				if (memory[memName].value.features[f].properties.hidden === true&&memory[memName].value.features[f].properties.rm===false) {
-					memory[memName].value.features[f].properties.numberLabel = numberLabel;
-					legendNumbers.features.push(memory[memName].value.features[f]);
-					numberLabel++;
-				} else {
-					memory[memName].value.features[f].properties.numberLabel = -1;
+			let dontAdd={};
+			for( let l in memory.dynamicLegends.value.legends) {
+				for (let f in memory.dynamicLegends.value.legends[l].features) {
+					if (memory.dynamicLegends.value.legends[l].features[f].properties.hidden === false || memory.dynamicLegends.value.legends[l].features[f].properties.rm === true) {
+						dontAdd[memory.dynamicLegends.value.legends[l].features[f].properties.id]=dontAdd[memory.dynamicLegends.value.legends[l].features[f].properties.id]? dontAdd[memory.dynamicLegends.value.legends[l].features[f].properties.id]+1:1;
+						//console.log(`legend: ${l} - ${memory.dynamicLegends.value.legends[l].features[f].properties.id} is hidden`)
+					}/* else {
+						delete dontAdd[memory.dynamicLegends.value.legends[l].features[f].properties.id];
+					}*/
 				}
 			}
-			self.queue.setMemory(options.prefix + 'legendNumbers', legendNumbers, "Session");
+			const first=Object.keys(memory.dynamicLegends.value.legends)[0];
+			const totlegends=Object.keys(memory.dynamicLegends.value.legends).length;
+			for (let f in memory.dynamicLegends.value.legends[first].features) {
+				if(dontAdd[memory.dynamicLegends.value.legends[first].features[f].properties.id]!==totlegends) {
+					memory.dynamicLegends.value.legends[first].features[f].properties.numberLabel = numberLabel;
+					numberLabel++;
+					memory.dynamicLegends.value.legendNumbers.features.push(memory.dynamicLegends.value.legends[first].features[f]);
+
+				}
+			}
+
+			//console.log(dontAdd);
+
 
 		}
+
 
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
