@@ -409,6 +409,10 @@ class Queue {
 		}
 		let targetDom = undefined;
 		let templateHTML = templateDom.innerHTML;
+
+		const startTime=Date.now();
+		if(self.developerMode)
+			console.log(`template ${templateId}`);
 		/*
 		 * Pass all out tags {{ }} First
 		 *
@@ -416,10 +420,12 @@ class Queue {
 		 * out {{eval}} when the command queues are gone to prevent executing too early
 		 */
 		let parsedTemplate = self.templateVars(templateHTML);
+		const parseTime=Date.now();
 		/*
 		 * now pass to the templateParse to build our commands
 		 */
 		parsedTemplate = self.templateParse(parsedTemplate, commands);
+		const commandTime=Date.now();
 
 		if (targetId === "return")
 			return parsedTemplate;
@@ -432,10 +438,16 @@ class Queue {
 				return false;
 			}
 			self.renderToDom(targetDom, parsedTemplate, mode);
+
 		}
+		const domTime=Date.now();
 
 		self.commandsBind(commands);
+		const bindTime=Date.now();
 
+		if(self.developerMode) {
+			console.log(`Parse: ${(parseTime-startTime)/1000} Command: ${(commandTime-startTime)/1000} Dom: ${(domTime-startTime)/1000} Bind: ${(bindTime-startTime)/1000}`);
+		}
 		return true;
 	}
 
@@ -1327,16 +1339,18 @@ class Queue {
 	/**
 	 *  Show current queue status in the console DEBUG function
 	 */
-	show() {
+	show(pid) {
 		let self = this;
 		if(self.queue.length>0) {
 			for (let i in self.queue) {
 				let indent = 0;
-				self.prettyCommandObject(self.queue[i], indent);
-				for (let j in self.queue[i].commands) {
-					indent++;
-					self.prettyCommandObject(self.queue[i].commands[j], indent);
+				if(pid===undefined||self.queue[i].pid===pid) {
+					self.prettyCommandObject(self.queue[i], indent);
+					for (let j in self.queue[i].commands) {
+						indent++;
+						self.prettyCommandObject(self.queue[i].commands[j], indent);
 
+					}
 				}
 			}
 		} else {
