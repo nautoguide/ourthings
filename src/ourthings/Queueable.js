@@ -64,6 +64,8 @@ class Queueable {
 			 * Execute
 			 */
 			try {
+				if(self.queue.developerMode)
+					console.log(`exec ${command}(${pid},{});`);
 				self[command](pid, json);
 			} catch(e) {
 				/*
