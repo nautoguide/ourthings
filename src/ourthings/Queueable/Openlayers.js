@@ -127,7 +127,8 @@ export default class Openlayers extends Queueable {
 			"debug": false,
 			"enableEvents": true,
 			"keyboardEventTarget":"body",
-			"pixelRatio":1
+			"pixelRatio":1,
+			"maxTilesLoading":16
 		}, json);
 		let kt=this.queue.getElement(options.keyboardEventTarget);
 		let projection = getProjection(options.projection);
@@ -141,7 +142,8 @@ export default class Openlayers extends Queueable {
 				projection: projection,
 				resolutions: options.resolutions,
 				extent: options.extent,
-				pixelRatio: options.pixelRatio
+				pixelRatio: options.pixelRatio,
+				maxTilesLoading: options.maxTilesLoading
 			}),
 			interactions: defaultInteractions().extend([
 				new DragRotateAndZoom()
@@ -368,7 +370,7 @@ export default class Openlayers extends Queueable {
 		 * Add our own values to the layer so we can track loading states
 		 */
 		olLayer.loadState = options.active ? (options.loadIgnore ? true : false) : true;
-		olLayer.on('postrender', function (event) {
+		olLayer.on('rendercomplete', function (event) {
 			olLayer.loadState = true;
 			if (!self.maps[options.map].layerLoadState) {
 				self._checkLayerLoadState(self.maps[options.map], `${options.map}-allLoaded`);
