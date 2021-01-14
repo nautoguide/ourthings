@@ -191,8 +191,8 @@ export default class Files extends Queueable {
 			.then(response => self.queue.handleFetchErrors(response))
 			.then(function (response) {
 				switch (json.contentType) {
-					case 'application/json':
-						return response.json();
+				/*	case 'application/json':
+						return response.json();*/
 					default:
 						return response.text();
 				}
