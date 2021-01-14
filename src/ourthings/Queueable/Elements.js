@@ -247,16 +247,17 @@ export default class Elements extends Queueable {
 	setInputValue(pid, json) {
 		let self = this;
 		let element = self.queue.getElement(json.targetId);
-		if (json.pre)
-			json.value = json.pre + json.value;
-		if (json.post)
-			json.value = json.value + json.post;
+		if(element) {
+			if (json.pre)
+				json.value = json.pre + json.value;
+			if (json.post)
+				json.value = json.value + json.post;
 
-		if (json.append === true)
-			element.value += json.value;
-		else
-			element.value = json.value;
-
+			if (json.append === true)
+				element.value += json.value;
+			else
+				element.value = json.value;
+		}
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
