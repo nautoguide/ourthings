@@ -299,6 +299,13 @@ export default class Api extends Queueable {
 				}
 			}
 
+			function websocketClose(pid,json) {
+				let self=this;
+				self.close(1005,json.reason||'Close ordered');
+				this.finished(pid, self.queue.DEFINE.FIN_OK);
+
+			}
+
 			function deployEvent() {
 				/*
 				 * We push data to the stack for anyone using stack mode

@@ -730,6 +730,9 @@ class Queue {
 							element.addEventListener(events[e], function (e) {
 								e.stopPropagation();
 								e.preventDefault();
+								if(commandObj[command].options.queueButtonDisable===true) {
+									element.disabled=true;
+								}
 								commandObj[command].options.queueRun = self.DEFINE.COMMAND_INSTANT;
 								self.commandsQueue.apply(self, [[commandObj[command]]]);
 							});
