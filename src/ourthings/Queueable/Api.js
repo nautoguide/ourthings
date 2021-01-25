@@ -299,12 +299,7 @@ export default class Api extends Queueable {
 				}
 			}
 
-			function websocketClose(pid,json) {
-				let self=this;
-				self.close(1005,json.reason||'Close ordered');
-				this.finished(pid, self.queue.DEFINE.FIN_OK);
 
-			}
 
 			function deployEvent() {
 				/*
@@ -356,6 +351,13 @@ export default class Api extends Queueable {
 			self.queue.setMemory('wsErrorDetails', event, self.queue.DEFINE.MEMORY_SESSION);
 			self.queue.execute("wsError");
 		};
+	}
+
+	websocketClose(pid,json) {
+		let self=this;
+		self.socket.close();
+		this.finished(pid, self.queue.DEFINE.FIN_OK);
+
 	}
 
 	websocketPop(pid, json) {
