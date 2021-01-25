@@ -360,7 +360,8 @@ export default class Elements extends Queueable {
 	 */
 	scrollToBottom(pid, json) {
 		let objDiv = this.queue.getElement(json.targetId);
-		objDiv.scrollTop = objDiv.scrollHeight;
+		if(objDiv)
+			objDiv.scrollTop = objDiv.scrollHeight;
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
 
