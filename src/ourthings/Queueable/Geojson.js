@@ -27,7 +27,7 @@ export default class Geojson extends Queueable {
 			"mode": "simple"
 		}, json);
 
-		let history = {"revertPtr": false, "mode": options.mode, "log": []};
+		let history = {"revertPtr": false, "mode": options.mode, "log": [],"stepPtr":0};
 		this.index = options.index;
 
 		history.log.push({
@@ -68,6 +68,7 @@ export default class Geojson extends Queueable {
 			"features": options.features,
 			"savePtr": false
 		}
+		memory.geojsonHistory.value.stepPtr = memory.geojsonHistory.value.log.length;
 		memory.geojsonHistory.value.log.push(entry);
 
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
@@ -114,10 +115,15 @@ export default class Geojson extends Queueable {
 		 * @param {string} json.name - memory name to use
 		 */
 		let currentPtr = parseInt(json.id);
+		if(currentPtr<0)
+			currentPtr=0;
+		if(currentPtr>=memory.geojsonHistory.value.log.length)
+			currentPtr=memory.geojsonHistory.value.log.length-1;
 		let historyCut = [];
 		let geojsonBuild;
 		let fastIndex;
 		memory.geojsonHistory.value.revertPtr = currentPtr;
+		memory.geojsonHistory.value.stepPtr = currentPtr;
 		/*
 		 * Cut out history from our end id to the first full geojson
 		 */
