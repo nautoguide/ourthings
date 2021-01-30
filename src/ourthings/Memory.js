@@ -57,11 +57,11 @@ export default class Memory {
 	 * @private
 	 */
 	_store() {
-		return window.btoa(JSON.stringify({
+		return window.btoa(unescape(encodeURIComponent(JSON.stringify({
 			pid: this.pid,
 			mode: this.mode,
 			origin: this.origin,
 			value: this.value
-		}));
+		}))));
 	}
 };
