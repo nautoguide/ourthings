@@ -180,38 +180,55 @@ export default class Files extends Queueable {
 			file = element.files[0];
 		}
 
-		/**
-		 *  Make the call to S3 with the file data
-		 */
-		fetch(json.url, {
-			headers: headers,
-			method: 'PUT',
-			body: file
-		})
-			.then(response => self.queue.handleFetchErrors(response))
-			.then(function (response) {
-				switch (json.contentType) {
-				/*	case 'application/json':
-						return response.json();*/
-					default:
-						return response.text();
+
+			let fileData;
+			let reader = new FileReader();
+			reader.readAsText(file, "UTF-8");
+			reader.onload = function (evt) {
+				fileData = evt.target.result;
+				if(json.contentType==='application/json') {
+					fileData=fileData.replace(/\r?\n|\r/g, '');
 				}
-			})
-			.then(function (response) {
-				/*
-				 * Convert the response to json and start the loader
+				/**
+				 *  Make the call to S3 with the file data
 				 */
-				self.set(pid, response);
-				self.finished(pid, self.queue.DEFINE.FIN_OK);
+				fetch(json.url, {
+					headers: headers,
+					method: 'PUT',
+					body: fileData
+				})
+					.then(response => self.queue.handleFetchErrors(response))
+					.then(function (response) {
+						switch (json.contentType) {
+							/*	case 'application/json':
+									return response.json();*/
+							default:
+								return response.text();
+						}
+					})
+					.then(function (response) {
+						/*
+						 * Convert the response to json and start the loader
+						 */
+						self.set(pid, response);
+						self.finished(pid, self.queue.DEFINE.FIN_OK);
 
-			})
-			.catch(function (error) {
-				console.info(self.queue.DEFINE.CONSOLE_LINE);
-				console.error('Error:', error);
-				console.info("Warning this error is probably fatal as I have no templates to load");
-				self.finished(pid, self.queue.DEFINE.FIN_ERROR, 'S3 upload error');
+					})
+					.catch(function (error) {
+						console.info(self.queue.DEFINE.CONSOLE_LINE);
+						console.error('Error:', error);
+						console.info("Warning this error is probably fatal as I have no templates to load");
+						self.finished(pid, self.queue.DEFINE.FIN_ERROR, 'S3 upload error');
 
-			});
+					});
+
+			}
+			reader.onerror = function (evt) {
+
+			}
+
+
+
 
 	}
 }
