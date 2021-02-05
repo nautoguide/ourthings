@@ -856,36 +856,42 @@ class Queue {
 					if (!self.queue[item].options.queueRegister || (self.queue[item].options.queueRegister && self.registers.indexOf(self.queue[item].options.queueRegister) !== -1)) {
 
 						/*
-                         * Is it online? If not we fail silently as it may come online later
-                         */
-						if (self.queueables[self.queue[item].queueable].ready) {
-							/*
-                             * Update our state to be running
-                             */
-							self.queue[item].state = self.DEFINE.QUEUE_RUNNING;
-							/*
-                             * Assign a pid
-                             */
-							if (self.queue[item].pid === undefined) {
-								self.queue[item].pid = item;
-							}
-							/*
-                             * Check if any specific timing is needed
-                             */
-							self.queue[item].options.queueTimer = self.queue[item].options.queueTimer || self.defaultTimer;
+						 * do we have a prefilter statement?
+						 */
 
+						if(!self.queue[item].options.queueStatement || eval(self.queue[item].options.queueStatement)) {
 							/*
-                             *  Launch the function as a time out (so we get control back)
-                             */
+							 * Is it online? If not we fail silently as it may come online later
+							 */
+							if (self.queueables[self.queue[item].queueable].ready) {
+								/*
+								 * Update our state to be running
+								 */
+								self.queue[item].state = self.DEFINE.QUEUE_RUNNING;
+								/*
+								 * Assign a pid
+								 */
+								if (self.queue[item].pid === undefined) {
+									self.queue[item].pid = item;
+								}
+								/*
+								 * Check if any specific timing is needed
+								 */
+								self.queue[item].options.queueTimer = self.queue[item].options.queueTimer || self.defaultTimer;
 
-							if (sync) {
-								self.runningPid = item;
-								self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
-							} else {
-								setTimeout(function () {
+								/*
+								 *  Launch the function as a time out (so we get control back)
+								 */
+
+								if (sync) {
 									self.runningPid = item;
 									self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
-								}, self.queue[item].options.queueTimer);
+								} else {
+									setTimeout(function () {
+										self.runningPid = item;
+										self.queueables[self.queue[item].queueable].start.apply(self.queueables[self.queue[item].queueable], [self.queue[item].pid, self.queue[item].command, self.jsonVars(self.queue[item].json), self]);
+									}, self.queue[item].options.queueTimer);
+								}
 							}
 						}
 					}
