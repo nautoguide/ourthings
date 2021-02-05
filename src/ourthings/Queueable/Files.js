@@ -181,21 +181,33 @@ export default class Files extends Queueable {
 		}
 
 
+		if(json.contentType==='application/json') {
 			let fileData;
 			let reader = new FileReader();
 			reader.readAsText(file, "UTF-8");
 			reader.onload = function (evt) {
 				fileData = evt.target.result;
-				if(json.contentType==='application/json') {
-					fileData=fileData.replace(/\r?\n|\r/g, '');
+				if (json.contentType === 'application/json') {
+					fileData = fileData.replace(/\r?\n|\r/g, '');
 				}
+				sendToS3(fileData)
+			};
+			reader.onerror = function (evt) {
+
+			}
+		} else {
+			sendToS3(file);
+		}
+
+		function sendToS3(file) {
+
 				/**
 				 *  Make the call to S3 with the file data
 				 */
 				fetch(json.url, {
 					headers: headers,
 					method: 'PUT',
-					body: fileData
+					body: file
 				})
 					.then(response => self.queue.handleFetchErrors(response))
 					.then(function (response) {
@@ -223,12 +235,6 @@ export default class Files extends Queueable {
 					});
 
 			}
-			reader.onerror = function (evt) {
-
-			}
-
-
-
 
 	}
 }
