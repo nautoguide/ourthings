@@ -807,16 +807,20 @@ class Queue {
 	execute(prepareName, json, silentFail) {
 		let self = this;
 		if (self.prepare[prepareName] !== undefined) {
-			/*
-			 * Take a copy of the prepared command as we need to alter it
-			 * and possibly pass new params then add it to the queue
-			 */
-			let dereferenceCommand = self.deepCopy(self.prepare[prepareName]);
-			dereferenceCommand.options.queueRun = self.DEFINE.COMMAND_INSTANT;
-			if (json !== undefined)
-				dereferenceCommand.json = Object.assign(dereferenceCommand.json, json);
-			self.commandsQueue.apply(self, [[dereferenceCommand]]);
-			return true;
+			if(!self.prepare[prepareName].options.queueStatement || eval(self.prepare[prepareName].options.queueStatement)) {
+				/*
+				 * Take a copy of the prepared command as we need to alter it
+				 * and possibly pass new params then add it to the queue
+				 */
+				let dereferenceCommand = self.deepCopy(self.prepare[prepareName]);
+				dereferenceCommand.options.queueRun = self.DEFINE.COMMAND_INSTANT;
+				if (json !== undefined)
+					dereferenceCommand.json = Object.assign(dereferenceCommand.json, json);
+				self.commandsQueue.apply(self, [[dereferenceCommand]]);
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			if (silentFail !== true)
 				self.reportError("Can not execute prepare [" + prepareName + "]", "The prepared queue you requested does not exist");
