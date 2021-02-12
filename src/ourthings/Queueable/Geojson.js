@@ -24,11 +24,13 @@ export default class Geojson extends Queueable {
 	historyInit(pid, json) {
 		let options = Object.assign({
 			"index": "feature_id",
-			"mode": "simple"
+			"mode": "simple",
+			"max": 50
 		}, json);
 
 		let history = {"revertPtr": false, "mode": options.mode, "log": [],"stepPtr":0};
 		this.index = options.index;
+		this.max=options.max;
 
 		history.log.push({
 			"name": "Session start",
@@ -67,6 +69,9 @@ export default class Geojson extends Queueable {
 			"details": options.details,
 			"features": options.features,
 			"savePtr": false
+		}
+		if(memory.geojsonHistory.value.log.length>this.max) {
+			memory.geojsonHistory.value.log.shift();
 		}
 		memory.geojsonHistory.value.stepPtr = memory.geojsonHistory.value.log.length;
 		memory.geojsonHistory.value.log.push(entry);
