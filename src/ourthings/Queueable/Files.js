@@ -54,6 +54,34 @@ export default class Files extends Queueable {
 	}
 
 	/**
+	 * Check the format of an upload file TODO add size etc checks
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.targetId - Dom location that contains the files input
+	 * @param {array} json.allowedTypes - Array of allowed mine types eg ["application/json"]
+	 */
+	checkFileFormat(pid, json) {
+		let self = this;
+		let element = self.queue.getElement(json.targetId);
+		let files = element.files;
+		let matches=false;
+		if (files && files[0]) {
+				console.log(files[0]);
+				if(json.allowedTypes) {
+
+					for(let t in json.allowedTypes) {
+						if(json.allowedTypes[t]===files[0].type) {
+							matches = true;
+							break;
+						}
+					}
+				}
+			self.queue.setMemory("checkFileFormat", matches, "Session");
+			self.finished(pid, self.queue.DEFINE.FIN_OK);
+		}
+	}
+
+	/**
 	 * Image preview
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
@@ -237,4 +265,5 @@ export default class Files extends Queueable {
 			}
 
 	}
+
 }
