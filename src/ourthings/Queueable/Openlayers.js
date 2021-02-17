@@ -557,7 +557,7 @@ export default class Openlayers extends Queueable {
 			//console.log(`GOT: ${e.tile.src_}  Needed ${tilesNeeded}`);
 			if (tilesNeeded <= 0) {
 				clearTimeout(toc);
-				toc=setTimeout(function () {
+				toc = setTimeout(function () {
 					let tilesNeeded = source.get('tilesNeeded');
 					let totalTilesNeeded = source.get('totalTilesNeeded');
 					if (tilesNeeded <= 0) {
@@ -903,7 +903,8 @@ export default class Openlayers extends Queueable {
 			"layer": "default",
 			"projection": "EPSG:4326",
 			"inside": undefined,
-			"buffer": 10
+			"buffer": 10,
+			"revert": true
 		}, json);
 		let map = self.maps[options.map].object;
 		let view = map.getView();
@@ -923,8 +924,12 @@ export default class Openlayers extends Queueable {
 				return shiftKeyOnly(evt) && singleClick(evt)
 			}
 		});
-		let maskFeature = buffer(options.inside, options.buffer, {units: "meters"});
-		let bufferedMask = maskFeature;
+		let maskFeature, bufferedMask;
+
+		if (options.inside) {
+			maskFeature = buffer(options.inside, options.buffer, {units: "meters"});
+			bufferedMask = maskFeature;
+		}
 
 
 		/*
@@ -932,10 +937,12 @@ export default class Openlayers extends Queueable {
 		 * encase we need to revert
 		 */
 		control.on('modifystart', function (event) {
-			let features = event.features.getArray();
-			featureCache = [];
-			for (let i = 0; i < features.length; i++) {
-				featureCache.push(features[i].clone());
+			if (options.revert) {
+				let features = event.features.getArray();
+				featureCache = [];
+				for (let i = 0; i < features.length; i++) {
+					featureCache.push(features[i].clone());
+				}
 			}
 		});
 
@@ -966,64 +973,61 @@ export default class Openlayers extends Queueable {
 				"featureProjection": view.getProjection().getCode()
 			}).writeFeaturesObject(modifiedFeatures);
 
-			/*
-            * Flag any inside feature valid
-            */
-			let allBufferPoly = self._multiFeatureToPolygon(bufferedMask.features[0]);
-			/*	for(let i in modifiedFeaturesJSON.features) {
-					let polygons=[modifiedFeaturesJSON.features[i]];
-					if(polygons[0].geometry.type==="MultiPolygon")
-						polygons=self._multiFeatureToPolygon(modifiedFeaturesJSON.features[i]);
-
-					for(let p in polygons) {
-
-
-						for(let b in allBufferPoly) {
-							if (booleanContains(allBufferPoly[b], polygons[p])) {
-								modifiedFeatures[i].set('invalid', false);
-								break;
-							}
-						}
-					}
-				}*/
-			/*
-			 * All features
-			 */
-			let features = new GeoJSON({
-				"dataProjection": options.projection,
-				"featureProjection": view.getProjection().getCode()
-			}).writeFeaturesObject(event.features.getArray());
-			/*
-			 * Check inside
-			 */
 
 			let isInside = false;
 			let isKink = false;
-			if (options.inside) {
-				for (let b in allBufferPoly) {
-					if (booleanPointInPolygon(turfPoint, allBufferPoly[b])) {
-						isInside = true;
+			if (options.revert===true) {
+
+				/*
+				* Flag any inside feature valid
+				*/
+				let allBufferPoly;
+				if (options.inside) {
+					allBufferPoly = self._multiFeatureToPolygon(bufferedMask.features[0]);
+				}
+
+				/*
+				 * All features
+				 */
+				let features = new GeoJSON({
+					"dataProjection": options.projection,
+					"featureProjection": view.getProjection().getCode()
+				}).writeFeaturesObject(event.features.getArray());
+				/*
+				 * Check inside
+				 */
+
+
+				if (options.inside) {
+					for (let b in allBufferPoly) {
+						if (booleanPointInPolygon(turfPoint, allBufferPoly[b])) {
+							isInside = true;
+							break;
+						}
+					}
+				} else {
+					isInside = true;
+				}
+
+				/*
+				 * Check for any kinks in the modified features
+				 */
+				for (let i in modifiedFeaturesJSON.features) {
+					let kinkres = kinks(modifiedFeaturesJSON.features[i]);
+					if (kinkres.features.length > 0) {
+						isKink = true;
 						break;
 					}
 				}
-			}
-
-			/*
-			 * Check for any kinks in the modified features
-			 */
-			for (let i in modifiedFeaturesJSON.features) {
-				let kinkres = kinks(modifiedFeaturesJSON.features[i]);
-				if (kinkres.features.length > 0) {
-					isKink = true;
-					break;
-				}
+			} else {
+				isInside = true;
+				isKink = false;
 			}
 
 			/*
 			 * Set memory and execute
 			 */
 			if (isInside === true && isKink === false) {
-				self.queue.setMemory(options.prefix + 'multiEditFeatures', features, "Session");
 				self.queue.setMemory(options.prefix + 'multiEditModifiedFeatures', modifiedFeaturesJSON, "Session");
 				self.queue.execute(options.prefix + "multiEdit");
 			} else {
@@ -1037,6 +1041,7 @@ export default class Openlayers extends Queueable {
 				}
 				self.queue.execute(options.prefix + "multiEditOutside");
 			}
+
 		});
 
 		return control;
