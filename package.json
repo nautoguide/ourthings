@@ -51,7 +51,7 @@
     "@turf/turf": "^5.1.6",
     "showdown": "^1.9.0",
     "js-base64": "^3.6.0",
-    "@nautoguide/aws-wsp": "^1.0.0"
+    "@nautoguide/aws-wsp": "^1.0.4"
   },
   "publishConfig": {
     "access": "public"

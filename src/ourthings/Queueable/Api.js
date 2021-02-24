@@ -224,13 +224,13 @@ export default class Api extends Queueable {
 		self.bulkQueue = 'bulkQueue';
 
 
-		self.ws=new wspClient({url:options.url},openF,messageF,errorF,closeF);
+		self.ws=new wspClient();
 
-		function openF() {
+		self.ws.onOpen = function() {
 			self.finished(pid, self.queue.DEFINE.FIN_OK);
 		}
 
-		function messageF(jsonData) {
+		self.ws.onMessage = function (jsonData) {
 			let stack = [];
 			/*
 			 * We push data to the stack for anyone using stack mode
@@ -270,16 +270,19 @@ export default class Api extends Queueable {
 			}
 		}
 
-		function closeF(event) {
+		self.ws.onClose =function(event) {
 			self.queue.setMemory('wsCloseDetails', event, self.queue.DEFINE.MEMORY_SESSION);
 			self.queue.execute("wsClose");
 		}
 
 
-		function errorF(event) {
+		self.ws.onError =function(event) {
 			self.queue.setMemory('wsErrorDetails', event, self.queue.DEFINE.MEMORY_SESSION);
 			self.queue.execute("wsError");
 		}
+
+		self.ws.open({url:options.url});
+
 	}
 
 	websocketClose(pid,json) {
