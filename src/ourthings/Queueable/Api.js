@@ -1,7 +1,6 @@
 /** @module Api */
 import Queueable from "../Queueable";
-import {v4 as uuidv4} from 'uuid';
-import {Base64} from 'js-base64';
+import wspClient from '@nautoguide/aws-wsp/wsp-client';
 
 /**
  * @classdesc
@@ -15,7 +14,6 @@ import {Base64} from 'js-base64';
  *
  */
 
-const MAX_BYTES = 50000;
 
 export default class Api extends Queueable {
 
@@ -220,143 +218,73 @@ export default class Api extends Queueable {
 			"queues": {},
 			"recvQeue": false
 		}, json);
-		self.frames = self.frames || {};
+
+
 		self.bulk = self.bulk || [];
 		self.bulkQueue = 'bulkQueue';
-		self.socket = new WebSocket(options.url);
-		self.socket.onopen = function (event) {
+
+
+		self.ws=new wspClient({url:options.url},openF,messageF,errorF,closeF);
+
+		function openF() {
 			self.finished(pid, self.queue.DEFINE.FIN_OK);
-		};
-		self.socket.onmessage = function (event) {
+		}
+
+		function messageF(jsonData) {
 			let stack = [];
-			let jsonData = JSON.parse(event.data);
+			/*
+			 * We push data to the stack for anyone using stack mode
+			 */
+			if (memory[`wsStack_${jsonData[options.queue]}`])
+				stack = memory[`wsStack_${jsonData[options.queue]}`].value;
+			stack.push(jsonData);
+			self.queue.setMemory(`wsStack_${jsonData[options.queue]}`, stack, self.queue.DEFINE.MEMORY_SESSION);
+			/*
+			 * Set our normal memory (not multiple thread safe)
+			 */
+			self.queue.setMemory(jsonData[options.queue], jsonData, self.queue.DEFINE.MEMORY_SESSION);
+			self.queue.setMemory('wsLastRecv', jsonData, self.queue.DEFINE.MEMORY_SESSION);
+
 
 			/*
-			 * Is this part of a multi packet?
-			 *
-			 * For AWS websockets size is limited so we split packets down into frames IE:
-			 *
-			 * { frame: 1, totalFrames: 10, data: "BASE64" }
-			 *
-			 * This decodes those frames, you will need to implement the split in your AWS websocket code
+			 * Do we need to trigger event? If we have bulk calls coming in then only if its the last
 			 */
-			if (jsonData['frame']!==undefined) {
-				//console.log(`${jsonData['uuid']} - ${jsonData['frame']} of ${jsonData['totalFrames']}`);
-				if (self.frames[jsonData['uuid']] === undefined) {
-					self.frames[jsonData['uuid']] = {"total": 0, data: new Array(parseInt(jsonData['totalFrames']))};
-				}
-				if(!self.frames[jsonData['uuid']].data[parseInt(jsonData['frame']) - 1]) {
-					self.frames[jsonData['uuid']].data[parseInt(jsonData['frame']) - 1] = Base64.decode(jsonData['data']);
-					self.frames[jsonData['uuid']].total++;
-				} else {
-					console.log(`Duplicate network packet!!! ${jsonData['uuid']} - ${jsonData['frame']}`);
-				}
-				if (self.frames[jsonData['uuid']].total === jsonData['totalFrames']) {
-					const realJsonData = JSON.parse(self.frames[jsonData['uuid']].data.join(''));
-					self.frames[jsonData['uuid']] = null;
-					delete self.frames[jsonData['uuid']];
-					jsonData = realJsonData;
-					deployEvent();
-				} else if (self.frames[jsonData['uuid']].total > jsonData['totalFrames']) {
-					console.log('WARNING NETWORK CRAZY');
-				}
-
-
-			} else {
-				/*
-				 * Is this a super large packet using S3?
-				 */
-				if (jsonData['s3']) {
-					fetch(jsonData['s3'], {})
-						.then(function (response) {
-							if (!response.ok) {
-								self.queue.setMemory('wsErrorDetails', response, self.queue.DEFINE.MEMORY_SESSION);
-								self.queue.execute("wsError");
-							}
-							self.queue.handleFetchErrors(response);
-							return response;
-						})
-						.then(function (response) {
-							return response.blob();
-						})
-						.then(function (response) {
-							const reader = new FileReader();
-							reader.addEventListener('loadend', () => {
-								jsonData = JSON.parse(reader.result);
-								deployEvent();
-							});
-							reader.readAsText(response);
-
-
-						})
-						.catch(function (error) {
-							self.queue.setMemory('wsErrorDetails', error, self.queue.DEFINE.MEMORY_SESSION);
-							self.queue.execute("wsError");
-
-						});
-				} else {
-					deployEvent();
+			let wasBulk = false;
+			for (let i in self.bulk) {
+				if (self.bulk[i][options.queue] === jsonData[options.queue]) {
+					self.bulk.splice(i, 1);
+					wasBulk = true;
 				}
 			}
 
-
-
-			function deployEvent() {
-				/*
-				 * We push data to the stack for anyone using stack mode
-				 */
-				if (memory[`wsStack_${jsonData[options.queue]}`])
-					stack = memory[`wsStack_${jsonData[options.queue]}`].value;
-				stack.push(jsonData);
-				self.queue.setMemory(`wsStack_${jsonData[options.queue]}`, stack, self.queue.DEFINE.MEMORY_SESSION);
-				/*
-				 * Set our normal memory (not multiple thread safe)
-				 */
-				self.queue.setMemory(jsonData[options.queue], jsonData, self.queue.DEFINE.MEMORY_SESSION);
-				self.queue.setMemory('wsLastRecv', jsonData, self.queue.DEFINE.MEMORY_SESSION);
-
-
-				/*
-				 * Do we need to trigger event? If we have bulk calls coming in then only if its the last
-				 */
-				let wasBulk = false;
-				for (let i in self.bulk) {
-					if (self.bulk[i][options.queue] === jsonData[options.queue]) {
-						self.bulk.splice(i, 1);
-						wasBulk = true;
-					}
-				}
-
-				if (wasBulk === false) {
-					self.queue.execute(jsonData[options.queue]);
+			if (wasBulk === false) {
+				self.queue.execute(jsonData[options.queue]);
+				if (options.recvQeue)
+					self.queue.execute(options.recvQeue);
+			} else {
+				if (wasBulk === true && self.bulk.length === 0) {
+					self.queue.execute(self.bulkQueue);
 					if (options.recvQeue)
 						self.queue.execute(options.recvQeue);
-				} else {
-					if (wasBulk === true && self.bulk.length === 0) {
-						self.queue.execute(self.bulkQueue);
-						if (options.recvQeue)
-							self.queue.execute(options.recvQeue);
-					}
 				}
 			}
+		}
 
-		};
-
-		self.socket.onclose = function (event) {
+		function closeF(event) {
 			self.queue.setMemory('wsCloseDetails', event, self.queue.DEFINE.MEMORY_SESSION);
 			self.queue.execute("wsClose");
-		};
+		}
 
-		self.socket.onerror = function (event) {
+
+		function errorF(event) {
 			self.queue.setMemory('wsErrorDetails', event, self.queue.DEFINE.MEMORY_SESSION);
 			self.queue.execute("wsError");
-		};
+		}
 	}
 
 	websocketClose(pid,json) {
-		let self=this;
-		self.socket.close();
-		this.finished(pid, self.queue.DEFINE.FIN_OK);
+		this.ws.close();
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
 
 	}
 
@@ -400,68 +328,14 @@ export default class Api extends Queueable {
 			self.bulk = json.bulk;
 			self.bulkQueue = json.bulkQueue;
 			for (let i in self.bulk) {
-				self._websocketSendActual(self.bulk[i])
-				//self.socket.send(JSON.stringify(self.bulk[i]));
+				self.ws.send(self.bulk[i]);
 			}
 		} else {
 			//self.socket.send(JSON.stringify(json.message));
-			self._websocketSendActual(json.message);
+			self.ws.send(json.message);
 		}
 		self.finished(pid, self.queue.DEFINE.FIN_OK);
 	}
 
-
-	_websocketSendActual(json) {
-		let self = this;
-		self.currentPacket = 0;
-		self.totalPackets = 0;
-		self.packetArray = [];
-		self.uuid = uuidv4();
-		const payload = JSON.stringify(json);
-		if (payload.length > MAX_BYTES) {
-			self.totalPackets = Math.ceil(payload.length / MAX_BYTES);
-			for (let i = 0; i < self.totalPackets; i++) {
-				let loc = i * MAX_BYTES;
-				let sub = payload.slice(loc, MAX_BYTES + loc);
-				self.packetArray.push(sub);
-			}
-			self._websocketSendPacket();
-		} else {
-			try {
-				self.socket.send(payload);
-			} catch (event) {
-				self.queue.setMemory('wsErrorDetails', event, self.queue.DEFINE.MEMORY_SESSION);
-				self.queue.execute("wsError");
-
-			}
-		}
-	}
-
-	_websocketSendPacket() {
-		let self = this;
-		/*
-		 * more work?
-		 */
-		if (self.currentPacket < self.totalPackets) {
-			let packet = Base64.encode(self.packetArray.shift());
-			self.currentPacket++;
-			//console.log(`packet:${self.currentPacket}-${self.totalPackets} Size: ${packet.length}`);
-
-			try {
-				self.socket.send(JSON.stringify({
-					"frame": self.currentPacket,
-					"totalFrames": self.totalPackets,
-					"uuid": self.uuid,
-					"data": packet
-				}));
-			} catch (event) {
-				self.queue.setMemory('wsErrorDetails', event, self.queue.DEFINE.MEMORY_SESSION);
-				self.queue.execute("wsError");
-			}
-			setTimeout(function () {
-				self._websocketSendPacket();
-			}, 200);
-		}
-	}
 
 }

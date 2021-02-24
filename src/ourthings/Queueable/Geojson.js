@@ -52,6 +52,7 @@ export default class Geojson extends Queueable {
 	 * @param {array} json.features - features that are updated [{id:xx,action:"update|delete|new"}]
 	 */
 	historyAdd(pid, json) {
+
 		let options = Object.assign({
 			"type": "incremental",
 			"features": []
