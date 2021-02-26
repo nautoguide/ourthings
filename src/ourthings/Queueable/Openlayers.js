@@ -1398,7 +1398,12 @@ export default class Openlayers extends Queueable {
 			let targetLayer = this.maps[options.map].layers[options.targetLayer];
 			let targetSource = targetLayer.getSource();
 			targetSource.addFeature(feature);
+			this.queue.setMemory('movedFeature', true, "Session");
+
+		} else {
+			this.queue.setMemory('movedFeature', false, "Session");
 		}
+
 
 		this.finished(pid, this.queue.DEFINE.FIN_OK);
 	}
