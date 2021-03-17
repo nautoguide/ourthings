@@ -1331,6 +1331,24 @@ class Queue {
 	}
 
 	/**
+	 * Finds an element in the dom using the jquery formant and return a value that is scaped (json safe)
+	 * @param elementTarget
+	 * @param errorTrap {boolean} Trap any errors?
+	 * @return {object|false}
+	 */
+	getElementValueEscaped(elementTarget, errorTrap = true) {
+		let self = this;
+		let element = document.querySelector(elementTarget);
+		if (element !== null) {
+			let unEscaped=element.value;
+			return unEscaped.replace(/\"/g,"&quot;");
+		}
+		if (errorTrap)
+			self.reportError('Dom Element find failed for [' + elementTarget + ']', 'Follow up calls that rely on this will fail');
+		return false;
+	}
+
+	/**
 	 * Finds an element(s) in the dom using the jquery formant IE #id .class tag (can return one or more)
 	 * @param elementTarget
 	 * @return {object|false}
