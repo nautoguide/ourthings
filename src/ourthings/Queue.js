@@ -1341,6 +1341,8 @@ class Queue {
 		let element = document.querySelector(elementTarget);
 		if (element !== null) {
 			let unEscaped=element.value;
+			unEscaped=unEscaped.replace(/\n/g,'\\n');
+			unEscaped=unEscaped.replace(/\r/g,'\\r');
 			return unEscaped.replace(/\"/g,"&quot;");
 		}
 		if (errorTrap)
