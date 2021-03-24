@@ -48,10 +48,13 @@ class Menu extends Queueable {
 				}
 				menuTop.setAttribute('aria-expanded', 'true');
 				menuTop.setAttribute('aria-hidden', 'false');
-				menuTop.children[0].focus();
+				window.setTimeout(function () {
+					menuTop.children[0].focus();
+				},0);
 			}
 		}
 		element.addEventListener("keydown", function (e) {
+			e.preventDefault();
 			if(e.keyCode===13) {
 				menuToggle();
 			}
