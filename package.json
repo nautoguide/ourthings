@@ -1,6 +1,6 @@
 {
   "name": "@nautoguide/ourthings",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Queue based JavaScript framework",
   "scripts": {
     "build": "webpack --config webpack.config.basic.js",
@@ -46,7 +46,7 @@
     "uuid": "^7.0.3",
     "showdown": "^1.9.1",
     "js-base64": "^3.6.0",
-    "@nautoguide/aws-wsp": "^1.0.4"
+    "@nautoguide/aws-wsp": "^1.1.0"
   },
   "publishConfig": {
     "access": "public"
