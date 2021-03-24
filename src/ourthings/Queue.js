@@ -1343,6 +1343,7 @@ class Queue {
 			let unEscaped=element.value;
 			unEscaped=unEscaped.replace(/\n/g,'\\n');
 			unEscaped=unEscaped.replace(/\r/g,'\\r');
+			unEscaped=unEscaped.replace(/\t/g,'\\t');
 			return unEscaped.replace(/\"/g,"&quot;");
 		}
 		if (errorTrap)
