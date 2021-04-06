@@ -1105,9 +1105,10 @@ class Queue {
 	 * @param value - Value of cookie
 	 * @returns {*}
 	 */
-	setCookie(name, value) {
+	setCookie(name, value,time) {
 		let date = new Date();
-		date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
+		time=time||(7 * 24 * 60 * 60 * 1000)
+		date.setTime(date.getTime() + time);
 		const secure = window.location.href.match(/https\:\/\//i);
 		const cookieString = `${name}=${value};expires=${date.toUTCString()} path=/;${(secure !== null ? 'Secure;' : '')} SameSite=Strict`;
 		document.cookie = cookieString;

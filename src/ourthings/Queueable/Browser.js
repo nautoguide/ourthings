@@ -27,6 +27,23 @@ export default class Browser extends Queueable {
 	}
 
 	/**
+	 * Set a brower cookie using ourthing setCookie function
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 * @param {string} json.name - cookie name
+	 * @param {string} json.value - cookie value
+	 * @param {number} json.time - cookie TTL
+	 */
+	setCookie(pid,json) {
+		let options = Object.assign({
+			"name":"foo",
+			"value":"bar",
+			"time":300
+		}, json);
+		this.queue.setCookie(options.name,options.value,options.time);
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+	/**
 	 * Start the history monitor.
 	 *
 	 * Detects when the user navigates via back / forward button and runs queue based on history item
