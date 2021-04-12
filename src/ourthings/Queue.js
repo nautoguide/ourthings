@@ -1487,9 +1487,11 @@ class Queue {
 
 	/**
 	 * Get any params from the url in json format
+	 *
+	 * This supports both the search format IE ? and also hash format # (# added to support AWS cognito)
 	 */
 	urlToJson() {
-		let url = location.search;
+		let url = location.search!==""? location.search:location.hash;
 		let query = url.substr(1);
 		let result = {};
 		query.split("&").forEach(function (part) {
