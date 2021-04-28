@@ -25,12 +25,14 @@ export default class Api extends Queueable {
 	 * @param {string} json.url - URL to make GET request to
 	 * @param {string} json.contentType=application/json - Content type to request
 	 * @param {string} json.header - header object to send (note Content-Type is overwritten by above setting)
-	 * @param {string} json.name - name of error queue to use
+	 * @param {string} json.errorName - name of error queue to use
+	 * @param {string} json.name - name of memoryto use
+	 * @param {string} json.qyeue - name of success queue to
 	 */
 	get(pid, json) {
 		let self = this;
 		json.contentType = json.contentType || 'application/json';
-		json.name = json.name || 'apiError';
+		json.errorName = json.errorName || 'apiError';
 		let headers = json.headers || {};
 		headers['Content-Type'] = json.contentType || 'application/json';
 		fetch(json.url, {
@@ -42,9 +44,8 @@ export default class Api extends Queueable {
 						"json": json,
 						"error": response
 					}, self.queue.DEFINE.MEMORY_SESSION);
-					self.queue.execute(json.name);
+					self.queue.execute(json.errorName);
 				}
-				self.queue.handleFetchErrors(response);
 				return response;
 			})
 			.then(function (response) {
@@ -60,6 +61,14 @@ export default class Api extends Queueable {
 				 * Convert the response to json and start the loader
 				 */
 				self.set(pid, response);
+				if(json.name) {
+					self.queue.setMemory(json.name, {
+						"json": response,
+					}, self.queue.DEFINE.MEMORY_SESSION);
+				}
+				if(json.queue) {
+					self.queue.execute(json.queue);
+				}
 				self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 			})
