@@ -19,10 +19,11 @@ class Queue {
 	/**
 	 * Class constructor
 	 */
-	constructor(queueablesList) {
-
+	constructor(queueablesList,domain) {
 		let self = this;
-
+		let calcDomain=window.location.hostname;
+		domain=domain||calcDomain;
+		self.domain=domain;
 		/*
 		 * Create our DEFINE object for
 		 * @type {Define}
@@ -105,7 +106,7 @@ class Queue {
 
 		self.developerMode = false;
 
-		console.clear();
+		//console.clear();
 		consoleBadge.log({
 			mode: 'shields.io',
 			leftText: 'ourthings framework',
@@ -1106,11 +1107,13 @@ class Queue {
 	 * @returns {*}
 	 */
 	setCookie(name, value,time) {
+		let self=this;
 		let date = new Date();
 		time=time||(7 * 24 * 60 * 60 * 1000)
 		date.setTime(date.getTime() + time);
 		const secure = window.location.href.match(/https\:\/\//i);
-		const cookieString = `${name}=${value};expires=${date.toUTCString()} path=/;${(secure !== null ? 'Secure;' : '')} SameSite=Strict`;
+		const cookieString = `${name}=${value};expires=${date.toUTCString()};domain=${self.domain}; path=/;${(secure !== null ? 'Secure;' : '')} SameSite=Strict`;
+		//console.log(cookieString)
 		document.cookie = cookieString;
 	}
 
