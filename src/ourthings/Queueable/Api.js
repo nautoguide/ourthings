@@ -45,6 +45,9 @@ export default class Api extends Queueable {
 						"error": response
 					}, self.queue.DEFINE.MEMORY_SESSION);
 					self.queue.execute(json.errorName);
+					self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+					return Promise.reject("Response was not ok");
 				}
 				return response;
 			})
@@ -77,7 +80,7 @@ export default class Api extends Queueable {
 					"json": json,
 					"error": error
 				}, self.queue.DEFINE.MEMORY_SESSION);
-				self.queue.execute(json.name);
+				self.queue.execute(json.errorName);
 				console.info(self.queue.DEFINE.CONSOLE_LINE);
 				console.error('Error:', error);
 				console.info("api.get Warning this error is probably fatal");
@@ -95,11 +98,12 @@ export default class Api extends Queueable {
 	 * @param {string} json.header - header object to send (note Content-Type is overwritten by above setting)
 	 * @param {string} json.body - object to send JSON.stringify is applies to this
 	 * @param {string} json.name - name of error queue to use
+	 * @param {string} json.errorName - name of error queue to use
 	 */
 	post(pid, json) {
 		let self = this;
 		json.contentType = json.contentType || 'application/json';
-		json.name = json.name || 'apiError';
+		json.errorName = json.errorName || 'apiError';
 		let headers = json.headers || {};
 		headers['Content-Type'] = json.contentType || 'application/json';
 		fetch(json.url, {
@@ -113,7 +117,10 @@ export default class Api extends Queueable {
 						"json": json,
 						"error": response
 					}, self.queue.DEFINE.MEMORY_SESSION);
-					self.queue.execute(json.name);
+					self.queue.execute(json.errorName);
+					self.finished(pid, self.queue.DEFINE.FIN_OK);
+
+					return Promise.reject("Response was not ok");
 				}
 				self.queue.handleFetchErrors(response);
 				return response;
@@ -131,6 +138,9 @@ export default class Api extends Queueable {
 				 * Convert the response to json and start the loader
 				 */
 				self.set(pid, response);
+				if(json.queue) {
+					self.queue.execute(json.queue);
+				}
 				self.finished(pid, self.queue.DEFINE.FIN_OK);
 
 			})
@@ -139,7 +149,7 @@ export default class Api extends Queueable {
 					"json": json,
 					"error": error
 				}, self.queue.DEFINE.MEMORY_SESSION);
-				self.queue.execute(json.name);
+				self.queue.execute(json.errorName);
 				console.info(self.queue.DEFINE.CONSOLE_LINE);
 				console.error('Error:', error);
 				console.info("api.post Warning this error is probably fatal");
