@@ -657,6 +657,10 @@ class Queue {
 			 */
 			let command = self.commandParse(match[1], isParent);
 
+			// Bad command queue
+			if(command===undefined) {
+				return 'Template parse failed';
+			}
 			/*
 			 *  In the case of an instant or sub run we don't need to leave anything in the DOM so nuke
 			 */
@@ -1241,7 +1245,14 @@ class Queue {
 		// Find first json arg
 
 		command = command.replace(/\);$/m, ']');
-		let jsonArray = JSON.parse(command);
+		let jsonArray=[];
+		try {
+			jsonArray = JSON.parse(command);
+		} catch (e) {
+			self.reportError('Command parser cant decode json',e);
+			console.log(command);
+			return undefined;
+		}
 		if (jsonArray[0]) {
 			commandObject.json = jsonArray[0];
 		} else {
