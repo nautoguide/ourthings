@@ -27,6 +27,15 @@ export default class Browser extends Queueable {
 	}
 
 	/**
+	 * reload browser
+	 * @param {number} pid - Process ID
+	 * @param {object} json - queue arguments
+	 */
+	reload(pid, json) {
+		window.location.reload();
+		this.finished(pid, this.queue.DEFINE.FIN_OK);
+	}
+	/**
 	 * Set a brower cookie using ourthing setCookie function
 	 * @param {number} pid - Process ID
 	 * @param {object} json - queue arguments
